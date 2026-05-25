@@ -1,0 +1,16 @@
+/**
+ * @page Foundation_BuildGuide Build Guide
+ *
+ * @section cmake CMake
+ * Use the provided presets:
+ * @code
+ * cmake --preset debug
+ * cmake --build --preset debug
+ * @endcode
+ *
+ * @section arduino Arduino
+ * Include the library with:
+ * @code
+ * #include <Foundation.h>
+ * @endcode
+ */

@@ -1,0 +1,2 @@
+add_executable(Foundation_Time_Period Period.cpp)
+target_link_libraries(Foundation_Time_Period PRIVATE Foundation)

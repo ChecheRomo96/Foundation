@@ -1,0 +1,39 @@
+/**
+ * @example BasicChecks.cpp
+ *
+ * @brief Basic compile-time checks using Foundation::TypeTraits.
+ *
+ * This example demonstrates how to use Foundation::TypeTraits to inspect
+ * type categories at compile time and restrict templates to specific kinds
+ * of data.
+ *
+ * The example covers:
+ *
+ * - is_integral
+ * - is_floating_point
+ * - is_arithmetic
+ * - is_class
+ * - is_union
+ * - is_enum
+ * - is_pointer
+ * - is_reference
+ * - is_object
+ * - is_scalar
+ * - is_fundamental
+ * - is_compound
+ * - is_function
+ *
+ * The NumericBuffer class demonstrates a practical embedded-style use case:
+ * restricting a buffer template to arithmetic types only.
+ *
+ * @code{.cpp}
+ * template <typename T>
+ * class NumericBuffer {
+ * public:
+ *     static_assert(
+ *         Foundation::TypeTraits::is_arithmetic<T>::value,
+ *         "NumericBuffer only supports arithmetic types"
+ *     );
+ * };
+ * @endcode
+ */

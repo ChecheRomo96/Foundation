@@ -1,0 +1,11 @@
+/**
+ * @mainpage Foundation
+ *
+ * Foundation is a lightweight foundation library for embedded and desktop C++ projects.
+ *
+ * @section modules Modules
+ * - @ref Foundation_Containers
+ * - @ref Foundation_Time
+ * - @ref Foundation_Scheduling
+ * - @ref Foundation_Utils
+ */

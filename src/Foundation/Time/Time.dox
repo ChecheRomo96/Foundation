@@ -1,0 +1,4 @@
+/**
+ * @defgroup Foundation_Time Time
+ * @brief Clock abstractions and time utilities.
+ */

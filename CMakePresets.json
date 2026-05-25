@@ -1,0 +1,170 @@
+{
+  "version": 3,
+
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 19,
+    "patch": 0
+  },
+
+  "configurePresets": [
+
+    {
+      "name": "base",
+      "hidden": true,
+
+      "binaryDir": "${sourceDir}/build/${presetName}",
+
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "dev_debug",
+      "displayName": "Desktop Debug",
+
+      "inherits": "base",
+
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+
+        "FOUNDATION_PLATFORM": "desktop",
+
+
+        "FOUNDATION_FULL_BUILD": "ON",
+
+        "FOUNDATION_DOCS": "OFF",
+        "FOUNDATION_TESTING": "ON",
+        "FOUNDATION_EXAMPLES": "ON",
+        "FOUNDATION_COVERAGE": "OFF"
+      }
+    },
+
+    {
+      "name": "dev_docs",
+      "displayName": "Desktop Docs",
+
+      "inherits": "base",
+
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+
+        "FOUNDATION_PLATFORM": "desktop",
+
+        "FOUNDATION_FULL_BUILD": "ON",
+
+        "FOUNDATION_DOCS": "ON",
+        "FOUNDATION_TESTING": "OFF",
+        "FOUNDATION_EXAMPLES": "ON",
+        "FOUNDATION_COVERAGE": "OFF"
+      }
+    },
+
+    {
+      "name": "dev_coverage",
+      "displayName": "Desktop Coverage",
+
+      "inherits": "base",
+
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+
+        "FOUNDATION_PLATFORM": "desktop",
+
+        "FOUNDATION_FULL_BUILD": "ON",
+
+        "FOUNDATION_DOCS": "OFF",
+        "FOUNDATION_TESTING": "ON",
+        "FOUNDATION_EXAMPLES": "OFF",
+        "FOUNDATION_COVERAGE": "ON"
+      }
+    },
+    {
+      "name": "psoc_base",
+      "hidden": true,
+
+      "inherits": "base",
+
+      "toolchainFile": "${sourceDir}/cmake/psoc-arm-gcc-toolchain.cmake",
+
+      "cacheVariables": {
+        "FOUNDATION_PLATFORM": "psoc",
+
+        "FOUNDATION_FULL_BUILD": "ON",
+
+        "FOUNDATION_DOCS": "OFF",
+        "FOUNDATION_TESTING": "OFF",
+        "FOUNDATION_EXAMPLES": "OFF",
+        "FOUNDATION_COVERAGE": "OFF"
+      }
+    },
+
+    {
+      "name": "psoc_debug",
+      "displayName": "PSoC ARM GCC Debug",
+
+      "inherits": "psoc_base",
+
+      "cacheVariables": {
+
+        "CMAKE_BUILD_TYPE": "Debug",
+
+        "CMAKE_INSTALL_PREFIX":
+          "${sourceDir}/dist/psoc"
+      }
+    },
+
+    {
+      "name": "psoc_release",
+      "displayName": "PSoC ARM GCC Release",
+
+      "inherits": "psoc_base",
+
+      "cacheVariables": {
+
+        "CMAKE_BUILD_TYPE": "Release",
+
+        "CMAKE_INSTALL_PREFIX":
+          "${sourceDir}/dist/psoc"
+      }
+    }
+
+  ],
+  "buildPresets": [
+    {
+      "name": "dev_debug",
+      "configurePreset": "dev_debug"
+    },
+
+    {
+      "name": "dev_docs",
+      "configurePreset": "dev_docs"
+    },
+
+    {
+      "name": "dev_coverage",
+      "configurePreset": "dev_coverage",
+      "configuration": "Release"
+    },
+    {
+      "name": "psoc_debug",
+      "configurePreset": "psoc_debug",
+      "configuration": "Debug",
+
+      "targets": [
+        "install"
+      ]
+    },
+
+    {
+      "name": "psoc_release",
+      "configurePreset": "psoc_release",
+      "configuration": "Release",
+
+      "targets": [
+        "install"
+      ]
+    }
+
+  ]
+}
