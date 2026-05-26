@@ -55,12 +55,6 @@
             };
 
             constexpr Frequency::Frequency(
-                uint32_t num,
-                uint32_t den
-            )
-                : _ratio(num, den) {}
-
-            constexpr Frequency::Frequency(
                 const Foundation::Math::Ratio& ratio
             )
                 : _ratio(ratio) {}

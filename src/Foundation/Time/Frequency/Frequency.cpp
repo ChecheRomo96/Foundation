@@ -5,6 +5,12 @@
 
 namespace Foundation {
     namespace Time {
+        
+        Frequency::Frequency(
+            uint32_t num,
+            uint32_t den
+        )
+            : _ratio(num, den) {}
 
         void Frequency::SetNum(uint32_t num) {
             _ratio.SetNum(num);
