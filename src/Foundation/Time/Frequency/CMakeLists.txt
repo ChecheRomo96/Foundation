@@ -11,57 +11,17 @@
 
     
     list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-        "${CMAKE_CURRENT_SOURCE_DIR}/Time.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Frequency.h"
     )
     
-    #list(APPEND FOUNDATION_SOURCES_LOCAL
-    #    "${CMAKE_CURRENT_SOURCE_DIR}/Time.cpp"
-    #)
+    list(APPEND FOUNDATION_SOURCES_LOCAL
+        "${CMAKE_CURRENT_SOURCE_DIR}/Frequency.cpp"
+    )
     
     list(APPEND FOUNDATION_DOX_LOCAL
-        "${CMAKE_CURRENT_SOURCE_DIR}/Time.dox"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Frequency.dox"
     )
 #
-######################################################################################################
-# Append headers for enabled submodules
-
-    if(FOUNDATION_TIME_CLOCK)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_SOURCE_DIR}/Clock.h"
-        )
-    endif()
-
-    if(FOUNDATION_TIME_DURATION)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_SOURCE_DIR}/Duration.h"
-        )
-    endif()
-
-    if(FOUNDATION_TIME_FREQUENCY)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_SOURCE_DIR}/Frequency.h"
-        )
-        add_subdirectory(Frequency)
-    endif()
-
-    if(FOUNDATION_TIME_PERIOD)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_SOURCE_DIR}/Period.h"
-        )
-    endif()
-
-    if(FOUNDATION_TIME_TICK)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_SOURCE_DIR}/Tick.h"
-        )
-    endif()
-
-    if(FOUNDATION_TIME_TIME_POINT)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_SOURCE_DIR}/TimePoint.h"
-        )
-    endif()
-
 ######################################################################################################
 # Add sources to the FOUNDATION target
 

@@ -15,7 +15,7 @@
 
                 public:
 
-                    constexpr Ratio(
+                    Ratio(
                         int32_t num = 0,
                         int32_t den = 1
                     )

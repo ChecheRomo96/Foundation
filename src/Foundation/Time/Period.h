@@ -14,7 +14,7 @@ namespace Foundation {
 
         public:
 
-            constexpr Period(
+            Period(
                 uint32_t num = 0,
                 uint32_t den = 1
             )

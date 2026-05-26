@@ -55,7 +55,7 @@
 
         "FOUNDATION_DOCS": "ON",
         "FOUNDATION_TESTING": "OFF",
-        "FOUNDATION_EXAMPLES": "ON",
+        "FOUNDATION_EXAMPLES": "OFF",
         "FOUNDATION_COVERAGE": "OFF"
       }
     },
