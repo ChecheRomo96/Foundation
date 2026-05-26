@@ -4,16 +4,26 @@
     namespace Foundation{
         namespace Utils {
 
+            /// @cond INTERNAL
             namespace Detail {
-                template <typename T>
-                struct RemoveReference { typedef T Type; };
 
-                template <typename T>
-                struct RemoveReference<T&> { typedef T Type; };
+                template<typename T>
+                struct RemoveReference {
+                    typedef T Type;
+                };
 
-                template <typename T>
-                struct RemoveReference<T&&> { typedef T Type; };
+                template<typename T>
+                struct RemoveReference<T&> {
+                    typedef T Type;
+                };
+
+                template<typename T>
+                struct RemoveReference<T&&> {
+                    typedef T Type;
+                };
+
             }
+            /// @endcond
 
             template <typename T>
             typename Detail::RemoveReference<T>::Type&& Move(T&& value) {
