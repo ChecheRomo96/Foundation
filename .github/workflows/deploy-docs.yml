@@ -1,0 +1,42 @@
+name: Deploy Documentation
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: write
+
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y doxygen graphviz cmake
+
+      - name: Configure CMake
+        run: |
+          cmake -S . -B build/docs \
+            -DFOUNDATION_DOCS=ON \
+            -DFOUNDATION_TESTING=OFF \
+            -DFOUNDATION_EXAMPLES=OFF
+
+      - name: Build documentation
+        run: |
+          cmake --build build/docs --target docs
+
+      - name: Deploy to docs branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: docs
+          publish_dir: build/docs/html
+          force_orphan: true
