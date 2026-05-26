@@ -31,7 +31,7 @@ jobs:
 
       - name: Build documentation
         run: |
-          cmake --build build/docs --target docs
+          cmake --build build/docs --target dev_docs
 
       - name: Deploy to docs branch
         uses: peaceiris/actions-gh-pages@v4
