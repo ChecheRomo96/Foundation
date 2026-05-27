@@ -11,58 +11,17 @@
 
     
     list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-        "${CMAKE_CURRENT_SOURCE_DIR}/Time.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Period.h"
     )
     
-    #list(APPEND FOUNDATION_SOURCES_LOCAL
-    #    "${CMAKE_CURRENT_SOURCE_DIR}/Time.cpp"
-    #)
+    list(APPEND FOUNDATION_SOURCES_LOCAL
+        "${CMAKE_CURRENT_SOURCE_DIR}/Period.cpp"
+    )
     
     list(APPEND FOUNDATION_DOX_LOCAL
-        "${CMAKE_CURRENT_SOURCE_DIR}/Time.dox"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Period.dox"
     )
 #
-######################################################################################################
-# Append headers for enabled submodules
-
-    if(FOUNDATION_TIME_CLOCK)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_SOURCE_DIR}/Clock.h"
-        )
-    endif()
-
-    if(FOUNDATION_TIME_DURATION)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_SOURCE_DIR}/Duration.h"
-        )
-    endif()
-
-    if(FOUNDATION_TIME_FREQUENCY)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_SOURCE_DIR}/Frequency.h"
-        )
-        add_subdirectory(Frequency)
-    endif()
-
-    if(FOUNDATION_TIME_PERIOD)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_SOURCE_DIR}/Period.h"
-        )
-        add_subdirectory(Period)
-    endif()
-
-    if(FOUNDATION_TIME_TICK)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_SOURCE_DIR}/Tick.h"
-        )
-    endif()
-
-    if(FOUNDATION_TIME_TIME_POINT)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_SOURCE_DIR}/TimePoint.h"
-        )
-    endif()
-
 ######################################################################################################
 # Add sources to the FOUNDATION target
 
@@ -93,7 +52,7 @@
     # Install headers for this subdirectory
     install(
         FILES ${FOUNDATION_PUBLIC_HEADERS_LOCAL}
-        DESTINATION "include/Foundation-${FOUNDATION_VERSION}/Foundation/Time"
+        DESTINATION "include/Foundation-${FOUNDATION_VERSION}/Foundation/Time/Period"
     )
 #
 ######################################################################################################
