@@ -46,3 +46,9 @@
     include(${CMAKE_CURRENT_LIST_DIR}/Utils/CMakeOptions.cmake)
 #
 #################################################################################################################################
+# Functional
+
+    option(FOUNDATION_FUNCTIONAL "Enables the compilation of Foundation::Functional" ON)
+    include(${CMAKE_CURRENT_LIST_DIR}/Functional/CMakeOptions.cmake)
+#
+#################################################################################################################################

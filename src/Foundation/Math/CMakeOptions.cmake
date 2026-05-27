@@ -3,6 +3,8 @@
     if(FOUNDATION_FULL_BUILD)
         set(FOUNDATION_MATH_ARITHMETIC ON)
         set(FOUNDATION_MATH_RATIO ON)
+        set(FOUNDATION_MATH_COMPLEX ON)
+        set(FOUNDATION_MATH_MATRIX ON)
     endif()
 #
 #################################################################################################################################
@@ -16,5 +18,17 @@
 
     option(FOUNDATION_MATH_ARITHMETIC "Enables the compilation of Foundation::Math::Arithmetic" ON)
     #include(${CMAKE_CURRENT_LIST_DIR}/Math/CMakeOptions.cmake)
+#
+#################################################################################################################################
+# Complex
+
+    option(FOUNDATION_MATH_COMPLEX "Enables the compilation of Foundation::Math::Complex" ON)
+    #include(${CMAKE_CURRENT_LIST_DIR}/Math/CMakeOptions.cmake)
+#
+#################################################################################################################################
+# Matrix
+
+    option(FOUNDATION_MATH_MATRIX "Enables the compilation of Foundation::Math::Matrix" ON)
+    include(${CMAKE_CURRENT_LIST_DIR}/Matrix/CMakeOptions.cmake)
 #
 #################################################################################################################################

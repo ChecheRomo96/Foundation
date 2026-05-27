@@ -25,6 +25,14 @@
         include(${CMAKE_CURRENT_LIST_DIR}/Time/CMakeMacros.cmake)
     endif()
 
+    if(FOUNDATION_FUNCTIONAL)
+        message(STATUS "Foundation::Functional")
+        target_compile_definitions(Foundation PUBLIC FOUNDATION_FUNCTIONAL)
+        list(APPEND ${PROJECT_NAME_UPPER}_MACROS "FOUNDATION_FUNCTIONAL")
+
+        include(${CMAKE_CURRENT_LIST_DIR}/Functional/CMakeMacros.cmake)
+    endif() 
+
     if(FOUNDATION_UTILS)
         message(STATUS "Foundation::Utils")
         target_compile_definitions(Foundation PUBLIC FOUNDATION_UTILS)

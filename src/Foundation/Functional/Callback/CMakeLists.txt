@@ -10,11 +10,11 @@
 # Append Headers (local to this subdirectory)
 
     list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-        "${CMAKE_CURRENT_LIST_DIR}/Delegate.h"
+        "${CMAKE_CURRENT_LIST_DIR}/Callback.h"
     )
     
     list(APPEND FOUNDATION_DOX_LOCAL
-        "${CMAKE_CURRENT_LIST_DIR}/Delegate.dox"
+        "${CMAKE_CURRENT_LIST_DIR}/Callback.dox"
     )
 #
 ######################################################################################################
@@ -47,7 +47,7 @@
     # Install headers for this subdirectory
     install(
         FILES ${FOUNDATION_PUBLIC_HEADERS_LOCAL}
-        DESTINATION "include/FOUNDATION-${FOUNDATION_VERSION}/Foundation/Utils/Delegate"
+        DESTINATION "include/FOUNDATION-${FOUNDATION_VERSION}/Foundation/Functional/Callback"
     )
 #
 ######################################################################################################

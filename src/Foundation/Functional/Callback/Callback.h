@@ -1,14 +1,14 @@
-#ifndef FOUNDATION_UTILS_DELEGATE_H
-#define FOUNDATION_UTILS_DELEGATE_H
+#ifndef FOUNDATION_UTILS_Callback_H
+#define FOUNDATION_UTILS_Callback_H
 
     #include <Foundation_BuildSettings.h>
 
     namespace Foundation{
-        namespace Utils {
+        namespace Functional {
 
             //////////////////////////////////////////////////////////////////////////////////////////////
             /**
-             * @brief A generic delegate for function pointers with multiple parameters.
+             * @brief A generic Callback for function pointers with multiple parameters.
              * 
              * This template class provides a mechanism to store, bind, and invoke callbacks dynamically.
              * It supports both function pointers, lambda functions, and non-static member functions.
@@ -16,9 +16,8 @@
              * @tparam R Return type of the callback function.
              * @tparam Args Parameter types of the callback function.
              */
-
             template <typename R, typename... Args>
-            class Delegate {
+            class Callback {
                 private:
                     struct CallbackContext {
                         void* instance;  // Pointer to the instance (could be any class)
@@ -28,7 +27,7 @@
                 public:
                     using CallbackType = R (*)(Args...);
 
-                    Delegate() : _callback(nullptr), _context{nullptr, nullptr} {}
+                    Callback() : _callback(nullptr), _context{nullptr, nullptr} {}
                     
                     inline void bind(CallbackType Callback) {
                         _callback = Callback;
@@ -75,7 +74,7 @@
             /// \cond INTERNAL
 
             template <typename R>
-            class Delegate<R, void> {
+            class Callback<R, void> {
                 private:
                     struct CallbackContext {
                         void* instance;
@@ -85,7 +84,7 @@
                 public:
                     using CallbackType = R (*)();
 
-                    Delegate() : _callback(nullptr), _context{nullptr, nullptr} {}
+                    Callback() : _callback(nullptr), _context{nullptr, nullptr} {}
                     
                     inline void bind(CallbackType Callback) {
                         _callback = Callback;
@@ -129,7 +128,7 @@
             };
 
             template <typename... Args>
-            class Delegate<void, Args...> {
+            class Callback<void, Args...> {
                 private:
                     struct CallbackContext {
                         void* instance;
@@ -139,7 +138,7 @@
                 public:
                     using CallbackType = void (*)(Args...);
 
-                    Delegate() : _callback(nullptr), _context{nullptr, nullptr} {}
+                    Callback() : _callback(nullptr), _context{nullptr, nullptr} {}
                     
                     inline void bind(CallbackType Callback) {
                         _callback = Callback;
@@ -184,7 +183,7 @@
             };
 
             template <>
-            class Delegate<void, void> {
+            class Callback<void, void> {
                 private:
                     struct CallbackContext {
                         void* instance;
@@ -194,7 +193,7 @@
                 public:
                     using CallbackType = void (*)();
 
-                    Delegate() : _callback(nullptr), _context{nullptr, nullptr} {}
+                    Callback() : _callback(nullptr), _context{nullptr, nullptr} {}
                     
                     inline void bind(CallbackType Callback) {
                         _callback = Callback;
@@ -242,4 +241,4 @@
         }
     } 
 
-#endif // FOUNDATION_UTILS_DELEGATE_H
+#endif // FOUNDATION_UTILS_Callback_H

@@ -1,44 +1,27 @@
 ######################################################################################################
-# Initialize FOUNDATION_SOURCES_LOCAL and HEADERS_LIST_LOCAL as an empty string list
+# Initialize local lists
 
     set(FOUNDATION_SOURCES_LOCAL "")
     set(FOUNDATION_PRIVATE_HEADERS_LOCAL "")
     set(FOUNDATION_PUBLIC_HEADERS_LOCAL "")
     set(FOUNDATION_DOX_LOCAL "")
+
 #
 ######################################################################################################
-# Append Headers (local to this subdirectory)
+# Append headers
 
-    if(FOUNDATION_MATH)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_LIST_DIR}/Math.h"
-        )
-        add_subdirectory(Math)
-    endif()
+    list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
+        "${CMAKE_CURRENT_SOURCE_DIR}/DynamicMatrix.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/DynamicMatrix.tpp"
+    )
 
-    if(FOUNDATION_FUNCTIONAL)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_LIST_DIR}/Functional.h"
-        )
-        add_subdirectory(Functional)
-    endif()
-    
-    if(FOUNDATION_TIME)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_LIST_DIR}/Time.h"
-        )
-        add_subdirectory(Time)
-    endif()
-    
-    if(FOUNDATION_UTILS)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_LIST_DIR}/Utils.h"
-        )
-        add_subdirectory(Utils)
-    endif()
+    list(APPEND FOUNDATION_DOX_LOCAL
+        "${CMAKE_CURRENT_SOURCE_DIR}/DynamicMatrix.dox"
+    )
+
 #
 ######################################################################################################
-# Add sources to the FOUNDATION target
+# Add sources to the Foundation target
 
     target_sources(Foundation PRIVATE
         ${FOUNDATION_PUBLIC_HEADERS_LOCAL}
@@ -47,7 +30,7 @@
     )
 #
 ######################################################################################################
-# Add sources for doxygen
+# Add sources for Doxygen
 
     if(FOUNDATION_DOCS)
         foundation_add_dox(
@@ -60,14 +43,15 @@
 # Stage headers
 
     foundation_stage_headers(${FOUNDATION_PUBLIC_HEADERS_LOCAL})
+
 #
 ######################################################################################################
-# FOUNDATION Install Process
+# Foundation install process
 
-    # Install headers for this subdirectory
     install(
         FILES ${FOUNDATION_PUBLIC_HEADERS_LOCAL}
-        DESTINATION "include/Foundation-${FOUNDATION_VERSION}/Foundation"
+        DESTINATION "include/Foundation-${FOUNDATION_VERSION}/Foundation/Math/Matrix/DynamicMatrix"
     )
+
 #
 ######################################################################################################

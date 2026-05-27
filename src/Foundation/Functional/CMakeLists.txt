@@ -9,32 +9,23 @@
 ######################################################################################################
 # Append Headers (local to this subdirectory)
 
-    if(FOUNDATION_MATH)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_LIST_DIR}/Math.h"
-        )
-        add_subdirectory(Math)
-    endif()
+    list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
+        "${CMAKE_CURRENT_LIST_DIR}/Functional.h"
+    )
+    
+    list(APPEND FOUNDATION_DOX_LOCAL
+        "${CMAKE_CURRENT_LIST_DIR}/Functional.dox"
+    )
 
-    if(FOUNDATION_FUNCTIONAL)
+#
+######################################################################################################
+# Add sources to the FOUNDATION target
+
+    if(FOUNDATION_FUNCTIONAL_CALLBACK)
         list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_LIST_DIR}/Functional.h"
+            "${CMAKE_CURRENT_SOURCE_DIR}/Callback.h"
         )
-        add_subdirectory(Functional)
-    endif()
-    
-    if(FOUNDATION_TIME)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_LIST_DIR}/Time.h"
-        )
-        add_subdirectory(Time)
-    endif()
-    
-    if(FOUNDATION_UTILS)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_LIST_DIR}/Utils.h"
-        )
-        add_subdirectory(Utils)
+        add_subdirectory(Callback)
     endif()
 #
 ######################################################################################################
@@ -67,7 +58,7 @@
     # Install headers for this subdirectory
     install(
         FILES ${FOUNDATION_PUBLIC_HEADERS_LOCAL}
-        DESTINATION "include/Foundation-${FOUNDATION_VERSION}/Foundation"
+        DESTINATION "include/FOUNDATION-${FOUNDATION_VERSION}/Foundation/Functional"
     )
 #
 ######################################################################################################

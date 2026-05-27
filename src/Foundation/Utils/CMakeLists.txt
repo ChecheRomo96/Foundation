@@ -11,28 +11,13 @@
 
     list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
         "${CMAKE_CURRENT_LIST_DIR}/Utils.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Move.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Swap.h"
     )
     
     list(APPEND FOUNDATION_DOX_LOCAL
         "${CMAKE_CURRENT_LIST_DIR}/Utils.dox"
-    )
-
-#
-######################################################################################################
-# Add sources to the FOUNDATION target
-    
-    if(FOUNDATION_UTILS_MOVE)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_SOURCE_DIR}/Move.h"
-        )
-    endif()
-    
-    if(FOUNDATION_UTILS_DELEGATE)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_SOURCE_DIR}/Delegate.h"
-        )
-        add_subdirectory(Delegate)
-    endif()
+    ) 
 #
 ######################################################################################################
 # Add sources to the FOUNDATION target

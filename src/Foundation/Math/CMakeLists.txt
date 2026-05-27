@@ -28,6 +28,26 @@
             "${CMAKE_CURRENT_SOURCE_DIR}/Arithmetic.h"
         )
     endif()
+    
+    if(FOUNDATION_MATH_RATIO)
+        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
+            "${CMAKE_CURRENT_SOURCE_DIR}/Ratio.h"
+        )
+    endif()
+    
+    if(FOUNDATION_MATH_COMPLEX)
+        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
+            "${CMAKE_CURRENT_SOURCE_DIR}/Complex.h"
+        )
+        add_subdirectory(Complex)
+    endif()
+    
+    if(FOUNDATION_MATH_MATRIX)
+        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
+            "${CMAKE_CURRENT_SOURCE_DIR}/Matrix.h"
+        )
+        add_subdirectory(Matrix)
+    endif()
 
 #
 ######################################################################################################
