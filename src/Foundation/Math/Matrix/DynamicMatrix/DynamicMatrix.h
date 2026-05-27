@@ -61,6 +61,9 @@ public:
     bool operator==(const DynamicMatrix<T>& other) const;
     bool operator!=(const DynamicMatrix<T>& other) const;
 
+    T* operator[](unsigned int row);
+    const T* operator[](unsigned int row) const;
+
     void Fill(T value);
     void Zero();
 

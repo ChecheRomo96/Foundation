@@ -2,6 +2,7 @@
 #define FOUNDATION_MATH_DYNAMIC_MATRIX_TPP
 
 #include <stdlib.h>
+#include "DynamicMatrix.h"
 
 namespace Foundation {
 namespace Math {
@@ -118,6 +119,16 @@ DynamicMatrix<T>& DynamicMatrix<T>::operator=(
     other._ownsData = false;
 
     return *this;
+}
+
+template <typename T>
+T* DynamicMatrix<T>::operator[](unsigned int row) {
+    return &_data[row * _cols];
+}
+
+template <typename T>
+const T* DynamicMatrix<T>::operator[](unsigned int row) const {
+    return &_data[row * _cols];
 }
 
 template <typename T>
