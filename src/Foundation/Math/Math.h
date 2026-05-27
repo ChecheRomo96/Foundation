@@ -18,4 +18,12 @@
         #include <Foundation/Math/Complex.h>
     #endif
 
+    #if __has_include(<Foundation/Math/Matrix.h>)
+        #ifndef FOUNDATION_MATRIX
+            #define FOUNDATION_MATRIX
+        #endif
+
+        #include <Foundation/Math/Matrix.h>
+    #endif
+
 #endif//FOUNDATION_MATH_CORE_H

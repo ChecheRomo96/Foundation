@@ -2,7 +2,7 @@
 #define FOUNDATION_MATH_MATRIX_TOP_H
 
 
-    #if __has_include("Matrix.h")
+    #if __has_include(<Foundation/Math/Matrix/Matrix.h>)
         #ifndef FOUNDATION_MATRIX
             #define FOUNDATION_MATRIX
         #endif

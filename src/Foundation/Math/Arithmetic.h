@@ -6,7 +6,7 @@
     namespace Foundation {
         namespace Math {
 
-            constexpr uint32_t GCD(
+            uint32_t GCD(
                 uint32_t a,
                 uint32_t b
             ) {

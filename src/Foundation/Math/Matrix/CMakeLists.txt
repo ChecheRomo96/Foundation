@@ -25,7 +25,6 @@
 
     add_subdirectory(FixedMatrix)
     add_subdirectory(DynamicMatrix)
-
 #
 ######################################################################################################
 # Add sources to the Foundation target
