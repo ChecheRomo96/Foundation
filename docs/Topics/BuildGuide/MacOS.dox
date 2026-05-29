@@ -1,0 +1,23 @@
+/**
+ * @addtogroup Foundation_BuildGuide_MacOs
+ *
+ * Recommended future presets:
+ *
+ * @code
+ * macos_clang_x64_debug
+ * macos_clang_x64_release
+ * macos_clang_arm64_debug
+ * macos_clang_arm64_release
+ * @endcode
+ *
+ * Apple Silicon and Intel builds must be treated as different artifacts unless
+ * a universal binary strategy is explicitly implemented.
+ *
+ * Example:
+ *
+ * @code{bash}
+ * cmake --preset macos_clang_arm64_release
+ * cmake --build --preset macos_clang_arm64_release
+ * cmake --install build/macos_clang_arm64_release --prefix dist/macos_clang_arm64_release
+ * @endcode
+ */

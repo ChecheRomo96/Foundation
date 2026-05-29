@@ -1,0 +1,56 @@
+/**
+ * @addtogroup Foundation_BuildGuide_PSoC
+ * @ingroup Foundation_BuildGuide
+ *
+ * @section FoundationBuildPSoCTarget Initial Supported Target
+ *
+ * Initial PSoC target:
+ *
+ * @code
+ * PSoC 5LP
+ * ARM GCC
+ * Cortex-M3
+ * Soft Float
+ * @endcode
+ *
+ * Recommended presets:
+ *
+ * @code
+ * psoc5lp_armgcc_cortex_m3_soft_debug
+ * psoc5lp_armgcc_cortex_m3_soft_release
+ * @endcode
+ *
+ * @section FoundationBuildPSoCWhy Why not every chip
+ *
+ * Foundation should not initially generate one distribution per PSoC chip.
+ *
+ * The minimum useful split is:
+ *
+ * - toolchain,
+ * - CPU core,
+ * - ABI/FPU mode,
+ * - configuration.
+ *
+ * Since Foundation is mostly portable C++ and does not depend on chip registers,
+ * a PSoC 5LP Cortex-M3 soft-float build can cover the typical CY8CKIT-059 use case.
+ *
+ * @section FoundationBuildPSoCExport Export
+ *
+ * Example:
+ *
+ * @code{bash}
+ * ./scripts/export.ps1 psoc5lp_armgcc_cortex_m3_soft_release Release
+ * @endcode
+ *
+ * or:
+ *
+ * @code{bash}
+ * ./scripts/export.sh psoc5lp_armgcc_cortex_m3_soft_release
+ * @endcode
+ *
+ * Output:
+ *
+ * @code
+ * dist/psoc5lp_armgcc_cortex_m3_soft_release/
+ * @endcode
+ */

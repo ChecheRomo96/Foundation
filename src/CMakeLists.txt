@@ -10,7 +10,7 @@
     endif()
 
     set(FOUNDATION_OUTPUT_DIRECTORY
-        "${FOUNDATION_ROOT_DIRECTORY}/dist/${FOUNDATION_PLATFORM}"
+        "${CMAKE_BINARY_DIR}/artifacts"
     )
 
     set_target_properties(Foundation PROPERTIES
@@ -26,12 +26,12 @@
         RUNTIME_OUTPUT_DIRECTORY_DEBUG "${FOUNDATION_OUTPUT_DIRECTORY}/bin"
         RUNTIME_OUTPUT_DIRECTORY_RELEASE "${FOUNDATION_OUTPUT_DIRECTORY}/bin"
 
-        OUTPUT_NAME_DEBUG "Foundation_d"
-        OUTPUT_NAME_RELEASE "Foundation"
+        OUTPUT_NAME "Foundation"
+        DEBUG_POSTFIX "_d"
     )
 
     set(FOUNDATION_BUILD_INCLUDE_DIR
-        "${CMAKE_BINARY_DIR}/include/FOUNDATION-${FOUNDATION_VERSION}"
+        "${CMAKE_BINARY_DIR}/include/Foundation-${FOUNDATION_VERSION}"
     )
 #
 ######################################################################################################
@@ -55,7 +55,7 @@
     )
     
     list(APPEND FOUNDATION_DOX_LOCAL
-        "${CMAKE_CURRENT_LIST_DIR}/Foundation.dox"
+        "${CMAKE_CURRENT_LIST_DIR}/FoundationTop.dox"
     )
 
 #
@@ -128,12 +128,12 @@
 # FOUNDATION install process
 
     install(TARGETS Foundation
-    EXPORT FoundationTargets
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin
-    INCLUDES DESTINATION include/Foundation-${FOUNDATION_VERSION}
-)
+        EXPORT FoundationTargets
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin
+        INCLUDES DESTINATION include/Foundation-${FOUNDATION_VERSION}
+    )
 
     install(
         DIRECTORY "${FOUNDATION_BUILD_INCLUDE_DIR}/"

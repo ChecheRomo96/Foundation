@@ -1,0 +1,56 @@
+/**
+ * @addtogroup Foundation_BuildGuide_Precompiled 
+ *
+ * @section FoundationPrecompiledPurpose Purpose
+ *
+ * Precompiled libraries reduce build time for projects that consume Foundation.
+ *
+ * The repository remains the source of truth.
+ * Users may build their own precompiled artifact depending on their target and
+ * required feature macros.
+ *
+ * @section FoundationPrecompiledCompatibility Compatibility
+ *
+ * A precompiled library is only compatible with the toolchain, architecture,
+ * ABI, and macro configuration used to build it.
+ *
+ * A Windows MSVC .lib is not assumed to be compatible with MinGW.
+ * An ARM GCC Cortex-M3 soft-float .a is not assumed to be compatible with
+ * Cortex-M4 hard-float.
+ *
+ * @section FoundationPrecompiledFullBuild Full Build
+ *
+ * A full build enables all Foundation modules.
+ *
+ * It is useful for:
+ *
+ * - desktop integration,
+ * - testing,
+ * - examples,
+ * - quick prototyping.
+ *
+ * @section FoundationPrecompiledCustomBuild Custom Build
+ *
+ * A custom build enables only the required modules.
+ *
+ * It is useful for:
+ *
+ * - embedded systems,
+ * - memory-sensitive projects,
+ * - production firmware,
+ * - target-specific deployments.
+ *
+ * @section FoundationPrecompiledRecommendedFlow Recommended Flow
+ *
+ * @code{bash}
+ * cmake --preset <preset>
+ * cmake --build --preset <preset>
+ * cmake --install build/<preset> --prefix dist/<preset>
+ * @endcode
+ *
+ * Or use:
+ *
+ * @code{bash}
+ * ./scripts/export.ps1 <preset> <config>
+ * @endcode
+ */

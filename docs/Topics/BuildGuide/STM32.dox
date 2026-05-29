@@ -1,0 +1,29 @@
+/**
+ * @addtogroup Foundation_BuildGuide_STM32
+ * @ingroup Foundation_BuildGuide
+ *
+ * STM32 support should be separated by family/core/FPU mode.
+ *
+ * Recommended future presets:
+ *
+ * @code
+ * stm32f103_armgcc_cortex_m3_soft_debug
+ * stm32f103_armgcc_cortex_m3_soft_release
+ * stm32f407_armgcc_cortex_m4f_hard_debug
+ * stm32f407_armgcc_cortex_m4f_hard_release
+ * stm32h743_armgcc_cortex_m7f_hard_debug
+ * stm32h743_armgcc_cortex_m7f_hard_release
+ * @endcode
+ *
+ * @section FoundationBuildSTM32Rule STM32 Rule
+ *
+ * Do not assume all STM32 targets are compatible.
+ *
+ * Separate builds when any of these change:
+ *
+ * - Cortex core,
+ * - FPU mode,
+ * - compiler/toolchain,
+ * - ABI,
+ * - feature macros.
+ */

@@ -1,15 +1,34 @@
 /**
  * @defgroup Foundation_BuildGuide Build Guide
- * @brief Building and integrating Foundation on different platforms.
+ * @brief Build, integration, export, and distribution guide for Foundation.
+ *
+ * The Build Guide documents the supported workflows for using Foundation as:
+ *
+ * - an Arduino-compatible source library,
+ * - a CMake development project,
+ * - a precompiled static library,
+ * - a platform-specific embedded dependency.
+ *
+ * @section FoundationBuildGuideSections Sections
  */
 
- /**
+/**
  * @defgroup Foundation_BuildGuide_Overview Overview
  * @ingroup Foundation_BuildGuide
  */
 
 /**
- * @defgroup Foundation_BuildGuide_CMake CMake Builds
+ * @defgroup Foundation_BuildGuide_Workflow Workflow
+ * @ingroup Foundation_BuildGuide
+ */
+
+/**
+ * @defgroup Foundation_BuildGuide_PresetNaming Preset Naming
+ * @ingroup Foundation_BuildGuide
+ */
+
+/**
+ * @defgroup Foundation_BuildGuide_DistLayout Distribution Layout
  * @ingroup Foundation_BuildGuide
  */
 

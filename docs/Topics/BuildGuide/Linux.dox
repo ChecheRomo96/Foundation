@@ -1,0 +1,23 @@
+/**
+ * @addtogroup Foundation_BuildGuide_Linux
+ *
+ * Recommended future presets:
+ *
+ * @code
+ * linux_gcc_x64_debug
+ * linux_gcc_x64_release
+ * linux_clang_x64_debug
+ * linux_clang_x64_release
+ * @endcode
+ *
+ * Linux generators are usually single-configuration generators.
+ * In this case, CMAKE_BUILD_TYPE is valid.
+ *
+ * Example:
+ *
+ * @code{bash}
+ * cmake --preset linux_gcc_x64_release
+ * cmake --build --preset linux_gcc_x64_release
+ * cmake --install build/linux_gcc_x64_release --prefix dist/linux_gcc_x64_release
+ * @endcode
+ */

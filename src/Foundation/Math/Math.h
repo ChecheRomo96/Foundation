@@ -26,4 +26,7 @@
         #include <Foundation/Math/Matrix.h>
     #endif
 
+    #include <Foundation/Math/Arithmetic.h>
+    #include <Foundation/Math/Trigonometry.h>
+
 #endif//FOUNDATION_MATH_CORE_H

@@ -1,0 +1,50 @@
+/**
+ * @addtogroup Foundation_BuildGuide_DistLayout
+ *
+ * Each preset exports to its own directory under dist.
+ *
+ * @section FoundationBuildDistFlat Flat Distribution Layout
+ *
+ * Recommended layout:
+ *
+ * @code
+ * dist/
+ * ├── windows_msvc_x64_debug/
+ * ├── windows_msvc_x64_release/
+ * ├── windows_msvc_x64_coverage/
+ * ├── psoc5lp_armgcc_cortex_m3_soft_debug/
+ * └── psoc5lp_armgcc_cortex_m3_soft_release/
+ * @endcode
+ *
+ * The preset name should match the dist folder name.
+ *
+ * @section FoundationBuildDistWhy Why dist is segmented
+ *
+ * Precompiled libraries are not universal.
+ *
+ * Compatibility depends on:
+ *
+ * - operating system,
+ * - compiler/toolchain,
+ * - architecture,
+ * - ABI,
+ * - build configuration,
+ * - feature macros.
+ *
+ * Therefore, each build configuration must have a separate distribution folder.
+ *
+ * @section FoundationBuildDistInstalledContent Typical Installed Content
+ *
+ * A Foundation distribution may contain:
+ *
+ * @code
+ * dist/<preset>/
+ * ├── include/
+ * ├── lib/
+ * └── cmake/
+ * @endcode
+ *
+ * The include directory contains installed headers.
+ * The lib directory contains the static library.
+ * The cmake directory may contain package configuration files.
+ */

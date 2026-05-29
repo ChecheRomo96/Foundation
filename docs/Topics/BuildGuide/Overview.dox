@@ -1,0 +1,50 @@
+/**
+ * @addtogroup Foundation_BuildGuide_Overview
+ *
+ * Foundation supports three main usage modes:
+ *
+ * @section FoundationBuildSourceMode Source Mode
+ *
+ * Source mode uses the repository directly.
+ *
+ * This is the default mode for:
+ *
+ * - Arduino,
+ * - development,
+ * - debugging,
+ * - changing feature macros,
+ * - modifying Foundation internals.
+ *
+ * In source mode, Foundation remains fully configurable through compile-time macros.
+ *
+ * @section FoundationBuildFullPrecompiledMode Full Precompiled Mode
+ *
+ * Full precompiled mode builds Foundation with all supported modules enabled.
+ *
+ * This mode is intended for:
+ *
+ * - quick integration,
+ * - desktop experiments,
+ * - users that want a ready-to-link library,
+ * - generic full builds for known toolchains.
+ *
+ * A full build is larger, but easier to consume.
+ *
+ * @section FoundationBuildCustomPrecompiledMode Custom Precompiled Mode
+ *
+ * Custom precompiled mode builds Foundation for a specific target, toolchain,
+ * architecture, ABI, and feature set.
+ *
+ * This mode is intended for:
+ *
+ * - embedded targets,
+ * - memory-constrained systems,
+ * - production builds,
+ * - projects that only need a subset of Foundation.
+ *
+ * @section FoundationBuildRule General Rule
+ *
+ * If macros change the compiled implementation, build a custom library.
+ * If the project needs maximum flexibility, use source mode.
+ * If the project needs fast integration, use a precompiled full build.
+ */

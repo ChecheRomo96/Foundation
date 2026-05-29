@@ -11,8 +11,13 @@
 # Append headers
 
     list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-        "${CMAKE_CURRENT_SOURCE_DIR}/Ratio.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/Math.h"
+            "${CMAKE_CURRENT_SOURCE_DIR}/Arithmetic.h"
+            "${CMAKE_CURRENT_SOURCE_DIR}/Trigonometry.h"
+    )
+    
+    list(APPEND FOUNDATION_SOURCES_LOCAL
+        "${CMAKE_CURRENT_SOURCE_DIR}/Arithmetic.cpp"
     )
 
     list(APPEND FOUNDATION_DOX_LOCAL
@@ -22,12 +27,6 @@
 #
 ######################################################################################################
 # Append headers
-
-    if(FOUNDATION_MATH_ARITHMETIC)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_SOURCE_DIR}/Arithmetic.h"
-        )
-    endif()
     
     if(FOUNDATION_MATH_RATIO)
         list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL

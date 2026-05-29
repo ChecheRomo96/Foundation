@@ -1,0 +1,58 @@
+/**
+ * @addtogroup Foundation_BuildGuide_Arduino
+ *
+ * Foundation is designed to remain Arduino-compatible without modifying the
+ * repository structure.
+ *
+ * Arduino requires:
+ *
+ * @code
+ * library.properties
+ * src/
+ * examples/
+ * @endcode
+ *
+ * Other directories such as docs, cmake, tests, scripts, and build support files
+ * are ignored by the Arduino IDE.
+ *
+ * @section FoundationBuildArduinoSource Source Mode
+ *
+ * Arduino should normally use Foundation in source mode.
+ *
+ * Example:
+ *
+ * @code{cpp}
+ * #include <Foundation.h>
+ * @endcode
+ *
+ * or:
+ *
+ * @code{cpp}
+ * #include <Foundation/Math/Ratio.h>
+ * @endcode
+ *
+ * @section FoundationBuildArduinoMacros Macros
+ *
+ * Foundation modules may be selected using macros before includes.
+ *
+ * Example:
+ *
+ * @code{cpp}
+ * #define FOUNDATION_FULL_BUILD
+ * #include <Foundation.h>
+ * @endcode
+ *
+ * @section FoundationBuildArduinoPrecompiled Precompiled Arduino Libraries
+ *
+ * Precompiled Arduino libraries are possible, but they are not universal.
+ *
+ * They must be separated by architecture and core, for example:
+ *
+ * @code
+ * arduino_avr_atmega328p_release
+ * arduino_samd_cortex_m0plus_release
+ * arduino_esp32_xtensa_release
+ * @endcode
+ *
+ * Source mode is recommended for Arduino unless a very specific target is known.
+ */

@@ -12,6 +12,7 @@
         project(Foundation VERSION 1.0.0 LANGUAGES CXX)
         message(STATUS "Building ${PROJECT_NAME} Version = ${PROJECT_VERSION}")
         string(TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER) # To be deleted
+        set(FOUNDATION_VERSION ${PROJECT_VERSION})
     #
     #################################################################################################
     # Set up C++ Version

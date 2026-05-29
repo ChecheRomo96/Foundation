@@ -1,0 +1,46 @@
+/**
+ * @addtogroup Foundation_BuildGuide_Windows
+ * @ingroup Foundation_BuildGuide
+ *
+ * @section FoundationBuildWindowsToolchains Supported Windows Toolchains
+ *
+ * Windows precompiled libraries must be separated by toolchain.
+ *
+ * Recommended presets:
+ *
+ * @code
+ * windows_msvc_x64_debug
+ * windows_msvc_x64_release
+ * windows_msvc_x64_coverage
+ * @endcode
+ *
+ * Optional future presets:
+ *
+ * @code
+ * windows_mingw_x64_debug
+ * windows_mingw_x64_release
+ * windows_clang_x64_debug
+ * windows_clang_x64_release
+ * @endcode
+ *
+ * @section FoundationBuildWindowsMSVC MSVC
+ *
+ * MSVC uses a multi-configuration generator.
+ *
+ * CMAKE_BUILD_TYPE is ignored by Visual Studio generators.
+ * Always pass the configuration during build and install.
+ *
+ * @code{bash}
+ * cmake --preset windows_msvc_x64_release
+ * cmake --build --preset windows_msvc_x64_release --config Release
+ * cmake --install build/windows_msvc_x64_release --config Release --prefix dist/windows_msvc_x64_release
+ * @endcode
+ *
+ * @section FoundationBuildWindowsExport Export
+ *
+ * Recommended:
+ *
+ * @code{bash}
+ * ./scripts/export.ps1 windows_msvc_x64_release Release
+ * @endcode
+ */
