@@ -1,0 +1,124 @@
+/**
+ * @defgroup Foundation_Matrix Matrix
+ * @ingroup Foundation_Math
+ *
+ * @brief Matrix types and algorithms.
+ *
+ * The Matrix module provides both fixed-size and dynamic matrix
+ * implementations together with common matrix algorithms.
+ *
+ * Matrix support is intended for:
+ *
+ * - Embedded systems.
+ * - Digital signal processing.
+ * - Robotics.
+ * - Control systems.
+ * - Numerical methods.
+ * - Machine learning applications.
+ *
+ * @section FoundationMatrixOverview Overview
+ *
+ * Two matrix storage models are provided:
+ *
+ * - FixedMatrix
+ * - DynamicMatrix
+ *
+ * FixedMatrix stores its data directly inside the object and is intended
+ * for applications where matrix dimensions are known at compile time.
+ *
+ * DynamicMatrix allocates storage at runtime and is intended for
+ * applications where matrix dimensions are not known until execution.
+ *
+ * @section FoundationMatrixTypes Matrix Types
+ *
+ * @subsection FoundationMatrixFixed Fixed Matrices
+ *
+ * Fixed-size matrices use compile-time dimensions:
+ *
+ * @code
+ * FixedMatrix<float, 3, 3> matrix;
+ * @endcode
+ *
+ * Advantages:
+ *
+ * - No heap allocation.
+ * - Deterministic memory usage.
+ * - Compile-time dimension checking.
+ *
+ * See:
+ *
+ * - @ref Foundation_FixedMatrix
+ *
+ * @subsection FoundationMatrixDynamic Dynamic Matrices
+ *
+ * Dynamic matrices determine their dimensions at runtime:
+ *
+ * @code
+ * DynamicMatrix<float> matrix;
+ * matrix.Allocate(3, 3);
+ * @endcode
+ *
+ * Advantages:
+ *
+ * - Flexible dimensions.
+ * - Runtime resizing.
+ *
+ * See:
+ *
+ * - @ref Foundation_DynamicMatrix
+ *
+ * @section FoundationMatrixOperationsSection Operations
+ *
+ * Matrix algorithms are provided separately from the matrix containers.
+ *
+ * Supported operations currently include:
+ *
+ * - Matrix multiplication.
+ * - Fixed × Fixed multiplication.
+ * - Dynamic × Dynamic multiplication.
+ * - Fixed × Dynamic multiplication.
+ * - Dynamic × Fixed multiplication.
+ *
+ * See:
+ *
+ * - @ref Foundation_MatrixOperations
+ *
+ * @section FoundationMatrixUsage Usage Examples
+ *
+ * Fixed-size multiplication:
+ *
+ * @code
+ * FixedMatrix<float, 2, 2> A;
+ * FixedMatrix<float, 2, 2> B;
+ * FixedMatrix<float, 2, 2> C;
+ *
+ * Multiply(A, B, C);
+ * @endcode
+ *
+ * Dynamic multiplication:
+ *
+ * @code
+ * DynamicMatrix<float> A;
+ * DynamicMatrix<float> B;
+ * DynamicMatrix<float> C;
+ *
+ * Multiply(A, B, C);
+ * @endcode
+ *
+ * @section FoundationMatrixApplications Applications
+ *
+ * Common applications include:
+ *
+ * - Coordinate transformations.
+ * - State-space control systems.
+ * - Robotics kinematics.
+ * - DSP filter structures.
+ * - Linear algebra algorithms.
+ * - Neural networks.
+ *
+ * @section FoundationMatrixRelated Related Modules
+ *
+ * - @ref Foundation_FixedMatrix
+ * - @ref Foundation_DynamicMatrix
+ * - @ref Foundation_MatrixOperations
+ */
