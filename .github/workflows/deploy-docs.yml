@@ -24,7 +24,7 @@ jobs:
 
       - name: Build documentation
         run: |
-         ./scripts/docs.ps1
+         ./scripts/docs.sh
 
       - name: Deploy to docs branch
         uses: peaceiris/actions-gh-pages@v4
