@@ -1,0 +1,133 @@
+/**
+ * @defgroup Foundation_Callback Callback
+ * @ingroup Foundation_Functional
+ *
+ * @brief Generic callback wrapper for free functions and member functions.
+ *
+ * Callback provides a lightweight mechanism for storing and invoking
+ * callable targets without requiring dynamic memory allocation.
+ *
+ * Supported callable types:
+ *
+ * - Free functions.
+ * - Static member functions.
+ * - Non-static member functions.
+ *
+ * The implementation is intended for embedded and desktop applications
+ * where deterministic memory usage is important.
+ *
+ * @section FoundationCallbackOverview Overview
+ *
+ * A Callback object can be in one of three states:
+ *
+ * - Unbound.
+ * - Bound to a free function.
+ * - Bound to a member function and object instance.
+ *
+ * Invocation is performed through a common interface:
+ *
+ * @code
+ * callback.invoke(...);
+ * @endcode
+ *
+ * @section FoundationCallbackFreeFunctions Free Functions
+ *
+ * Binding a free function:
+ *
+ * @code
+ * void OnMessage(uint8_t value)
+ * {
+ * }
+ *
+ * Foundation::Functional::Callback<void, uint8_t> callback;
+ *
+ * callback.bind(OnMessage);
+ *
+ * callback.invoke(42);
+ * @endcode
+ *
+ * @section FoundationCallbackMemberFunctions Member Functions
+ *
+ * Binding a non-static member function:
+ *
+ * @code
+ * class Printer {
+ * public:
+ *
+ *     void Print(uint8_t value)
+ *     {
+ *     }
+ * };
+ *
+ * Printer printer;
+ *
+ * Foundation::Functional::Callback<void, uint8_t> callback;
+ *
+ * callback.bind<
+ *     Printer,
+ *     &Printer::Print
+ * >(&printer);
+ *
+ * callback.invoke(42);
+ * @endcode
+ *
+ * @section FoundationCallbackReturnValues Return Values
+ *
+ * Callbacks may return values:
+ *
+ * @code
+ * int Add(
+ *     int a,
+ *     int b
+ * ) {
+ *     return a + b;
+ * }
+ *
+ * Foundation::Functional::Callback<int, int, int> callback;
+ *
+ * callback.bind(Add);
+ *
+ * int result = callback.invoke(2, 3);
+ * @endcode
+ *
+ * @section FoundationCallbackVoidSpecializations Void Specializations
+ *
+ * The library provides internal specializations for:
+ *
+ * - Callback<R, void>
+ * - Callback<void, Args...>
+ * - Callback<void, void>
+ *
+ * These specializations reduce implementation complexity and avoid
+ * unnecessary argument handling when no parameters or return values
+ * are required.
+ *
+ * @section FoundationCallbackEmbedded Embedded Usage
+ *
+ * Callback is designed to:
+ *
+ * - Avoid heap allocation.
+ * - Avoid RTTI.
+ * - Avoid virtual dispatch.
+ * - Work on resource-constrained microcontrollers.
+ *
+ * Typical applications include:
+ *
+ * - Event systems.
+ * - State machines.
+ * - MIDI message handlers.
+ * - Interrupt dispatchers.
+ * - Task schedulers.
+ * - Hardware abstraction layers.
+ *
+ * @section FoundationCallbackRelated Related Components
+ *
+ * Callback is commonly used by:
+ *
+ * - Message parsers.
+ * - Event dispatchers.
+ * - Scheduling systems.
+ * - Driver callbacks.
+ *
+ * @see Foundation::Functional::Callback
+ */
