@@ -22,16 +22,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y doxygen graphviz cmake
 
-      - name: Configure CMake
-        run: cmake --preset dev_docs
-
       - name: Build documentation
-        run: cmake --build --preset dev_docs
+        run: |
+         ./scripts/docs.ps1
 
       - name: Deploy to docs branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: docs
-          publish_dir: build/dev_docs/docs/html
+          publish_dir: build/documentation/docs/html
           force_orphan: true
