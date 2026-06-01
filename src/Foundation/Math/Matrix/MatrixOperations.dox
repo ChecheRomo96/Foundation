@@ -1,0 +1,122 @@
+/**
+ * @defgroup Foundation_MatrixOperations Matrix Operations
+ * @ingroup Foundation_Math
+ *
+ * @brief Matrix arithmetic algorithms.
+ *
+ * This module provides algorithms operating on matrix types such as
+ * FixedMatrix and DynamicMatrix.
+ *
+ * Currently supported operations include:
+ *
+ * - Matrix multiplication.
+ * - Fixed-to-fixed multiplication.
+ * - Dynamic-to-dynamic multiplication.
+ * - Fixed-to-dynamic multiplication.
+ * - Dynamic-to-fixed multiplication.
+ *
+ * @section FoundationMatrixOperationsOverview Overview
+ *
+ * Matrix multiplication combines two matrices:
+ *
+ * A(M×N) · B(N×P) = C(M×P)
+ *
+ * The number of columns in the left matrix must match the number of
+ * rows in the right matrix.
+ *
+ * 
+::contentReference[oaicite:0]{index=0}
+
+ *
+ * @section FoundationMatrixOperationsFixed Fixed Matrices
+ *
+ * Fixed-size multiplication is resolved entirely at compile time.
+ *
+ * @code
+ * FixedMatrix<float, 2, 3> A;
+ * FixedMatrix<float, 3, 2> B;
+ * FixedMatrix<float, 2, 2> C;
+ *
+ * Multiply(A, B, C);
+ * @endcode
+ *
+ * Matrix dimensions are validated by the compiler through template
+ * parameters.
+ *
+ * @section FoundationMatrixOperationsDynamic Dynamic Matrices
+ *
+ * Dynamic matrices are checked at runtime.
+ *
+ * @code
+ * DynamicMatrix<float> A;
+ * DynamicMatrix<float> B;
+ * DynamicMatrix<float> C;
+ *
+ * if(Multiply(A, B, C))
+ * {
+ *     // Success
+ * }
+ * @endcode
+ *
+ * The result matrix is automatically resized when required.
+ *
+ * @section FoundationMatrixOperationsMixed Mixed Matrices
+ *
+ * Mixed multiplication between fixed and dynamic matrices is also
+ * supported.
+ *
+ * Fixed × Dynamic:
+ *
+ * @code
+ * FixedMatrix<float, 3, 3> A;
+ * DynamicMatrix<float> B;
+ * DynamicMatrix<float> C;
+ *
+ * Multiply(A, B, C);
+ * @endcode
+ *
+ * Dynamic × Fixed:
+ *
+ * @code
+ * DynamicMatrix<float> A;
+ * FixedMatrix<float, 3, 3> B;
+ * DynamicMatrix<float> C;
+ *
+ * Multiply(A, B, C);
+ * @endcode
+ *
+ * @section FoundationMatrixOperationsComplexity Computational Complexity
+ *
+ * Matrix multiplication is implemented using the classical
+ * triple-nested-loop algorithm:
+ *
+ * @code
+ * for(i)
+ *     for(j)
+ *         for(k)
+ * @endcode
+ *
+ * Time complexity:
+ *
+ * O(MNP)
+ *
+ * Memory complexity:
+ *
+ * O(1)
+ *
+ * excluding storage required for the result matrix.
+ *
+ * @section FoundationMatrixOperationsApplications Applications
+ *
+ * Typical applications include:
+ *
+ * - Coordinate transformations.
+ * - Robotics kinematics.
+ * - State-space control systems.
+ * - DSP processing.
+ * - Machine learning.
+ * - Numerical linear algebra.
+ *
+ * @see Foundation::Math::FixedMatrix
+ * @see Foundation::Math::DynamicMatrix
+ */

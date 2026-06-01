@@ -17,6 +17,7 @@
 
     list(APPEND FOUNDATION_DOX_LOCAL
         "${CMAKE_CURRENT_SOURCE_DIR}/Matrix.dox"
+        "${CMAKE_CURRENT_SOURCE_DIR}/MatrixOperations.dox"
     )
 
 #
