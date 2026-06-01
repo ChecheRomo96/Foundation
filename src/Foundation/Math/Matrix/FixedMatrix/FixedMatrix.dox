@@ -1,0 +1,145 @@
+/**
+ * @defgroup Foundation_FixedMatrix FixedMatrix
+ * @ingroup Foundation_Math
+ *
+ * @brief Fixed-size matrix container.
+ *
+ * The FixedMatrix class provides a statically allocated matrix whose
+ * dimensions are known at compile time.
+ *
+ * Unlike dynamically allocated matrices, all storage is embedded directly
+ * within the object:
+ *
+ * @code
+ * FixedMatrix<float, 3, 3> matrix;
+ * @endcode
+ *
+ * This design avoids heap allocation and provides deterministic memory
+ * usage, making it suitable for embedded systems and real-time
+ * applications.
+ *
+ * @section FoundationFixedMatrixFeatures Features
+ *
+ * - Compile-time dimensions.
+ * - No dynamic memory allocation.
+ * - Direct element access.
+ * - Matrix addition and subtraction.
+ * - Scalar multiplication and division.
+ * - Matrix transposition.
+ * - Compatible with generic numeric types.
+ *
+ * @section FoundationFixedMatrixLayout Memory Layout
+ *
+ * Elements are stored internally as:
+ *
+ * @code
+ * T data[Rows][Cols];
+ * @endcode
+ *
+ * in row-major order.
+ *
+ * Example:
+ *
+ * @code
+ * [ a00 a01 a02 ]
+ * [ a10 a11 a12 ]
+ * [ a20 a21 a22 ]
+ * @endcode
+ *
+ * @section FoundationFixedMatrixConstruction Construction
+ *
+ * Default construction:
+ *
+ * @code
+ * FixedMatrix<float, 2, 2> A;
+ * @endcode
+ *
+ * Fill construction:
+ *
+ * @code
+ * FixedMatrix<float, 2, 2> A(1.0f);
+ * @endcode
+ *
+ * Array initialization:
+ *
+ * @code
+ * float values[2][2] =
+ * {
+ *     {1.0f, 2.0f},
+ *     {3.0f, 4.0f}
+ * };
+ *
+ * FixedMatrix<float, 2, 2> A(values);
+ * @endcode
+ *
+ * @section FoundationFixedMatrixElementAccess Element Access
+ *
+ * Access using At():
+ *
+ * @code
+ * float value = matrix.At(1, 2);
+ * @endcode
+ *
+ * Access using operator[]:
+ *
+ * @code
+ * matrix[1][2] = 42.0f;
+ * @endcode
+ *
+ * @section FoundationFixedMatrixArithmetic Arithmetic Operations
+ *
+ * Matrix addition:
+ *
+ * @code
+ * auto C = A + B;
+ * @endcode
+ *
+ * Matrix subtraction:
+ *
+ * @code
+ * auto C = A - B;
+ * @endcode
+ *
+ * Scalar multiplication:
+ *
+ * @code
+ * auto B = A * 2.0f;
+ * auto C = 2.0f * A;
+ * @endcode
+ *
+ * Scalar division:
+ *
+ * @code
+ * auto B = A / 2.0f;
+ * @endcode
+ *
+ * @section FoundationFixedMatrixTranspose Transpose
+ *
+ * The transpose operation exchanges rows and columns:
+ *
+ * 
+::contentReference[oaicite:0]{index=0}
+
+ *
+ * @code
+ * FixedMatrix<float, 2, 3> A;
+ *
+ * auto AT = A.Transposed();
+ *
+ * // Result type:
+ * // FixedMatrix<float, 3, 2>
+ * @endcode
+ *
+ * @section FoundationFixedMatrixApplications Applications
+ *
+ * Typical applications include:
+ *
+ * - Coordinate transformations.
+ * - DSP processing.
+ * - Control systems.
+ * - State-space models.
+ * - Robotics kinematics.
+ * - Embedded numerical algorithms.
+ *
+ * @see Foundation::Math::FixedMatrix
+ */
