@@ -1,0 +1,11 @@
+/**
+ * @file FoundationTop.dox
+ *
+ * @defgroup Foundation Foundation
+ *
+ * Foundation is a modular framework for embedded and desktop
+ * software development.
+ *
+ * The framework is organized into independent modules that may
+ * be enabled or disabled through the build system.
+ */

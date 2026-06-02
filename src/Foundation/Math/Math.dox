@@ -1,0 +1,13 @@
+/**
+ * @defgroup Foundation_Math Math
+ * @ingroup Foundation
+ *
+ * Mathematical utilities and data structures.
+ */
+
+/**
+ * @namespace Foundation::Math
+ * @ingroup Foundation_Math
+ *
+ * Mathematical algorithms, numeric types, and linear algebra utilities.
+ */

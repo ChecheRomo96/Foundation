@@ -1,0 +1,46 @@
+/**
+ * @mainpage Foundation Documentation
+ *
+ * Foundation provides reusable software components designed for
+ * resource-constrained embedded systems as well as desktop
+ * applications.
+ *
+ * @section FoundationArchitecture Architecture
+ *
+ * The framework is divided into multiple modules:
+ *
+ * - @ref Foundation_TypeTraits
+ * - @ref Foundation_Math
+ * - @ref Foundation_Time
+ * - @ref Foundation_Containers
+ * - @ref Foundation_Functional
+ * - @ref Foundation_System
+ *
+ * Each module is intended to remain as independent as possible
+ * in order to minimize compile times and reduce unnecessary
+ * dependencies.
+ *
+ * @section FoundationBuild Building Foundation
+ *
+ * See:
+ *
+ * - @ref FoundationBuildGuide
+ *
+ * @section FoundationExamples Examples
+ *
+ * See:
+ *
+ * - @ref Foundation_Examples
+ *
+ * @section FoundationRepository Repository Structure
+ *
+ * @code
+ * Foundation/
+ * ├─ docs/
+ * ├─ examples/
+ * ├─ src/
+ * ├─ tests/
+ * ├─ scripts/
+ * └─ CMakeLists.txt
+ * @endcode
+ */

@@ -1,0 +1,15 @@
+/**
+ * @file Foundation.dox
+ *
+ * @defgroup Foundation Foundation
+ *
+ * Root group for all Foundation modules.
+ *
+ * Modules:
+ * - @ref Foundation_TypeTraits
+ * - @ref Foundation_Math
+ * - @ref Foundation_Time
+ * - @ref Foundation_Containers
+ * - @ref Foundation_Functional
+ * - @ref Foundation_System
+ */

@@ -1,0 +1,6 @@
+/**
+ * @defgroup Foundation_TypeTraits Type Traits
+ * @ingroup Foundation
+ *
+ * Compile-time type utilities.
+ */
