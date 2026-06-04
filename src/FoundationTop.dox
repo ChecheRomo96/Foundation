@@ -1,11 +1,478 @@
 /**
  * @file FoundationTop.dox
  *
- * @defgroup Foundation Foundation
+ * @page FoundationTopLevelHeaders Top-Level Headers
+ * @ingroup Foundation
  *
- * Foundation is a modular framework for embedded and desktop
- * software development.
+ * @brief Public top-level include interface for Foundation.
  *
- * The framework is organized into independent modules that may
- * be enabled or disabled through the build system.
+ * Foundation exposes a set of top-level headers intended to be used
+ * directly by application code.
+ *
+ * These headers are especially important for Arduino, PSoC Creator,
+ * and other embedded environments where users usually include headers
+ * directly instead of relying on CMake targets.
+ *
+ * @section FoundationTop_Overview Overview
+ *
+ * The top-level headers define the public include surface of
+ * Foundation.
+ *
+ * They provide a stable access layer that keeps application code
+ * independent from the internal folder structure of the framework.
+ *
+ * User code should prefer:
+ *
+ * @code{.cpp}
+ * #include <Foundation.h>
+ * #include <Foundation_Math.h>
+ * #include <Foundation_Time.h>
+ * @endcode
+ *
+ * instead of including internal module headers directly:
+ *
+ * @code{.cpp}
+ * #include <Foundation/Math/Ratio.h>
+ * #include <Foundation/Time/Clock.h>
+ * @endcode
+ *
+ * Internal headers may still exist and may be used inside the
+ * Foundation source tree, but top-level headers are the recommended
+ * public entry points for applications.
+ *
+ * @section FoundationTop_HeaderList Top-Level Header List
+ *
+ * Foundation provides the following top-level headers:
+ *
+ * @code
+ * Foundation.h
+ * Foundation_BuildSettings.h
+ * Foundation_TypeTraits.h
+ * Foundation_Math.h
+ * Foundation_Time.h
+ * Foundation_Containers.h
+ * Foundation_Functional.h
+ * Foundation_Scheduling.h
+ * Foundation_Utils.h
+ * @endcode
+ *
+ * @section FoundationTop_MainHeader Main Header
+ *
+ * @subsection FoundationTop_FoundationHeader Foundation.h
+ *
+ * The Foundation.h header is the main public entry point of the
+ * framework.
+ *
+ * It includes the public interface of the enabled Foundation modules.
+ *
+ * Use this header when the application needs broad access to the
+ * enabled Foundation functionality.
+ *
+ * Example:
+ *
+ * @code{.cpp}
+ * #include <Foundation.h>
+ *
+ * void setup() {
+ * }
+ *
+ * void loop() {
+ * }
+ * @endcode
+ *
+ * This include style is convenient for:
+ *
+ * - Arduino sketches.
+ * - Examples.
+ * - Prototypes.
+ * - Small embedded applications.
+ * - Applications that use several Foundation modules.
+ *
+ * @section FoundationTop_BuildSettingsHeader Build Settings Header
+ *
+ * @subsection FoundationTop_FoundationBuildSettingsHeader Foundation_BuildSettings.h
+ *
+ * The Foundation_BuildSettings.h header exposes build configuration
+ * macros.
+ *
+ * These macros describe which modules or features are available in the
+ * current build.
+ *
+ * Example:
+ *
+ * @code{.cpp}
+ * #include <Foundation_BuildSettings.h>
+ *
+ * #ifdef FOUNDATION_MATH
+ *     // Math module is available.
+ * #endif
+ * @endcode
+ *
+ * This header is useful when writing code that must adapt to different
+ * Foundation distributions.
+ *
+ * @section FoundationTop_ModuleHeaders Module Headers
+ *
+ * Each Foundation module may expose a dedicated top-level header.
+ *
+ * These headers allow application code to include only the module-level
+ * interface it needs.
+ *
+ * @subsection FoundationTop_TypeTraitsHeader Foundation_TypeTraits.h
+ *
+ * The Foundation_TypeTraits.h header exposes the Type Traits module.
+ *
+ * This module provides compile-time type utilities.
+ *
+ * Typical usage:
+ *
+ * @code{.cpp}
+ * #include <Foundation_TypeTraits.h>
+ * @endcode
+ *
+ * This header maps to:
+ *
+ * - @ref Foundation_TypeTraits
+ *
+ * @subsection FoundationTop_MathHeader Foundation_Math.h
+ *
+ * The Foundation_Math.h header exposes the Math module.
+ *
+ * Typical contents include:
+ *
+ * - Arithmetic helpers.
+ * - Ratio utilities.
+ * - Complex numbers.
+ * - Fixed-size matrices.
+ * - Dynamic matrices.
+ * - Matrix operations.
+ *
+ * Typical usage:
+ *
+ * @code{.cpp}
+ * #include <Foundation_Math.h>
+ * @endcode
+ *
+ * This header maps to:
+ *
+ * - @ref Foundation_Math
+ *
+ * @subsection FoundationTop_TimeHeader Foundation_Time.h
+ *
+ * The Foundation_Time.h header exposes the Time module.
+ *
+ * Typical contents include:
+ *
+ * - Frequency.
+ * - Period.
+ * - Duration.
+ * - Tick.
+ * - TimePoint.
+ * - Clock.
+ *
+ * Typical usage:
+ *
+ * @code{.cpp}
+ * #include <Foundation_Time.h>
+ * @endcode
+ *
+ * This header maps to:
+ *
+ * - @ref Foundation_Time
+ *
+ * @subsection FoundationTop_ContainersHeader Foundation_Containers.h
+ *
+ * The Foundation_Containers.h header exposes the Containers module.
+ *
+ * This module is intended for reusable storage abstractions such as
+ * arrays, buffers, queues, lists, or other container types.
+ *
+ * Typical usage:
+ *
+ * @code{.cpp}
+ * #include <Foundation_Containers.h>
+ * @endcode
+ *
+ * This header maps to:
+ *
+ * - @ref Foundation_Containers
+ *
+ * @subsection FoundationTop_FunctionalHeader Foundation_Functional.h
+ *
+ * The Foundation_Functional.h header exposes the Functional module.
+ *
+ * This module is intended for callable utilities, callback helpers,
+ * delegates, and related abstractions.
+ *
+ * Typical usage:
+ *
+ * @code{.cpp}
+ * #include <Foundation_Functional.h>
+ * @endcode
+ *
+ * This header maps to:
+ *
+ * - @ref Foundation_Functional
+ *
+ * @subsection FoundationTop_SchedulingHeader Foundation_Scheduling.h
+ *
+ * The Foundation_Scheduling.h header exposes the Scheduling module.
+ *
+ * This module is intended for task scheduling, periodic execution,
+ * one-shot execution, and embedded-friendly execution control.
+ *
+ * Typical usage:
+ *
+ * @code{.cpp}
+ * #include <Foundation_Scheduling.h>
+ * @endcode
+ *
+ * This header maps to:
+ *
+ * - @ref Foundation_Scheduling
+ *
+ * @subsection FoundationTop_UtilsHeader Foundation_Utils.h
+ *
+ * The Foundation_Utils.h header exposes the Utils module.
+ *
+ * This module contains general-purpose utilities that do not belong to
+ * a more specific module.
+ *
+ * Typical usage:
+ *
+ * @code{.cpp}
+ * #include <Foundation_Utils.h>
+ * @endcode
+ *
+ * This header maps to:
+ *
+ * - @ref Foundation_Utils
+ *
+ * @section FoundationTop_IncludeStrategies Include Strategies
+ *
+ * Foundation supports two main include strategies:
+ *
+ * - Full include.
+ * - Selective include.
+ *
+ * @subsection FoundationTop_FullInclude Full Include
+ *
+ * Use the main Foundation.h header when the application needs access
+ * to several modules or when simplicity is preferred.
+ *
+ * Example:
+ *
+ * @code{.cpp}
+ * #include <Foundation.h>
+ * @endcode
+ *
+ * This style is recommended for:
+ *
+ * - Arduino sketches.
+ * - PSoC Creator applications.
+ * - Examples.
+ * - Quick tests.
+ * - Small applications.
+ *
+ * @subsection FoundationTop_SelectiveInclude Selective Include
+ *
+ * Use individual module headers when the application only needs
+ * specific parts of the framework.
+ *
+ * Example:
+ *
+ * @code{.cpp}
+ * #include <Foundation_Math.h>
+ * #include <Foundation_Time.h>
+ * @endcode
+ *
+ * This style is recommended for:
+ *
+ * - Library code.
+ * - Public headers.
+ * - Larger projects.
+ * - Embedded applications with strict dependency control.
+ * - Projects where compile-time dependencies should remain explicit.
+ *
+ * @section FoundationTop_ArduinoUsage Arduino Usage
+ *
+ * Arduino users should normally include Foundation through top-level
+ * headers.
+ *
+ * Basic example:
+ *
+ * @code{.cpp}
+ * #include <Foundation.h>
+ *
+ * void setup() {
+ * }
+ *
+ * void loop() {
+ * }
+ * @endcode
+ *
+ * Selective include example:
+ *
+ * @code{.cpp}
+ * #include <Foundation_Math.h>
+ * #include <Foundation_Time.h>
+ *
+ * void setup() {
+ * }
+ *
+ * void loop() {
+ * }
+ * @endcode
+ *
+ * Top-level headers avoid exposing Arduino sketches to the internal
+ * source tree layout of Foundation.
+ *
+ * @section FoundationTop_PSoCUsage PSoC Creator Usage
+ *
+ * In PSoC Creator projects, Foundation is usually consumed through an
+ * exported distribution containing:
+ *
+ * - Public headers.
+ * - Precompiled static libraries.
+ * - Build settings.
+ *
+ * Application code should include top-level headers from the exported
+ * include directory.
+ *
+ * Example:
+ *
+ * @code{.cpp}
+ * #include <Foundation.h>
+ * @endcode
+ *
+ * or:
+ *
+ * @code{.cpp}
+ * #include <Foundation_Math.h>
+ * @endcode
+ *
+ * @section FoundationTop_DesktopUsage Desktop Usage
+ *
+ * Desktop projects may use the same top-level headers as embedded
+ * projects.
+ *
+ * When using CMake, the recommended workflow is:
+ *
+ * - Add or find the Foundation package.
+ * - Link the Foundation target.
+ * - Include the required top-level headers.
+ *
+ * Example:
+ *
+ * @code{.cpp}
+ * #include <Foundation.h>
+ * @endcode
+ *
+ * @section FoundationTop_PublicApiPolicy Public API Policy
+ *
+ * The top-level headers define the intended public include interface of
+ * Foundation.
+ *
+ * Application code should treat these headers as the stable entry
+ * points of the framework.
+ *
+ * Headers located deeper inside the Foundation source tree may be
+ * reorganized as the framework evolves.
+ *
+ * Recommended:
+ *
+ * @code{.cpp}
+ * #include <Foundation_Math.h>
+ * @endcode
+ *
+ * Avoid in application code:
+ *
+ * @code{.cpp}
+ * #include <Foundation/Math/Matrix/FixedMatrix/FixedMatrix.h>
+ * @endcode
+ *
+ * Internal headers may still be documented, but they should not
+ * necessarily be considered the preferred user-facing include path.
+ *
+ * @section FoundationTop_HeaderResponsibility Header Responsibility
+ *
+ * Top-level headers should:
+ *
+ * - Expose the public module interface.
+ * - Include only public module headers.
+ * - Avoid exposing private implementation details.
+ * - Remain stable across internal folder reorganizations.
+ * - Match the enabled build configuration.
+ *
+ * Top-level headers should not:
+ *
+ * - Contain large implementations unless required by templates.
+ * - Include unrelated modules unnecessarily.
+ * - Become a replacement for clear module boundaries.
+ * - Expose experimental internals as public API.
+ *
+ * @section FoundationTop_ModuleAvailability Module Availability
+ *
+ * The exact contents of each top-level header may depend on the
+ * enabled modules in the current build.
+ *
+ * Reduced embedded builds may expose fewer modules than full desktop
+ * builds.
+ *
+ * Code that depends on optional modules should check the corresponding
+ * build macros when necessary.
+ *
+ * Example:
+ *
+ * @code{.cpp}
+ * #include <Foundation_BuildSettings.h>
+ *
+ * #ifdef FOUNDATION_TIME
+ *     #include <Foundation_Time.h>
+ * #endif
+ * @endcode
+ *
+ * @section FoundationTop_RecommendedUsage Recommended Usage
+ *
+ * For most applications:
+ *
+ * @code{.cpp}
+ * #include <Foundation.h>
+ * @endcode
+ *
+ * For module-specific application code:
+ *
+ * @code{.cpp}
+ * #include <Foundation_Math.h>
+ * @endcode
+ *
+ * For library headers:
+ *
+ * @code{.cpp}
+ * #include <Foundation_Math.h>
+ * #include <Foundation_Time.h>
+ * @endcode
+ *
+ * For conditional builds:
+ *
+ * @code{.cpp}
+ * #include <Foundation_BuildSettings.h>
+ *
+ * #ifdef FOUNDATION_MATH
+ *     #include <Foundation_Math.h>
+ * #endif
+ * @endcode
+ *
+ * @section FoundationTop_RelatedTopics Related Topics
+ *
+ * Related Foundation documentation:
+ *
+ * - @ref Foundation
+ * - @ref Foundation_TypeTraits
+ * - @ref Foundation_Math
+ * - @ref Foundation_Time
+ * - @ref Foundation_Containers
+ * - @ref Foundation_Functional
+ * - @ref Foundation_Scheduling
+ * - @ref Foundation_Utils
  */

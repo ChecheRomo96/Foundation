@@ -9,6 +9,10 @@
 ######################################################################################################
 # Append Headers (local to this subdirectory)
 
+    list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
+        "${CMAKE_CURRENT_LIST_DIR}/Foundation.dox"
+    )
+
     if(FOUNDATION_MATH)
         list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
             "${CMAKE_CURRENT_LIST_DIR}/Math.h"

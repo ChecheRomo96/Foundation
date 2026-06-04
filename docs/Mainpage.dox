@@ -1,46 +1,149 @@
 /**
+ * @file mainpage.dox
+ *
  * @mainpage Foundation Documentation
  *
- * Foundation provides reusable software components designed for
- * resource-constrained embedded systems as well as desktop
- * applications.
+ * @brief Documentation for the Foundation framework.
  *
- * @section FoundationArchitecture Architecture
+ * Foundation is a modular C++ framework for embedded and desktop
+ * software development.
  *
- * The framework is divided into multiple modules:
+ * It provides reusable, lightweight components intended to serve as a
+ * common base layer for embedded applications, desktop tools, and
+ * higher-level frameworks.
+ *
+ * @section MainPage_Overview Overview
+ *
+ * Foundation is organized into independent modules. Each module focuses
+ * on a specific domain and may be enabled or disabled through the build
+ * system.
+ *
+ * Main framework topic:
+ *
+ * - @ref Foundation
+ *
+ * @section MainPage_PublicApi Public API
+ *
+ * Application code should normally include Foundation through its
+ * top-level public headers.
+ *
+ * Main public API page:
+ *
+ * - @ref FoundationTopLevelHeaders
+ *
+ * Common include styles:
+ *
+ * @code{.cpp}
+ * #include <Foundation.h>
+ * @endcode
+ *
+ * or:
+ *
+ * @code{.cpp}
+ * #include <Foundation_Math.h>
+ * #include <Foundation_Time.h>
+ * @endcode
+ *
+ * @section MainPage_Modules Modules
+ *
+ * Foundation is divided into the following main modules:
  *
  * - @ref Foundation_TypeTraits
  * - @ref Foundation_Math
  * - @ref Foundation_Time
  * - @ref Foundation_Containers
  * - @ref Foundation_Functional
- * - @ref Foundation_System
+ * - @ref Foundation_Scheduling
+ * - @ref Foundation_Utils
  *
- * Each module is intended to remain as independent as possible
- * in order to minimize compile times and reduce unnecessary
- * dependencies.
+ * @section MainPage_GettingStarted Getting Started
  *
- * @section FoundationBuild Building Foundation
+ * For small applications, examples, and Arduino-style projects, include
+ * the main header:
  *
- * See:
+ * @code{.cpp}
+ * #include <Foundation.h>
+ * @endcode
+ *
+ * For larger projects or library code, prefer selective module headers:
+ *
+ * @code{.cpp}
+ * #include <Foundation_Math.h>
+ * #include <Foundation_Time.h>
+ * @endcode
+ *
+ * @section MainPage_Build Build and Installation
+ *
+ * Foundation uses CMake as its primary build system.
+ *
+ * Build documentation:
  *
  * - @ref FoundationBuildGuide
  *
- * @section FoundationExamples Examples
+ * The build system supports:
  *
- * See:
+ * - Desktop builds.
+ * - Documentation builds.
+ * - Coverage builds.
+ * - Embedded distributions.
+ * - Precompiled library exports.
+ *
+ * @section MainPage_Examples Examples
+ *
+ * Example documentation is available here:
  *
  * - @ref Foundation_Examples
  *
- * @section FoundationRepository Repository Structure
+ * Examples demonstrate how to use Foundation modules in practical
+ * desktop and embedded scenarios.
+ *
+ * @section MainPage_RepositoryLayout Repository Layout
+ *
+ * The project is generally organized as:
  *
  * @code
  * Foundation/
- * ├─ docs/
- * ├─ examples/
- * ├─ src/
- * ├─ tests/
- * ├─ scripts/
- * └─ CMakeLists.txt
+ * ├── docs/
+ * ├── include/
+ * ├── src/
+ * ├── examples/
+ * ├── tests/
+ * ├── scripts/
+ * ├── CMakeLists.txt
+ * └── CMakePresets.json
  * @endcode
+ *
+ * @section MainPage_DesignGoals Design Goals
+ *
+ * Foundation is designed with the following goals:
+ *
+ * - Embedded-first architecture.
+ * - Desktop compatibility.
+ * - Modular feature selection.
+ * - Stable top-level public headers.
+ * - Minimal runtime overhead.
+ * - Minimal dependency on the C++ standard library.
+ * - Clear separation between public API and internal implementation.
+ *
+ * @section MainPage_Platforms Supported Platforms
+ *
+ * Foundation is intended to support:
+ *
+ * - Windows
+ * - Linux
+ * - macOS
+ * - Arduino-style environments
+ * - PSoC Creator projects
+ * - STM32 projects
+ * - Other C++11-capable embedded targets
+ *
+ * @section MainPage_NextSteps Next Steps
+ *
+ * Recommended reading order:
+ *
+ * - @ref Foundation
+ * - @ref FoundationTopLevelHeaders
+ * - @ref FoundationBuildGuide
+ * - @ref Foundation_Examples
+ * - Module documentation such as @ref Foundation_Math or @ref Foundation_Time
  */

@@ -1,0 +1,15 @@
+/**
+ * @file Functional.dox
+ *
+ * @defgroup Foundation_Functional Functional
+ * @ingroup Foundation
+ *
+ * @brief Callable and callback utilities.
+ *
+ * The Functional module provides lightweight abstractions for
+ * callbacks, delegates, function binding, and other callable
+ * utilities intended for embedded and desktop applications.
+ *
+ * The module focuses on minimizing runtime overhead while providing
+ * flexible mechanisms for event handling and callback dispatch.
+ */

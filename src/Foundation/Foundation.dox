@@ -3,13 +3,259 @@
  *
  * @defgroup Foundation Foundation
  *
- * Root group for all Foundation modules.
+ * @brief Core documentation topic for the Foundation framework.
  *
- * Modules:
+ * Foundation is a modular C++ framework designed for embedded and
+ * desktop software development.
+ *
+ * The framework provides reusable software components organized into
+ * independent modules. Each module focuses on a specific domain such as
+ * mathematics, time handling, containers, scheduling, or compile-time
+ * utilities.
+ *
+ * @section Foundation_Overview Overview
+ *
+ * Foundation is intended to provide a stable base layer for projects
+ * that need reusable, lightweight, and portable C++ components.
+ *
+ * The main design goal is to support both resource-constrained embedded
+ * systems and desktop environments without forcing unnecessary
+ * dependencies on the user.
+ *
+ * Foundation can be used as:
+ *
+ * - A standalone utility library.
+ * - A dependency for higher-level frameworks.
+ * - A base layer for embedded applications.
+ * - A shared foundation for multiple projects.
+ *
+ * @section Foundation_DesignGoals Design Goals
+ *
+ * Foundation is designed around the following principles:
+ *
+ * - Embedded-first design.
+ * - Desktop compatibility.
+ * - Modular architecture.
+ * - Stable public interfaces.
+ * - Minimal runtime overhead.
+ * - Minimal dependency on the C++ standard library.
+ * - Optional module selection through the build system.
+ * - Clear separation between public API and internal structure.
+ *
+ * @section Foundation_ModuleArchitecture Module Architecture
+ *
+ * Foundation is organized into modules. Each module exposes a clear
+ * public interface and may contain smaller submodules.
+ *
+ * @code
+ * Foundation
+ * ├── TypeTraits
+ * ├── Math
+ * ├── Time
+ * ├── Containers
+ * ├── Functional
+ * ├── Scheduling
+ * └── Utils
+ * @endcode
+ *
+ * Each module is documented as a Doxygen topic under this main
+ * Foundation topic.
+ *
+ * @section Foundation_Modules Modules
+ *
+ * The main Foundation modules are:
+ *
  * - @ref Foundation_TypeTraits
  * - @ref Foundation_Math
  * - @ref Foundation_Time
  * - @ref Foundation_Containers
  * - @ref Foundation_Functional
- * - @ref Foundation_System
+ * - @ref Foundation_Scheduling
+ * - @ref Foundation_Utils
+ *
+ * @section Foundation_TypeTraitsModule Type Traits Module
+ *
+ * The Type Traits module provides compile-time type utilities.
+ *
+ * This module is intended to provide lightweight template
+ * metaprogramming support, especially for embedded environments where
+ * depending on the full C++ standard library may not be desirable.
+ *
+ * @section Foundation_MathModule Math Module
+ *
+ * The Math module provides mathematical utilities and data structures.
+ *
+ * Typical components include:
+ *
+ * - Arithmetic helpers.
+ * - Ratios.
+ * - Complex numbers.
+ * - Fixed-size matrices.
+ * - Dynamic matrices.
+ * - Matrix operations.
+ *
+ * @section Foundation_TimeModule Time Module
+ *
+ * The Time module provides abstractions for representing and working
+ * with time-related values.
+ *
+ * Typical components include:
+ *
+ * - Frequency.
+ * - Period.
+ * - Duration.
+ * - Tick.
+ * - TimePoint.
+ * - Clock.
+ *
+ * @section Foundation_ContainersModule Containers Module
+ *
+ * The Containers module provides reusable data structures.
+ *
+ * This module is intended for arrays, buffers, queues, lists, or other
+ * storage abstractions that are useful across embedded and desktop
+ * projects.
+ *
+ * @section Foundation_FunctionalModule Functional Module
+ *
+ * The Functional module provides callable and callback utilities.
+ *
+ * This module is intended for lightweight callback binding, function
+ * abstraction, delegates, and related utilities.
+ *
+ * @section Foundation_SchedulingModule Scheduling Module
+ *
+ * The Scheduling module provides utilities for managing task execution.
+ *
+ * This module is intended for periodic tasks, one-shot tasks, deferred
+ * execution, and simple embedded-friendly scheduling systems.
+ *
+ * @section Foundation_UtilsModule Utils Module
+ *
+ * The Utils module contains general-purpose utilities that do not yet
+ * belong to a more specific module.
+ *
+ * This module should remain small. If a utility grows into a clear
+ * domain, it should eventually be moved into its own module.
+ *
+ * @section Foundation_DependencyModel Dependency Model
+ *
+ * Foundation modules should depend only on modules that are lower-level
+ * or more general.
+ *
+ * A typical dependency direction is:
+ *
+ * @code
+ * TypeTraits
+ *      |
+ *      v
+ * Math
+ *      |
+ *      v
+ * Time
+ *      |
+ *      v
+ * Scheduling
+ * @endcode
+ *
+ * Higher-level modules may depend on lower-level modules, but
+ * lower-level modules should avoid depending on higher-level ones.
+ *
+ * @section Foundation_PublicApi Public API
+ *
+ * The public API of Foundation is exposed through top-level headers.
+ *
+ * For user-facing includes, see:
+ *
+ * - @ref FoundationTopLevelHeaders
+ *
+ * Application code should prefer the top-level public headers instead
+ * of including deeply nested internal headers directly.
+ *
+ * @section Foundation_BuildSystem Build System
+ *
+ * Foundation uses CMake as its main build system.
+ *
+ * The build system is responsible for:
+ *
+ * - Enabling or disabling modules.
+ * - Selecting the target platform.
+ * - Exporting public headers.
+ * - Generating static libraries.
+ * - Generating documentation.
+ * - Preparing embedded distributions.
+ *
+ * @section Foundation_TargetPlatforms Target Platforms
+ *
+ * Foundation is intended to support:
+ *
+ * - Desktop platforms.
+ * - Arduino-style environments.
+ * - PSoC Creator projects.
+ * - STM32 projects.
+ * - Other C++11-capable embedded targets.
+ *
+ * @section Foundation_Style Coding Style
+ *
+ * Foundation follows these general conventions:
+ *
+ * - PascalCase for class names.
+ * - PascalCase for public function names.
+ * - Nested namespaces.
+ * - Explicit module ownership.
+ * - Small focused headers.
+ * - Minimal hidden dependencies.
+ * - Embedded-friendly implementations.
+ *
+ * @section Foundation_Namespaces Namespaces
+ *
+ * All Foundation code should live inside the main Foundation namespace.
+ *
+ * Module namespaces are placed inside Foundation:
+ *
+ * @code{.cpp}
+ * namespace Foundation {
+ *     namespace Math {
+ *     }
+ *
+ *     namespace Time {
+ *     }
+ * }
+ * @endcode
+ *
+ * @section Foundation_DocumentationLayout Documentation Layout
+ *
+ * Foundation documentation is organized into:
+ *
+ * - The main Foundation topic.
+ * - Module topics.
+ * - Submodule topics.
+ * - Public API pages.
+ * - Build guide pages.
+ * - Example documentation.
+ * - Class and file documentation.
+ *
+ * The main Foundation topic should describe the framework as a whole.
+ * Module-specific documentation should live in the corresponding module
+ * documentation files.
+ *
+ * @section Foundation_Versioning Versioning
+ *
+ * Foundation follows semantic versioning:
+ *
+ * @code
+ * MAJOR.MINOR.PATCH
+ * @endcode
+ *
+ * Breaking public API changes should increment the major version.
+ * Backward-compatible features should increment the minor version.
+ * Fixes should increment the patch version.
+ *
+ * @section Foundation_RelatedPages Related Pages
+ *
+ * Useful related documentation pages:
+ *
+ * - @ref FoundationTopLevelHeaders
+ * - @ref FoundationBuildGuide
+ * - @ref Foundation_Examples
  */
