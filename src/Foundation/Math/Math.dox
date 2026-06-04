@@ -1,5 +1,5 @@
 /**
- * @defgroup Foundation_Math Math
+  @defgroup Foundation_Math Math
  * @ingroup Foundation
  *
  * Mathematical utilities and data structures.
