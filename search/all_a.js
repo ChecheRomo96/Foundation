@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['macos_0',['macOS',['../group__Foundation__BuildGuide__MacOs.html',1,'']]],
+  ['macros_1',['Macros',['../group__Foundation__BuildGuide__Arduino.html#FoundationBuildArduinoMacros',1,'']]],
+  ['main_20header_2',['Main Header',['../group__Foundation.html#FoundationTop_MainHeader',1,'']]],
+  ['math_3',['Math',['../group__Foundation__Math.html',1,'']]],
+  ['math_20module_4',['Math Module',['../group__Foundation.html#Foundation_MathModule',1,'']]],
+  ['matrices_5',['matrices',['../group__Foundation__MatrixOperations.html#FoundationMatrixOperationsDynamic',1,'Dynamic Matrices'],['../group__Foundation__Matrix.html#FoundationMatrixDynamic',1,'Dynamic Matrices'],['../group__Foundation__Matrix.html#FoundationMatrixFixed',1,'Fixed Matrices'],['../group__Foundation__MatrixOperations.html#FoundationMatrixOperationsFixed',1,'Fixed Matrices'],['../group__Foundation__MatrixOperations.html#FoundationMatrixOperationsMixed',1,'Mixed Matrices']]],
+  ['matrix_6',['Matrix',['../group__Foundation__Matrix.html',1,'']]],
+  ['matrix_20operations_7',['Matrix Operations',['../group__Foundation__MatrixOperations.html',1,'']]],
+  ['matrix_20types_8',['Matrix Types',['../group__Foundation__Matrix.html#FoundationMatrixTypes',1,'']]],
+  ['matrixoperations_2eh_9',['MatrixOperations.h',['../MatrixOperations_8h.html',1,'']]],
+  ['meaning_10',['Directory Meaning',['../group__Foundation__BuildGuide__Workflow.html#FoundationBuildDirectoryMeaning',1,'']]],
+  ['member_20functions_11',['Member Functions',['../group__Foundation__Callback.html#FoundationCallbackMemberFunctions',1,'']]],
+  ['memory_20layout_12',['Memory Layout',['../group__Foundation__FixedMatrix.html#FoundationFixedMatrixLayout',1,'']]],
+  ['mixed_20matrices_13',['Mixed Matrices',['../group__Foundation__MatrixOperations.html#FoundationMatrixOperationsMixed',1,'']]],
+  ['mode_14',['mode',['../group__Foundation__BuildGuide__Overview.html#FoundationBuildCustomPrecompiledMode',1,'Custom Precompiled Mode'],['../group__Foundation__BuildGuide__Overview.html#FoundationBuildFullPrecompiledMode',1,'Full Precompiled Mode'],['../group__Foundation__BuildGuide__Overview.html#FoundationBuildSourceMode',1,'Source Mode'],['../group__Foundation__BuildGuide__Arduino.html#FoundationBuildArduinoSource',1,'Source Mode']]],
+  ['model_15',['Dependency Model',['../group__Foundation.html#Foundation_DependencyModel',1,'']]],
+  ['module_16',['module',['../group__Foundation.html#Foundation_ContainersModule',1,'Containers Module'],['../group__Foundation.html#Foundation_FunctionalModule',1,'Functional Module'],['../group__Foundation.html#Foundation_MathModule',1,'Math Module'],['../group__Foundation.html#Foundation_SchedulingModule',1,'Scheduling Module'],['../group__Foundation.html#Foundation_TimeModule',1,'Time Module'],['../group__Foundation.html#Foundation_TypeTraitsModule',1,'Type Traits Module'],['../group__Foundation.html#Foundation_UtilsModule',1,'Utils Module']]],
+  ['module_20architecture_17',['Module Architecture',['../group__Foundation.html#Foundation_ModuleArchitecture',1,'']]],
+  ['module_20availability_18',['Module Availability',['../group__Foundation.html#FoundationTop_ModuleAvailability',1,'']]],
+  ['module_20headers_19',['Module Headers',['../group__Foundation.html#FoundationTop_ModuleHeaders',1,'']]],
+  ['modules_20',['modules',['../group__Foundation.html#Foundation_Modules',1,'Modules'],['../md_README.html#autotoc_md1',1,'Modules'],['../index.html#MainPage_Modules',1,'Modules'],['../group__Foundation__Matrix.html#FoundationMatrixRelated',1,'Related Modules']]],
+  ['msvc_21',['MSVC',['../group__Foundation__BuildGuide__Windows.html#FoundationBuildWindowsMSVC',1,'']]],
+  ['multiply_22',['multiply',['../namespaceFoundation_1_1Math.html#aff60f2d14a9d6ec59d81b2f465d56799',1,'Foundation::Math::Multiply(const DynamicMatrix&lt; T &gt; &amp;a, const FixedMatrix&lt; T, RowsB, ColsB &gt; &amp;b, DynamicMatrix&lt; T &gt; &amp;result)'],['../namespaceFoundation_1_1Math.html#a6736c7b8e5c173d0dbaf785df2b33cb2',1,'Foundation::Math::Multiply(const FixedMatrix&lt; T, RowsA, ColsA &gt; &amp;a, const DynamicMatrix&lt; T &gt; &amp;b, DynamicMatrix&lt; T &gt; &amp;result)'],['../namespaceFoundation_1_1Math.html#a8e030902c5986fc05df330787062856a',1,'Foundation::Math::Multiply(const DynamicMatrix&lt; T &gt; &amp;a, const DynamicMatrix&lt; T &gt; &amp;b, DynamicMatrix&lt; T &gt; &amp;result)'],['../namespaceFoundation_1_1Math.html#a9982d69a2e425d061f0155ea07ca7727',1,'Foundation::Math::Multiply(const FixedMatrix&lt; T, RowsA, ColsA &gt; &amp;a, const FixedMatrix&lt; T, ColsA, ColsB &gt; &amp;b, FixedMatrix&lt; T, RowsA, ColsB &gt; &amp;result)']]]
+];

@@ -1,0 +1,6 @@
+<map id="Foundation" name="Foundation">
+<area shape="rect" id="Node000001" title="Core documentation topic for the Foundation framework." alt="" coords="5,55,100,80"/>
+<area shape="rect" id="Node000003" href="$group__Foundation__Functional.html" title="Callable and callback utilities." alt="" coords="148,5,237,31"/>
+<area shape="rect" id="Node000002" href="$group__Foundation__Math.html" title=" " alt="" coords="165,55,220,80"/>
+<area shape="rect" id="Node000004" href="$group__Foundation__Time.html" title="Clock abstractions and time utilities." alt="" coords="165,104,220,129"/>
+</map>

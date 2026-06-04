@@ -1,0 +1,11 @@
+<map id="src/Foundation/Math/Matrix/MatrixOperations.h" name="src/Foundation/Math/Matrix/MatrixOperations.h">
+<area shape="rect" id="Node000001" title="Matrix arithmetic algorithms." alt="" coords="137,5,334,45"/>
+<area shape="rect" id="Node000002" href="$FixedMatrix_8h_source.html" title=" " alt="" coords="14,93,209,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="209,48,151,88,148,83,206,43"/>
+<area shape="rect" id="Node000004" href="$DynamicMatrix_8h_source.html" title=" " alt="" coords="238,93,481,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="264,43,322,83,319,88,261,48"/>
+<area shape="rect" id="Node000003" href="$FixedMatrix_8tpp_source.html" title=" " alt="" coords="5,181,212,221"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="113,134,112,168,107,167,108,134"/>
+<area shape="rect" id="Node000005" href="$DynamicMatrix_8tpp_source.html" title=" " alt="" coords="236,181,491,221"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="363,133,364,167,359,168,358,134"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="Math" name="Math">
+<area shape="rect" id="Node000002" href="$group__Foundation.html" title="Core documentation topic for the Foundation framework." alt="" coords="5,55,100,80"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="148,55,203,80"/>
+<area shape="rect" id="Node000003" href="$group__Foundation__FixedMatrix.html" title="Fixed&#45;size matrix container." alt="" coords="271,5,369,31"/>
+<area shape="rect" id="Node000004" href="$group__Foundation__Matrix.html" title="Matrix types and algorithms." alt="" coords="288,55,352,80"/>
+<area shape="rect" id="Node000005" href="$group__Foundation__MatrixOperations.html" title="Matrix arithmetic algorithms." alt="" coords="251,104,389,129"/>
+</map>
