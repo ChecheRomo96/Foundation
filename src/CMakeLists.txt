@@ -13,6 +13,13 @@
         "${CMAKE_BINARY_DIR}/artifacts"
     )
 
+    set(FOUNDATION_DIST_ROOT
+        "${CMAKE_SOURCE_DIR}/dist/Foundation-${PROJECT_VERSION}"
+    )
+
+    set(FOUNDATION_DIST_INCLUDE_DIR
+        "${FOUNDATION_DIST_ROOT}/include"
+    )
     set_target_properties(Foundation PROPERTIES
         ARCHIVE_OUTPUT_DIRECTORY "${FOUNDATION_OUTPUT_DIRECTORY}/lib"
         ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${FOUNDATION_OUTPUT_DIRECTORY}/lib"
@@ -31,7 +38,7 @@
     )
 
     set(FOUNDATION_BUILD_INCLUDE_DIR
-        "${CMAKE_BINARY_DIR}/include/Foundation-${FOUNDATION_VERSION}"
+        "${CMAKE_BINARY_DIR}/include/Foundation-${PROJECT_VERSION}"
     )
 #
 ######################################################################################################
@@ -106,7 +113,7 @@
     target_include_directories(Foundation
         PUBLIC
             "$<BUILD_INTERFACE:${FOUNDATION_BUILD_INCLUDE_DIR}>"
-            "$<INSTALL_INTERFACE:include/FOUNDATION-${PROJECT_VERSION}>"
+            "$<INSTALL_INTERFACE:../../../include>"
     )
 #
 ######################################################################################################
@@ -132,12 +139,11 @@
         ARCHIVE DESTINATION lib
         LIBRARY DESTINATION lib
         RUNTIME DESTINATION bin
-        INCLUDES DESTINATION include/Foundation-${FOUNDATION_VERSION}
     )
 
     install(
-        DIRECTORY "${FOUNDATION_BUILD_INCLUDE_DIR}/"
-        DESTINATION "include/Foundation-${FOUNDATION_VERSION}"
+        DIRECTORY "${FOUNDATION_BUILD_INCLUDE_DIR}/Foundation"
+        DESTINATION "${CMAKE_SOURCE_DIR}/dist/Foundation-${PROJECT_VERSION}/include"
     )
 
     install(EXPORT FoundationTargets

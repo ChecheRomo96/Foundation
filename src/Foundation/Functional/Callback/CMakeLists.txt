@@ -47,7 +47,7 @@
     # Install headers for this subdirectory
     install(
         FILES ${FOUNDATION_PUBLIC_HEADERS_LOCAL}
-        DESTINATION "include/FOUNDATION-${FOUNDATION_VERSION}/Foundation/Functional/Callback"
+        DESTINATION "${FOUNDATION_DIST_INCLUDE_DIR}/Foundation/Functional/Callback"
     )
 #
 ######################################################################################################

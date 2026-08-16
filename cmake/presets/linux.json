@@ -1,0 +1,100 @@
+{
+    "version": 6,
+
+    "include": [
+        "base.json"
+    ],
+
+    "configurePresets": [
+
+        {
+            "name": "linux_x64_base",
+            "hidden": true,
+            "inherits": "base",
+
+            "cacheVariables": {
+                "FOUNDATION_PLATFORM": "linux_x64"
+            }
+        },
+
+        {
+            "name": "linux_x64_debug",
+            "inherits": "linux_x64_base",
+
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+
+        {
+            "name": "linux_x64_release",
+            "inherits": "linux_x64_base",
+
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+
+        {
+            "name": "linux_x64_docs",
+            "inherits": [
+                "linux_x64_base",
+                "docs_base"
+            ]
+        },
+
+        {
+            "name": "linux_x64_testing",
+            "inherits": [
+                "linux_x64_base",
+                "testing_base"
+            ]
+        },
+
+
+
+        {
+            "name": "linux_arm64_base",
+            "hidden": true,
+            "inherits": "base",
+
+            "cacheVariables": {
+                "FOUNDATION_PLATFORM": "linux_arm64"
+            }
+        },
+
+        {
+            "name": "linux_arm64_debug",
+            "inherits": "linux_arm64_base",
+
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+
+        {
+            "name": "linux_arm64_release",
+            "inherits": "linux_arm64_base",
+
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+
+        {
+            "name": "linux_arm64_docs",
+            "inherits": [
+                "linux_arm64_base",
+                "docs_base"
+            ]
+        },
+
+        {
+            "name": "linux_arm64_testing",
+            "inherits": [
+                "linux_arm64_base",
+                "testing_base"
+            ]
+        }
+    ]
+}

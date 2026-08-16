@@ -81,7 +81,7 @@
 
     install(
         FILES ${FOUNDATION_PUBLIC_HEADERS_LOCAL}
-        DESTINATION "include/Foundation-${FOUNDATION_VERSION}/Foundation/Math"
+        DESTINATION "${FOUNDATION_DIST_INCLUDE_DIR}/Foundation/Math"
     )
 
 #

@@ -50,7 +50,7 @@
     # Install headers for this subdirectory
     install(
         FILES ${FOUNDATION_PUBLIC_HEADERS_LOCAL}
-        DESTINATION "include/Foundation-${FOUNDATION_VERSION}/TypeTraits"
+        DESTINATION "${FOUNDATION_DIST_INCLUDE_DIR}/Foundation/TypeTraits"
     )
 #
 ######################################################################################################

@@ -4,15 +4,18 @@
     #################################################################################################
     # CMake Minimum Version
         
-        cmake_minimum_required(VERSION 3.14)
+        cmake_minimum_required(VERSION 3.25)
     #
     #################################################################################################
     # Project Name, Version, and Language
 
-        project(Foundation VERSION 1.0.0 LANGUAGES CXX)
+        project(Foundation VERSION 1.0.0 LANGUAGES C CXX)
         message(STATUS "Building ${PROJECT_NAME} Version = ${PROJECT_VERSION}")
-        string(TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER) # To be deleted
-        set(FOUNDATION_VERSION ${PROJECT_VERSION})
+        message(STATUS "System      = ${CMAKE_SYSTEM_NAME}")
+        message(STATUS "Processor   = ${CMAKE_SYSTEM_PROCESSOR}")
+        message(STATUS "C Compiler  = ${CMAKE_C_COMPILER}")
+        message(STATUS "CXX Compiler= ${CMAKE_CXX_COMPILER}")
+        message(STATUS "CXX ID      = ${CMAKE_CXX_COMPILER_ID}")
     #
     #################################################################################################
     # Set up C++ Version
@@ -35,6 +38,7 @@
 #####################################################################################################
 # Include helper functions for Doxygen and macro management
 
+    include(CMakePackageConfigHelpers)
     include(cmake/FoundationHelpers.cmake)
 #
 #####################################################################################################
@@ -66,7 +70,7 @@
 ######################################################################################################
 # Create the library
 
-    foundation_add_macro(PUBLIC FOUNDATION_VERSION="${PROJECT_VERSION}")
+    foundation_add_macro(PUBLIC Foundation_VERSION="${PROJECT_VERSION}")
 
 #
 ######################################################################################################
@@ -99,5 +103,25 @@
         include(cmake/BuildTests.cmake)
         add_subdirectory(tests)
     endif()
+#
+######################################################################################################
+#
+    configure_package_config_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FoundationConfig.cmake.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/FoundationConfig.cmake"
+        INSTALL_DESTINATION lib/cmake/Foundation
+    )
+
+    write_basic_package_version_file(
+        "${CMAKE_CURRENT_BINARY_DIR}/FoundationConfigVersion.cmake"
+        VERSION ${PROJECT_VERSION}
+        COMPATIBILITY SameMajorVersion
+    )
+
+    install(FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/FoundationConfig.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/FoundationConfigVersion.cmake"
+        DESTINATION lib/cmake/Foundation
+    )
 #
 ######################################################################################################

@@ -1,0 +1,54 @@
+{
+    "version": 6,
+
+    "include": [
+        "base.json"
+    ],
+
+    "configurePresets": [
+
+        {
+            "name": "macos_arm64_base",
+            "hidden": true,
+            "inherits": "base",
+
+            "cacheVariables": {
+                "FOUNDATION_PLATFORM": "macos_arm64"
+            }
+        },
+
+        {
+            "name": "macos_arm64_debug",
+            "inherits": "macos_arm64_base",
+
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+
+        {
+            "name": "macos_arm64_release",
+            "inherits": "macos_arm64_base",
+
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+
+        {
+            "name": "macos_arm64_docs",
+            "inherits": [
+                "macos_arm64_base",
+                "docs_base"
+            ]
+        },
+
+        {
+            "name": "macos_arm64_testing",
+            "inherits": [
+                "macos_arm64_base",
+                "testing_base"
+            ]
+        }
+    ]
+}

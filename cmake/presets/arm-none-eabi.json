@@ -1,0 +1,63 @@
+{
+    "version": 6,
+
+    "include": [
+        "base.json"
+    ],
+
+    "configurePresets": [
+
+        {
+            "name": "arm_none_eabi_base",
+            "hidden": true,
+            "inherits": "base",
+            "generator": "Ninja",
+
+            "toolchainFile": "${sourceDir}/cmake/toolchains/arm-none-eabi.cmake"
+        },
+
+
+
+        {
+            "name": "arm_none_eabi_cortex_m3_debug",
+            "inherits": "arm_none_eabi_base",
+
+            "cacheVariables": {
+                "FOUNDATION_ARM_CPU": "cortex-m3"
+            }
+        },
+
+        {
+            "name": "arm_none_eabi_cortex_m3_release",
+            "inherits": "arm_none_eabi_base",
+
+            "cacheVariables": {
+                "FOUNDATION_ARM_CPU": "cortex-m3"
+            }
+        },
+
+        {
+            "name": "arm_none_eabi_cortex_m3_docs",
+            "inherits": [
+                "arm_none_eabi_base",
+                "docs_base"
+            ],
+
+            "cacheVariables": {
+                "FOUNDATION_ARM_CPU": "cortex-m3"
+            }
+        },
+
+        {
+            "name": "arm_none_eabi_cortex_m3_testing",
+            "inherits": [
+                "arm_none_eabi_base",
+                "testing_base"
+            ],
+
+            "cacheVariables": {
+                "FOUNDATION_ARM_CPU": "cortex-m3"
+            }
+        }
+    ]
+}

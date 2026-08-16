@@ -1,5 +1,15 @@
-param([Parameter(Mandatory=$true)][string]$Preset)
+param(
+    [string]$Preset = "windows_msvc_x64_debug"
+)
+
 cmake --preset $Preset
-if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+if ($LASTEXITCODE -ne 0) {
+    exit $LASTEXITCODE
+}
+
 cmake --build --preset $Preset
-exit $LASTEXITCODE
+
+if ($LASTEXITCODE -ne 0) {
+    exit $LASTEXITCODE
+}

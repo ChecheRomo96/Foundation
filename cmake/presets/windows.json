@@ -1,0 +1,164 @@
+{
+    "version": 6,
+
+    "include": [
+        "base.json"
+    ],
+
+    "configurePresets": [
+
+        {
+            "name": "windows_msvc_x64_base",
+            "hidden": true,
+            "inherits": "base",
+
+            "generator": "Visual Studio 18 2026",
+            "architecture": "x64",
+
+            "cacheVariables": {
+                "FOUNDATION_PLATFORM": "windows_msvc_x64"
+            }
+        },
+
+        {
+            "name": "windows_msvc_x64_debug",
+            "inherits": "windows_msvc_x64_base",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/dist/windows_msvc_x64_debug"
+            }
+        },
+
+        {
+            "name": "windows_msvc_x64_release",
+            "inherits": "windows_msvc_x64_base",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/dist/windows_msvc_x64_release"
+            }
+        },
+
+        {
+            "name": "windows_msvc_x64_docs",
+            "inherits": [
+                "windows_msvc_x64_base",
+                "docs_base"
+            ],
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/dist/windows_msvc_x64_docs"
+            }
+        },
+
+        {
+            "name": "windows_msvc_x64_testing",
+            "inherits": [
+                "windows_msvc_x64_base",
+                "testing_base"
+            ],
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/dist/windows_msvc_x64_testing"
+            }
+        },
+
+
+
+        {
+            "name": "windows_clang_x64_base",
+            "hidden": true,
+            "inherits": "base",
+
+            "generator": "Ninja",
+
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++",
+
+                "FOUNDATION_PLATFORM": "windows_clang_x64"
+            }
+        },
+
+        {
+            "name": "windows_clang_x64_debug",
+            "inherits": "windows_clang_x64_base",
+
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/dist/windows_clang_x64_debug"
+            }
+        },
+
+        {
+            "name": "windows_clang_x64_release",
+            "inherits": "windows_clang_x64_base",
+
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/dist/windows_clang_x64_release"
+            }
+        },
+
+        {
+            "name": "windows_clang_x64_docs",
+            "inherits": [
+                "windows_clang_x64_base",
+                "docs_base"
+            ],
+
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/dist/windows_clang_x64_docs"
+            }
+        },
+
+        {
+            "name": "windows_clang_x64_testing",
+            "inherits": [
+                "windows_clang_x64_base",
+                "testing_base"
+            ],
+
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/dist/windows_clang_x64_testing"
+            }
+        }
+    ],
+
+    "buildPresets": [
+    {
+        "name": "windows_msvc_x64_debug",
+        "configurePreset": "windows_msvc_x64_debug",
+        "configuration": "Debug"
+    },
+    {
+        "name": "windows_msvc_x64_release",
+        "configurePreset": "windows_msvc_x64_release",
+        "configuration": "Release"
+    },
+    {
+        "name": "windows_msvc_x64_docs",
+        "configurePreset": "windows_msvc_x64_docs",
+        "configuration": "Release"
+    },
+    {
+        "name": "windows_msvc_x64_testing",
+        "configurePreset": "windows_msvc_x64_testing",
+        "configuration": "Debug"
+    },
+
+    {
+        "name": "windows_clang_x64_debug",
+        "configurePreset": "windows_clang_x64_debug"
+    },
+    {
+        "name": "windows_clang_x64_release",
+        "configurePreset": "windows_clang_x64_release"
+    },
+    {
+        "name": "windows_clang_x64_docs",
+        "configurePreset": "windows_clang_x64_docs"
+    },
+    {
+        "name": "windows_clang_x64_testing",
+        "configurePreset": "windows_clang_x64_testing"
+    }
+    ]
+}

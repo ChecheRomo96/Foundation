@@ -5,7 +5,7 @@
     #include <Foundation/Time/Frequency.h>
     #include <Foundation/Time/Period.h>
     #include <Foundation/Time/TimePoint.h>
-    #include <Foundation/Utils/Callback.h>
+    #include <Foundation/Functional/Callback.h>
 
     namespace Foundation {
         namespace Time {
@@ -15,7 +15,7 @@
                 using Callback = Tick (*)();
 
             private:
-                Utils::Callback<Tick> _callback;
+                Functional::Callback<Tick> _callback;
                 Frequency _frequency;
 
             public:

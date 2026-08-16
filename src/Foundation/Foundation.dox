@@ -239,7 +239,7 @@
  * Module-specific documentation should live in the corresponding module
  * documentation files.
  *
- * @section Foundation_Versioning Versioning
+ * @section Foundation_VERSIONing Versioning
  *
  * Foundation follows semantic versioning:
  *
