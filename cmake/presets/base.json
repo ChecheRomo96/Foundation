@@ -11,7 +11,7 @@
             "cacheVariables": {
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
 
-                "FOUNDATION_FULL_BUILD": "ON",
+                "FOUNDATION_FULL_BUILD": "OFF",
                 "FOUNDATION_DOCS": "OFF",
                 "FOUNDATION_TESTING": "OFF",
                 "FOUNDATION_EXAMPLES": "OFF",
@@ -35,8 +35,7 @@
             "inherits": "base",
 
             "cacheVariables": {
-                "FOUNDATION_TESTING": "ON",
-                "FOUNDATION_EXAMPLES": "ON"
+                "FOUNDATION_TESTING": "ON"
             }
         }
     ]

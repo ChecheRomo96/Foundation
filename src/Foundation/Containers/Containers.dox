@@ -1,4 +1,5 @@
 /**
  * @defgroup Foundation_Containers Containers
+ * @ingroup Foundation
  * @brief Static-memory containers for embedded systems.
  */

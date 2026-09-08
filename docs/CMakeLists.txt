@@ -4,3 +4,4 @@ foundation_add_dox(
 )
 
 add_subdirectory(Topics)
+add_subdirectory(Workflows)

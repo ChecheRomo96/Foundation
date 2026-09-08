@@ -1,0 +1,5 @@
+/**
+ * @defgroup Foundation_DynamicMatrix DynamicMatrix
+ * @ingroup Foundation_Math
+ * @brief Runtime-sized matrix storage and operations.
+ */

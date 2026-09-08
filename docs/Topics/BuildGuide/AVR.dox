@@ -1,0 +1,74 @@
+/**
+ * @addtogroup Foundation_BuildGuide_AVR
+ *
+ * @section FoundationBuildAVRTarget Initial Supported Target
+ *
+ * The initial AVR export profile is:
+ *
+ * @code
+ * atmega328p_avrgcc_avr5
+ * @endcode
+ *
+ * It selects the AVR-GCC C/C++ toolchain, the ATmega328P MCU, and the AVR5
+ * architecture. Debug and Release share one build tree and one exported
+ * package:
+ *
+ * @code{bash}
+ * ./scripts/export.sh atmega328p_avrgcc_avr5
+ * @endcode
+ *
+ * The preset is an exact binary identity, not a generic “AVR” archive. The
+ * toolchain passes `-mmcu=atmega328p` to C/C++ compilation and executable link
+ * operations and records `avr5` in package metadata.
+ *
+ * @code
+ * dist/atmega328p_avrgcc_avr5/
+ * @endcode
+ *
+ * @section FoundationBuildAVRToolchain Toolchain Configuration
+ *
+ * `cmake/toolchains/avr-gcc.cmake` finds `avr-gcc`, `avr-g++`, `avr-ar`, and
+ * `avr-ranlib`. Set `FOUNDATION_AVR_TOOLCHAIN_ROOT` when the toolchain's `bin`
+ * directory is not on `PATH`.
+ *
+ * A new AVR preset must use a device profile that fixes both
+ * `FOUNDATION_AVR_MCU` and `FOUNDATION_AVR_ARCHITECTURE`. Do not reuse the
+ * ATmega328P archive for another MCU merely because both are AVR devices.
+ *
+ * @warning AVR C++ standard-library support varies by toolchain distribution.
+ * Foundation avoids requiring the C++ standard library, but every new profile
+ * must still be compiled and consumer-tested with its intended AVR-GCC version.
+ *
+ * @section FoundationBuildAVRCommands Complete Local Sequence
+ *
+ * @code{bash}
+ * avr-gcc --version
+ * avr-g++ --version
+ * ./scripts/configure.sh atmega328p_avrgcc_avr5 --fresh
+ * ./scripts/build.sh atmega328p_avrgcc_avr5 \
+ *     --config Debug --target Foundation
+ * ./scripts/build.sh atmega328p_avrgcc_avr5 \
+ *     --config Release --target Foundation
+ * ./scripts/export.sh atmega328p_avrgcc_avr5 --fresh
+ * @endcode
+ *
+ * Expected package archives are `libFoundation_d.a` and `libFoundation.a`.
+ * Both must report `elf32-avr` and architecture `avr:5`:
+ *
+ * @code{bash}
+ * avr-objdump -f dist/atmega328p_avrgcc_avr5/lib/libFoundation_d.a
+ * avr-objdump -f dist/atmega328p_avrgcc_avr5/lib/libFoundation.a
+ * @endcode
+ *
+ * @section FoundationBuildAVRConsumer Consumer Validation
+ *
+ * Configure a separate AVR CMake project with the same ATmega328P toolchain,
+ * point `CMAKE_PREFIX_PATH` at the export, call
+ * `find_package(Foundation CONFIG REQUIRED)`, and link
+ * `Foundation::Foundation`. The consumer must call a non-inline Foundation
+ * function so the linker actually reads the archive. Inspect the resulting ELF
+ * with `avr-size`, `avr-nm`, and `avr-objdump` before running it on hardware.
+ *
+ * Repository CTest is not an AVR execution environment. Behavioral tests require
+ * an AVR emulator or board integration. See @ref Foundation_Workflows_Validation.
+ */

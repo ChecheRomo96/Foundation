@@ -9,6 +9,16 @@
         #include(${CMAKE_CURRENT_LIST_DIR}/TypeTraits/CMakeMacros.cmake)
     endif()
 
+    if(FOUNDATION_CONTAINERS)
+        message(STATUS "Foundation::Containers")
+        target_compile_definitions(Foundation PUBLIC FOUNDATION_CONTAINERS)
+    endif()
+
+    if(FOUNDATION_SCHEDULING)
+        message(STATUS "Foundation::Scheduling")
+        target_compile_definitions(Foundation PUBLIC FOUNDATION_SCHEDULING)
+    endif()
+
     if(FOUNDATION_MATH)
         message(STATUS "Foundation::Math")
         target_compile_definitions(Foundation PUBLIC FOUNDATION_MATH)
@@ -31,7 +41,7 @@
         list(APPEND ${PROJECT_NAME_UPPER}_MACROS "FOUNDATION_FUNCTIONAL")
 
         include(${CMAKE_CURRENT_LIST_DIR}/Functional/CMakeMacros.cmake)
-    endif() 
+    endif()
 
     if(FOUNDATION_UTILS)
         message(STATUS "Foundation::Utils")

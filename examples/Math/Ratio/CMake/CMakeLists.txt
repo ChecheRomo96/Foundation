@@ -1,2 +1,1 @@
-add_executable(Ratio_Ratio Ratio.cpp)
-target_link_libraries(Ratio_Ratio PRIVATE Foundation)
+foundation_add_example(Foundation_Math_Ratio Ratio.cpp)

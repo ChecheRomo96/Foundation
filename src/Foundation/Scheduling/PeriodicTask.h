@@ -12,19 +12,19 @@ namespace Foundation::Scheduling {
     private:
         Callback _callback;
         void* _context;
-        Foundation::Time::Clock::TimePoint _period;
-        Foundation::Time::Clock::TimePoint _lastRun;
+        Foundation::Time::Duration _period;
+        Foundation::Time::TimePoint _lastRun;
         bool _firstRun;
 
     public:
-        PeriodicTask(Callback callback, void* context, Foundation::Time::Clock::TimePoint period)
+        PeriodicTask(Callback callback, void* context, Foundation::Time::Duration period)
             : _callback(callback), _context(context), _period(period), _lastRun(0), _firstRun(true) { }
 
-        bool ShouldRun(Foundation::Time::Clock::TimePoint now) override {
+        bool ShouldRun(Foundation::Time::TimePoint now) override {
             return _firstRun || ((now - _lastRun) >= _period);
         }
 
-        void Run(Foundation::Time::Clock::TimePoint now) override {
+        void Run(Foundation::Time::TimePoint now) override {
             _firstRun = false;
             _lastRun = now;
             if (_callback) { _callback(_context); }

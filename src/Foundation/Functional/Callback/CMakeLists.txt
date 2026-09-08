@@ -12,7 +12,7 @@
     list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
         "${CMAKE_CURRENT_LIST_DIR}/Callback.h"
     )
-    
+
     list(APPEND FOUNDATION_DOX_LOCAL
         "${CMAKE_CURRENT_LIST_DIR}/Callback.dox"
     )
@@ -47,7 +47,7 @@
     # Install headers for this subdirectory
     install(
         FILES ${FOUNDATION_PUBLIC_HEADERS_LOCAL}
-        DESTINATION "${FOUNDATION_DIST_INCLUDE_DIR}/Foundation/Functional/Callback"
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/Foundation/Functional/Callback"
     )
 #
 ######################################################################################################

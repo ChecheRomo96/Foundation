@@ -1,0 +1,86 @@
+/**
+ * @defgroup Foundation_Workflows_Precompiled Precompiled Libraries
+ * @ingroup Foundation_Workflows_Delivery
+ * @brief Compatibility and consumption rules for exported static libraries.
+ *
+ * Precompiled libraries reduce build time for projects that consume Foundation,
+ * while the repository remains the source of truth. An exported library is only
+ * compatible with the operating system, compiler/toolchain, architecture, ABI,
+ * build configuration, and compiled feature macros used to create it.
+ *
+ * A Windows MSVC `.lib` is not assumed to be compatible with MinGW. An Arm GNU
+ * Cortex-M3 soft-float `.a` is not compatible with a Cortex-M4 hard-float target.
+ * Keep each target package in its own `dist/<preset>` directory; its Debug and
+ * Release configurations may coexist there under distinct library names.
+ *
+ * @section FoundationPrecompiledCompatibilityMatrix Compatibility Matrix
+ *
+ * Rebuild or select another package whenever one of these changes:
+ *
+ * | Dimension | Examples | Why it matters |
+ * | --- | --- | --- |
+ * | operating system/object format | Windows COFF, macOS Mach-O, ELF | Linkers consume different formats. |
+ * | compiler/toolchain | MSVC, Apple Clang, Arm GNU, AVR-GCC | Name mangling, runtime, and flags may differ. |
+ * | architecture/core | x86-64, arm64, Cortex-M3, AVR5 | Machine instructions are target-specific. |
+ * | ABI/FPU | Arm soft float, M4F hard float | Function calling conventions differ. |
+ * | C++ runtime policy | exceptions/RTTI enabled or disabled | Runtime symbols and object assumptions differ. |
+ * | feature options | Scheduling on/off | Headers, macros, and compiled symbols differ. |
+ * | configuration | Debug, Release | Debug postfix and optimization/debug information differ. |
+ *
+ * Debug and Release are handled inside one package. Every other incompatible
+ * dimension belongs in the preset identity or in a deliberately isolated custom
+ * feature package.
+ *
+ * @section FoundationPrecompiledFullBuild Full Build
+ *
+ * A full build enables all Foundation modules. It is useful for desktop
+ * integration, testing, examples, and quick prototyping.
+ *
+ * @section FoundationPrecompiledCustomBuild Custom Build
+ *
+ * A custom build enables only the modules required by a product. It is useful
+ * for embedded systems, memory-sensitive projects, and production firmware.
+ * Configure feature options before exporting and preserve the preset identity
+ * with the resulting package.
+ *
+ * The feature set is part of package compatibility even though it is not part of
+ * the normal preset name. Store custom variants in separate distribution paths,
+ * retain their `FoundationBuildInfo.cmake`, and never overlay two variants.
+ *
+ * @section FoundationPrecompiledRecommendedFlow Recommended Flow
+ *
+ * @code{bash}
+ * ./scripts/configure.sh <preset> --fresh
+ * ./scripts/test.sh <preset> --config Debug
+ * ./scripts/export.sh <preset>
+ * @endcode
+ *
+ * On Windows:
+ *
+ * @code{powershell}
+ * ./scripts/configure.ps1 <preset> -Fresh
+ * ./scripts/test.ps1 <preset> -Configuration Debug
+ * ./scripts/export.ps1 <preset>
+ * @endcode
+ *
+ * The current test suite is empty; see @ref Foundation_Workflows_Test before
+ * treating the test step above as a release gate. For cross-compiled targets,
+ * replace host CTest execution with firmware/consumer validation described in
+ * @ref Foundation_Workflows_Validation.
+ *
+ * @section FoundationPrecompiledConsumer Consumer Contract
+ *
+ * A CMake consumer should use:
+ *
+ * @code{cmake}
+ * find_package(Foundation 1.0 CONFIG REQUIRED)
+ * target_link_libraries(MyTarget PRIVATE Foundation::Foundation)
+ * @endcode
+ *
+ * The imported target carries include directories, compile features, public
+ * definitions, and Debug/Release archive mappings. Consumers must not copy only
+ * the archive and omit the installed headers/package metadata.
+ *
+ * See @ref Foundation_Workflows_Export for package contents and
+ * `find_package(Foundation CONFIG)` integration.
+ */

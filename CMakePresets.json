@@ -11,6 +11,7 @@
     "cmake/presets/windows.json",
     "cmake/presets/linux.json",
     "cmake/presets/macos.json",
-    "cmake/presets/arm-none-eabi.json"
+    "cmake/presets/avr-gcc.json",
+    "cmake/presets/embedded.json"
   ]
 }

@@ -1,7 +1,7 @@
 #ifndef FOUNDATION_UTILS_MOVE_H
 #define FOUNDATION_UTILS_MOVE_H
 
-    namespace Foundation{
+    namespace Foundation::Utils {
 
         /// @cond INTERNAL
         namespace Detail {

@@ -1,0 +1,62 @@
+@echo off
+setlocal EnableExtensions EnableDelayedExpansion
+
+:menu
+cls
+echo Foundation Examples
+echo ===================
+echo.
+
+set "FOUNDATION_EXAMPLE_COUNT=0"
+for %%F in ("%~dp0Foundation_*.exe") do (
+    if exist "%%~fF" (
+        set /a FOUNDATION_EXAMPLE_COUNT+=1
+        set "FOUNDATION_EXAMPLE[!FOUNDATION_EXAMPLE_COUNT!]=%%~fF"
+        echo   !FOUNDATION_EXAMPLE_COUNT!^) %%~nF
+    )
+)
+
+if !FOUNDATION_EXAMPLE_COUNT! EQU 0 goto no_examples
+
+echo.
+set "FOUNDATION_SELECTION="
+set /p "FOUNDATION_SELECTION=Select an example [1-!FOUNDATION_EXAMPLE_COUNT!] or q to quit: "
+
+if /I "!FOUNDATION_SELECTION!"=="Q" exit /b 0
+if "!FOUNDATION_SELECTION!"=="" goto invalid_selection
+for /f "delims=0123456789" %%A in ("!FOUNDATION_SELECTION!") do goto invalid_selection
+if !FOUNDATION_SELECTION! LSS 1 goto invalid_selection
+if !FOUNDATION_SELECTION! GTR !FOUNDATION_EXAMPLE_COUNT! goto invalid_selection
+
+set "FOUNDATION_SELECTED_EXAMPLE="
+for /L %%I in (1,1,!FOUNDATION_EXAMPLE_COUNT!) do (
+    if "!FOUNDATION_SELECTION!"=="%%I" (
+        set "FOUNDATION_SELECTED_EXAMPLE=!FOUNDATION_EXAMPLE[%%I]!"
+    )
+)
+
+echo.
+echo Running !FOUNDATION_SELECTED_EXAMPLE!...
+echo.
+
+"!FOUNDATION_SELECTED_EXAMPLE!"
+set "FOUNDATION_STATUS=!ERRORLEVEL!"
+
+echo ----------------------------------------
+echo Process finished with exit code !FOUNDATION_STATUS!
+echo.
+pause
+goto menu
+
+:invalid_selection
+echo.
+echo Invalid selection.
+pause
+goto menu
+
+:no_examples
+echo No executable examples were found in:
+echo %~dp0
+echo.
+pause
+exit /b 1

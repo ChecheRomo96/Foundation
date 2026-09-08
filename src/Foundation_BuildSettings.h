@@ -5,8 +5,8 @@
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //  Version
 
-        #ifndef Foundation_VERSION
-            #define Foundation_VERSION "0.x.1"
+        #ifndef FOUNDATION_VERSION
+            #define FOUNDATION_VERSION "0.x.1"
         #endif
 
     //

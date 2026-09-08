@@ -1,0 +1,174 @@
+/**
+ * @defgroup Foundation_Workflows_Export Export
+ * @ingroup Foundation_Workflows_Delivery
+ * @brief Build and install a clean, target-specific distribution package.
+ *
+ * Export configures the target preset once, builds the installable Foundation
+ * artifacts for Debug and Release, removes the default `dist/<preset>`
+ * destination, and installs both configurations into one fresh package. The
+ * library is always included. Executable API examples are opt-in through
+ * `--examples-on` in Bash or `-ExamplesOn` in PowerShell.
+ *
+ * The exact default sequence is:
+ *
+ * 1. configure or refresh `build/<preset>`;
+ * 2. build the `Foundation` library target for Debug;
+ * 3. build `FoundationExportArtifacts` for Release, including optional examples;
+ * 4. safely remove the repository-owned `dist/<preset>` directory;
+ * 5. install Debug and then Release into that one directory.
+ *
+ * Configuration happens once, so target settings and feature options are
+ * identical for both archives.
+ *
+ * @section FoundationWorkflowExportBash Bash
+ *
+ * @code{bash}
+ * ./scripts/export.sh <preset> [--config <name>]... [--output <path>] \
+ *     [--parallel <jobs>] [--fresh] [--keep] [--examples-on] \
+ *     [-- <cmake arguments>]
+ *
+ * ./scripts/export.sh macos_arm64 --parallel 8
+ * ./scripts/export.sh psoc5lp_armgcc_cortex_m3_soft
+ * ./scripts/export.sh atmega328p_avrgcc_avr5 --fresh
+ * ./scripts/export.sh macos_arm64 -- -DFOUNDATION_SCHEDULING=OFF
+ * ./scripts/export.sh macos_arm64 --fresh --examples-on
+ * @endcode
+ *
+ * Examples for PowerShell:
+ *
+ * @code{powershell}
+ * ./scripts/export.ps1 windows_msvc_x64 -Fresh -Parallel 8
+ * ./scripts/export.ps1 windows_msvc_x64 `
+ *     -CMakeArguments "-DFOUNDATION_SCHEDULING=OFF"
+ * ./scripts/export.ps1 windows_msvc_x64 -Fresh -ExamplesOn
+ * @endcode
+ *
+ * @section FoundationWorkflowExportArguments Arguments and Defaults
+ *
+ * | Argument | Default | Meaning |
+ * | --- | --- | --- |
+ * | configurations | Debug and Release | May select one or repeat/pass an array. |
+ * | output | `dist/<preset>` | Installation prefix for the package. |
+ * | parallel | CMake default | Worker count for each build. |
+ * | fresh | off | Clears CMake cache state before the single configure. |
+ * | keep | off | Preserves and overlays the destination. |
+ * | examples | off | Builds and installs Release API examples. |
+ * | CMake arguments | none | Cache overrides shared by every built configuration. |
+ *
+ * @section FoundationWorkflowExportPowerShell PowerShell
+ *
+ * @code{powershell}
+ * ./scripts/export.ps1 <preset> [-Configuration <names>] [-Output <path>] `
+ *     [-Parallel <jobs>] [-Fresh] [-Keep] [-ExamplesOn] `
+ *     [-CMakeArguments <arguments>]
+ * @endcode
+ *
+ * With no configuration option, export builds `Debug` and `Release`. Repeat
+ * `--config` in Bash or pass a PowerShell array to export only selected
+ * configurations. CMake arguments customize the one configure operation and
+ * therefore apply consistently to both builds.
+ *
+ * `--examples-on` and `-ExamplesOn` set `FOUNDATION_EXAMPLES=ON` for that
+ * configure operation. Without the switch, the preset default remains `OFF`,
+ * so regular packages contain only the library, public headers, and CMake
+ * package metadata. Exported examples are Release-only even when the package
+ * contains both library configurations; Debug examples can still be built from
+ * the source tree when needed for development. Consequently, `--examples-on`
+ * or `-ExamplesOn` requires Release to be present in the selected configurations.
+ *
+ * A custom output path requires `--keep` or `-Keep`. This prevents the export
+ * workflow from recursively deleting an arbitrary caller-supplied directory.
+ * In keep mode, installation overlays the destination.
+ *
+ * @warning Keep mode can retain files from an older feature selection. For a
+ * reproducible custom package, choose a new empty output directory or explicitly
+ * clean that caller-owned directory before invoking export. The default
+ * `dist/<preset>` path is the only destination the script deletes automatically.
+ *
+ * @section FoundationWorkflowExportLayout Package Layout
+ *
+ * @code
+ * dist/<preset>/
+ * |-- include/                              Public headers
+ * |-- bin/examples/                         Optional Release API examples
+ * |   |-- Foundation_Math_Ratio             Release example (macOS)
+ * |   `-- FoundationExamples.command        Menu launcher (macOS)
+ * |-- lib/libFoundation_d.a                Debug library (Unix-like targets)
+ * |-- lib/libFoundation.a                  Release library (Unix-like targets)
+ * `-- lib/cmake/Foundation/
+ *     |-- FoundationConfig.cmake
+ *     |-- FoundationConfigVersion.cmake
+ *     |-- FoundationBuildInfo.cmake
+ *     |-- FoundationTargets.cmake
+ *     |-- FoundationTargets-debug.cmake
+ *     `-- FoundationTargets-release.cmake
+ * @endcode
+ *
+ * Windows uses `Foundation_d.lib` and `Foundation.lib` rather than Unix archive
+ * names, appends `.exe` to example executables, and installs the single
+ * `FoundationExamples.cmd` menu launcher. Only Release examples are distribution
+ * artifacts. Headers are
+ * installed once because they are common to both library configurations. The
+ * two `FoundationTargets-<configuration>.cmake` files keep the archive mapping
+ * configuration-aware.
+
+ * The macOS `.command` and Windows `.cmd` launchers are console menus intended
+ * for double-click use. Each discovers the adjacent examples, runs the selected
+ * executable, displays its exit code, and returns to the menu. Terminal owns the
+ * macOS window after the script
+ * exits; select **Terminal > Settings > Profiles > Shell > When the shell exits**
+ * to choose whether a successful launcher closes it. Launchers are installed
+ * only when examples are enabled; they are not CTest tests or replacements for
+ * the executable artifacts.
+ *
+ * `FoundationBuildInfo.cmake` records the exported version, platform, system,
+ * processor, macOS architecture, compiler, C++ standard, ARM CPU/ABI/FPU, and
+ * AVR MCU/architecture values, whether executable examples were included, plus
+ * the enabled top-level modules. Consumers can load the target with:
+ *
+ * @code{cmake}
+ * find_package(Foundation 1.0 CONFIG REQUIRED)
+ * target_link_libraries(MyApplication PRIVATE Foundation::Foundation)
+ * @endcode
+ *
+ * The consumer should set `CMAKE_PREFIX_PATH` to `dist/<preset>` or set
+ * `Foundation_DIR` to its `lib/cmake/Foundation` directory. It must use a
+ * compatible compiler, target architecture, ABI, runtime, and configuration.
+ * Do not bypass the imported target by guessing a library filename.
+ *
+ * @section FoundationWorkflowExportFeatures Feature Variants
+ *
+ * Module overrides are valid because export forwards them into the one configure
+ * operation:
+ *
+ * @code{bash}
+ * ./scripts/export.sh macos_arm64 --fresh -- \
+ *     -DFOUNDATION_FULL_BUILD=OFF \
+ *     -DFOUNDATION_SCHEDULING=OFF \
+ *     -DFOUNDATION_CONTAINERS=OFF
+ * @endcode
+ *
+ * The generated `FoundationBuildInfo.cmake` records the enabled top-level
+ * modules. A consumer must compile with the exported target's propagated macros
+ * and headers. Do not merge packages produced with incompatible feature sets.
+ *
+ * Examples remain demonstrations of the public API, not tests. Export does not
+ * register them with CTest or interpret their execution as test evidence.
+ *
+ * @section FoundationWorkflowExportCompatibility Compatibility Rule
+ *
+ * Precompiled libraries are not universal. Produce a separate export for every
+ * operating system, compiler/toolchain, architecture, ABI, and incompatible
+ * feature set. Debug and Release may share the package because CMake records
+ * them as separate imported configurations. “Any platform” means any target
+ * represented by a valid CMake preset and, when cross-compiling, an appropriate
+ * toolchain file.
+ *
+ * @section FoundationWorkflowExportVerify Verification
+ *
+ * Before publishing, verify file presence, inspect object architecture with the
+ * target tool (`lipo`, `dumpbin`, `llvm-readobj`, `arm-none-eabi-objdump`, or
+ * `avr-objdump`), inspect `FoundationBuildInfo.cmake`, and compile an external
+ * `find_package` consumer. See @ref Foundation_Workflows_Validation for the
+ * complete target matrix.
+ */

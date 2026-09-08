@@ -50,7 +50,7 @@
 
     install(
         FILES ${FOUNDATION_PUBLIC_HEADERS_LOCAL}
-        DESTINATION "${FOUNDATION_DIST_INCLUDE_DIR}/Foundation/Math/Matrix/FixedMatrix"
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/Foundation/Math/Matrix/FixedMatrix"
     )
 
 #

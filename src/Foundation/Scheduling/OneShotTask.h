@@ -12,18 +12,18 @@ namespace Foundation::Scheduling {
     private:
         Callback _callback;
         void* _context;
-        Foundation::Time::Clock::TimePoint _triggerTime;
+        Foundation::Time::TimePoint _triggerTime;
         bool _hasRun;
 
     public:
-        OneShotTask(Callback callback, void* context, Foundation::Time::Clock::TimePoint triggerTime)
+        OneShotTask(Callback callback, void* context, Foundation::Time::TimePoint triggerTime)
             : _callback(callback), _context(context), _triggerTime(triggerTime), _hasRun(false) { }
 
-        bool ShouldRun(Foundation::Time::Clock::TimePoint now) override {
+        bool ShouldRun(Foundation::Time::TimePoint now) override {
             return !_hasRun && now >= _triggerTime;
         }
 
-        void Run(Foundation::Time::Clock::TimePoint) override {
+        void Run(Foundation::Time::TimePoint) override {
             _hasRun = true;
             if (_callback) { _callback(_context); }
         }

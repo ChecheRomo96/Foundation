@@ -1,4 +1,5 @@
 /**
  * @defgroup Foundation_Scheduling Scheduling
+ * @ingroup Foundation
  * @brief Cooperative task scheduling primitives.
  */

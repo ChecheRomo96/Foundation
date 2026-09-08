@@ -63,6 +63,22 @@
                 bool operator!=(const TimePoint& rhs) const {
                     return !(*this == rhs);
                 }
+
+                bool operator<(const TimePoint& rhs) const {
+                    return SameClock(rhs) && (_ticks < rhs._ticks);
+                }
+
+                bool operator>(const TimePoint& rhs) const {
+                    return rhs < *this;
+                }
+
+                bool operator<=(const TimePoint& rhs) const {
+                    return SameClock(rhs) && (_ticks <= rhs._ticks);
+                }
+
+                bool operator>=(const TimePoint& rhs) const {
+                    return SameClock(rhs) && (_ticks >= rhs._ticks);
+                }
             };
         }
     }

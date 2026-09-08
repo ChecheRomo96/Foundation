@@ -7,6 +7,7 @@
         set(FOUNDATION_TIME ON)
         set(FOUNDATION_TYPE_TRAITS ON)
         set(FOUNDATION_UTILS ON)
+        set(FOUNDATION_FUNCTIONAL ON)
     endif()
 #
 #################################################################################################################################

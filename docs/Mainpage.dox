@@ -78,7 +78,8 @@
  *
  * Build documentation:
  *
- * - @ref FoundationBuildGuide
+ * - @ref Foundation_BuildGuide
+ * - @ref Foundation_Workflows
  *
  * The build system supports:
  *
@@ -132,9 +133,10 @@
  * - Linux
  * - macOS
  * - Arduino-style environments
+ * - AVR-GCC / ATmega328P
  * - PSoC Creator projects
  * - STM32 projects
- * - Other C++11-capable embedded targets
+ * - Other C++17-capable embedded targets
  *
  * @section MainPage_NextSteps Next Steps
  *
@@ -142,7 +144,9 @@
  *
  * - @ref Foundation
  * - @ref FoundationTopLevelHeaders
- * - @ref FoundationBuildGuide
+ * - @ref Foundation_BuildGuide
+ * - @ref Foundation_Workflows
+ * - @ref Foundation_Workflows_Validation
  * - @ref Foundation_Examples
  * - Module documentation such as @ref Foundation_Math or @ref Foundation_Time
  */

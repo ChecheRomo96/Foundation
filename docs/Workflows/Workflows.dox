@@ -1,0 +1,101 @@
+/**
+ * @defgroup Foundation_Workflows Workflows
+ * @ingroup Foundation_BuildGuide
+ * @brief Repeatable configure, build, test, install, export, and maintenance workflows.
+ *
+ * Foundation uses CMake presets to describe a target and small repository
+ * scripts to execute a workflow. The scripts do not contain platform-specific
+ * compiler logic. A preset selects the platform, architecture, compiler,
+ * generator, and cross-compilation toolchain. Debug or Release is selected by
+ * the workflow and is deliberately not part of the preset identity.
+ *
+ * Bash scripts are provided for macOS, Linux, and compatible shells. Matching
+ * PowerShell scripts provide the same operations on Windows. Every script
+ * resolves the repository root from its own location, so it can be invoked from
+ * any working directory.
+ *
+ * @section FoundationWorkflowsResponsibilities Responsibilities
+ *
+ * The build system is split into four layers:
+ *
+ * - `CMakePresets.json` and `cmake/presets/` define supported artifact
+ *   identities and reproducible target defaults;
+ * - `cmake/toolchains/` defines cross-compilers, CPU flags, ABI flags, target
+ *   runtimes, and program lookup rules;
+ * - CMake cache options select Foundation modules or machine-local SDK paths;
+ * - `scripts/` performs one operation consistently without duplicating target
+ *   knowledge.
+ *
+ * A workflow script is an interface to CMake, not a second build system. When a
+ * target changes, update its preset or toolchain. When the sequence of CMake
+ * operations changes, update the script.
+ *
+ * @section FoundationWorkflowsDirectories Workflow Directories
+ *
+ * @code
+ * build/<preset>/   Temporary CMake cache and build artifacts
+ * dist/<preset>/    Installed, redistributable package
+ * docs/Workflows/   Source documentation for these workflows
+ * @endcode
+ *
+ * Build directories are disposable. Distribution directories are created only
+ * by install or export operations and must remain separated by target preset.
+ * One package may contain distinct Debug and Release libraries, but compiler,
+ * architecture, ABI, and feature-set changes require a different package or a
+ * deliberate custom re-export.
+ *
+ * @section FoundationWorkflowsState Cached State
+ *
+ * `configure`, `build`, `test`, and `export` reuse `build/<preset>` unless their
+ * fresh option is supplied. This is convenient during development, but cache
+ * overrides not explicitly replaced by the preset or script can remain active.
+ * The test workflow enables testing only; examples remain independent. Use a
+ * fresh export for release candidates so the package starts from preset defaults
+ * plus only the overrides shown in the release command.
+ *
+ * @section FoundationWorkflowsSequence Normal Release Sequence
+ *
+ * @code{bash}
+ * ./scripts/configure.sh macos_arm64 --fresh
+ * ./scripts/build.sh macos_arm64 --config Debug --parallel 8
+ * ./scripts/test.sh macos_arm64 --config Debug --parallel 8
+ * ./scripts/export.sh macos_arm64 --fresh --parallel 8
+ * @endcode
+ *
+ * @warning The test step currently stops this sequence because no CTest cases
+ * are registered. That is an intentional release-gate failure, not permission
+ * to silently skip testing. See @ref Foundation_Workflows_Test.
+ *
+ * The Windows equivalent uses the matching `.ps1` scripts. Cross-compiled
+ * targets do not run host-side CTest executables; follow
+ * @ref Foundation_Workflows_Validation for their compile, export, architecture,
+ * and firmware-consumer checks.
+ *
+ * Start with @ref Foundation_Workflows_Manual for the complete local workflow.
+ * See the other subgroups for each command's contract, defaults, side effects,
+ * expected output, and failure modes.
+ */
+
+/**
+ * @defgroup Foundation_Workflows_Manual Manual Workflow
+ * @ingroup Foundation_Workflows
+ * @brief Run the complete local development and release-candidate sequence.
+ */
+
+/**
+ * @defgroup Foundation_Workflows_Configuration Configuration
+ * @ingroup Foundation_Workflows
+ * @brief Select a preset and configure its native or cross-compilation environment.
+ */
+
+/**
+ * @defgroup Foundation_Workflows_Development Development
+ * @ingroup Foundation_Workflows
+ * @brief Compile, test, document, and clean the project during development.
+ */
+
+/**
+ * @defgroup Foundation_Workflows_Delivery Delivery
+ * @ingroup Foundation_Workflows
+ * @brief Install, package, and consume target-specific Foundation libraries.
+ */

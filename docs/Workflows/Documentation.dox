@@ -1,0 +1,82 @@
+/**
+ * @defgroup Foundation_Workflows_Documentation Documentation
+ * @ingroup Foundation_Workflows_Development
+ * @brief Generate the Doxygen HTML site through the normal build workflow.
+ *
+ * Documentation is configured by the `documentation` preset and built as the
+ * CMake `docs` target. It is intentionally kept inside the same preset/script
+ * architecture as the library so local development and CI use one command.
+ *
+ * @section FoundationWorkflowDocsBash Bash
+ *
+ * @code{bash}
+ * ./scripts/docs.sh [preset] [build options]
+ *
+ * ./scripts/docs.sh
+ * ./scripts/docs.sh documentation --fresh --parallel 8
+ * @endcode
+ *
+ * @section FoundationWorkflowDocsPowerShell PowerShell
+ *
+ * @code{powershell}
+ * ./scripts/docs.ps1 [-Preset <preset>] [-Parallel <jobs>] [-Fresh]
+ * @endcode
+ *
+ * The default preset is `documentation`. It enables `FOUNDATION_DOCS`, requires
+ * a discoverable Doxygen installation, and builds the `docs` target. Generated
+ * HTML is written to:
+ *
+ * @code
+ * build/<preset>/docs/html/index.html
+ * @endcode
+ *
+ * Documentation sources must be registered with `foundation_add_dox()` from a
+ * CMakeLists file. Workflow pages are registered by `docs/Workflows/CMakeLists.txt`.
+ * Platform pages are registered by `docs/Topics/BuildGuide/CMakeLists.txt`.
+ *
+ * @section FoundationWorkflowDocsStructure Group Structure
+ *
+ * Workflow documentation must remain under `docs/Workflows/` and use this
+ * hierarchy:
+ *
+ * @code
+ * Workflows
+ * |-- Manual Workflow
+ * |-- Configuration
+ * |   |-- Configure
+ * |   |-- Presets
+ * |   `-- Toolchains
+ * |-- Development
+ * |   |-- Build
+ * |   |-- Test
+ * |   |-- Validation
+ * |   |   `-- Windows and macOS Checklist
+ * |   |-- Documentation
+ * |   `-- Clean
+ * `-- Delivery
+ *     |-- Install
+ *     |-- Export
+ *     `-- Precompiled Libraries
+ * @endcode
+ *
+ * Define a page with `@defgroup`, attach it to exactly one subgroup with
+ * `@ingroup`, add a concise `@brief`, use globally unique section identifiers,
+ * and register the file in the local CMakeLists. Platform-specific integration
+ * belongs under Build Guide / Platforms; reusable command behavior belongs here.
+ *
+ * @section FoundationWorkflowDocsQuality Quality Checks
+ *
+ * After changing documentation:
+ *
+ * @code{bash}
+ * ./scripts/docs.sh --fresh
+ * @endcode
+ *
+ * Confirm that the command succeeds, the expected group HTML exists, new pages
+ * appear below the intended parent, and the output contains no unresolved
+ * references, malformed commands, or duplicate section labels. The checked-in
+ * configuration intentionally disables `WARN_IF_UNDOCUMENTED`: API coverage is
+ * incomplete and is tracked as a separate release task, while structural and
+ * semantic documentation errors remain visible. Do not suppress a new warning
+ * merely because older public APIs still need descriptions.
+ */

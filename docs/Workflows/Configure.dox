@@ -1,0 +1,106 @@
+/**
+ * @defgroup Foundation_Workflows_Configure Configure
+ * @ingroup Foundation_Workflows_Configuration
+ * @brief Create or update the CMake cache for a preset.
+ *
+ * Configuration is the only workflow that accepts arbitrary CMake cache
+ * overrides. Those values remain in `build/<preset>/CMakeCache.txt` and are
+ * reused by later build, test, install, and export operations.
+ *
+ * Internally, the scripts run `cmake --preset <preset>`, optionally add
+ * `--fresh`, and forward caller-supplied CMake arguments. The preset determines
+ * the binary directory, generator, compiler/toolchain, architecture, and target
+ * identity. Configuration generates build-system files but does not compile,
+ * test, install, or export Foundation.
+ *
+ * @section FoundationWorkflowConfigureBash Bash
+ *
+ * @code{bash}
+ * ./scripts/configure.sh <preset> [--fresh] [-- <cmake arguments>]
+ *
+ * ./scripts/configure.sh macos_arm64 --fresh
+ * ./scripts/configure.sh stm32f407_armgcc_cortex_m4f_hard --fresh -- \
+ *     -DFOUNDATION_ARM_TOOLCHAIN_ROOT=/opt/arm-gnu-toolchain \
+ *     -DFOUNDATION_ARM_SYSROOT=/opt/arm-none-eabi
+ * ./scripts/configure.sh atmega328p_avrgcc_avr5 --fresh -- \
+ *     -DFOUNDATION_AVR_TOOLCHAIN_ROOT=/opt/avr-gcc
+ * @endcode
+ *
+ * `--fresh` asks CMake to discard the existing cache before configuration.
+ * Arguments after `--` are forwarded directly to `cmake --preset`.
+ *
+ * @section FoundationWorkflowConfigurePowerShell PowerShell
+ *
+ * @code{powershell}
+ * ./scripts/configure.ps1 <preset> [-Fresh] [-CMakeArguments <arguments>]
+ *
+ * ./scripts/configure.ps1 arm_none_eabi_cortex_m4f_hard `
+ *     -Fresh `
+ *     -CMakeArguments "-DFOUNDATION_ARM_SYSROOT=C:/arm/sysroot"
+ * @endcode
+ *
+ * PowerShell collects all remaining arguments in `CMakeArguments`. Quote an
+ * argument when its value contains spaces. Bash requires the `--` separator so
+ * script options and CMake options cannot be confused.
+ *
+ * @section FoundationWorkflowConfigureFresh When to Use Fresh
+ *
+ * Use fresh configuration when:
+ *
+ * - changing generator, compiler, toolchain file, sysroot, CPU, FPU, or ABI;
+ * - preparing a release/export after development or testing overrides;
+ * - switching a cache from a full build to a reduced feature set;
+ * - diagnosing a result that may depend on stale cache state.
+ *
+ * Without the fresh option, CMake updates the existing cache. This is faster
+ * for normal source edits and preserves explicit feature selections. Fresh
+ * configuration removes only the CMake cache/build-system state managed by
+ * CMake; use @ref Foundation_Workflows_Clean when the entire build tree should
+ * be removed.
+ *
+ * @section FoundationWorkflowConfigureOptions Foundation Options
+ *
+ * The main workflow options are:
+ *
+ * | Option | Default | Effect |
+ * | --- | --- | --- |
+ * | `FOUNDATION_FULL_BUILD` | `OFF` | Requests the complete module selection. |
+ * | `FOUNDATION_DOCS` | `OFF` | Adds the Doxygen `docs` target. |
+ * | `FOUNDATION_TESTING` | `OFF` | Enables CTest integration. |
+ * | `FOUNDATION_EXAMPLES` | `OFF` | Builds repository examples. |
+ * | `FOUNDATION_COVERAGE` | `OFF` | Adds host coverage flags. |
+ * | `FOUNDATION_MATH` | `ON` | Includes Math and its selected submodules. |
+ * | `FOUNDATION_TYPE_TRAITS` | `ON` | Includes TypeTraits. |
+ * | `FOUNDATION_CONTAINERS` | `ON` | Includes Containers. |
+ * | `FOUNDATION_SCHEDULING` | `ON` | Includes Scheduling. |
+ * | `FOUNDATION_TIME` | `ON` | Includes Time and its selected submodules. |
+ * | `FOUNDATION_FUNCTIONAL` | `ON` | Includes Functional. |
+ * | `FOUNDATION_UTILS` | `ON` | Includes Utils. |
+ *
+ * Math, Time, Matrix, and Functional expose additional submodule options in
+ * their `CMakeOptions.cmake` files. When a parent is disabled, its child code is
+ * not added even if a child cache option remains `ON`.
+ *
+ * Target presets intentionally leave module options in the CMake cache. This
+ * allows a caller to configure a custom feature set once and reuse it for both
+ * Debug and Release. Leave `FOUNDATION_FULL_BUILD=OFF` when disabling individual
+ * modules; setting it to `ON` explicitly enables the complete module set.
+ * Do not override target invariants such as `FOUNDATION_PLATFORM`, CPU, FPU,
+ * architecture, or ABI merely to reuse a preset name. Add a new preset/profile
+ * when the produced binary has a different compatibility identity.
+ *
+ * @section FoundationWorkflowConfigureInspect Inspecting the Result
+ *
+ * Review the configure summary for system, processor, C/C++ compiler, compiler
+ * ID, and enabled Foundation features. Important cached values can also be
+ * inspected with:
+ *
+ * @code{bash}
+ * cmake -N -LA build/<preset>
+ * grep -E "FOUNDATION_|CMAKE_(CXX_COMPILER|SYSTEM_PROCESSOR)" \
+ *     build/<preset>/CMakeCache.txt
+ * @endcode
+ *
+ * A successful configure proves that CMake accepted the environment; it does
+ * not prove that all source files compile or that the target runtime is complete.
+ */

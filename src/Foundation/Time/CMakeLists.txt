@@ -93,7 +93,7 @@
     # Install headers for this subdirectory
     install(
         FILES ${FOUNDATION_PUBLIC_HEADERS_LOCAL}
-        DESTINATION "${FOUNDATION_DIST_INCLUDE_DIR}/Foundation/Time"
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/Foundation/Time"
     )
 #
 ######################################################################################################

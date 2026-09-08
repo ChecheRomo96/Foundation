@@ -9,7 +9,7 @@
 ######################################################################################################
 # Append Headers (local to this subdirectory)
 
-    list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
+    list(APPEND FOUNDATION_DOX_LOCAL
         "${CMAKE_CURRENT_LIST_DIR}/Foundation.dox"
     )
 
@@ -18,6 +18,14 @@
             "${CMAKE_CURRENT_LIST_DIR}/Math.h"
         )
         add_subdirectory(Math)
+    endif()
+
+    if(FOUNDATION_TYPE_TRAITS)
+        add_subdirectory(TypeTraits)
+    endif()
+
+    if(FOUNDATION_CONTAINERS)
+        add_subdirectory(Containers)
     endif()
 
     if(FOUNDATION_FUNCTIONAL)
@@ -32,6 +40,10 @@
             "${CMAKE_CURRENT_LIST_DIR}/Time.h"
         )
         add_subdirectory(Time)
+    endif()
+
+    if(FOUNDATION_SCHEDULING)
+        add_subdirectory(Scheduling)
     endif()
     
     if(FOUNDATION_UTILS)
@@ -71,7 +83,7 @@
     # Install headers for this subdirectory
     install(
         FILES ${FOUNDATION_PUBLIC_HEADERS_LOCAL}
-        DESTINATION "${FOUNDATION_DIST_INCLUDE_DIR}/Foundation"
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/Foundation"
     )
 #
 ######################################################################################################

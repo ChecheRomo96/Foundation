@@ -3,13 +3,13 @@
 
     #include <Foundation/Utils/Move.h>
 
-    namespace Foundation {
+    namespace Foundation::Utils {
 
         template <typename T>
-        void swap(T& a, T& b) {
-            T temp = Foundation::move(a);
-            a = Foundation::move(b);
-            b = Foundation::move(temp);
+        void Swap(T& a, T& b) {
+            T temp = Foundation::Utils::Move(a);
+            a = Foundation::Utils::Move(b);
+            b = Foundation::Utils::Move(temp);
         }
 
     }

@@ -1,0 +1,68 @@
+/**
+ * @defgroup Foundation_Workflows_Test Test
+ * @ingroup Foundation_Workflows_Development
+ * @brief Build a testing preset and execute its CTest suite.
+ *
+ * The test workflow performs three operations in order:
+ *
+ * 1. configures the selected preset with `FOUNDATION_TESTING=ON`;
+ * 2. builds the selected configuration;
+ * 3. runs CTest from `build/<preset>` with failure output enabled.
+ *
+ * `FOUNDATION_TESTING=ON` is present in the active cache immediately after this
+ * workflow. A later script configuration reapplies preset-defined defaults, but
+ * a fresh export is still recommended for release packaging because unrelated
+ * feature overrides may remain cached.
+ *
+ * @section FoundationWorkflowTestBash Bash
+ *
+ * @code{bash}
+ * ./scripts/test.sh <preset> [--config <name>] \
+ *     [--parallel <jobs>] [--filter <regex>] [--fresh] [--allow-no-tests]
+ *
+ * ./scripts/test.sh macos_arm64 --config Debug --parallel 8
+ * ./scripts/test.sh macos_arm64 --filter TimePoint
+ * @endcode
+ *
+ * @section FoundationWorkflowTestArguments Arguments and Defaults
+ *
+ * Test defaults to `Debug`. The filter is forwarded as CTest's regular
+ * expression, parallel controls both compilation and CTest workers, and fresh
+ * recreates the cache before enabling testing. Test failures propagate as a
+ * nonzero script exit status.
+ *
+ * @section FoundationWorkflowTestPowerShell PowerShell
+ *
+ * @code{powershell}
+ * ./scripts/test.ps1 <preset> [-Configuration <name>] `
+ *     [-Parallel <jobs>] [-Filter <regex>] [-Fresh] [-AllowNoTests]
+ * @endcode
+ *
+ * Test output is always displayed on failure. An empty CTest suite is an error
+ * by default so a release cannot silently pass without validation.
+ * `--allow-no-tests` or `-AllowNoTests` is intended only while bootstrapping the
+ * suite and must not be used by a release gate.
+ * The test workflow enables only `FOUNDATION_TESTING` while configuring the
+ * selected target preset; a separate testing preset is not needed. Examples are
+ * API demonstrations and are never enabled, executed, or reported as tests by
+ * this workflow.
+ *
+ * @warning The current repository does not yet register executable tests.
+ * Removing this warning requires adding test targets with `add_test()` or
+ * GoogleTest discovery and making the normal test command pass without the
+ * allow-no-tests option.
+ *
+ * @section FoundationWorkflowTestNativeVsCross Native and Cross Tests
+ *
+ * Native presets may build and execute CTest programs on the host. Cross presets
+ * create binaries for a different processor and cannot be treated as host
+ * executable tests. AVR, STM32, PSoC, and generic Arm targets require one of:
+ *
+ * - tests compiled into the consuming firmware and executed on hardware;
+ * - a target-aware emulator with an explicit CMake/CTest launcher;
+ * - host-side tests built from the same portable source using a native preset.
+ *
+ * Until such infrastructure is registered, validate embedded outputs with
+ * @ref Foundation_Workflows_Validation and do not report `AllowNoTests` as a
+ * successful test suite.
+ */

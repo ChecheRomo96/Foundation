@@ -12,10 +12,12 @@
     list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
         "${CMAKE_CURRENT_LIST_DIR}/HelperClasses.h"
         "${CMAKE_CURRENT_LIST_DIR}/PrimaryTypeCategories.h"
+        "${CMAKE_CURRENT_LIST_DIR}/CompositeTypeCategories.h"
         "${CMAKE_CURRENT_LIST_DIR}/TypeProperties.h"
+        "${CMAKE_CURRENT_LIST_DIR}/TypeRelationships.h"
         "${CMAKE_CURRENT_LIST_DIR}/TypeTraits.h"
     )
-    
+
     list(APPEND FOUNDATION_DOX_LOCAL
         "${CMAKE_CURRENT_LIST_DIR}/TypeTraits.dox"
     )
@@ -50,7 +52,7 @@
     # Install headers for this subdirectory
     install(
         FILES ${FOUNDATION_PUBLIC_HEADERS_LOCAL}
-        DESTINATION "${FOUNDATION_DIST_INCLUDE_DIR}/Foundation/TypeTraits"
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/Foundation/TypeTraits"
     )
 #
 ######################################################################################################

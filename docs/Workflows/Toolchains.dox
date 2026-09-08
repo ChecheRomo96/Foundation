@@ -1,0 +1,112 @@
+/**
+ * @defgroup Foundation_Workflows_Toolchains Toolchains
+ * @ingroup Foundation_Workflows_Configuration
+ * @brief CMake cross-compilation configuration and adding new targets.
+ *
+ * Native desktop builds generally use host compilers selected by their preset.
+ * Cross-compiled targets use a CMake toolchain file to describe the target
+ * system, compiler programs, architecture flags, ABI, and find-root behavior.
+ * CMake loads the toolchain before `project()`, so changing a compiler, target
+ * processor, or sysroot requires a fresh cache.
+ *
+ * Both repository cross-toolchains set `CMAKE_SYSTEM_NAME=Generic` and
+ * `CMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY`. The latter prevents compiler
+ * detection from requiring startup objects or a linker script. It does not make
+ * a complete firmware: the consuming project still owns startup, memory layout,
+ * runtime initialization, linker script, and board/device integration.
+ *
+ * @section FoundationWorkflowArmToolchain GNU Arm Embedded
+ *
+ * The generic toolchain is `cmake/toolchains/arm-none-eabi.cmake`. Reusable
+ * profiles in `cmake/toolchains/arm-none-eabi/` supply CPU and floating-point
+ * defaults for Cortex-M0+, M3, M4F, and M7F.
+ *
+ * Configurable cache values include:
+ *
+ * - `FOUNDATION_ARM_TOOLCHAIN_ROOT`: optional installation root whose `bin`
+ *   directory contains the compiler programs;
+ * - `FOUNDATION_ARM_TOOLCHAIN_PREFIX`: compiler executable prefix, normally
+ *   `arm-none-eabi`;
+ * - `FOUNDATION_ARM_CPU`: value passed through `-mcpu`;
+ * - `FOUNDATION_FLOAT_ABI`: `soft`, `softfp`, or `hard`;
+ * - `FOUNDATION_FPU`: value passed through `-mfpu` when applicable;
+ * - `FOUNDATION_ARM_SYSROOT`: target C runtime headers and libraries;
+ * - `FOUNDATION_ARM_ADDITIONAL_FLAGS`: extra C and C++ target flags.
+ *
+ * Hard-float profiles require an explicit FPU. All profiles use Thumb mode,
+ * section-level garbage collection support, and disable C++ exceptions and RTTI.
+ *
+ * | Profile | CPU flag | Float ABI | FPU |
+ * | --- | --- | --- | --- |
+ * | `cortex-m0plus-soft` | `cortex-m0plus` | `soft` | none |
+ * | `cortex-m3-soft` | `cortex-m3` | `soft` | none |
+ * | `cortex-m4f-hard` | `cortex-m4` | `hard` | `fpv4-sp-d16` |
+ * | `cortex-m7f-hard` | `cortex-m7` | `hard` | `fpv5-d16` |
+ *
+ * Profile files assign CPU/ABI/FPU with `CACHE ... FORCE`; those values are
+ * target invariants. Create a new profile instead of overriding them from a
+ * command line. `FOUNDATION_ARM_SYSROOT` and additional flags remain
+ * machine/product inputs and may be configured externally.
+ *
+ * @warning The compiler alone may not provide target runtime headers. If a build
+ * fails to locate headers such as `stdint.h`, install the matching Newlib/runtime
+ * package or configure `FOUNDATION_ARM_SYSROOT` to a compatible SDK sysroot.
+ * Compiler, runtime, CPU, FPU, and float ABI must all agree.
+ * The toolchain searches `arm-none-eabi-gcc`, `arm-none-eabi-g++`,
+ * `arm-none-eabi-ar`, and `arm-none-eabi-ranlib`. Place their directory on
+ * `PATH` or configure `FOUNDATION_ARM_TOOLCHAIN_ROOT`. Verify the actual tools
+ * selected in CMake's configure summary.
+ *
+ * @section FoundationWorkflowAVRToolchain AVR-GCC
+ *
+ * `cmake/toolchains/avr-gcc.cmake` provides the reusable AVR-GCC layer. Device
+ * profiles must set `FOUNDATION_AVR_MCU` and `FOUNDATION_AVR_ARCHITECTURE`.
+ * The initial `cmake/toolchains/avr-gcc/atmega328p.cmake` profile selects the
+ * ATmega328P and AVR5 architecture. `FOUNDATION_AVR_TOOLCHAIN_ROOT` may point
+ * to an installation whose `bin` directory is not on `PATH`.
+ *
+ * The profile fixes `-mmcu=atmega328p` and reports `avr5` as the system
+ * processor. The common toolchain also enables function/data sections, garbage
+ * collection at executable link time, and disables exceptions and RTTI.
+ * `FOUNDATION_AVR_ADDITIONAL_FLAGS` is available for product-specific compiler
+ * flags, but an MCU change requires a new profile and preset.
+ *
+ * AVR-GCC distributions vary in supported C++ language/library functionality.
+ * Foundation requires C++17 language compilation but avoids a dependency on the
+ * general C++ standard library. Validate each compiler version and real consumer
+ * rather than assuming every AVR package is equivalent.
+ *
+ * @section FoundationWorkflowToolchainInspect Inspecting Cross Outputs
+ *
+ * `build/<preset>/compile_commands.json` shows the effective per-source flags.
+ * Confirm that every C++ command has the expected CPU/device and ABI flags.
+ * Inspect installed archives with the target binutils:
+ *
+ * @code{bash}
+ * arm-none-eabi-objdump -f dist/<arm-preset>/lib/libFoundation.a
+ * avr-objdump -f dist/atmega328p_avrgcc_avr5/lib/libFoundation.a
+ * @endcode
+ *
+ * Archive inspection proves object architecture, not full firmware
+ * compatibility. The final consumer must use the same runtime and ABI.
+ *
+ * @section FoundationWorkflowAddTarget Adding a Target
+ *
+ * 1. Reuse an existing profile or add a focused toolchain file under
+ *    `cmake/toolchains/`.
+ * 2. Add a configure preset under `cmake/presets/` and select its
+ *    `toolchainFile` or a focused profile that includes the generic toolchain.
+ * 3. Add one target-identity configure preset and matching build/test presets.
+ *    Select Debug or Release as a build configuration, not in the preset name.
+ * 4. Set `FOUNDATION_PLATFORM` to the artifact identity and validate the
+ *    processor or ABI when CMake can report it.
+ * 5. Add the preset file to the include graph in `CMakePresets.json`.
+ * 6. Configure, build, export, and verify the resulting library architecture
+ *    with the repository scripts.
+ * 7. Compile a separate consumer with `find_package(Foundation CONFIG)` against
+ *    the exported prefix before publishing it.
+ * 8. Document prerequisites, generated flags, limitations, and acceptance steps.
+ *
+ * No platform-specific branch should be added to the scripts. New target logic
+ * belongs in the preset and toolchain configuration so every workflow can use it.
+ */

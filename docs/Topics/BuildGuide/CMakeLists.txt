@@ -1,14 +1,11 @@
 foundation_add_dox(
     "${CMAKE_CURRENT_LIST_DIR}/BuildGuide.dox"
     "${CMAKE_CURRENT_LIST_DIR}/Arduino.dox"
-    "${CMAKE_CURRENT_LIST_DIR}/DistLayout.dox"
+    "${CMAKE_CURRENT_LIST_DIR}/AVR.dox"
     "${CMAKE_CURRENT_LIST_DIR}/Linux.dox"
     "${CMAKE_CURRENT_LIST_DIR}/MacOS.dox"
     "${CMAKE_CURRENT_LIST_DIR}/Overview.dox"
-    "${CMAKE_CURRENT_LIST_DIR}/PrecompiledLibraries.dox"
     "${CMAKE_CURRENT_LIST_DIR}/PSoC.dox"
-    "${CMAKE_CURRENT_LIST_DIR}/Scripts.dox"
     "${CMAKE_CURRENT_LIST_DIR}/STM32.dox"
     "${CMAKE_CURRENT_LIST_DIR}/Windows.dox"
-    "${CMAKE_CURRENT_LIST_DIR}/Workflow.dox"
 )
