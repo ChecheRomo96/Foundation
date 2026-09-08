@@ -49,10 +49,20 @@
  * They must be separated by architecture and core, for example:
  *
  * @code
- * arduino_avr_atmega328p_release
- * arduino_samd_cortex_m0plus_release
- * arduino_esp32_xtensa_release
+ * atmega328p_avrgcc_avr5
+ * arduino_samd_cortex_m0plus
+ * arduino_esp32_xtensa
  * @endcode
  *
  * Source mode is recommended for Arduino unless a very specific target is known.
+ *
+ * The `atmega328p_avrgcc_avr5` export is a CMake package and target archive. It
+ * does not automatically create Arduino's architecture-specific precompiled
+ * library directory layout or board metadata. To distribute it through Arduino,
+ * verify the exact board core/toolchain version and package the archive according
+ * to that core's library rules. Otherwise, keep using source mode so the Arduino
+ * build compiles Foundation with the sketch's selected board flags.
+ *
+ * SAMD, ESP32, and other Arduino architectures require their own explicit
+ * profiles; the ATmega328P AVR archive is not compatible with them.
  */

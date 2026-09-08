@@ -1,23 +1,36 @@
 /**
  * @addtogroup Foundation_BuildGuide_Linux
  *
- * Recommended future presets:
+ * Native target presets:
  *
  * @code
- * linux_gcc_x64_debug
- * linux_gcc_x64_release
- * linux_clang_x64_debug
- * linux_clang_x64_release
+ * linux_gcc_x64
+ * linux_clang_x64
+ * linux_gcc_arm64
+ * linux_clang_arm64
  * @endcode
  *
- * Linux generators are usually single-configuration generators.
- * In this case, CMAKE_BUILD_TYPE is valid.
+ * Foundation uses Ninja Multi-Config so Debug and Release share one build tree
+ * without mixing object files or duplicating installed headers.
+ * GCC and Clang are different compatibility targets and therefore use separate
+ * presets and distribution directories.
+ *
+ * These are native presets. The x64 presets require an x86-64 Linux host and the
+ * Arm64 presets require an AArch64/Arm64 Linux host. They do not install a
+ * cross-compiler or sysroot and will reject a mismatched detected processor.
  *
  * Example:
  *
  * @code{bash}
- * cmake --preset linux_gcc_x64_release
- * cmake --build --preset linux_gcc_x64_release
- * cmake --install build/linux_gcc_x64_release --prefix dist/linux_gcc_x64_release
+ * gcc --version
+ * ninja --version
+ * ./scripts/configure.sh linux_gcc_x64 --fresh
+ * ./scripts/build.sh linux_gcc_x64 --config Debug --target Foundation
+ * ./scripts/build.sh linux_gcc_x64 --config Release --target Foundation
+ * ./scripts/export.sh linux_gcc_x64 --fresh
  * @endcode
+ *
+ * Repeat with the Clang preset after recording `clang++ --version`. Inspect the
+ * exported objects with `file`, `readelf`, or `llvm-readobj`, and compile an
+ * external consumer through `Foundation::Foundation`.
  */

@@ -1,0 +1,250 @@
+/**
+ * @addtogroup Foundation_Workflows_Manual
+ * @{
+ *
+ * This page describes the workflow a developer runs manually from a local
+ * checkout. CI should invoke the same repository scripts on the appropriate
+ * native or cross-compilation runner; it should not duplicate their CMake
+ * sequence in workflow YAML.
+ *
+ * @section FoundationManualWorkflowModel Execution Model
+ *
+ * Every command starts with a target preset such as `macos_arm64`,
+ * `windows_msvc_x64`, `stm32f407_armgcc_cortex_m4f_hard`, or
+ * `atmega328p_avrgcc_avr5`. The preset is the compatibility identity: it selects
+ * the platform, compiler/toolchain, architecture, ABI, and generator. Debug and
+ * Release are configurations inside that one identity, not separate presets.
+ *
+ * The scripts use two repository-owned locations:
+ *
+ * @code
+ * build/<preset>/   CMake cache, generated build system, objects, and artifacts
+ * dist/<preset>/    Installed package intended for consumption or publication
+ * @endcode
+ *
+ * `build/` is disposable. `dist/` is a package result. Do not publish files
+ * directly from the build tree.
+ *
+ * @section FoundationManualWorkflowPrerequisites Prerequisites
+ *
+ * From the repository root, first confirm that CMake can see the target preset
+ * and the required compiler:
+ *
+ * @code{bash}
+ * cmake --version
+ * cmake --list-presets=all
+ * ninja --version
+ * @endcode
+ *
+ * Ninja is required by the current macOS, Clang, Linux, Arm, and AVR presets.
+ * Visual Studio presets instead require the matching Visual Studio installation
+ * and should be run from Developer PowerShell. Cross presets additionally need
+ * their target compiler and runtime/sysroot. Doxygen is needed only for the
+ * documentation workflow.
+ *
+ * @section FoundationManualWorkflowDaily Daily Development
+ *
+ * The build script configures before compiling, so a separate configure command
+ * is not required for a normal edit/build cycle.
+ *
+ * @code{bash}
+ * ./scripts/build.sh macos_arm64 --config Debug --target Foundation
+ * @endcode
+ *
+ * @code{powershell}
+ * ./scripts/build.ps1 windows_msvc_x64 `
+ *     -Configuration Debug -Target Foundation
+ * @endcode
+ *
+ * Repeating the command is incremental. Use Release explicitly when optimizing
+ * or checking the release configuration:
+ *
+ * @code{bash}
+ * ./scripts/build.sh macos_arm64 --config Release --target Foundation
+ * @endcode
+ *
+ * Omitting `--target Foundation` or `-Target Foundation` builds the generator's
+ * default target and can include optional targets enabled in the current cache.
+ * Selecting Debug or Release does not require `--fresh` and does not create a
+ * second preset directory.
+ *
+ * @section FoundationManualWorkflowConfigure Explicit Configuration and Overrides
+ *
+ * Run configure directly when inspecting the configure summary or selecting a
+ * custom feature set:
+ *
+ * @code{bash}
+ * ./scripts/configure.sh macos_arm64 --fresh -- \
+ *     -DFOUNDATION_FULL_BUILD=OFF \
+ *     -DFOUNDATION_SCHEDULING=OFF
+ * @endcode
+ *
+ * @code{powershell}
+ * ./scripts/configure.ps1 windows_msvc_x64 -Fresh `
+ *     -CMakeArguments "-DFOUNDATION_FULL_BUILD=OFF", `
+ *                     "-DFOUNDATION_SCHEDULING=OFF"
+ * @endcode
+ *
+ * Cache overrides remain associated with `build/<preset>` until another
+ * configure operation replaces them or the cache is refreshed. If an override
+ * must apply to an export, pass it to the export command itself; do not rely on
+ * an earlier configure call.
+ *
+ * @section FoundationManualWorkflowFresh Fresh Versus Incremental
+ *
+ * `--fresh` in Bash and `-Fresh` in PowerShell ask CMake to recreate its cache
+ * and generated build-system state. They are optional controls, not part of the
+ * target name.
+ *
+ * | Situation | Fresh? | Reason |
+ * | --- | --- | --- |
+ * | Rebuild after editing source or headers | No | Incremental compilation is faster. |
+ * | Switch between Debug and Release | No | The multi-config tree isolates both configurations. |
+ * | Export a local package during iteration | Optional | Explicit command options still apply. |
+ * | Create a release candidate | Yes | Begins from preset defaults and declared overrides. |
+ * | Change compiler, generator, toolchain, SDK, sysroot, CPU, FPU, or ABI | Yes | Cached detection may no longer be valid. |
+ * | Suspect a stale or unexplained option | Yes | Removes hidden cache state. |
+ * | Remove the complete build directory | Use clean | Fresh is not a full directory cleanup. |
+ *
+ * `--fresh` does not delete source files. It is also different from distribution
+ * cleanup: export refreshes the default `dist/<preset>` directory itself.
+ *
+ * @section FoundationManualWorkflowTests Tests and Examples
+ *
+ * Tests and examples have different purposes:
+ *
+ * - tests provide pass/fail correctness evidence through CTest;
+ * - examples demonstrate public API usage and are not test evidence.
+ *
+ * Run the native test workflow with:
+ *
+ * @code{bash}
+ * ./scripts/test.sh macos_arm64 --config Debug --fresh
+ * @endcode
+ *
+ * @code{powershell}
+ * ./scripts/test.ps1 windows_msvc_x64 -Configuration Debug -Fresh
+ * @endcode
+ *
+ * The repository currently has no registered CTest cases, so the normal command
+ * intentionally fails. `--allow-no-tests` or `-AllowNoTests` may be used only to
+ * check that the test configuration compiles while the suite is being created;
+ * it is not release evidence. Embedded binaries require target hardware, an
+ * emulator, or host-side portable tests as described in
+ * @ref Foundation_Workflows_Validation.
+ *
+ * Examples are excluded from ordinary packages. The export-only opt-in is:
+ *
+ * @code{bash}
+ * ./scripts/export.sh macos_arm64 --examples-on
+ * @endcode
+ *
+ * @code{powershell}
+ * ./scripts/export.ps1 windows_msvc_x64 -ExamplesOn
+ * @endcode
+ *
+ * Native macOS exports also contain the `FoundationExamples.command` launcher,
+ * and Windows exports contain `FoundationExamples.cmd`. A developer can
+ * double-click it, select any adjacent example, read its exit code, and return
+ * to the menu to run another example.
+ * Terminal and CI usage should invoke the real executable directly. Distribution
+ * packages contain Release examples only; build examples in Debug from the
+ * source tree when stepping through their code is useful.
+ *
+ * @code{bash}
+ * ./scripts/build.sh macos_arm64 --config Debug \
+ *     --target FoundationExamples --examples-on
+ * @endcode
+ *
+ * @section FoundationManualWorkflowInstall Manual Install
+ *
+ * Install overlays one already-built configuration into a prefix. It does not
+ * configure, compile, or remove stale files.
+ *
+ * @code{bash}
+ * ./scripts/build.sh macos_arm64 --config Debug --target Foundation
+ * ./scripts/build.sh macos_arm64 --config Release --target Foundation
+ * ./scripts/install.sh macos_arm64 --config Debug
+ * ./scripts/install.sh macos_arm64 --config Release
+ * @endcode
+ *
+ * This is useful for inspecting CMake installation behavior. For a distributable
+ * package, prefer export because it builds both configurations and refreshes the
+ * repository-owned destination safely.
+ *
+ * @section FoundationManualWorkflowExport Release-Candidate Export
+ *
+ * The normal one-command package excludes examples:
+ *
+ * @code{bash}
+ * ./scripts/export.sh macos_arm64 --fresh --parallel 8
+ * @endcode
+ *
+ * @code{powershell}
+ * ./scripts/export.ps1 windows_msvc_x64 -Fresh -Parallel 8
+ * @endcode
+ *
+ * To publish example executables in the same package, opt in explicitly:
+ *
+ * @code{bash}
+ * ./scripts/export.sh macos_arm64 --fresh --examples-on --parallel 8
+ * @endcode
+ *
+ * Feature variants must declare their overrides in the export command:
+ *
+ * @code{bash}
+ * ./scripts/export.sh macos_arm64 --fresh -- \
+ *     -DFOUNDATION_FULL_BUILD=OFF \
+ *     -DFOUNDATION_SCHEDULING=OFF
+ * @endcode
+ *
+ * Place `--examples-on` before the `--` separator when combining it with raw
+ * CMake arguments. Export configures once, builds Debug and Release, removes the
+ * default `dist/<preset>`, and installs both configurations into that directory.
+ * The expected native Unix library pair is `libFoundation_d.a` and
+ * `libFoundation.a`; Windows produces `Foundation_d.lib` and `Foundation.lib`.
+ * Optional examples are built and installed only for Release.
+ *
+ * @section FoundationManualWorkflowVerify Verification Before Publication
+ *
+ * A successful command is necessary but not sufficient. Before publishing:
+ *
+ * 1. confirm the Debug and Release archives both exist;
+ * 2. confirm `include/` and `lib/cmake/Foundation/` exist;
+ * 3. inspect `FoundationBuildInfo.cmake` for the platform, compiler, architecture,
+ *    feature set, and example selection;
+ * 4. inspect archive architecture with the platform tool;
+ * 5. compile a separate consumer through `find_package(Foundation CONFIG)`;
+ * 6. record the native or embedded validation result for that preset.
+ *
+ * On macOS, a minimal structural inspection is:
+ *
+ * @code{bash}
+ * test -f dist/macos_arm64/lib/libFoundation_d.a
+ * test -f dist/macos_arm64/lib/libFoundation.a
+ * test -f dist/macos_arm64/lib/cmake/Foundation/FoundationConfig.cmake
+ * lipo -archs dist/macos_arm64/lib/libFoundation_d.a
+ * lipo -archs dist/macos_arm64/lib/libFoundation.a
+ * @endcode
+ *
+ * Use @ref Foundation_Workflows_Validation for target-specific checks and the
+ * release evidence checklist.
+ *
+ * @section FoundationManualWorkflowDocs Documentation Changes
+ *
+ * Rebuild documentation whenever a script, option, preset, toolchain, package
+ * layout, or workflow changes:
+ *
+ * @code{bash}
+ * ./scripts/docs.sh --fresh
+ * @endcode
+ *
+ * @code{powershell}
+ * ./scripts/docs.ps1 -Fresh
+ * @endcode
+ *
+ * Generated HTML belongs under `build/documentation/docs/html`; only the Doxygen
+ * source files under `docs/` are maintained as repository documentation.
+ *
+ * @}
+ */

@@ -15,54 +15,65 @@
 /**
  * @defgroup Foundation_BuildGuide_Overview Overview
  * @ingroup Foundation_BuildGuide
+ * @brief Choose between source, full precompiled, and target-specific builds.
  */
 
 /**
- * @defgroup Foundation_BuildGuide_Workflow Workflow
+ * @defgroup Foundation_BuildGuide_Platforms Platforms
  * @ingroup Foundation_BuildGuide
+ * @brief Platform-specific compiler, architecture, and integration guidance.
  */
 
 /**
- * @defgroup Foundation_BuildGuide_PresetNaming Preset Naming
- * @ingroup Foundation_BuildGuide
+ * @defgroup Foundation_BuildGuide_DesktopPlatforms Desktop
+ * @ingroup Foundation_BuildGuide_Platforms
+ * @brief Native Windows, Linux, and macOS targets.
  */
 
 /**
- * @defgroup Foundation_BuildGuide_DistLayout Distribution Layout
- * @ingroup Foundation_BuildGuide
+ * @defgroup Foundation_BuildGuide_EmbeddedPlatforms Embedded
+ * @ingroup Foundation_BuildGuide_Platforms
+ * @brief Arduino, AVR, PSoC, STM32, and related cross-compiled targets.
  */
 
 /**
  * @defgroup Foundation_BuildGuide_Windows Windows
- * @ingroup Foundation_BuildGuide
+ * @ingroup Foundation_BuildGuide_DesktopPlatforms
+ * @brief MSVC and Clang builds for Windows.
  */
 
 /**
  * @defgroup Foundation_BuildGuide_Linux Linux
- * @ingroup Foundation_BuildGuide
+ * @ingroup Foundation_BuildGuide_DesktopPlatforms
+ * @brief Native GCC and Clang builds for x86-64 and Arm64 Linux.
  */
 
 /**
  * @defgroup Foundation_BuildGuide_MacOs macOS
- * @ingroup Foundation_BuildGuide
+ * @ingroup Foundation_BuildGuide_DesktopPlatforms
+ * @brief Apple Silicon and Intel macOS builds.
  */
 
 /**
  * @defgroup Foundation_BuildGuide_Arduino Arduino
- * @ingroup Foundation_BuildGuide
+ * @ingroup Foundation_BuildGuide_EmbeddedPlatforms
+ * @brief Source-first Arduino integration and architecture-specific exports.
  */
 
 /**
  * @defgroup Foundation_BuildGuide_PSoC PSoC
- * @ingroup Foundation_BuildGuide
+ * @ingroup Foundation_BuildGuide_EmbeddedPlatforms
+ * @brief PSoC 5LP Cortex-M3 soft-float builds.
  */
 
 /**
  * @defgroup Foundation_BuildGuide_STM32 STM32
- * @ingroup Foundation_BuildGuide
+ * @ingroup Foundation_BuildGuide_EmbeddedPlatforms
+ * @brief STM32 Cortex-M3, M4F, and M7F target families.
  */
 
 /**
- * @defgroup Foundation_BuildGuide_Precompiled Precompiled Libraries
- * @ingroup Foundation_BuildGuide
+ * @defgroup Foundation_BuildGuide_AVR AVR
+ * @ingroup Foundation_BuildGuide_EmbeddedPlatforms
+ * @brief AVR-GCC builds for explicitly named 8-bit AVR devices.
  */

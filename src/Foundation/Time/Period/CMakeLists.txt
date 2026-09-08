@@ -9,15 +9,15 @@
 ######################################################################################################
 # Append Headers (local to this subdirectory)
 
-    
+
     list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
         "${CMAKE_CURRENT_SOURCE_DIR}/Period.h"
     )
-    
+
     list(APPEND FOUNDATION_SOURCES_LOCAL
         "${CMAKE_CURRENT_SOURCE_DIR}/Period.cpp"
     )
-    
+
     list(APPEND FOUNDATION_DOX_LOCAL
         "${CMAKE_CURRENT_SOURCE_DIR}/Period.dox"
     )
@@ -52,7 +52,7 @@
     # Install headers for this subdirectory
     install(
         FILES ${FOUNDATION_PUBLIC_HEADERS_LOCAL}
-        DESTINATION "${FOUNDATION_DIST_INCLUDE_DIR}/Foundation/Time/Period"
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/Foundation/Time/Period"
     )
 #
 ######################################################################################################

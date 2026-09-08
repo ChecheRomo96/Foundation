@@ -1,0 +1,101 @@
+/**
+ * @defgroup Foundation_Workflows_Build Build
+ * @ingroup Foundation_Workflows_Development
+ * @brief Configure a preset and compile one or more targets.
+ *
+ * The build workflow first configures the selected preset, then invokes CMake
+ * using `build/<preset>` as the binary directory. It therefore works even when
+ * a configure preset has no matching build preset.
+ * Calling build repeatedly is incremental unless `--clean-first`, `-CleanFirst`,
+ * or a fresh/clean operation invalidates prior outputs.
+ *
+ * @section FoundationWorkflowBuildBash Bash
+ *
+ * @code{bash}
+ * ./scripts/build.sh <preset> [--config <name>] [--target <name>] \
+ *     [--parallel <jobs>] [--clean-first] [--fresh] [--examples-on]
+ *
+ * ./scripts/build.sh macos_arm64 --config Release --parallel 8
+ * ./scripts/build.sh macos_arm64 --config Debug --target Foundation --clean-first
+ * ./scripts/build.sh stm32f407_armgcc_cortex_m4f_hard \
+ *     --config Release --target Foundation
+ * @endcode
+ *
+ * @section FoundationWorkflowBuildPowerShell PowerShell
+ *
+ * @code{powershell}
+ * ./scripts/build.ps1 <preset> [-Configuration <name>] [-Target <name>] `
+ *     [-Parallel <jobs>] [-CleanFirst] [-Fresh] [-ExamplesOn]
+ * @endcode
+ *
+ * @section FoundationWorkflowBuildArguments Arguments and Defaults
+ *
+ * | Argument | Default | Meaning |
+ * | --- | --- | --- |
+ * | configuration | `Debug` | Selects `Debug` or `Release` in the shared tree. |
+ * | target | generator default | Builds one named CMake target when supplied. |
+ * | parallel | CMake default | Forwards the requested worker count. |
+ * | clean first | off | Cleans the selected configuration before compiling. |
+ * | fresh | off | Reconfigures with a fresh CMake cache before building. |
+ * | examples | off | Enables repository example targets for this build. |
+ *
+ * `--target Foundation` is recommended when validating or exporting the library
+ * alone. Omitting it builds the generator's default target, which may include
+ * examples or tests enabled by earlier cache state.
+ *
+ * Target presets are configuration-independent. Build defaults to `Debug`; use
+ * the explicit option to select `Release`. Both configurations use the same
+ * `build/<preset>` directory while Ninja Multi-Config or the native IDE generator
+ * keeps their object files isolated.
+ *
+ * Foundation archives are written below:
+ *
+ * @code
+ * build/<preset>/artifacts/lib/
+ * @endcode
+ *
+ * Debug builds use the `_d` postfix. Release builds produce `libFoundation.a`
+ * on Unix-like systems or the corresponding Foundation static library on Windows.
+ * Typical names are:
+ *
+ * | Target | Debug | Release |
+ * | --- | --- | --- |
+ * | macOS/Linux/Arm/AVR | `libFoundation_d.a` | `libFoundation.a` |
+ * | Windows | `Foundation_d.lib` | `Foundation.lib` |
+ *
+ * @section FoundationWorkflowBuildExamples Building Examples for Development
+ *
+ * Examples can be compiled in either configuration inside the build tree. This
+ * is the supported way to debug or step through an example; exported packages
+ * intentionally contain Release examples only.
+ *
+ * @code{bash}
+ * ./scripts/build.sh macos_arm64 --config Debug \
+ *     --target FoundationExamples --examples-on
+ * @endcode
+ *
+ * @code{powershell}
+ * ./scripts/build.ps1 windows_msvc_x64 -Configuration Debug `
+ *     -Target FoundationExamples -ExamplesOn
+ * @endcode
+ *
+ * @section FoundationWorkflowBuildNotDelivery Build Is Not Export
+ *
+ * Files under `build/` are temporary implementation artifacts. They are not the
+ * supported package layout and may contain generator-specific files. Use
+ * @ref Foundation_Workflows_Install to overlay one compiled configuration or
+ * @ref Foundation_Workflows_Export to create the complete Debug/Release package.
+ *
+ * @section FoundationWorkflowBuildFailures Common Failures
+ *
+ * - “preset not found” means the preset is unavailable on that host or its JSON
+ *   was not included by `CMakePresets.json`;
+ * - “compiler not found” means the required compiler is not on `PATH` and no
+ *   configured toolchain root locates it;
+ * - missing `stdint.h` in an Arm build usually means the compiler runtime/Newlib
+ *   or configured sysroot is incomplete;
+ * - architecture validation failures mean a native preset was used on the wrong
+ *   host architecture;
+ * - a stale generator/compiler error requires a fresh configure or clean build
+ *   directory.
+ */

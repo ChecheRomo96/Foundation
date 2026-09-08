@@ -1,0 +1,190 @@
+/**
+ * @defgroup Foundation_Workflows_DesktopValidation Windows and macOS Checklist
+ * @ingroup Foundation_Workflows_Validation
+ * @brief Manual acceptance checklist for every native desktop preset and configuration.
+ *
+ * Run this checklist from a clean clone or a worktree containing exactly the
+ * release candidate. A preset identifies the target toolchain and architecture;
+ * Debug and Release are configurations inside that one preset. Both libraries
+ * therefore belong in the same `build/<preset>/artifacts/lib` directory and in
+ * the same exported `dist/<preset>/lib` package.
+ *
+ * @section FoundationDesktopValidationMatrix Required Matrix
+ *
+ * Complete every applicable row. Do not substitute a Linux container result
+ * for a native Windows or macOS result.
+ *
+ * | Host | Preset | Compiler | Debug | Release | Export | Consumer |
+ * | ---- | ------ | -------- | ----- | ------- | ------ | -------- |
+ * | Windows x64 | `windows_msvc_x64` | MSVC | [ ] | [ ] | [ ] | [ ] |
+ * | Windows x64 | `windows_clang_x64` | Clang | [ ] | [ ] | [ ] | [ ] |
+ * | macOS Apple Silicon | `macos_arm64` | Apple Clang | [ ] | [ ] | [ ] | [ ] |
+ * | macOS Apple Silicon or Intel | `macos_x64` | Apple Clang | [ ] | [ ] | [ ] | [ ] |
+ *
+ * `macos_x64` may be cross-built on Apple Silicon. Archive inspection proves
+ * the architecture, but an x86-64 executable test requires Rosetta or an Intel
+ * Mac. Record which environment executed the consumer.
+ *
+ * @section FoundationDesktopValidationFeatures Feature-Set Matrix
+ *
+ * Debug and Release are not enough by themselves because module options change
+ * the installed headers, compile definitions, and binary. Run the default set
+ * on all four desktop presets. Run the expanded option matrix on at least
+ * `windows_msvc_x64` and `macos_arm64`; run one non-default set on each
+ * secondary compiler preset to prove that arguments are forwarded correctly.
+ * Every row is a fresh export and must pass in both Debug and Release.
+ *
+ * | Result | Feature set | Fresh CMake arguments |
+ * | ------ | ----------- | --------------------- |
+ * | [ ] | Preset defaults | none |
+ * | [ ] | Explicit full build | `-DFOUNDATION_FULL_BUILD=ON` |
+ * | [ ] | Without Math | `-DFOUNDATION_MATH=OFF` |
+ * | [ ] | Without TypeTraits | `-DFOUNDATION_TYPE_TRAITS=OFF` |
+ * | [ ] | Without Containers | `-DFOUNDATION_CONTAINERS=OFF` |
+ * | [ ] | Without Scheduling | `-DFOUNDATION_SCHEDULING=OFF` |
+ * | [ ] | Without Time | `-DFOUNDATION_TIME=OFF` |
+ * | [ ] | Without Functional | `-DFOUNDATION_FUNCTIONAL=OFF` |
+ * | [ ] | Without Utils | `-DFOUNDATION_UTILS=OFF` |
+ * | [ ] | Core only | all seven module options above set to `OFF` |
+ *
+ * If disabling one module breaks another module, record the failure as a CMake
+ * dependency-model defect rather than silently changing the checklist. The
+ * build must either support that combination or reject it at configure time
+ * with a precise dependency message.
+ *
+ * @section FoundationDesktopValidationCommon Checklist for Each Preset
+ *
+ * - [ ] Record the commit SHA and confirm the worktree contains the intended changes.
+ * - [ ] Record CMake, Ninja or Visual Studio, and compiler versions.
+ * - [ ] Remove `build/<preset>` and `dist/<preset>` through `clean`.
+ * - [ ] Configure the preset once with the fresh option.
+ * - [ ] Confirm `CMAKE_CONFIGURATION_TYPES` contains Debug and Release.
+ * - [ ] Build the `Foundation` target in Debug.
+ * - [ ] Build the `Foundation` target in Release without reconfiguring.
+ * - [ ] Confirm the two archives have distinct names and the expected architecture.
+ * - [ ] Run one export command with no `--config`/`-Configuration` override.
+ * - [ ] Confirm that export installed Debug and Release into the same prefix.
+ * - [ ] Confirm public headers and all CMake package metadata were installed.
+ * - [ ] If examples are enabled, confirm only Release executables and launchers
+ *       exist in `bin/examples`; record them as examples, never as tests.
+ * - [ ] Confirm Debug and Release imported locations select different archives.
+ * - [ ] Build a separate consumer with `find_package(Foundation CONFIG REQUIRED)`
+ *       and `Foundation::Foundation` in both configurations.
+ * - [ ] Run registered native tests in both configurations.
+ * - [ ] Record any use of `AllowNoTests` as “compiled; no tests executed,” not
+ *       as a test pass.
+ * - [ ] Repeat one fresh export with a module disabled and verify its metadata.
+ * - [ ] Restore and re-export the preset defaults before retaining release artifacts.
+ *
+ * @section FoundationDesktopValidationWindows Windows Commands
+ *
+ * Run MSVC from a Visual Studio Developer PowerShell. Set `$Preset` to
+ * `windows_msvc_x64`, then repeat with `windows_clang_x64` after confirming that
+ * `clang` and `clang++` resolve to the intended installation.
+ *
+ * @code{powershell}
+ * $Preset = "windows_msvc_x64"
+ * git rev-parse HEAD
+ * cmake --version
+ * cmake --list-presets=all
+ * Get-Command cl
+ * Get-Command ninja -ErrorAction SilentlyContinue
+ *
+ * ./scripts/clean.ps1 $Preset -Dist
+ * ./scripts/configure.ps1 $Preset -Fresh
+ * Select-String -Path "build/$Preset/CMakeCache.txt" `
+ *   -Pattern "CMAKE_CONFIGURATION_TYPES"
+ * ./scripts/build.ps1 $Preset -Configuration Debug -Target Foundation
+ * ./scripts/build.ps1 $Preset -Configuration Release -Target Foundation
+ *
+ * Test-Path "build/$Preset/artifacts/lib/Foundation_d.lib"
+ * Test-Path "build/$Preset/artifacts/lib/Foundation.lib"
+ *
+ * ./scripts/test.ps1 $Preset -Configuration Debug -AllowNoTests
+ * ./scripts/test.ps1 $Preset -Configuration Release -AllowNoTests
+ * ./scripts/export.ps1 $Preset -Fresh
+ *
+ * Test-Path "dist/$Preset/include"
+ * Test-Path "dist/$Preset/lib/Foundation_d.lib"
+ * Test-Path "dist/$Preset/lib/Foundation.lib"
+ * Test-Path "dist/$Preset/lib/cmake/Foundation/FoundationConfig.cmake"
+ * Test-Path "dist/$Preset/lib/cmake/Foundation/FoundationTargets-debug.cmake"
+ * Test-Path "dist/$Preset/lib/cmake/Foundation/FoundationTargets-release.cmake"
+ * Select-String -Path "dist/$Preset/lib/cmake/Foundation/FoundationTargets-debug.cmake" `
+ *   -Pattern "IMPORTED_LOCATION_DEBUG.*Foundation_d.lib"
+ * Select-String -Path "dist/$Preset/lib/cmake/Foundation/FoundationTargets-release.cmake" `
+ *   -Pattern "IMPORTED_LOCATION_RELEASE.*Foundation.lib"
+ * @endcode
+ *
+ * Every `Test-Path` must print `True`, and both `Select-String` archive checks
+ * must return a match. Use `dumpbin /headers` for MSVC or `llvm-readobj` for
+ * Clang when recording the archive machine type.
+ *
+ * Validate cache overrides independently; then restore the default package:
+ *
+ * @code{powershell}
+ * ./scripts/export.ps1 $Preset -Fresh `
+ *   -CMakeArguments "-DFOUNDATION_SCHEDULING=OFF"
+ * Select-String `
+ *   -Path "dist/$Preset/lib/cmake/Foundation/FoundationBuildInfo.cmake" `
+ *   -Pattern 'Foundation_FEATURE_SCHEDULING "OFF"'
+ * ./scripts/export.ps1 $Preset -Fresh
+ * @endcode
+ *
+ * @section FoundationDesktopValidationMacOS macOS Commands
+ *
+ * Set `PRESET` to `macos_arm64`, then repeat the complete checklist with
+ * `macos_x64`.
+ *
+ * @code{bash}
+ * PRESET=macos_arm64
+ * git rev-parse HEAD
+ * xcode-select -p
+ * xcrun clang++ --version
+ * cmake --version
+ * ninja --version
+ * cmake --list-presets=all
+ *
+ * ./scripts/clean.sh "$PRESET" --dist
+ * ./scripts/configure.sh "$PRESET" --fresh
+ * grep "CMAKE_CONFIGURATION_TYPES" "build/$PRESET/CMakeCache.txt"
+ * ./scripts/build.sh "$PRESET" --config Debug --target Foundation
+ * ./scripts/build.sh "$PRESET" --config Release --target Foundation
+ *
+ * test -f "build/$PRESET/artifacts/lib/libFoundation_d.a"
+ * test -f "build/$PRESET/artifacts/lib/libFoundation.a"
+ * lipo -archs "build/$PRESET/artifacts/lib/libFoundation_d.a"
+ * lipo -archs "build/$PRESET/artifacts/lib/libFoundation.a"
+ *
+ * ./scripts/test.sh "$PRESET" --config Debug --allow-no-tests
+ * ./scripts/test.sh "$PRESET" --config Release --allow-no-tests
+ * ./scripts/export.sh "$PRESET" --fresh
+ *
+ * test -d "dist/$PRESET/include"
+ * test -f "dist/$PRESET/lib/libFoundation_d.a"
+ * test -f "dist/$PRESET/lib/libFoundation.a"
+ * test -f "dist/$PRESET/lib/cmake/Foundation/FoundationConfig.cmake"
+ * grep "IMPORTED_LOCATION_DEBUG.*libFoundation_d.a" \
+ *   "dist/$PRESET/lib/cmake/Foundation/FoundationTargets-debug.cmake"
+ * grep "IMPORTED_LOCATION_RELEASE.*libFoundation.a" \
+ *   "dist/$PRESET/lib/cmake/Foundation/FoundationTargets-release.cmake"
+ * lipo -archs "dist/$PRESET/lib/libFoundation_d.a"
+ * lipo -archs "dist/$PRESET/lib/libFoundation.a"
+ * @endcode
+ *
+ * Both architecture commands must report `arm64` for `macos_arm64` and
+ * `x86_64` for `macos_x64`. Validate an option override, then restore defaults:
+ *
+ * @code{bash}
+ * ./scripts/export.sh "$PRESET" --fresh -- -DFOUNDATION_SCHEDULING=OFF
+ * grep 'Foundation_FEATURE_SCHEDULING "OFF"' \
+ *   "dist/$PRESET/lib/cmake/Foundation/FoundationBuildInfo.cmake"
+ * ./scripts/export.sh "$PRESET" --fresh
+ * @endcode
+ *
+ * @section FoundationDesktopValidationExit Release Evidence
+ *
+ * Keep the command log and complete one @ref FoundationValidationReport record
+ * for each preset. A row is complete only when the package consumer links the
+ * correct archive; the presence of files alone is not sufficient.
+ */

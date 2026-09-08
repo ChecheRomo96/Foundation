@@ -26,7 +26,7 @@ namespace Foundation::Scheduling {
 
         void Update() {
             if (_clock == 0) { return; }
-            Foundation::Time::Clock::TimePoint now = _clock->Now();
+            Foundation::Time::TimePoint now = _clock->Now();
             for (size_t i = 0; i < _count; ++i) {
                 if (_tasks[i] && _tasks[i]->ShouldRun(now)) {
                     _tasks[i]->Run(now);

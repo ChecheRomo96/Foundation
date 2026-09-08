@@ -256,6 +256,7 @@
  * Useful related documentation pages:
  *
  * - @ref FoundationTopLevelHeaders
- * - @ref FoundationBuildGuide
+ * - @ref Foundation_BuildGuide
+ * - @ref Foundation_Workflows
  * - @ref Foundation_Examples
  */

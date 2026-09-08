@@ -1,0 +1,180 @@
+/**
+ * @defgroup Foundation_Workflows_Validation Validation
+ * @ingroup Foundation_Workflows_Development
+ * @brief Repeatable acceptance matrix for native and cross-compiled targets.
+ *
+ * This page defines what “the workflow works” means. A successful compilation
+ * alone is not enough for a release artifact. Each supported target must pass
+ * the checks that are meaningful for that target class.
+ *
+ * @section FoundationValidationAcceptance Acceptance Criteria
+ *
+ * A target passes workflow validation when all applicable items below pass:
+ *
+ * 1. CMake accepts the preset and records the intended compiler and processor.
+ * 2. `Foundation` builds independently in Debug and Release from one build tree.
+ * 3. Debug and Release archives are different files with the correct target
+ *    object format and architecture.
+ * 4. One export operation installs both archives, public headers, package files,
+ *    and target metadata into `dist/<preset>`.
+ * 5. `FoundationTargets-debug.cmake` and
+ *    `FoundationTargets-release.cmake` map consumers to the correct archive.
+ * 6. A separate consumer compiles against the installed headers and links the
+ *    matching imported target or archive.
+ * 7. Native executable tests pass when tests are registered. Cross-compiled
+ *    behavior is validated in the real firmware or an appropriate emulator.
+ * 8. Doxygen builds without unresolved workflow references.
+ *
+ * Record the host OS and architecture, preset, CMake version, generator,
+ * compiler version, exact command, result, and artifact inspection output for
+ * every run. This makes a failure reproducible instead of machine-specific.
+ *
+ * @section FoundationValidationCurrentLimits Current Test-Suite Status
+ *
+ * @warning The repository currently registers no CTest test cases. On a native
+ * target, the normal test command is expected to return nonzero because
+ * `--no-tests=error` is intentional. `--allow-no-tests` or `-AllowNoTests`
+ * validates configuration and compilation only; it is not a release-test pass.
+ *
+ * Do not run `test.sh` or `test.ps1` as an execution test for STM32 or AVR.
+ * Examples are not tests, and cross-compiled binaries cannot run directly on the
+ * host. Embedded validation consists of library compilation, archive inspection,
+ * consumer/firmware linkage, and target execution where hardware is available.
+ *
+ * @section FoundationValidationPreflight Common Preflight
+ *
+ * Run before platform-specific checks:
+ *
+ * @code{bash}
+ * cmake --version
+ * cmake --list-presets=all
+ * git status --short
+ * @endcode
+ *
+ * CMake 3.25 or newer is required by the root project. Ninja must be available
+ * for every `Ninja` or `Ninja Multi-Config` preset. Confirm that the intended
+ * compiler resolves before configuring; a different compiler with the same
+ * executable name can create an incompatible archive.
+ *
+ * @section FoundationValidationDesktop Desktop Matrix
+ *
+ * The complete Windows and macOS commands, feature variants, assertions, and
+ * checkboxes live in @ref Foundation_Workflows_DesktopValidation. Keeping that
+ * matrix as a subgroup prevents this acceptance contract from becoming a
+ * second copy of the executable platform procedure.
+ *
+ * @section FoundationValidationSTM32 STM32 Matrix
+ *
+ * Select the preset that matches the firmware CPU and floating-point ABI:
+ *
+ * - `stm32f103_armgcc_cortex_m3_soft`;
+ * - `stm32f407_armgcc_cortex_m4f_hard`;
+ * - `stm32h743_armgcc_cortex_m7f_hard`.
+ *
+ * The presets build a static library only. Startup code, interrupt vectors,
+ * CMSIS, HAL, device definitions, memory layout, linker script, and flashing
+ * remain responsibilities of the consuming STM32 firmware project.
+ *
+ * @code{bash}
+ * arm-none-eabi-gcc --version
+ * arm-none-eabi-g++ --version
+ * arm-none-eabi-g++ -print-sysroot
+ *
+ * ./scripts/clean.sh stm32f407_armgcc_cortex_m4f_hard --dist
+ * ./scripts/configure.sh stm32f407_armgcc_cortex_m4f_hard --fresh
+ * ./scripts/build.sh stm32f407_armgcc_cortex_m4f_hard \
+ *   --config Debug --target Foundation
+ * ./scripts/build.sh stm32f407_armgcc_cortex_m4f_hard \
+ *   --config Release --target Foundation
+ * ./scripts/export.sh stm32f407_armgcc_cortex_m4f_hard --fresh
+ *
+ * arm-none-eabi-objdump -f \
+ *   dist/stm32f407_armgcc_cortex_m4f_hard/lib/libFoundation_d.a
+ * arm-none-eabi-objdump -f \
+ *   dist/stm32f407_armgcc_cortex_m4f_hard/lib/libFoundation.a
+ * grep -E "Foundation_(PLATFORM|SYSTEM|PROCESSOR|ARM)" \
+ *   dist/stm32f407_armgcc_cortex_m4f_hard/lib/cmake/Foundation/FoundationBuildInfo.cmake
+ * @endcode
+ *
+ * Compile and link the exported package in the actual STM32 firmware with the
+ * same `-mcpu`, `-mthumb`, `-mfloat-abi`, and `-mfpu` values. A successful
+ * Foundation archive build does not prove that the final firmware uses a
+ * compatible runtime or linker configuration. If configuration cannot find
+ * `stdint.h`, install the target Newlib/runtime or pass a compatible
+ * `FOUNDATION_ARM_SYSROOT` during a fresh configure/export.
+ *
+ * @section FoundationValidationAVR AVR Matrix
+ *
+ * The initial AVR preset is exact: ATmega328P, AVR-GCC, and AVR5. Do not use its
+ * archive for another AVR MCU without validating binary compatibility and adding
+ * an explicit device profile.
+ *
+ * @code{bash}
+ * avr-gcc --version
+ * avr-g++ --version
+ * avr-g++ -mmcu=atmega328p -print-file-name=include
+ *
+ * ./scripts/clean.sh atmega328p_avrgcc_avr5 --dist
+ * ./scripts/configure.sh atmega328p_avrgcc_avr5 --fresh
+ * ./scripts/build.sh atmega328p_avrgcc_avr5 \
+ *   --config Debug --target Foundation
+ * ./scripts/build.sh atmega328p_avrgcc_avr5 \
+ *   --config Release --target Foundation
+ * ./scripts/export.sh atmega328p_avrgcc_avr5 --fresh
+ *
+ * avr-objdump -f \
+ *   dist/atmega328p_avrgcc_avr5/lib/libFoundation_d.a
+ * avr-objdump -f \
+ *   dist/atmega328p_avrgcc_avr5/lib/libFoundation.a
+ * grep -E "Foundation_(PLATFORM|SYSTEM|PROCESSOR|AVR)" \
+ *   dist/atmega328p_avrgcc_avr5/lib/cmake/Foundation/FoundationBuildInfo.cmake
+ * @endcode
+ *
+ * Both archives must contain `elf32-avr` objects with architecture `avr:5`.
+ * Validate the installed package with a separate CMake consumer that calls a
+ * non-inline Foundation function, then inspect the ELF with `avr-size` and
+ * `avr-objdump`. Hardware execution remains the final check for timing, memory,
+ * startup, and board integration.
+ *
+ * @section FoundationValidationPackage Package Checks
+ *
+ * For every exported target, confirm these files exist:
+ *
+ * @code
+ * dist/<preset>/include/
+ * dist/<preset>/lib/<debug archive>
+ * dist/<preset>/lib/<release archive>
+ * dist/<preset>/lib/cmake/Foundation/FoundationConfig.cmake
+ * dist/<preset>/lib/cmake/Foundation/FoundationBuildInfo.cmake
+ * dist/<preset>/lib/cmake/Foundation/FoundationTargets-debug.cmake
+ * dist/<preset>/lib/cmake/Foundation/FoundationTargets-release.cmake
+ * @endcode
+ *
+ * Search the two target files for `IMPORTED_LOCATION_DEBUG` and
+ * `IMPORTED_LOCATION_RELEASE`. They must reference different archives. A
+ * downstream CMake project should use `find_package(Foundation CONFIG REQUIRED)`
+ * and `Foundation::Foundation`; consumers should not hard-code archive names.
+ *
+ * @section FoundationValidationReport Result Record
+ *
+ * Keep one record per preset with the following fields:
+ *
+ * @code
+ * Date and operator:
+ * Host OS and architecture:
+ * Preset:
+ * CMake / generator / compiler versions:
+ * Configure result:
+ * Debug build result:
+ * Release build result:
+ * Test result and whether tests actually executed:
+ * Export result:
+ * Archive architecture result:
+ * External consumer or firmware link result:
+ * Hardware/emulator result, if applicable:
+ * Deviations, warnings, and logs:
+ * @endcode
+ *
+ * A smoke test that used `AllowNoTests` must be recorded as “compiled, no tests
+ * executed,” never as “tests passed.”
+ */

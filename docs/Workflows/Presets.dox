@@ -1,0 +1,107 @@
+/**
+ * @defgroup Foundation_Workflows_Presets Presets
+ * @ingroup Foundation_Workflows_Configuration
+ * @brief Target naming, supported families, and preset extension rules.
+ *
+ * Use `cmake --list-presets` to list configure presets compatible with the
+ * current host and `cmake --list-presets=all` to include build and test presets.
+ * Preset JSON is the source of truth for supported target identities; scripts
+ * accept a preset name but do not infer architecture or compiler settings.
+ *
+ * @section FoundationWorkflowPresetNaming Naming
+ *
+ * A preset names only the compatibility identity of an artifact. Desktop
+ * presets use:
+ *
+ * @code
+ * platform_toolchain_architecture
+ * @endcode
+ *
+ * For example, `linux_clang_x64` identifies Linux, Clang, and x86-64. Embedded
+ * presets use:
+ *
+ * @code
+ * platform_toolchain_core_abi
+ * @endcode
+ *
+ * For example, `stm32f407_armgcc_cortex_m4f_hard` identifies the MCU family,
+ * GNU Arm Embedded toolchain, Cortex-M4F core, and hard-float ABI.
+ * AVR uses `atmega328p_avrgcc_avr5`: exact MCU, compiler family, and AVR
+ * architecture. A naming component may be omitted only when it has no meaningful
+ * compatibility alternative for that target.
+ *
+ * Debug and Release are configurations selected with `--config` or
+ * `-Configuration`; they are not part of a preset name. Both configurations
+ * share `build/<preset>` and `dist/<preset>` while retaining distinct object
+ * files, library names, and imported CMake configuration metadata.
+ *
+ * @section FoundationWorkflowPresetFamilies Supported Families
+ *
+ * - macOS: `macos_arm64`, `macos_x64`
+ * - Linux: `linux_gcc_x64`, `linux_clang_x64`, `linux_gcc_arm64`,
+ *   `linux_clang_arm64`
+ * - Windows: `windows_msvc_x64`, `windows_clang_x64`
+ * - Generic Arm: `arm_none_eabi_cortex_m0plus_soft`,
+ *   `arm_none_eabi_cortex_m3_soft`, `arm_none_eabi_cortex_m4f_hard`, and
+ *   `arm_none_eabi_cortex_m7f_hard`
+ * - Target aliases: `psoc5lp_armgcc_cortex_m3_soft`,
+ *   `stm32f103_armgcc_cortex_m3_soft`,
+ *   `stm32f407_armgcc_cortex_m4f_hard`, and
+ *   `stm32h743_armgcc_cortex_m7f_hard`
+ * - AVR: `atmega328p_avrgcc_avr5`
+ *
+ * The special `documentation` preset builds the complete Doxygen site.
+ *
+ * Desktop presets are host builds, not general cross-compilers. Linux Arm64
+ * presets require an Arm64 Linux host and Linux x64 presets require an x86-64
+ * host. macOS presets use Apple architecture selection and can produce separate
+ * arm64 and x86-64 archives. Windows presets are available only on Windows.
+ * Embedded presets are host-independent when their cross-toolchain is installed.
+ *
+ * @section FoundationWorkflowPresetFiles Files
+ *
+ * `CMakePresets.json` includes platform files from `cmake/presets/`. Platform
+ * files inherit shared defaults from `cmake/presets/base.json`. Cross-compiled
+ * configure presets select a `toolchainFile`; native desktop presets normally
+ * select a generator, compiler, and architecture directly.
+ *
+ * Every new target should have one public configure preset and matching build
+ * and test presets with the same name where applicable. Its binary directory
+ * must remain `build/<preset>` so all repository workflows can locate it.
+ *
+ * Presets own target invariants such as compiler, architecture, ABI, generator,
+ * and toolchain file. Module options remain configurable cache values so a
+ * consumer can disable features without creating a new platform preset.
+ *
+ * @section FoundationWorkflowPresetAnatomy Preset Anatomy
+ *
+ * All normal presets inherit `base`, which fixes `build/${presetName}` and
+ * disables docs, tests, examples, and coverage. Target presets then provide:
+ *
+ * - a multi-configuration generator with Debug and Release;
+ * - native compiler/architecture settings or a CMake toolchain profile;
+ * - `FOUNDATION_PLATFORM` matching the public preset name;
+ * - optional processor validation;
+ * - a build preset of the same name whose convenience default is Debug.
+ *
+ * The build preset's `configuration: Debug` is only a default for direct
+ * `cmake --build --preset`. Repository scripts explicitly pass the requested
+ * configuration and share the configure preset/build directory.
+ *
+ * @section FoundationWorkflowPresetRules Extension Rules
+ *
+ * Before adding a public preset:
+ *
+ * 1. identify the complete binary compatibility boundary;
+ * 2. select a generator available on supported hosts;
+ * 3. put machine-local paths in cache variables, not hard-coded JSON;
+ * 4. put immutable CPU/ABI/device values in the preset or forced profile;
+ * 5. add only one configuration-independent public name;
+ * 6. validate Debug and Release, archive architecture, package metadata, and a
+ *    downstream consumer;
+ * 7. document prerequisites and limitations in the matching platform page.
+ *
+ * Do not add `_debug`, `_release`, or feature names to the normal target preset.
+ * Do not claim support for a generic device family when the compiler requires an
+ * exact MCU, runtime, or device pack.
+ */

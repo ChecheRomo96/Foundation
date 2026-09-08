@@ -15,7 +15,7 @@
             "${CMAKE_CURRENT_SOURCE_DIR}/Arithmetic.h"
             "${CMAKE_CURRENT_SOURCE_DIR}/Trigonometry.h"
     )
-    
+
     list(APPEND FOUNDATION_SOURCES_LOCAL
         "${CMAKE_CURRENT_SOURCE_DIR}/Arithmetic.cpp"
     )
@@ -27,20 +27,20 @@
 #
 ######################################################################################################
 # Append headers
-    
+
     if(FOUNDATION_MATH_RATIO)
         list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
             "${CMAKE_CURRENT_SOURCE_DIR}/Ratio.h"
         )
     endif()
-    
+
     if(FOUNDATION_MATH_COMPLEX)
         list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
             "${CMAKE_CURRENT_SOURCE_DIR}/Complex.h"
         )
         add_subdirectory(Complex)
     endif()
-    
+
     if(FOUNDATION_MATH_MATRIX)
         list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
             "${CMAKE_CURRENT_SOURCE_DIR}/Matrix.h"
@@ -81,7 +81,7 @@
 
     install(
         FILES ${FOUNDATION_PUBLIC_HEADERS_LOCAL}
-        DESTINATION "${FOUNDATION_DIST_INCLUDE_DIR}/Foundation/Math"
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/Foundation/Math"
     )
 
 #

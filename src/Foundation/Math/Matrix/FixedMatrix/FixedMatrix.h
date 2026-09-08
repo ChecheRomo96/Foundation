@@ -1,5 +1,5 @@
 /**
- * @file  @file Foundation/Math/Matrix/FixedMatrix/FixedMatrix.h
+ * @file Foundation/Math/Matrix/FixedMatrix/FixedMatrix.h
  * @brief Fixed-size matrix type.
  */
 

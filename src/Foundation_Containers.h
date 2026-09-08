@@ -1,8 +1,8 @@
 #ifndef FOUNDATION_CONTAINERS_H
 #define FOUNDATION_CONTAINERS_H
 
-#include <Containers/CircularBuffer.h>
-#include <Containers/Queue.h>
-#include <Containers/Stack.h>
+#include <Foundation/Containers/CircularBuffer.h>
+#include <Foundation/Containers/Queue.h>
+#include <Foundation/Containers/Stack.h>
 
 #endif

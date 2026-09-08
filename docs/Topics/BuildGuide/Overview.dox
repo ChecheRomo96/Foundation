@@ -29,6 +29,8 @@
  * - generic full builds for known toolchains.
  *
  * A full build is larger, but easier to consume.
+ * The resulting Debug and Release libraries may share one exported package, but
+ * that package remains specific to its preset's compiler and architecture.
  *
  * @section FoundationBuildCustomPrecompiledMode Custom Precompiled Mode
  *
@@ -42,9 +44,15 @@
  * - production builds,
  * - projects that only need a subset of Foundation.
  *
+ * The selected modules are compiled into the package and recorded in
+ * `FoundationBuildInfo.cmake`. A different feature selection is a different
+ * compatibility product even when the target preset itself is unchanged.
+ *
  * @section FoundationBuildRule General Rule
  *
  * If macros change the compiled implementation, build a custom library.
  * If the project needs maximum flexibility, use source mode.
  * If the project needs fast integration, use a precompiled full build.
+ * Always validate a precompiled package with a separate consumer using the same
+ * target toolchain and ABI.
  */

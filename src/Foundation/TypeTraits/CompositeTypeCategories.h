@@ -2,6 +2,10 @@
 #define FOUNDATION_TYPE_TRAITS_COMPOSITE_TYPE_CATEGORIES_H
 
 #include <Foundation_BuildSettings.h>
+#include "HelperClasses.h"
+#include "TypeProperties.h"
+#include "TypeRelationships.h"
+#include "PrimaryTypeCategories.h"
 
 #if defined(FOUNDATION_USING_STL)
     #include <type_traits>
@@ -52,7 +56,7 @@ namespace Foundation::TypeTraits {
         is_pointer<T>::value ||
         is_member_pointer<T>::value ||
         is_enum<T>::value ||
-        is_same<nullptr_t, typename remove_cv<T>::type>::value
+        is_same<decltype(nullptr), typename remove_cv<T>::type>::value
     > {};
 
     template <typename T>
@@ -60,7 +64,7 @@ namespace Foundation::TypeTraits {
         is_integral<T>::value ||
         is_floating_point<T>::value ||
         is_void<T>::value ||
-        is_same<nullptr_t, typename remove_cv<T>::type>::value
+        is_same<decltype(nullptr), typename remove_cv<T>::type>::value
     > {};
 
     template <typename T>

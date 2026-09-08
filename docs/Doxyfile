@@ -361,20 +361,6 @@ EXTENSION_MAPPING      =
 
 MARKDOWN_SUPPORT       = YES
 
-# If the MARKDOWN_STRICT tag is enabled then Doxygen treats text in comments as
-# Markdown formatted also in cases where Doxygen's native markup format
-# conflicts with that of Markdown. This is only relevant in cases where
-# backticks are used. Doxygen's native markup style allows a single quote to end
-# a text fragment started with a backtick and then treat it as a piece of quoted
-# text, whereas in Markdown such text fragment is treated as verbatim and only
-# ends when a second matching backtick is found. Also, Doxygen's native markup
-# format requires double quotes to be escaped when they appear in a backtick
-# section, whereas this is not needed for Markdown.
-# The default value is: YES.
-# This tag requires that the tag MARKDOWN_SUPPORT is set to YES.
-
-MARKDOWN_STRICT        = YES
-
 # When the TOC_INCLUDE_HEADINGS tag is set to a non-zero value, all headings up
 # to that level are automatically included in the table of contents, even if
 # they do not have an id attribute.
@@ -793,27 +779,6 @@ GENERATE_BUGLIST       = YES
 
 GENERATE_DEPRECATEDLIST= YES
 
-# The GENERATE_REQUIREMENTS tag can be used to enable (YES) or disable (NO) the
-# requirements page. When enabled, this page is automatically created when at
-# least one comment block with a \requirement command appears in the input.
-# The default value is: YES.
-
-GENERATE_REQUIREMENTS  = YES
-
-# The REQ_TRACEABILITY_INFO tag controls if traceability information is shown on
-# the requirements page (only relevant when using \requirement comment blocks).
-# The setting NO will disable the traceablility information altogether. The
-# setting UNSATISFIED_ONLY will show a list of requirements that are missing a
-# satisfies relation (through the command: \satisfies). Similarly the setting
-# UNVERIFIED_ONLY will show a list of requirements that are missing a verifies
-# relation (through the command: \verifies). Setting the tag to YES (the
-# default) will show both lists if applicable.
-# Possible values are: YES, NO, UNSATISFIED_ONLY and UNVERIFIED_ONLY.
-# The default value is: YES.
-# This tag requires that the tag GENERATE_REQUIREMENTS is set to YES.
-
-REQ_TRACEABILITY_INFO  = YES
-
 # The ENABLED_SECTIONS tag can be used to enable conditional documentation
 # sections, marked by \if <section_label> ... \endif and \cond <section_label>
 # ... \endcond blocks.
@@ -911,7 +876,7 @@ EXTERNAL_TOOL_PATH     =
 # messages are off.
 # The default value is: NO.
 
-QUIET                  = NO
+QUIET                  = YES
 
 # The WARNINGS tag can be used to turn on/off the warning messages that are
 # generated to standard error (stderr) by Doxygen. If WARNINGS is set to YES
@@ -927,7 +892,7 @@ WARNINGS               = YES
 # will automatically be disabled.
 # The default value is: YES.
 
-WARN_IF_UNDOCUMENTED   = YES
+WARN_IF_UNDOCUMENTED   = NO
 
 # If the WARN_IF_DOC_ERROR tag is set to YES, Doxygen will generate warnings for
 # potential errors in the documentation, such as documenting some parameters in
@@ -984,7 +949,7 @@ WARN_LAYOUT_FILE       = YES
 # Possible values are: NO, YES, FAIL_ON_WARNINGS and FAIL_ON_WARNINGS_PRINT.
 # The default value is: NO.
 
-WARN_AS_ERROR          = NO
+WARN_AS_ERROR          = FAIL_ON_WARNINGS
 
 # The WARN_FORMAT tag determines the format of the warning messages that Doxygen
 # can produce. The string should contain the $file, $line, and $text tags, which
@@ -1357,7 +1322,9 @@ VERBATIM_HEADERS       = YES
 # generated with the -Duse_libclang=ON option for CMake.
 # The default value is: NO.
 
-CLANG_ASSISTED_PARSING = NO
+# Clang-assisted parsing directives are intentionally omitted. Some packaged
+# Doxygen builds do not include libclang and warn even when the feature is set
+# to NO. Foundation currently uses Doxygen's built-in C++ parser.
 
 # If the CLANG_ASSISTED_PARSING tag is set to YES and the CLANG_ADD_INC_PATHS
 # tag is set to YES then Doxygen will add the directory of each input to the
@@ -1365,7 +1332,6 @@ CLANG_ASSISTED_PARSING = NO
 # The default value is: YES.
 # This tag requires that the tag CLANG_ASSISTED_PARSING is set to YES.
 
-CLANG_ADD_INC_PATHS    = YES
 
 # If clang assisted parsing is enabled you can provide the compiler with command
 # line options that you would normally use when invoking the compiler. Note that
@@ -1373,7 +1339,6 @@ CLANG_ADD_INC_PATHS    = YES
 # specified with INPUT and INCLUDE_PATH.
 # This tag requires that the tag CLANG_ASSISTED_PARSING is set to YES.
 
-CLANG_OPTIONS          =
 
 # If clang assisted parsing is enabled you can provide the clang parser with the
 # path to the directory containing a file called compile_commands.json. This
@@ -1386,7 +1351,6 @@ CLANG_OPTIONS          =
 # Note: The availability of this option depends on whether or not Doxygen was
 # generated with the -Duse_libclang=ON option for CMake.
 
-CLANG_DATABASE_PATH    =
 
 #---------------------------------------------------------------------------
 # Configuration options related to the alphabetical class index

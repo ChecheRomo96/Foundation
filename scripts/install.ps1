@@ -1,36 +1,27 @@
 param(
-    [string]$Preset = "windows_msvc_x64_debug",
-    [string]$Configuration = ""
+    [Parameter(Mandatory = $true, Position = 0)]
+    [string]$Preset,
+
+    [string]$Configuration = "",
+    [string]$Prefix = ""
 )
 
-cmake --preset $Preset
+. "$PSScriptRoot/common.ps1"
 
-if ($LASTEXITCODE -ne 0) {
-    exit $LASTEXITCODE
-}
+Assert-FoundationConfigured -Preset $Preset
 
-cmake --build --preset $Preset
+$buildDirectory = Get-FoundationBuildDirectory -Preset $Preset
+$configurationName = Get-FoundationConfiguration `
+    -Preset $Preset `
+    -Configuration $Configuration `
+    -DefaultConfiguration "Release"
+Assert-FoundationConfiguration -Configuration $configurationName
+if (-not $Prefix) {
+    $Prefix = Join-Path $script:FoundationDistRoot $Preset
+}
+$Prefix = Resolve-FoundationPath -Path $Prefix
 
-if ($LASTEXITCODE -ne 0) {
-    exit $LASTEXITCODE
-}
+$arguments = @("--install", $buildDirectory, "--prefix", $Prefix)
+$arguments += @("--config", $configurationName)
 
-$BuildDir = "build/$Preset"
-
-if ($Preset -match "_debug$") {
-    $Configuration = "Debug"
-}
-elseif ($Preset -match "_release$" -or $Preset -match "_docs$") {
-    $Configuration = "Release"
-}
-
-if ($Configuration -ne "") {
-    cmake --install $BuildDir --config $Configuration
-}
-else {
-    cmake --install $BuildDir
-}
-
-if ($LASTEXITCODE -ne 0) {
-    exit $LASTEXITCODE
-}
+Invoke-FoundationCMake -Arguments $arguments

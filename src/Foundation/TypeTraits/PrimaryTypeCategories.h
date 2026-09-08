@@ -2,6 +2,10 @@
 #define FOUNDATION_TYPE_TRAITS_PRIMARY_TYPE_CATEGORIES_H
 
     #include <Foundation_BuildSettings.h>
+    #include <stddef.h>
+    #include "HelperClasses.h"
+    #include "TypeProperties.h"
+    #include "TypeRelationships.h"
 
     #if defined(FOUNDATION_USING_STL)
         #include <type_traits>

@@ -1,19 +1,23 @@
 /**
  * @addtogroup Foundation_BuildGuide_STM32
- * @ingroup Foundation_BuildGuide
  *
  * STM32 support should be separated by family/core/FPU mode.
  *
- * Recommended future presets:
+ * Supported target presets:
  *
  * @code
- * stm32f103_armgcc_cortex_m3_soft_debug
- * stm32f103_armgcc_cortex_m3_soft_release
- * stm32f407_armgcc_cortex_m4f_hard_debug
- * stm32f407_armgcc_cortex_m4f_hard_release
- * stm32h743_armgcc_cortex_m7f_hard_debug
- * stm32h743_armgcc_cortex_m7f_hard_release
+ * stm32f103_armgcc_cortex_m3_soft
+ * stm32f407_armgcc_cortex_m4f_hard
+ * stm32h743_armgcc_cortex_m7f_hard
  * @endcode
+ *
+ * These presets map to reusable core/ABI profiles:
+ *
+ * | Preset | CPU | Float ABI | FPU |
+ * | --- | --- | --- | --- |
+ * | `stm32f103_armgcc_cortex_m3_soft` | Cortex-M3 | soft | none |
+ * | `stm32f407_armgcc_cortex_m4f_hard` | Cortex-M4 | hard | `fpv4-sp-d16` |
+ * | `stm32h743_armgcc_cortex_m7f_hard` | Cortex-M7 | hard | `fpv5-d16` |
  *
  * @section FoundationBuildSTM32Rule STM32 Rule
  *
@@ -26,4 +30,37 @@
  * - compiler/toolchain,
  * - ABI,
  * - feature macros.
+ *
+ * @section FoundationBuildSTM32Scope Library Scope
+ *
+ * The STM32 presets compile Foundation as a static library. They intentionally
+ * do not select a concrete STM32 device macro, CMSIS package, HAL, startup file,
+ * interrupt vector table, memory map, linker script, or programmer. Those belong
+ * to the consuming firmware and may further narrow compatibility.
+ *
+ * @section FoundationBuildSTM32Commands Build and Export
+ *
+ * Example for STM32F407:
+ *
+ * @code{bash}
+ * arm-none-eabi-g++ --version
+ * ./scripts/configure.sh stm32f407_armgcc_cortex_m4f_hard --fresh
+ * ./scripts/build.sh stm32f407_armgcc_cortex_m4f_hard \
+ *     --config Debug --target Foundation
+ * ./scripts/build.sh stm32f407_armgcc_cortex_m4f_hard \
+ *     --config Release --target Foundation
+ * ./scripts/export.sh stm32f407_armgcc_cortex_m4f_hard --fresh
+ * @endcode
+ *
+ * If the compiler cannot find `stdint.h`, provide a compatible Newlib/runtime
+ * and `FOUNDATION_ARM_SYSROOT`. A compiler executable without target headers is
+ * not a complete cross-compilation installation.
+ *
+ * @section FoundationBuildSTM32Validation Validation
+ *
+ * Use `arm-none-eabi-objdump -f` to inspect both archives and verify the effective
+ * flags in `build/<preset>/compile_commands.json`. Then link the exported package
+ * into the real firmware using the same CPU/FPU/ABI flags. Hardware or emulator
+ * execution is the behavioral test; host CTest cannot execute Cortex-M objects.
+ * See @ref Foundation_Workflows_Validation for the full checklist.
  */

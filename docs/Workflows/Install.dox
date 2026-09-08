@@ -1,0 +1,48 @@
+/**
+ * @defgroup Foundation_Workflows_Install Install
+ * @ingroup Foundation_Workflows_Delivery
+ * @brief Install an already configured build into a selected prefix.
+ *
+ * Install does not configure or build the project and does not delete existing
+ * content. The selected configuration must already be configured and compiled.
+ * Use install when the caller controls the destination and wants normal CMake
+ * overlay semantics.
+ *
+ * @section FoundationWorkflowInstallBash Bash
+ *
+ * @code{bash}
+ * ./scripts/install.sh <preset> [--config <name>] [--prefix <path>]
+ *
+ * ./scripts/install.sh macos_arm64 --config Release --prefix /opt/Foundation
+ * ./scripts/install.sh macos_arm64 --config Debug
+ * @endcode
+ *
+ * @section FoundationWorkflowInstallPowerShell PowerShell
+ *
+ * @code{powershell}
+ * ./scripts/install.ps1 <preset> [-Configuration <name>] [-Prefix <path>]
+ * @endcode
+ *
+ * Without an explicit prefix, the destination is `dist/<preset>`. The installed
+ * tree contains public headers, the static library, and the CMake package files
+ * required by `find_package(Foundation CONFIG)`.
+ * The default install configuration is `Release`.
+ *
+ * To install both configurations manually, build and install each configuration
+ * into the same prefix. Headers and common CMake files are overlaid; CMake writes
+ * separate configuration import files and the archives keep distinct names.
+ *
+ * @code{bash}
+ * ./scripts/build.sh macos_arm64 --config Debug --target Foundation
+ * ./scripts/build.sh macos_arm64 --config Release --target Foundation
+ * ./scripts/install.sh macos_arm64 --config Debug
+ * ./scripts/install.sh macos_arm64 --config Release
+ * @endcode
+ *
+ * Install never removes stale files. If a feature was disabled after an earlier
+ * installation, old headers or archives may remain in the prefix. Use export for
+ * a clean repository-owned destination, or clean a caller-owned prefix yourself.
+ *
+ * Use @ref Foundation_Workflows_Export when a clean, reproducible distribution
+ * should be created in one command.
+ */

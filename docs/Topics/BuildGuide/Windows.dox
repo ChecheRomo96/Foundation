@@ -1,26 +1,26 @@
 /**
  * @addtogroup Foundation_BuildGuide_Windows
- * @ingroup Foundation_BuildGuide
  *
  * @section FoundationBuildWindowsToolchains Supported Windows Toolchains
  *
  * Windows precompiled libraries must be separated by toolchain.
  *
- * Recommended presets:
+ * Supported target presets:
  *
  * @code
- * windows_msvc_x64_debug
- * windows_msvc_x64_release
- * windows_msvc_x64_coverage
+ * windows_msvc_x64
+ * windows_clang_x64
  * @endcode
+ *
+ * `windows_msvc_x64` selects the `Visual Studio 18 2026` multi-configuration
+ * generator and x64 architecture. `windows_clang_x64` selects `clang`/`clang++`
+ * with Ninja Multi-Config and validates that the host processor is x86-64.
+ * Their archives are separate compatibility products even when both use `.lib`.
  *
  * Optional future presets:
  *
  * @code
- * windows_mingw_x64_debug
- * windows_mingw_x64_release
- * windows_clang_x64_debug
- * windows_clang_x64_release
+ * windows_mingw_x64
  * @endcode
  *
  * @section FoundationBuildWindowsMSVC MSVC
@@ -30,17 +30,53 @@
  * CMAKE_BUILD_TYPE is ignored by Visual Studio generators.
  * Always pass the configuration during build and install.
  *
- * @code{bash}
- * cmake --preset windows_msvc_x64_release
- * cmake --build --preset windows_msvc_x64_release --config Release
- * cmake --install build/windows_msvc_x64_release --config Release --prefix dist/windows_msvc_x64_release
+ * Run from Visual Studio Developer PowerShell so MSVC, the Windows SDK, and
+ * environment variables refer to the same installation.
+ *
+ * @code{powershell}
+ * Get-Command cmake
+ * Get-Command cl
+ *
+ * ./scripts/configure.ps1 windows_msvc_x64 -Fresh
+ * ./scripts/build.ps1 windows_msvc_x64 `
+ *     -Configuration Debug -Target Foundation
+ * ./scripts/build.ps1 windows_msvc_x64 `
+ *     -Configuration Release -Target Foundation
  * @endcode
+ *
+ * For Clang, verify `clang++` and `ninja`, then replace the preset name with
+ * `windows_clang_x64` in the same workflow.
  *
  * @section FoundationBuildWindowsExport Export
  *
  * Recommended:
  *
- * @code{bash}
- * ./scripts/export.ps1 windows_msvc_x64_release Release
+ * @code{powershell}
+ * ./scripts/export.ps1 windows_msvc_x64 -Fresh
  * @endcode
+ *
+ * The export command builds and installs Debug and Release into the same package.
+ * Expect `Foundation_d.lib`, `Foundation.lib`, public headers, build metadata,
+ * and Debug/Release imported-target files below `dist/windows_msvc_x64`.
+ * Add `-ExamplesOn` only when the package should include Release API examples.
+ * The package then includes one `FoundationExamples.cmd` menu launcher that
+ * returns after every selected example.
+ * See @ref Foundation_Workflows_Manual for the complete local sequence and the
+ * distinction between incremental and clean configuration.
+ *
+ * @section FoundationBuildWindowsTests Test Status
+ *
+ * Native Windows can run CTest, but the repository currently registers no test
+ * cases. The normal test command should fail to expose that gap. Use
+ * `-AllowNoTests` only to exercise configuration and compilation, then use a
+ * fresh export so unrelated cached feature overrides do not leak into the
+ * release package.
+ *
+ * @section FoundationBuildWindowsValidation Validation
+ *
+ * Inspect MSVC output with `dumpbin /headers` and Clang output with
+ * `llvm-readobj` where available. Compile a separate x64 consumer using
+ * `find_package(Foundation CONFIG REQUIRED)` and verify Debug selects
+ * `Foundation_d.lib` while Release selects `Foundation.lib`. The complete
+ * command checklist is in @ref Foundation_Workflows_Validation.
  */

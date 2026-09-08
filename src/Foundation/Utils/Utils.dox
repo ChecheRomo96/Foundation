@@ -1,0 +1,5 @@
+/**
+ * @defgroup Foundation_Utils Utils
+ * @ingroup Foundation
+ * @brief Low-level move, swap, and utility helpers.
+ */

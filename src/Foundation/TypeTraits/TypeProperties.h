@@ -2,6 +2,7 @@
 #define FOUNDATION_TYPE_TRAITS_TYPE_PROPERTIES_H
 
 #include <Foundation_BuildSettings.h>
+#include "HelperClasses.h"
 
 #if defined(FOUNDATION_USING_STL)
     #include <type_traits>
@@ -23,6 +24,31 @@ namespace Foundation::TypeTraits {
     template <typename T> using is_volatile = std::is_volatile<T>;
 
 #else
+
+    template <typename T>
+    struct remove_const {
+        using type = T;
+    };
+
+    template <typename T>
+    struct remove_const<const T> {
+        using type = T;
+    };
+
+    template <typename T>
+    struct remove_volatile {
+        using type = T;
+    };
+
+    template <typename T>
+    struct remove_volatile<volatile T> {
+        using type = T;
+    };
+
+    template <typename T>
+    struct remove_cv {
+        using type = typename remove_volatile<typename remove_const<T>::type>::type;
+    };
 
     template <typename T>
     struct is_const : false_type {};

@@ -1,23 +1,68 @@
 /**
  * @addtogroup Foundation_BuildGuide_MacOs
  *
- * Recommended future presets:
+ * Supported target presets:
  *
  * @code
- * macos_clang_x64_debug
- * macos_clang_x64_release
- * macos_clang_arm64_debug
- * macos_clang_arm64_release
+ * macos_x64
+ * macos_arm64
  * @endcode
+ *
+ * Both presets use Apple Clang and Ninja Multi-Config. `macos_arm64` sets
+ * `CMAKE_OSX_ARCHITECTURES=arm64`; `macos_x64` sets it to `x86_64`. The compiler
+ * version and deployment environment are still part of practical compatibility
+ * and should be recorded with release artifacts.
+ *
+ * Each preset uses one multi-configuration build tree. Select Debug or Release
+ * at build time; both archives use the same artifact and distribution directory.
  *
  * Apple Silicon and Intel builds must be treated as different artifacts unless
  * a universal binary strategy is explicitly implemented.
+ * The current workflow creates thin, architecture-specific archives rather than
+ * combining them with `lipo`.
  *
- * Example:
+ * Day-to-day incremental build:
  *
  * @code{bash}
- * cmake --preset macos_clang_arm64_release
- * cmake --build --preset macos_clang_arm64_release
- * cmake --install build/macos_clang_arm64_release --prefix dist/macos_clang_arm64_release
+ * ./scripts/build.sh macos_arm64 --config Debug --target Foundation
  * @endcode
+ *
+ * The build script configures the preset automatically. A complete manual
+ * release-candidate sequence is documented in
+ * @ref Foundation_Workflows_Manual.
+ *
+ * Clean release export:
+ *
+ * @code{bash}
+ * xcode-select -p
+ * ninja --version
+ * ./scripts/configure.sh macos_arm64 --fresh
+ * ./scripts/build.sh macos_arm64 --config Debug --target Foundation
+ * ./scripts/build.sh macos_arm64 --config Release --target Foundation
+ * ./scripts/export.sh macos_arm64 --fresh
+ * @endcode
+ *
+ * The export contains `libFoundation_d.a` and `libFoundation.a`.
+ * Examples are excluded by default. Add `--examples-on` when the package should
+ * also contain Release API example executables. The package then includes one
+ * `FoundationExamples.command` launcher that can be opened from Finder. It shows
+ * a menu, runs the selected console binary, reports its status, and returns to
+ * the menu. Window closure after choosing `q` follows
+ * **Terminal > Settings > Profiles > Shell >
+ * When the shell exits**. **Close if the shell exited cleanly** closes successful
+ * examples while leaving a failed example visible for diagnosis.
+ * Verify both with:
+ *
+ * @code{bash}
+ * lipo -info dist/macos_arm64/lib/libFoundation_d.a
+ * lipo -info dist/macos_arm64/lib/libFoundation.a
+ * @endcode
+ *
+ * Repeat with `macos_x64`; both commands must then report `x86_64`. An Intel
+ * consumer may require Rosetta to execute on Apple Silicon, but archive creation
+ * and architecture inspection do not.
+ *
+ * Native CTest execution is possible, but no tests are currently registered.
+ * See @ref Foundation_Workflows_Test and use the acceptance sequence in
+ * @ref Foundation_Workflows_Validation.
  */

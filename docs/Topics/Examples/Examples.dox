@@ -1,9 +1,67 @@
-/*! 
-@defgroup Foundation_Examples Examples
-
-Examples are organized by module:
-- Containers
-- Time
-- Scheduling
-
-*/
+/**
+ * @defgroup Foundation_Examples Examples
+ * @brief Executable demonstrations of Foundation's public APIs.
+ *
+ * Examples are normal CMake executable targets. They demonstrate API usage;
+ * they are not correctness tests, are not registered with CTest, and must not
+ * be reported as test results.
+ *
+ * @section FoundationExamplesAvailable Available Native Examples
+ *
+ * - Math: `Foundation_Math_Ratio`;
+ * - Time: `Foundation_Time_Frequency` and `Foundation_Time_Period`;
+ * - TypeTraits: `Foundation_TypeTraits_BasicChecks`.
+ *
+ * Containers and Scheduling currently have example directories but no native
+ * executable implementation. Arduino `.ino` sources are separate sketches and
+ * are not compiled by the native CMake targets described here.
+ *
+ * @section FoundationExamplesBuild Build Through CMake
+ *
+ * Enable examples through the build workflow and select the aggregate
+ * `FoundationExamples` target. Source-tree examples may be built in Debug or
+ * Release; this is separate from their Release-only export policy.
+ *
+ * @code{bash}
+ * ./scripts/build.sh macos_arm64 --config Debug \
+ *     --target FoundationExamples --examples-on --fresh
+ * ./scripts/build.sh macos_arm64 --config Release \
+ *     --target FoundationExamples --examples-on
+ * @endcode
+ *
+ * Examples are added only when their required Foundation modules are enabled.
+ * They link `Foundation::Foundation` and therefore exercise the public target
+ * usage requirements.
+ *
+ * @section FoundationExamplesExport Export as Executables
+ *
+ * When examples are enabled, export builds the dedicated
+ * `FoundationExportArtifacts` target for Release and installs every configured
+ * Release example beside the library package:
+ *
+ * @code{bash}
+ * ./scripts/export.sh macos_arm64 --fresh --examples-on
+ * @endcode
+ *
+ * @code
+ * dist/<preset>/bin/examples/<example>          Release executable
+ * dist/<preset>/bin/examples/FoundationExamples.command  macOS launcher
+ * @endcode
+ *
+ * Windows appends `.exe` to each executable and installs the single
+ * `FoundationExamples.cmd` launcher. Double-clicking the platform launcher opens
+ * a console menu that discovers the adjacent Release examples. After each run,
+ * it reports the exit code and returns to the selection menu. Choosing `q` exits
+ * the launcher. The executable remains the real artifact used from a terminal
+ * or CI. On macOS, whether Terminal then closes the window is controlled by the
+ * active Terminal profile's **When the shell exits** preference.
+ *
+ * Launchers are created only for native macOS and Windows packages. Embedded
+ * targets cannot run on the host, and Linux desktop integration is not currently
+ * generated. Debug examples remain available to developers through a normal
+ * source-tree Debug build, but are not distribution artifacts.
+ *
+ * @note These convenience scripts are not application bundles and do not bypass
+ * operating-system security. A downloaded package may still require the normal
+ * macOS Gatekeeper or Windows security approval applicable to unsigned software.
+ */

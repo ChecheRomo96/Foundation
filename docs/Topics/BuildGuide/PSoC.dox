@@ -1,6 +1,5 @@
 /**
  * @addtogroup Foundation_BuildGuide_PSoC
- * @ingroup Foundation_BuildGuide
  *
  * @section FoundationBuildPSoCTarget Initial Supported Target
  *
@@ -13,11 +12,10 @@
  * Soft Float
  * @endcode
  *
- * Recommended presets:
+ * Target preset:
  *
  * @code
- * psoc5lp_armgcc_cortex_m3_soft_debug
- * psoc5lp_armgcc_cortex_m3_soft_release
+ * psoc5lp_armgcc_cortex_m3_soft
  * @endcode
  *
  * @section FoundationBuildPSoCWhy Why not every chip
@@ -33,24 +31,35 @@
  *
  * Since Foundation is mostly portable C++ and does not depend on chip registers,
  * a PSoC 5LP Cortex-M3 soft-float build can cover the typical CY8CKIT-059 use case.
+ * The preset produces a generic Cortex-M3 soft-float static archive. It does not
+ * provide PSoC Creator startup code, generated components, linker script, device
+ * headers, or project metadata.
+ *
+ * The consuming PSoC project must use a compatible Arm GNU compiler/runtime and
+ * the same Thumb, Cortex-M3, and soft-float ABI. Compiler compatibility must be
+ * validated with the exact PSoC Creator/toolchain version used by the product.
  *
  * @section FoundationBuildPSoCExport Export
  *
  * Example:
  *
  * @code{bash}
- * ./scripts/export.ps1 psoc5lp_armgcc_cortex_m3_soft_release Release
+ * ./scripts/export.ps1 psoc5lp_armgcc_cortex_m3_soft
  * @endcode
  *
  * or:
  *
  * @code{bash}
- * ./scripts/export.sh psoc5lp_armgcc_cortex_m3_soft_release
+ * ./scripts/export.sh psoc5lp_armgcc_cortex_m3_soft
  * @endcode
  *
  * Output:
  *
  * @code
- * dist/psoc5lp_armgcc_cortex_m3_soft_release/
+ * dist/psoc5lp_armgcc_cortex_m3_soft/
  * @endcode
+ *
+ * Inspect both archives with `arm-none-eabi-objdump -f` and link them into a
+ * minimal PSoC firmware before publishing. Do not use host CTest as proof of
+ * embedded execution.
  */
