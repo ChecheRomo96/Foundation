@@ -160,19 +160,17 @@
  *
  * @section FoundationManualWorkflowInstall Manual Install
  *
- * Install overlays one already-built configuration into a prefix. It does not
- * configure, compile, or remove stale files.
+ * Install overlays the already-built Release configuration into a prefix. It
+ * does not configure, compile, or remove stale files.
  *
  * @code{bash}
- * ./scripts/build.sh macos_arm64 --config Debug --target Foundation
  * ./scripts/build.sh macos_arm64 --config Release --target Foundation
- * ./scripts/install.sh macos_arm64 --config Debug
- * ./scripts/install.sh macos_arm64 --config Release
+ * ./scripts/install.sh macos_arm64
  * @endcode
  *
  * This is useful for inspecting CMake installation behavior. For a distributable
- * package, prefer export because it builds both configurations and refreshes the
- * repository-owned destination safely.
+ * package, prefer export because it builds the complete Release artifact set and
+ * refreshes the repository-owned destination safely.
  *
  * @section FoundationManualWorkflowExport Release-Candidate Export
  *
@@ -201,17 +199,16 @@
  * @endcode
  *
  * Place `--examples-on` before the `--` separator when combining it with raw
- * CMake arguments. Export configures once, builds Debug and Release, removes the
- * default `dist/<preset>`, and installs both configurations into that directory.
- * The expected native Unix library pair is `libFoundation_d.a` and
- * `libFoundation.a`; Windows produces `Foundation_d.lib` and `Foundation.lib`.
- * Optional examples are built and installed only for Release.
+ * CMake arguments. Export configures once, builds Release, removes the default
+ * `dist/<preset>`, and installs that configuration into the directory. The
+ * expected native Unix library is `libFoundation.a`; Windows produces
+ * `Foundation.lib`. Optional examples are also Release artifacts.
  *
  * @section FoundationManualWorkflowVerify Verification Before Publication
  *
  * A successful command is necessary but not sufficient. Before publishing:
  *
- * 1. confirm the Debug and Release archives both exist;
+ * 1. confirm the Release archive exists and no Debug archive was packaged;
  * 2. confirm `include/` and `lib/cmake/Foundation/` exist;
  * 3. inspect `FoundationBuildInfo.cmake` for the platform, compiler, architecture,
  *    feature set, and example selection;
@@ -222,10 +219,9 @@
  * On macOS, a minimal structural inspection is:
  *
  * @code{bash}
- * test -f dist/macos_arm64/lib/libFoundation_d.a
  * test -f dist/macos_arm64/lib/libFoundation.a
+ * test ! -e dist/macos_arm64/lib/libFoundation_d.a
  * test -f dist/macos_arm64/lib/cmake/Foundation/FoundationConfig.cmake
- * lipo -archs dist/macos_arm64/lib/libFoundation_d.a
  * lipo -archs dist/macos_arm64/lib/libFoundation.a
  * @endcode
  *

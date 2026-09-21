@@ -54,8 +54,7 @@ Examples remain separate API demonstrations.
 
 ## Export
 
-Build Debug and Release, then install both configurations into one
-self-contained package under `dist/<preset>`:
+Build and install one self-contained Release package under `dist/<preset>`:
 
 ```bash
 ./scripts/export.sh macos_arm64
@@ -71,8 +70,9 @@ options can be overridden for a custom export without creating another preset:
   -DFOUNDATION_SCHEDULING=OFF
 ```
 
-Every default export contains shared public headers, debug and release static
-libraries, and CMake package files for `find_package(Foundation)`.
+Every default export contains shared public headers, one Release static library,
+and CMake package files for `find_package(Foundation)`. Debug remains available
+from the source build for development and testing, but is not distributed.
 
 The full Doxygen workflow guide explains cache behavior, toolchains, package
 compatibility, troubleshooting, and the Windows/macOS/STM32/AVR validation

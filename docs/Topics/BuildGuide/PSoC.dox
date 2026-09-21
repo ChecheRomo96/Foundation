@@ -59,7 +59,7 @@
  * dist/psoc5lp_armgcc_cortex_m3_soft/
  * @endcode
  *
- * Inspect both archives with `arm-none-eabi-objdump -f` and link them into a
+ * Inspect the Release archive with `arm-none-eabi-objdump -f` and link it into a
  * minimal PSoC firmware before publishing. Do not use host CTest as proof of
  * embedded execution.
  */

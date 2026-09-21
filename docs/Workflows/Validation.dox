@@ -13,14 +13,14 @@
  *
  * 1. CMake accepts the preset and records the intended compiler and processor.
  * 2. `Foundation` builds independently in Debug and Release from one build tree.
- * 3. Debug and Release archives are different files with the correct target
- *    object format and architecture.
- * 4. One export operation installs both archives, public headers, package files,
- *    and target metadata into `dist/<preset>`.
- * 5. `FoundationTargets-debug.cmake` and
- *    `FoundationTargets-release.cmake` map consumers to the correct archive.
- * 6. A separate consumer compiles against the installed headers and links the
- *    matching imported target or archive.
+ * 3. The local Debug and Release archives are different files with the correct
+ *    target object format and architecture.
+ * 4. One export operation installs only the Release archive, public headers,
+ *    package files, and target metadata into `dist/<preset>`.
+ * 5. `FoundationTargets-release.cmake` maps consumers to the Release archive,
+ *    and no Debug archive or Debug import file is present in the package.
+ * 6. A separate Release consumer compiles against the installed headers and
+ *    links the imported target.
  * 7. Registered native executable tests pass in Debug and Release.
  *    Cross-compiled behavior is validated in real firmware or an appropriate
  *    emulator.
@@ -93,8 +93,6 @@
  * ./scripts/export.sh stm32f407_armgcc_cortex_m4f_hard --fresh
  *
  * arm-none-eabi-objdump -f \
- *   dist/stm32f407_armgcc_cortex_m4f_hard/lib/libFoundation_d.a
- * arm-none-eabi-objdump -f \
  *   dist/stm32f407_armgcc_cortex_m4f_hard/lib/libFoundation.a
  * grep -E "Foundation_(PLATFORM|SYSTEM|PROCESSOR|ARM)" \
  *   dist/stm32f407_armgcc_cortex_m4f_hard/lib/cmake/Foundation/FoundationBuildInfo.cmake
@@ -127,14 +125,12 @@
  * ./scripts/export.sh atmega328p_avrgcc_avr5 --fresh
  *
  * avr-objdump -f \
- *   dist/atmega328p_avrgcc_avr5/lib/libFoundation_d.a
- * avr-objdump -f \
  *   dist/atmega328p_avrgcc_avr5/lib/libFoundation.a
  * grep -E "Foundation_(PLATFORM|SYSTEM|PROCESSOR|AVR)" \
  *   dist/atmega328p_avrgcc_avr5/lib/cmake/Foundation/FoundationBuildInfo.cmake
  * @endcode
  *
- * Both archives must contain `elf32-avr` objects with architecture `avr:5`.
+ * The Release archive must contain `elf32-avr` objects with architecture `avr:5`.
  * Validate the installed package with a separate CMake consumer that calls a
  * non-inline Foundation function, then inspect the ELF with `avr-size` and
  * `avr-objdump`. Hardware execution remains the final check for timing, memory,
@@ -146,18 +142,17 @@
  *
  * @code
  * dist/<preset>/include/
- * dist/<preset>/lib/<debug archive>
  * dist/<preset>/lib/<release archive>
  * dist/<preset>/lib/cmake/Foundation/FoundationConfig.cmake
  * dist/<preset>/lib/cmake/Foundation/FoundationBuildInfo.cmake
- * dist/<preset>/lib/cmake/Foundation/FoundationTargets-debug.cmake
  * dist/<preset>/lib/cmake/Foundation/FoundationTargets-release.cmake
  * @endcode
  *
- * Search the two target files for `IMPORTED_LOCATION_DEBUG` and
- * `IMPORTED_LOCATION_RELEASE`. They must reference different archives. A
- * downstream CMake project should use `find_package(Foundation CONFIG REQUIRED)`
- * and `Foundation::Foundation`; consumers should not hard-code archive names.
+ * Confirm that no Debug archive or `FoundationTargets-debug.cmake` remains from
+ * an older package. Search the Release target file for
+ * `IMPORTED_LOCATION_RELEASE`. A downstream Release CMake project should use
+ * `find_package(Foundation CONFIG REQUIRED)` and `Foundation::Foundation`;
+ * consumers should not hard-code archive names.
  *
  * @section FoundationValidationReport Result Record
  *

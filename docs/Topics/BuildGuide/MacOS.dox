@@ -14,7 +14,8 @@
  * and should be recorded with release artifacts.
  *
  * Each preset uses one multi-configuration build tree. Select Debug or Release
- * at build time; both archives use the same artifact and distribution directory.
+ * at build/test time; both archives share the local artifact directory, but only
+ * Release is exported to the distribution directory.
  *
  * Apple Silicon and Intel builds must be treated as different artifacts unless
  * a universal binary strategy is explicitly implemented.
@@ -42,7 +43,8 @@
  * ./scripts/export.sh macos_arm64 --fresh
  * @endcode
  *
- * The export contains `libFoundation_d.a` and `libFoundation.a`.
+ * The export contains `libFoundation.a`; `libFoundation_d.a` remains a local
+ * development artifact and is not distributed.
  * Examples are excluded by default. Add `--examples-on` when the package should
  * also contain Release API example executables. The package then includes one
  * `FoundationExamples.command` launcher that can be opened from Finder. It shows
@@ -51,11 +53,11 @@
  * **Terminal > Settings > Profiles > Shell >
  * When the shell exits**. **Close if the shell exited cleanly** closes successful
  * examples while leaving a failed example visible for diagnosis.
- * Verify both with:
+ * Verify the package with:
  *
  * @code{bash}
- * lipo -info dist/macos_arm64/lib/libFoundation_d.a
  * lipo -info dist/macos_arm64/lib/libFoundation.a
+ * test ! -e dist/macos_arm64/lib/libFoundation_d.a
  * @endcode
  *
  * Repeat with `macos_x64`; both commands must then report `x86_64`. An Intel

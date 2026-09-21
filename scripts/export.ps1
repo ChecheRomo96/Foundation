@@ -2,9 +2,6 @@ param(
     [Parameter(Mandatory = $true, Position = 0)]
     [string]$Preset,
 
-    [Parameter(Position = 1)]
-    [string[]]$Configuration = @(),
-
     [string]$Output = "",
     [int]$Parallel = 0,
     [switch]$Fresh,
@@ -28,25 +25,15 @@ if (-not $Keep -and $customOutput) {
     throw "Custom export paths require -Keep; remove custom destinations explicitly"
 }
 
-$configurations = if ($Configuration.Count -gt 0) {
-    $Configuration
-}
-else {
-    @("Debug", "Release")
-}
-foreach ($configurationName in $configurations) {
-    Assert-FoundationConfiguration -Configuration $configurationName
-}
-if ($ExamplesOn -and "Release" -notin $configurations) {
-    throw "-ExamplesOn requires the Release configuration"
-}
-
 $configureParameters = @{
     Preset = $Preset
 }
 $effectiveCMakeArguments = @($CMakeArguments)
 if ($ExamplesOn) {
     $effectiveCMakeArguments += "-DFOUNDATION_EXAMPLES=ON"
+}
+else {
+    $effectiveCMakeArguments += "-DFOUNDATION_EXAMPLES=OFF"
 }
 if ($effectiveCMakeArguments.Count -gt 0) {
     $configureParameters.CMakeArguments = $effectiveCMakeArguments
@@ -60,23 +47,15 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 $buildDirectory = Get-FoundationBuildDirectory -Preset $Preset
-foreach ($configurationName in $configurations) {
-    $buildTarget = if ($configurationName -eq "Release") {
-        "FoundationExportArtifacts"
-    }
-    else {
-        "Foundation"
-    }
-    $buildArguments = @(
-        "--build", $buildDirectory,
-        "--config", $configurationName,
-        "--target", $buildTarget
-    )
-    if ($Parallel -gt 0) {
-        $buildArguments += @("--parallel", $Parallel.ToString())
-    }
-    Invoke-FoundationCMake -Arguments $buildArguments
+$buildArguments = @(
+    "--build", $buildDirectory,
+    "--config", "Release",
+    "--target", "FoundationExportArtifacts"
+)
+if ($Parallel -gt 0) {
+    $buildArguments += @("--parallel", $Parallel.ToString())
 }
+Invoke-FoundationCMake -Arguments $buildArguments
 
 if (-not $Keep) {
     Assert-FoundationDistChild -Path $Output
@@ -85,16 +64,13 @@ if (-not $Keep) {
     }
 }
 
-foreach ($configurationName in $configurations) {
-    $installParameters = @{
-        Preset = $Preset
-        Configuration = $configurationName
-        Prefix = $Output
-    }
-    & "$PSScriptRoot/install.ps1" @installParameters
-    if ($LASTEXITCODE -ne 0) {
-        exit $LASTEXITCODE
-    }
+$installParameters = @{
+    Preset = $Preset
+    Prefix = $Output
+}
+& "$PSScriptRoot/install.ps1" @installParameters
+if ($LASTEXITCODE -ne 0) {
+    exit $LASTEXITCODE
 }
 
-Write-Host "Exported Foundation ($($configurations -join ', ')) to $Output"
+Write-Host "Exported Foundation (Release) to $Output"

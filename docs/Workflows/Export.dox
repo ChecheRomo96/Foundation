@@ -3,27 +3,25 @@
  * @ingroup Foundation_Workflows_Delivery
  * @brief Build and install a clean, target-specific distribution package.
  *
- * Export configures the target preset once, builds the installable Foundation
- * artifacts for Debug and Release, removes the default `dist/<preset>`
- * destination, and installs both configurations into one fresh package. The
- * library is always included. Executable API examples are opt-in through
- * `--examples-on` in Bash or `-ExamplesOn` in PowerShell.
+ * Export configures the target preset once, builds the installable Release
+ * artifacts, removes the default `dist/<preset>` destination, and installs one
+ * fresh Release package. The library is always included. Executable API examples
+ * are opt-in through `--examples-on` in Bash or `-ExamplesOn` in PowerShell.
  *
  * The exact default sequence is:
  *
  * 1. configure or refresh `build/<preset>`;
- * 2. build the `Foundation` library target for Debug;
- * 3. build `FoundationExportArtifacts` for Release, including optional examples;
- * 4. safely remove the repository-owned `dist/<preset>` directory;
- * 5. install Debug and then Release into that one directory.
+ * 2. build `FoundationExportArtifacts` for Release, including optional examples;
+ * 3. safely remove the repository-owned `dist/<preset>` directory;
+ * 4. install Release into that directory.
  *
- * Configuration happens once, so target settings and feature options are
- * identical for both archives.
+ * Debug remains available through the build and test workflows but is not part
+ * of the distribution package.
  *
  * @section FoundationWorkflowExportBash Bash
  *
  * @code{bash}
- * ./scripts/export.sh <preset> [--config <name>]... [--output <path>] \
+ * ./scripts/export.sh <preset> [--output <path>] \
  *     [--parallel <jobs>] [--fresh] [--keep] [--examples-on] \
  *     [-- <cmake arguments>]
  *
@@ -47,34 +45,30 @@
  *
  * | Argument | Default | Meaning |
  * | --- | --- | --- |
- * | configurations | Debug and Release | May select one or repeat/pass an array. |
+ * | configuration | Release | Fixed distribution configuration. |
  * | output | `dist/<preset>` | Installation prefix for the package. |
  * | parallel | CMake default | Worker count for each build. |
  * | fresh | off | Clears CMake cache state before the single configure. |
  * | keep | off | Preserves and overlays the destination. |
  * | examples | off | Builds and installs Release API examples. |
- * | CMake arguments | none | Cache overrides shared by every built configuration. |
+ * | CMake arguments | none | Cache overrides applied to the Release build. |
  *
  * @section FoundationWorkflowExportPowerShell PowerShell
  *
  * @code{powershell}
- * ./scripts/export.ps1 <preset> [-Configuration <names>] [-Output <path>] `
+ * ./scripts/export.ps1 <preset> [-Output <path>] `
  *     [-Parallel <jobs>] [-Fresh] [-Keep] [-ExamplesOn] `
  *     [-CMakeArguments <arguments>]
  * @endcode
  *
- * With no configuration option, export builds `Debug` and `Release`. Repeat
- * `--config` in Bash or pass a PowerShell array to export only selected
- * configurations. CMake arguments customize the one configure operation and
- * therefore apply consistently to both builds.
+ * Export has no configuration selector: distribution artifacts are always
+ * Release. CMake arguments customize the single configure/build operation.
  *
  * `--examples-on` and `-ExamplesOn` set `FOUNDATION_EXAMPLES=ON` for that
  * configure operation. Without the switch, the preset default remains `OFF`,
  * so regular packages contain only the library, public headers, and CMake
- * package metadata. Exported examples are Release-only even when the package
- * contains both library configurations; Debug examples can still be built from
- * the source tree when needed for development. Consequently, `--examples-on`
- * or `-ExamplesOn` requires Release to be present in the selected configurations.
+ * package metadata. Exported examples are Release-only; Debug examples can still
+ * be built from the source tree when needed for development.
  *
  * A custom output path requires `--keep` or `-Keep`. This prevents the export
  * workflow from recursively deleting an arbitrary caller-supplied directory.
@@ -93,24 +87,21 @@
  * |-- bin/examples/                         Optional Release API examples
  * |   |-- Foundation_Math_Ratio             Release example (macOS)
  * |   `-- FoundationExamples.command        Menu launcher (macOS)
- * |-- lib/libFoundation_d.a                Debug library (Unix-like targets)
  * |-- lib/libFoundation.a                  Release library (Unix-like targets)
  * `-- lib/cmake/Foundation/
  *     |-- FoundationConfig.cmake
  *     |-- FoundationConfigVersion.cmake
  *     |-- FoundationBuildInfo.cmake
  *     |-- FoundationTargets.cmake
- *     |-- FoundationTargets-debug.cmake
  *     `-- FoundationTargets-release.cmake
  * @endcode
  *
- * Windows uses `Foundation_d.lib` and `Foundation.lib` rather than Unix archive
- * names, appends `.exe` to example executables, and installs the single
+ * Windows uses `Foundation.lib` rather than the Unix archive name, appends
+ * `.exe` to example executables, and installs the single
  * `FoundationExamples.cmd` menu launcher. Only Release examples are distribution
- * artifacts. Headers are
- * installed once because they are common to both library configurations. The
- * two `FoundationTargets-<configuration>.cmake` files keep the archive mapping
- * configuration-aware.
+ * artifacts. Headers are configuration-independent and installed once.
+ * `FoundationTargets-release.cmake` maps the imported target to the Release
+ * archive.
 
  * The macOS `.command` and Windows `.cmd` launchers are console menus intended
  * for double-click use. Each discovers the adjacent examples, runs the selected
@@ -122,9 +113,10 @@
  * the executable artifacts.
  *
  * `FoundationBuildInfo.cmake` records the exported version, platform, system,
- * processor, macOS architecture, compiler, C++ standard, ARM CPU/ABI/FPU, and
- * AVR MCU/architecture values, whether executable examples were included, plus
- * the enabled top-level modules. Consumers can load the target with:
+ * processor, macOS architecture, compiler, C++ standard, package configuration,
+ * ARM CPU/ABI/FPU, and AVR MCU/architecture values, whether executable examples
+ * were included, plus the enabled top-level modules. Consumers can load the
+ * target with:
  *
  * @code{cmake}
  * find_package(Foundation 1.0 CONFIG REQUIRED)
@@ -133,8 +125,9 @@
  *
  * The consumer should set `CMAKE_PREFIX_PATH` to `dist/<preset>` or set
  * `Foundation_DIR` to its `lib/cmake/Foundation` directory. It must use a
- * compatible compiler, target architecture, ABI, runtime, and configuration.
- * Do not bypass the imported target by guessing a library filename.
+ * compatible compiler, target architecture, ABI, runtime, and Release
+ * configuration. Debug consumers should build Foundation from source. Do not
+ * bypass the imported target by guessing a library filename.
  *
  * @section FoundationWorkflowExportFeatures Feature Variants
  *
@@ -159,10 +152,9 @@
  *
  * Precompiled libraries are not universal. Produce a separate export for every
  * operating system, compiler/toolchain, architecture, ABI, and incompatible
- * feature set. Debug and Release may share the package because CMake records
- * them as separate imported configurations. “Any platform” means any target
- * represented by a valid CMake preset and, when cross-compiling, an appropriate
- * toolchain file.
+ * feature set. Every exported package is Release-only. “Any platform” means any
+ * target represented by a valid CMake preset and, when cross-compiling, an
+ * appropriate toolchain file.
  *
  * @section FoundationWorkflowExportVerify Verification
  *

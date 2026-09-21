@@ -29,8 +29,8 @@
  * - generic full builds for known toolchains.
  *
  * A full build is larger, but easier to consume.
- * The resulting Debug and Release libraries may share one exported package, but
- * that package remains specific to its preset's compiler and architecture.
+ * The official export contains the Release library only and remains specific to
+ * its preset's compiler and architecture. Debug is built from source when needed.
  *
  * @section FoundationBuildCustomPrecompiledMode Custom Precompiled Mode
  *
