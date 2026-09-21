@@ -73,6 +73,8 @@
  * Start with @ref Foundation_Workflows_Manual for the complete local workflow.
  * See the other subgroups for each command's contract, defaults, side effects,
  * expected output, and failure modes.
+ * Track release readiness in @ref Foundation_Workflows_ReleaseV1; that backlog
+ * is updated in Git with task status, acceptance criteria, and evidence.
  */
 
 /**

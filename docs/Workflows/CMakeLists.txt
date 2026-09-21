@@ -6,6 +6,7 @@ foundation_add_dox(
     "${CMAKE_CURRENT_LIST_DIR}/Test.dox"
     "${CMAKE_CURRENT_LIST_DIR}/Validation.dox"
     "${CMAKE_CURRENT_LIST_DIR}/DesktopValidation.dox"
+    "${CMAKE_CURRENT_LIST_DIR}/ReleaseV1Backlog.dox"
     "${CMAKE_CURRENT_LIST_DIR}/Install.dox"
     "${CMAKE_CURRENT_LIST_DIR}/Export.dox"
     "${CMAKE_CURRENT_LIST_DIR}/PrecompiledLibraries.dox"
