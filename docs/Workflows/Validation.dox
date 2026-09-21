@@ -21,20 +21,24 @@
  *    `FoundationTargets-release.cmake` map consumers to the correct archive.
  * 6. A separate consumer compiles against the installed headers and links the
  *    matching imported target or archive.
- * 7. Native executable tests pass when tests are registered. Cross-compiled
- *    behavior is validated in the real firmware or an appropriate emulator.
+ * 7. Registered native executable tests pass in Debug and Release.
+ *    Cross-compiled behavior is validated in real firmware or an appropriate
+ *    emulator.
  * 8. Doxygen builds without unresolved workflow references.
  *
  * Record the host OS and architecture, preset, CMake version, generator,
  * compiler version, exact command, result, and artifact inspection output for
  * every run. This makes a failure reproducible instead of machine-specific.
  *
- * @section FoundationValidationCurrentLimits Current Test-Suite Status
+ * @section FoundationValidationCurrentLimits Test-Suite Scope
  *
- * @warning The repository currently registers no CTest test cases. On a native
- * target, the normal test command is expected to return nonzero because
- * `--no-tests=error` is intentional. `--allow-no-tests` or `-AllowNoTests`
- * validates configuration and compilation only; it is not a release-test pass.
+ * The default native configuration builds seven module-scoped GoogleTest
+ * executables covering Math, TypeTraits, Utils, Containers, Functional, Time,
+ * and Scheduling. CTest discovers their individual cases. A feature override
+ * conditionally removes every test target whose required modules are no longer
+ * all available. Always inspect the reported case count;
+ * `--allow-no-tests` or `-AllowNoTests` only validates configuration and
+ * compilation when zero tests are present and is not a release-test pass.
  *
  * Do not run `test.sh` or `test.ps1` as an execution test for STM32 or AVR.
  * Examples are not tests, and cross-compiled binaries cannot run directly on the

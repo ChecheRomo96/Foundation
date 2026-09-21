@@ -126,10 +126,12 @@
  * ./scripts/test.ps1 windows_msvc_x64 -Configuration Debug -Fresh
  * @endcode
  *
- * The repository currently has no registered CTest cases, so the normal command
- * intentionally fails. `--allow-no-tests` or `-AllowNoTests` may be used only to
- * check that the test configuration compiles while the suite is being created;
- * it is not release evidence. Embedded binaries require target hardware, an
+ * The default native feature set builds seven module-scoped GoogleTest
+ * executables, whose individual cases are discovered by CTest. Run the workflow
+ * once for Debug and once for Release and confirm that the output names and
+ * executes every expected case. `--allow-no-tests` or `-AllowNoTests` is only a
+ * diagnostic escape hatch for a deliberate zero-test feature configuration; it
+ * is not release evidence. Embedded binaries require target hardware, an
  * emulator, or host-side portable tests as described in
  * @ref Foundation_Workflows_Validation.
  *

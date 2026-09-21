@@ -71,8 +71,8 @@
  * - [ ] Build a separate consumer with `find_package(Foundation CONFIG REQUIRED)`
  *       and `Foundation::Foundation` in both configurations.
  * - [ ] Run registered native tests in both configurations.
- * - [ ] Record any use of `AllowNoTests` as “compiled; no tests executed,” not
- *       as a test pass.
+ * - [ ] Confirm the default feature set discovers and passes every expected
+ *       GoogleTest case; do not use `AllowNoTests` for release evidence.
  * - [ ] Repeat one fresh export with a module disabled and verify its metadata.
  * - [ ] Restore and re-export the preset defaults before retaining release artifacts.
  *
@@ -100,8 +100,8 @@
  * Test-Path "build/$Preset/artifacts/lib/Foundation_d.lib"
  * Test-Path "build/$Preset/artifacts/lib/Foundation.lib"
  *
- * ./scripts/test.ps1 $Preset -Configuration Debug -AllowNoTests
- * ./scripts/test.ps1 $Preset -Configuration Release -AllowNoTests
+ * ./scripts/test.ps1 $Preset -Configuration Debug
+ * ./scripts/test.ps1 $Preset -Configuration Release
  * ./scripts/export.ps1 $Preset -Fresh
  *
  * Test-Path "dist/$Preset/include"
@@ -156,8 +156,8 @@
  * lipo -archs "build/$PRESET/artifacts/lib/libFoundation_d.a"
  * lipo -archs "build/$PRESET/artifacts/lib/libFoundation.a"
  *
- * ./scripts/test.sh "$PRESET" --config Debug --allow-no-tests
- * ./scripts/test.sh "$PRESET" --config Release --allow-no-tests
+ * ./scripts/test.sh "$PRESET" --config Debug
+ * ./scripts/test.sh "$PRESET" --config Release
  * ./scripts/export.sh "$PRESET" --fresh
  *
  * test -d "dist/$PRESET/include"

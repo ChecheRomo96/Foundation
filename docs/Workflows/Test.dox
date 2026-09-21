@@ -40,17 +40,41 @@
  *
  * Test output is always displayed on failure. An empty CTest suite is an error
  * by default so a release cannot silently pass without validation.
- * `--allow-no-tests` or `-AllowNoTests` is intended only while bootstrapping the
- * suite and must not be used by a release gate.
+ * `--allow-no-tests` or `-AllowNoTests` exists only for diagnosing a deliberate
+ * configuration that registers no tests and must not be used by a release gate.
  * The test workflow enables only `FOUNDATION_TESTING` while configuring the
  * selected target preset; a separate testing preset is not needed. Examples are
  * API demonstrations and are never enabled, executed, or reported as tests by
  * this workflow.
  *
- * @warning The current repository does not yet register executable tests.
- * Removing this warning requires adding test targets with `add_test()` or
- * GoogleTest discovery and making the normal test command pass without the
- * allow-no-tests option.
+ * @section FoundationWorkflowTestSuite Registered Native Suite
+ *
+ * The default feature set builds seven module-scoped GoogleTest executables:
+ *
+ * - `FoundationMathTests`;
+ * - `FoundationTypeTraitsTests`;
+ * - `FoundationUtilsTests`;
+ * - `FoundationContainersTests`;
+ * - `FoundationFunctionalTests`;
+ * - `FoundationTimeTests`;
+ * - `FoundationSchedulingTests`.
+ *
+ * `gtest_discover_tests()` exposes every `TEST()` case separately to CTest. Each
+ * executable uses Foundation's public headers, lives below the matching
+ * `tests/Foundation/<module>` directory, and is registered only when all modules
+ * it requires are enabled. Use `--filter <regex>` or `-Filter <regex>` to select
+ * discovered cases by name without changing the build graph.
+ *
+ * @section FoundationWorkflowTestDependency GoogleTest Dependency
+ *
+ * `cmake/BuildTests.cmake` obtains GoogleTest 1.18.0 through CMake
+ * `FetchContent`, pinned to the release commit rather than a moving branch.
+ * A clean first configuration therefore needs access to GitHub unless the
+ * dependency has already been populated or a standard FetchContent source
+ * override is supplied. GoogleTest and GoogleMock installation are disabled;
+ * none of their headers or libraries enter a Foundation package. With
+ * `FOUNDATION_TESTING=OFF`, GoogleTest is neither downloaded nor added to the
+ * build graph.
  *
  * @section FoundationWorkflowTestNativeVsCross Native and Cross Tests
  *
@@ -62,7 +86,6 @@
  * - a target-aware emulator with an explicit CMake/CTest launcher;
  * - host-side tests built from the same portable source using a native preset.
  *
- * Until such infrastructure is registered, validate embedded outputs with
- * @ref Foundation_Workflows_Validation and do not report `AllowNoTests` as a
- * successful test suite.
+ * Validate embedded outputs with @ref Foundation_Workflows_Validation and do
+ * not report `AllowNoTests` as a successful test suite.
  */

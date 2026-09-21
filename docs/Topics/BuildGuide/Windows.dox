@@ -66,10 +66,10 @@
  *
  * @section FoundationBuildWindowsTests Test Status
  *
- * Native Windows can run CTest, but the repository currently registers no test
- * cases. The normal test command should fail to expose that gap. Use
- * `-AllowNoTests` only to exercise configuration and compilation, then use a
- * fresh export so unrelated cached feature overrides do not leak into the
+ * Native Windows runs the registered CTest suite. Execute all discovered
+ * GoogleTest cases in both Debug and Release for `windows_msvc_x64` and
+ * `windows_clang_x64`; a zero-test result is not release evidence. Use a fresh
+ * export afterward so unrelated cached feature overrides do not leak into the
  * release package.
  *
  * @section FoundationBuildWindowsValidation Validation

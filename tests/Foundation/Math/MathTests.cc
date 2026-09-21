@@ -1,0 +1,71 @@
+#include <gtest/gtest.h>
+
+#include <cstdint>
+#include <limits>
+
+#include <Foundation/Math/Arithmetic.h>
+#include <Foundation/Math/Ratio.h>
+
+using Foundation::Math::GCD;
+using Foundation::Math::Ratio;
+
+TEST(ArithmeticTest, CalculatesGreatestCommonDivisor) {
+    EXPECT_EQ(GCD(54, 24), 6u);
+    EXPECT_EQ(GCD(0, 7), 7u);
+}
+
+TEST(RatioTest, SupportsConstantConstructionAndConversion) {
+    constexpr Ratio half(1, 2);
+    static_assert(half.Num() == 1, "Ratio numerator must be constexpr");
+    static_assert(half.Den() == 2, "Ratio denominator must be constexpr");
+    static_assert(half.IsValid(), "A nonzero denominator must be valid");
+
+    EXPECT_FLOAT_EQ(half.ToFloat(), 0.5f);
+}
+
+TEST(RatioTest, ReducesWithoutLosingTheSign) {
+    const Ratio reduced = Ratio(-42, 56).Reduced();
+
+    EXPECT_EQ(reduced.Num(), -3);
+    EXPECT_EQ(reduced.Den(), 4);
+    EXPECT_EQ(reduced.Sign(), -1);
+}
+
+TEST(RatioTest, ReducesInPlace) {
+    Ratio ratio(-42, 56);
+    ratio.Reduce();
+
+    EXPECT_EQ(ratio.Num(), -3);
+    EXPECT_EQ(ratio.Den(), 4);
+    EXPECT_EQ(ratio.Sign(), -1);
+
+    ratio.Set(-5, -10);
+    ratio.Reduce();
+
+    EXPECT_EQ(ratio.Num(), -1);
+    EXPECT_EQ(ratio.Den(), -2);
+    EXPECT_EQ(ratio.Sign(), 1);
+}
+
+TEST(RatioTest, ReducesMinimumSignedValuesWithoutOverflow) {
+    constexpr std::int32_t minimum =
+        std::numeric_limits<std::int32_t>::min();
+
+    const Ratio minimumNumerator = Ratio(minimum, 2).Reduced();
+    EXPECT_EQ(minimumNumerator.Num(), minimum / 2);
+    EXPECT_EQ(minimumNumerator.Den(), 1);
+
+    const Ratio minimumDenominator = Ratio(2, minimum).Reduced();
+    EXPECT_EQ(minimumDenominator.Num(), 1);
+    EXPECT_EQ(minimumDenominator.Den(), minimum / 2);
+}
+
+TEST(RatioTest, HandlesAnInvalidDenominator) {
+    const Ratio invalid(1, 0);
+    const Ratio reduced = invalid.Reduced();
+
+    EXPECT_FALSE(invalid.IsValid());
+    EXPECT_FLOAT_EQ(invalid.ToFloat(), 0.0f);
+    EXPECT_EQ(reduced.Num(), 0);
+    EXPECT_EQ(reduced.Den(), 1);
+}

@@ -47,7 +47,10 @@ subsequent workflows reuse its `build/<preset>` cache:
 ./scripts/test.sh macos_arm64 --config Debug
 ```
 
-Testing presets fail when no tests are registered.
+The native CTest suite covers Math, TypeTraits, Utils, Containers, Functional,
+Time, and Scheduling. GoogleTest is fetched only when testing is enabled, and
+each module's tests are registered only when all required modules are enabled.
+Examples remain separate API demonstrations.
 
 ## Export
 

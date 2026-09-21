@@ -12,9 +12,35 @@
  * - Time: `Foundation_Time_Frequency` and `Foundation_Time_Period`;
  * - TypeTraits: `Foundation_TypeTraits_BasicChecks`.
  *
- * Containers and Scheduling currently have example directories but no native
- * executable implementation. Arduino `.ino` sources are separate sketches and
- * are not compiled by the native CMake targets described here.
+ * Each example lives under the module that owns the demonstrated API:
+ *
+ * @code
+ * examples/Foundation/<module>/<example>/
+ * |-- CMakeLists.txt
+ * |-- <example>.ino
+ * |-- Shared.h
+ * |-- Shared.cpp
+ * `-- Desktop/
+ *     |-- CMakeLists.txt
+ *     `-- main.cpp
+ * @endcode
+ *
+ * The top-level `Shared.h` and `Shared.cpp` contain the actual API scenario.
+ * Both entry points reuse that scenario: `<example>.ino` adapts its output to
+ * Arduino `Serial`, while `Desktop/main.cpp` adapts it to a native console
+ * executable. This prevents the Arduino and desktop versions from silently
+ * becoming different examples.
+ *
+ * The CMake hierarchy mirrors `src/Foundation`: `examples/CMakeLists.txt`
+ * provides the common example helper and launcher, `examples/Foundation`
+ * selects enabled modules, and each example's own `CMakeLists.txt` selects its
+ * platform adapter. The `Desktop/CMakeLists.txt` explicitly compiles the entry
+ * point together with the parent directory's `Shared.cpp`.
+ *
+ * @note Arduino `.ino` entry points are sketches, not native CMake targets.
+ * Open the complete example directory as a sketch so that the Arduino build
+ * also compiles its adjacent `Shared.cpp`. Native CMake builds enter only the
+ * `Desktop` subdirectory on macOS, Windows, and Linux.
  *
  * @section FoundationExamplesBuild Build Through CMake
  *
@@ -32,6 +58,37 @@
  * Examples are added only when their required Foundation modules are enabled.
  * They link `Foundation::Foundation` and therefore exercise the public target
  * usage requirements.
+ *
+ * @subsection FoundationExamplesAdd Adding an Example
+ *
+ * 1. Create `examples/Foundation/<module>/<example>` using the structure above.
+ * 2. Put platform-independent Foundation API usage in `Shared.h` and
+ *    `Shared.cpp`; do not put `Serial`, `iostream`, `main()`, `setup()`, or
+ *    `loop()` there.
+ * 3. Add the Arduino entry point as `<example>.ino` in the example root.
+ * 4. Add the native entry point as `Desktop/main.cpp`.
+ * 5. In `Desktop/CMakeLists.txt`, pass both sources to
+ *    `foundation_add_example()` and add the parent directory as a private
+ *    include directory.
+ * 6. Register the example directory from its module `CMakeLists.txt`, guarded
+ *    by every Foundation option required by the demonstrated API.
+ *
+ * A desktop registration follows this pattern:
+ *
+ * @code{.cmake}
+ * foundation_add_example(
+ *     Foundation_Module_Example
+ *     main.cpp
+ *     ../Shared.cpp
+ * )
+ * target_include_directories(Foundation_Module_Example PRIVATE ..)
+ * @endcode
+ *
+ * `foundation_add_example()` accepts one or more source files, links the public
+ * Foundation target, registers the executable with `FoundationExamples`, and
+ * applies the Release-only installation policy. A newly added example must
+ * remain a demonstration; correctness assertions belong in `tests/Foundation`
+ * and CTest.
  *
  * @section FoundationExamplesExport Export as Executables
  *
@@ -60,6 +117,15 @@
  * targets cannot run on the host, and Linux desktop integration is not currently
  * generated. Debug examples remain available to developers through a normal
  * source-tree Debug build, but are not distribution artifacts.
+ *
+ * @section FoundationExamplesTypeTraits TypeTraits BasicChecks
+ *
+ * `Foundation_TypeTraits_BasicChecks` demonstrates compile-time type-category
+ * checks and an embedded-style `NumericBuffer<T>` restricted to arithmetic
+ * types. It covers integral, floating-point, arithmetic, class, union, enum,
+ * pointer, reference, object, scalar, fundamental, compound, and function
+ * traits. The shared implementation performs the same compile-time checks for
+ * the desktop executable and Arduino sketch.
  *
  * @note These convenience scripts are not application bundles and do not bypass
  * operating-system security. A downloaded package may still require the normal

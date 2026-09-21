@@ -1,7 +1,13 @@
 add_custom_target(FoundationExamples)
 
-function(foundation_add_example TARGET_NAME SOURCE_FILE)
-    add_executable(${TARGET_NAME} ${SOURCE_FILE})
+function(foundation_add_example TARGET_NAME)
+    if(ARGC LESS 2)
+        message(FATAL_ERROR
+            "foundation_add_example(${TARGET_NAME}) requires at least one source file"
+        )
+    endif()
+
+    add_executable(${TARGET_NAME} ${ARGN})
     target_link_libraries(${TARGET_NAME} PRIVATE Foundation::Foundation)
     set_target_properties(${TARGET_NAME} PROPERTIES DEBUG_POSTFIX "_d")
     add_dependencies(FoundationExamples ${TARGET_NAME})
@@ -14,25 +20,12 @@ function(foundation_add_example TARGET_NAME SOURCE_FILE)
     )
 endfunction()
 
-if(FOUNDATION_MATH)
-    add_subdirectory(Math)
+set(FOUNDATION_DESKTOP_EXAMPLES_SUPPORTED OFF)
+if(APPLE OR WIN32 OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(FOUNDATION_DESKTOP_EXAMPLES_SUPPORTED ON)
 endif()
 
-if(FOUNDATION_TIME AND FOUNDATION_MATH AND FOUNDATION_MATH_RATIO)
-    add_subdirectory(Time)
-endif()
-
-if(FOUNDATION_TYPE_TRAITS)
-    add_subdirectory(TypeTraits)
-endif()
-
-if(FOUNDATION_CONTAINERS)
-    add_subdirectory(Containers)
-endif()
-
-if(FOUNDATION_SCHEDULING)
-    add_subdirectory(Scheduling)
-endif()
+add_subdirectory(Foundation)
 
 set(FOUNDATION_EXAMPLES_LAUNCHER_DIRECTORY
     "${CMAKE_CURRENT_BINARY_DIR}/launchers"
