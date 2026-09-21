@@ -108,10 +108,12 @@
  * Windows appends `.exe` to each executable and installs the single
  * `FoundationExamples.cmd` launcher. Double-clicking the platform launcher opens
  * a console menu that discovers the adjacent Release examples. After each run,
- * it reports the exit code and returns to the selection menu. Choosing `q` exits
- * the launcher. The executable remains the real artifact used from a terminal
- * or CI. On macOS, whether Terminal then closes the window is controlled by the
- * active Terminal profile's **When the shell exits** preference.
+ * it reports the exit code and asks whether to run another example. Press Enter
+ * or answer `y` to return to the selection menu; answer `n` or `q` to exit.
+ * Choosing `q` from the initial menu also exits the launcher. The executable
+ * remains the real artifact used from a terminal or CI. On macOS, whether
+ * Terminal then closes the window is controlled by the active Terminal profile's
+ * **When the shell exits** preference.
  *
  * Launchers are created only for native macOS and Windows packages. Embedded
  * targets cannot run on the host, and Linux desktop integration is not currently

@@ -45,8 +45,16 @@ set "FOUNDATION_STATUS=!ERRORLEVEL!"
 echo ----------------------------------------
 echo Process finished with exit code !FOUNDATION_STATUS!
 echo.
-pause
-goto menu
+
+:run_another
+set "FOUNDATION_RUN_ANOTHER="
+set /p "FOUNDATION_RUN_ANOTHER=Run another example? [Y/n]: "
+if "!FOUNDATION_RUN_ANOTHER!"=="" goto menu
+if /I "!FOUNDATION_RUN_ANOTHER!"=="Y" goto menu
+if /I "!FOUNDATION_RUN_ANOTHER!"=="N" exit /b 0
+if /I "!FOUNDATION_RUN_ANOTHER!"=="Q" exit /b 0
+echo Please enter Y or N.
+goto run_another
 
 :invalid_selection
 echo.

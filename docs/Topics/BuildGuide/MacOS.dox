@@ -48,8 +48,9 @@
  * Examples are excluded by default. Add `--examples-on` when the package should
  * also contain Release API example executables. The package then includes one
  * `FoundationExamples.command` launcher that can be opened from Finder. It shows
- * a menu, runs the selected console binary, reports its status, and returns to
- * the menu. Window closure after choosing `q` follows
+ * a menu, runs the selected console binary, reports its status, and asks whether
+ * to run another. Press Enter or answer `y` to return to the menu; answer `n` or
+ * `q` to exit. Window closure after exiting follows
  * **Terminal > Settings > Profiles > Shell >
  * When the shell exits**. **Close if the shell exited cleanly** closes successful
  * examples while leaving a failed example visible for diagnosis.
