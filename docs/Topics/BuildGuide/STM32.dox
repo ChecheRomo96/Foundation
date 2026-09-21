@@ -58,9 +58,10 @@
  *
  * @section FoundationBuildSTM32Validation Validation
  *
- * Use `arm-none-eabi-objdump -f` to inspect both archives and verify the effective
- * flags in `build/<preset>/compile_commands.json`. Then link the exported package
- * into the real firmware using the same CPU/FPU/ABI flags. Hardware or emulator
- * execution is the behavioral test; host CTest cannot execute Cortex-M objects.
- * See @ref Foundation_Workflows_Validation for the full checklist.
+ * Use `arm-none-eabi-objdump -f` to inspect the exported Release archive and
+ * verify the effective flags in `build/<preset>/compile_commands.json`. Then link
+ * the package into the real firmware using the same CPU/FPU/ABI flags. Hardware
+ * or emulator execution is the behavioral test; host CTest cannot execute
+ * Cortex-M objects. See @ref Foundation_Workflows_Validation for the full
+ * checklist.
  */

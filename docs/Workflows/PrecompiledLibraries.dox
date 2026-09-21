@@ -10,8 +10,8 @@
  *
  * A Windows MSVC `.lib` is not assumed to be compatible with MinGW. An Arm GNU
  * Cortex-M3 soft-float `.a` is not compatible with a Cortex-M4 hard-float target.
- * Keep each target package in its own `dist/<preset>` directory; its Debug and
- * Release configurations may coexist there under distinct library names.
+ * Keep each target package in its own `dist/<preset>` directory. Official
+ * packages contain Release objects only.
  *
  * @section FoundationPrecompiledCompatibilityMatrix Compatibility Matrix
  *
@@ -25,11 +25,12 @@
  * | ABI/FPU | Arm soft float, M4F hard float | Function calling conventions differ. |
  * | C++ runtime policy | exceptions/RTTI enabled or disabled | Runtime symbols and object assumptions differ. |
  * | feature options | Scheduling on/off | Headers, macros, and compiled symbols differ. |
- * | configuration | Debug, Release | Debug postfix and optimization/debug information differ. |
+ * | configuration | Release | Official packages contain optimized Release objects only. |
  *
- * Debug and Release are handled inside one package. Every other incompatible
- * dimension belongs in the preset identity or in a deliberately isolated custom
- * feature package.
+ * Debug is a source-build configuration used for development and tests; it is
+ * not a distributed precompiled package. Every other incompatible dimension
+ * belongs in the preset identity or in a deliberately isolated custom feature
+ * package.
  *
  * @section FoundationPrecompiledFullBuild Full Build
  *
@@ -63,9 +64,9 @@
  * ./scripts/export.ps1 <preset>
  * @endcode
  *
- * The current test suite is empty; see @ref Foundation_Workflows_Test before
- * treating the test step above as a release gate. For cross-compiled targets,
- * replace host CTest execution with firmware/consumer validation described in
+ * The native GoogleTest suite is the release gate described in
+ * @ref Foundation_Workflows_Test. For cross-compiled targets, replace host
+ * CTest execution with firmware/consumer validation described in
  * @ref Foundation_Workflows_Validation.
  *
  * @section FoundationPrecompiledConsumer Consumer Contract
@@ -78,8 +79,9 @@
  * @endcode
  *
  * The imported target carries include directories, compile features, public
- * definitions, and Debug/Release archive mappings. Consumers must not copy only
- * the archive and omit the installed headers/package metadata.
+ * definitions, and the Release archive mapping. Consumers must not copy only the
+ * archive and omit the installed headers/package metadata. Debug consumers must
+ * build Foundation from source.
  *
  * See @ref Foundation_Workflows_Export for package contents and
  * `find_package(Foundation CONFIG)` integration.

@@ -55,9 +55,10 @@
  * ./scripts/export.ps1 windows_msvc_x64 -Fresh
  * @endcode
  *
- * The export command builds and installs Debug and Release into the same package.
- * Expect `Foundation_d.lib`, `Foundation.lib`, public headers, build metadata,
- * and Debug/Release imported-target files below `dist/windows_msvc_x64`.
+ * The export command builds and installs a Release-only package. Expect
+ * `Foundation.lib`, public headers, build metadata, and Release imported-target
+ * files below `dist/windows_msvc_x64`. `Foundation_d.lib` remains available only
+ * in the source build tree.
  * Add `-ExamplesOn` only when the package should include Release API examples.
  * The package then includes one `FoundationExamples.cmd` menu launcher that
  * returns after every selected example.
@@ -76,7 +77,7 @@
  *
  * Inspect MSVC output with `dumpbin /headers` and Clang output with
  * `llvm-readobj` where available. Compile a separate x64 consumer using
- * `find_package(Foundation CONFIG REQUIRED)` and verify Debug selects
- * `Foundation_d.lib` while Release selects `Foundation.lib`. The complete
- * command checklist is in @ref Foundation_Workflows_Validation.
+ * `find_package(Foundation CONFIG REQUIRED)` in Release and verify it selects
+ * `Foundation.lib`. Build Foundation from source for Debug consumers. The
+ * complete command checklist is in @ref Foundation_Workflows_Validation.
  */

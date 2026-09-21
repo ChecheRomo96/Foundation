@@ -84,7 +84,7 @@
  * Files under `build/` are temporary implementation artifacts. They are not the
  * supported package layout and may contain generator-specific files. Use
  * @ref Foundation_Workflows_Install to overlay one compiled configuration or
- * @ref Foundation_Workflows_Export to create the complete Debug/Release package.
+ * @ref Foundation_Workflows_Export to create the complete Release package.
  *
  * @section FoundationWorkflowBuildFailures Common Failures
  *

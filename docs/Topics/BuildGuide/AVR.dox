@@ -10,8 +10,8 @@
  * @endcode
  *
  * It selects the AVR-GCC C/C++ toolchain, the ATmega328P MCU, and the AVR5
- * architecture. Debug and Release share one build tree and one exported
- * package:
+ * architecture. Debug and Release share one build tree; the exported package is
+ * Release-only:
  *
  * @code{bash}
  * ./scripts/export.sh atmega328p_avrgcc_avr5
@@ -52,12 +52,12 @@
  * ./scripts/export.sh atmega328p_avrgcc_avr5 --fresh
  * @endcode
  *
- * Expected package archives are `libFoundation_d.a` and `libFoundation.a`.
- * Both must report `elf32-avr` and architecture `avr:5`:
+ * The expected package archive is `libFoundation.a`. It must report `elf32-avr`
+ * and architecture `avr:5`; no Debug archive is distributed:
  *
  * @code{bash}
- * avr-objdump -f dist/atmega328p_avrgcc_avr5/lib/libFoundation_d.a
  * avr-objdump -f dist/atmega328p_avrgcc_avr5/lib/libFoundation.a
+ * test ! -e dist/atmega328p_avrgcc_avr5/lib/libFoundation_d.a
  * @endcode
  *
  * @section FoundationBuildAVRConsumer Consumer Validation

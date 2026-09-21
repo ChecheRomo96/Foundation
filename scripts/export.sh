@@ -5,11 +5,10 @@ SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 . "$SCRIPT_DIR/common.sh"
 
 usage() {
-    printf '%s\n' "Usage: $0 <preset> [--config <name>]... [--output <path>] [--parallel <jobs>] [--fresh] [--keep] [--examples-on] [-- <cmake arguments>]"
+    printf '%s\n' "Usage: $0 <preset> [--output <path>] [--parallel <jobs>] [--fresh] [--keep] [--examples-on] [-- <cmake arguments>]"
 }
 
 PRESET=""
-CONFIGURATIONS=""
 OUTPUT=""
 PARALLEL=""
 FRESH=0
@@ -19,11 +18,6 @@ CUSTOM_OUTPUT=0
 
 while [ "$#" -gt 0 ]; do
     case "$1" in
-        --config)
-            foundation_require_value "$1" "${2:-}"
-            CONFIGURATIONS="${CONFIGURATIONS}${CONFIGURATIONS:+ }$2"
-            shift 2
-            ;;
         --output)
             foundation_require_value "$1" "${2:-}"
             OUTPUT=$2
@@ -68,21 +62,11 @@ done
 
 if [ "$EXAMPLES_ON" -eq 1 ]; then
     set -- "$@" -DFOUNDATION_EXAMPLES=ON
+else
+    set -- "$@" -DFOUNDATION_EXAMPLES=OFF
 fi
 
 foundation_require_preset "$PRESET"
-[ -n "$CONFIGURATIONS" ] || CONFIGURATIONS="Debug Release"
-for CONFIGURATION in $CONFIGURATIONS; do
-    foundation_require_configuration "$CONFIGURATION"
-done
-if [ "$EXAMPLES_ON" -eq 1 ]; then
-    RELEASE_SELECTED=0
-    for CONFIGURATION in $CONFIGURATIONS; do
-        [ "$CONFIGURATION" != "Release" ] || RELEASE_SELECTED=1
-    done
-    [ "$RELEASE_SELECTED" -eq 1 ] || \
-        foundation_die "--examples-on requires the Release configuration"
-fi
 
 [ -n "$OUTPUT" ] || OUTPUT="$FOUNDATION_DIST_ROOT/$PRESET"
 OUTPUT=$(foundation_absolute_path "$OUTPUT")
@@ -98,23 +82,15 @@ else
 fi
 
 BUILD_DIR=$(foundation_build_dir "$PRESET")
-for CONFIGURATION in $CONFIGURATIONS; do
-    BUILD_TARGET=Foundation
-    if [ "$CONFIGURATION" = "Release" ]; then
-        BUILD_TARGET=FoundationExportArtifacts
-    fi
-    set -- cmake --build "$BUILD_DIR" --config "$CONFIGURATION" --target "$BUILD_TARGET"
-    [ -z "$PARALLEL" ] || set -- "$@" --parallel "$PARALLEL"
-    "$@"
-done
+set -- cmake --build "$BUILD_DIR" --config Release --target FoundationExportArtifacts
+[ -z "$PARALLEL" ] || set -- "$@" --parallel "$PARALLEL"
+"$@"
 
 if [ "$KEEP" -eq 0 ]; then
     foundation_require_safe_dist_child "$OUTPUT"
     cmake -E remove_directory "$OUTPUT"
 fi
 
-for CONFIGURATION in $CONFIGURATIONS; do
-    "$SCRIPT_DIR/install.sh" "$PRESET" --config "$CONFIGURATION" --prefix "$OUTPUT"
-done
+"$SCRIPT_DIR/install.sh" "$PRESET" --prefix "$OUTPUT"
 
-printf '%s\n' "Exported Foundation ($CONFIGURATIONS) to $OUTPUT"
+printf '%s\n' "Exported Foundation (Release) to $OUTPUT"

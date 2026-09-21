@@ -150,6 +150,7 @@
 
     install(TARGETS Foundation
         EXPORT FoundationTargets
+        CONFIGURATIONS Release
         ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
@@ -165,6 +166,7 @@
         FILE FoundationTargets.cmake
         NAMESPACE Foundation::
         DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/Foundation"
+        CONFIGURATIONS Release
     )
 #
 ######################################################################################################

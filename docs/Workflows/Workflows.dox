@@ -40,9 +40,9 @@
  *
  * Build directories are disposable. Distribution directories are created only
  * by install or export operations and must remain separated by target preset.
- * One package may contain distinct Debug and Release libraries, but compiler,
- * architecture, ABI, and feature-set changes require a different package or a
- * deliberate custom re-export.
+ * Official packages contain only the Release library. Compiler, architecture,
+ * ABI, and feature-set changes require a different package or a deliberate
+ * custom re-export. Debug remains available inside the source build tree.
  *
  * @section FoundationWorkflowsState Cached State
  *

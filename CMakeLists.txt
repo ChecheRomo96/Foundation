@@ -154,6 +154,7 @@
         "${CMAKE_CURRENT_BINARY_DIR}/FoundationConfigVersion.cmake"
         "${CMAKE_CURRENT_BINARY_DIR}/FoundationBuildInfo.cmake"
         DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/Foundation"
+        CONFIGURATIONS Release
     )
 #
 ######################################################################################################
