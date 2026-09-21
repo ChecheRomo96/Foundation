@@ -62,9 +62,8 @@
  * ./scripts/export.sh macos_arm64 --fresh --parallel 8
  * @endcode
  *
- * @warning The test step currently stops this sequence because no CTest cases
- * are registered. That is an intentional release-gate failure, not permission
- * to silently skip testing. See @ref Foundation_Workflows_Test.
+ * The test step must report and execute the registered suite; a zero-test result
+ * is a release-gate failure. See @ref Foundation_Workflows_Test.
  *
  * The Windows equivalent uses the matching `.ps1` scripts. Cross-compiled
  * targets do not run host-side CTest executables; follow

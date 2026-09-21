@@ -1,1 +1,0 @@
-foundation_add_example(Foundation_Math_Ratio Ratio.cpp)

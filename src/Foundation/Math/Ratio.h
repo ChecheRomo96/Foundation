@@ -12,9 +12,10 @@
                     int32_t _num;
                     int32_t _den;
 
-                    private:
-                    static int32_t abs(int32_t value) {
-                        return (value < 0) ? -value : value;
+                    static uint32_t AbsoluteMagnitude(int32_t value) {
+                        return (value < 0)
+                            ? 0u - static_cast<uint32_t>(value)
+                            : static_cast<uint32_t>(value);
                     }
 
                 public:
@@ -47,7 +48,7 @@
                     void Set(
                         int32_t num,
                         int32_t den
-                    ) { 
+                    ) {
                         _num = num;
                         _den = den;
                     }
@@ -73,11 +74,18 @@
                             return Ratio(0, 1);
                         }
 
-                        uint32_t gcd = Math::GCD( abs(_num), abs(_den));
+                        const uint32_t gcd = Math::GCD(
+                            AbsoluteMagnitude(_num),
+                            AbsoluteMagnitude(_den)
+                        );
 
                         Ratio result(
-                            static_cast<int32_t>(_num / gcd),
-                            static_cast<int32_t>(_den / gcd)
+                            static_cast<int32_t>(
+                                static_cast<int64_t>(_num) / gcd
+                            ),
+                            static_cast<int32_t>(
+                                static_cast<int64_t>(_den) / gcd
+                            )
                         );
 
 
@@ -90,11 +98,18 @@
                             _den = 1;
                             return;
                         }
-                        uint32_t gcd = Math::GCD(_num, _den);
-                        _num /= gcd;
-                        _den /= gcd;
+                        const uint32_t gcd = Math::GCD(
+                            AbsoluteMagnitude(_num),
+                            AbsoluteMagnitude(_den)
+                        );
+                        _num = static_cast<int32_t>(
+                            static_cast<int64_t>(_num) / gcd
+                        );
+                        _den = static_cast<int32_t>(
+                            static_cast<int64_t>(_den) / gcd
+                        );
                     }
-                
+
             };
         }
     }

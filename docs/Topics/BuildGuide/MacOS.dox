@@ -62,7 +62,9 @@
  * consumer may require Rosetta to execute on Apple Silicon, but archive creation
  * and architecture inspection do not.
  *
- * Native CTest execution is possible, but no tests are currently registered.
- * See @ref Foundation_Workflows_Test and use the acceptance sequence in
+ * Native CTest execution is part of the release check. The default feature set
+ * discovers and runs the module-owned GoogleTest cases in both Debug and
+ * Release. See
+ * @ref Foundation_Workflows_Test and use the acceptance sequence in
  * @ref Foundation_Workflows_Validation.
  */
