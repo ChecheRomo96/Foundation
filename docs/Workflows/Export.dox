@@ -105,12 +105,12 @@
 
  * The macOS `.command` and Windows `.cmd` launchers are console menus intended
  * for double-click use. Each discovers the adjacent examples, runs the selected
- * executable, displays its exit code, and returns to the menu. Terminal owns the
- * macOS window after the script
- * exits; select **Terminal > Settings > Profiles > Shell > When the shell exits**
- * to choose whether a successful launcher closes it. Launchers are installed
- * only when examples are enabled; they are not CTest tests or replacements for
- * the executable artifacts.
+ * executable, displays its exit code, and asks whether to run another. Pressing
+ * Enter or answering `y` returns to the menu; answering `n` or `q` exits.
+ * Terminal owns the macOS window after the script exits; select **Terminal >
+ * Settings > Profiles > Shell > When the shell exits** to choose whether a
+ * successful launcher closes it. Launchers are installed only when examples are
+ * enabled; they are not CTest tests or replacements for the executable artifacts.
  *
  * `FoundationBuildInfo.cmake` records the exported version, platform, system,
  * processor, macOS architecture, compiler, C++ standard, package configuration,

@@ -147,8 +147,8 @@
  *
  * Native macOS exports also contain the `FoundationExamples.command` launcher,
  * and Windows exports contain `FoundationExamples.cmd`. A developer can
- * double-click it, select any adjacent example, read its exit code, and return
- * to the menu to run another example.
+ * double-click it, select any adjacent example, and read its exit code. The
+ * launcher then asks whether to return to the menu and run another or exit.
  * Terminal and CI usage should invoke the real executable directly. Distribution
  * packages contain Release examples only; build examples in Debug from the
  * source tree when stepping through their code is useful.

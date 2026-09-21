@@ -61,7 +61,7 @@
  * in the source build tree.
  * Add `-ExamplesOn` only when the package should include Release API examples.
  * The package then includes one `FoundationExamples.cmd` menu launcher that
- * returns after every selected example.
+ * asks after every selected example whether to return to the menu or exit.
  * See @ref Foundation_Workflows_Manual for the complete local sequence and the
  * distinction between incremental and clean configuration.
  *
