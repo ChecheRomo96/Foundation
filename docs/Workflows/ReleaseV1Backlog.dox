@@ -1,0 +1,190 @@
+/**
+ * @defgroup Foundation_Workflows_ReleaseV1 Foundation v1.0.0 Backlog
+ * @ingroup Foundation_Workflows_Validation
+ * @brief Version-controlled plan and release gates for Foundation v1.0.0.
+ *
+ * This page is the source of truth for Foundation v1.0.0 readiness. Update it
+ * in the same commit that changes a task's status or acceptance evidence. Do
+ * not maintain a separate progress copy in chat, a spreadsheet, or a Gantt.
+ *
+ * @section FoundationReleaseV1Status Status Header
+ *
+ * | Field | Value |
+ * | ----- | ----- |
+ * | Target | `v1.0.0` |
+ * | Working branch | `v1.0-release-prep` |
+ * | Overall status | `IN PROGRESS` |
+ * | Current milestone | M1 - Release contract |
+ * | Last reviewed | 2026-09-21 |
+ * | Release decision | Not ready |
+ *
+ * Allowed task states are:
+ *
+ * | State | Meaning |
+ * | ----- | ------- |
+ * | `NEXT` | The next task to execute. |
+ * | `TODO` | Accepted scope, not started. |
+ * | `IN PROGRESS` | Work exists locally or on a branch but is not accepted. |
+ * | `BLOCKED` | Cannot continue until the recorded dependency is resolved. |
+ * | `DONE` | Acceptance criteria passed and evidence is recorded. |
+ * | `DEFERRED` | Explicitly removed from the v1.0.0 scope. |
+ *
+ * @section FoundationReleaseV1Rules Update Rules
+ *
+ * - Keep task IDs stable so commits and conversations can refer to them.
+ * - Change a task to `DONE` only after all stated acceptance criteria pass.
+ * - Record evidence as a commit SHA, CI run, command log, package inspection,
+ *   consumer build, or hardware-validation record.
+ * - A successful cross-compilation is not evidence of target execution.
+ * - A test run that discovers zero tests is not a passing test result.
+ * - When scope changes, mark the task `DEFERRED` and explain why; do not delete it.
+ * - Update the status header and release gates whenever this backlog changes.
+ *
+ * @section FoundationReleaseV1Roadmap Dependency Roadmap
+ *
+ * This dependency roadmap is intentionally used instead of a dated Gantt. Add
+ * calendar dates only after runner and hardware availability is known.
+ *
+ * @dot
+ * digraph FoundationReleaseV1Roadmap {
+ *     rankdir=TB;
+ *     graph [
+ *         bgcolor="transparent",
+ *         pad="0.25",
+ *         nodesep="0.55",
+ *         ranksep="0.65"
+ *     ];
+ *     node [
+ *         shape=box,
+ *         style="rounded,filled",
+ *         color="#34495e",
+ *         fontcolor="#17202a",
+ *         fontname="Helvetica",
+ *         fontsize=11,
+ *         margin="0.18,0.12"
+ *     ];
+ *     edge [
+ *         color="#5d6d7e",
+ *         penwidth=1.5,
+ *         arrowsize=0.8
+ *     ];
+ *
+ *     M1 [label="M1\nRelease contract", fillcolor="#d6eaf8"];
+ *     M2 [label="M2\nContinuous integration", fillcolor="#d6eaf8"];
+ *     M3 [label="M3\nTest depth and code quality", fillcolor="#fcf3cf"];
+ *     M4 [label="M4\nPackage and workflow hardening", fillcolor="#fcf3cf"];
+ *     M5 [label="M5\nPlatform and hardware validation", fillcolor="#fadbd8"];
+ *     M6 [label="M6\nRelease candidate and v1.0.0", fillcolor="#d5f5e3"];
+ *
+ *     M1 -> M2;
+ *     M2 -> M3;
+ *     M2 -> M4;
+ *     M3 -> M5;
+ *     M4 -> M5;
+ *     M5 -> M6;
+ *
+ *     { rank=same; M3; M4; }
+ * }
+ * @enddot
+ *
+ * @section FoundationReleaseV1Baseline Completed Baseline
+ *
+ * | ID | State | Deliverable | Evidence |
+ * | -- | ----- | ----------- | -------- |
+ * | BASE-001 | `DONE` | Pre-v1 scripts, presets, toolchains, and workflow baseline | `943c192` |
+ * | BASE-002 | `DONE` | Modular GoogleTests and cross-platform example layout | `33ca3c7` |
+ * | BASE-003 | `DONE` | Release-only exported packages | `96c0892` |
+ * | BASE-004 | `DONE` | Auto-discovered interactive example launchers | `f2786cc` |
+ *
+ * @section FoundationReleaseV1M1 M1 - Release Contract
+ *
+ * | ID | Priority | State | Task | Acceptance criteria / evidence |
+ * | -- | -------- | ----- | ---- | ------------------------------ |
+ * | V1-001 | P0 | `NEXT` | Define the support matrix | Every preset is classified as supported, experimental, or deferred; PIC remains outside v1.0.0. |
+ * | V1-002 | P0 | `TODO` | Make version and language requirements consistent | CMake and source-mode headers report 1.0.0; all documentation consistently requires C++17. |
+ * | V1-003 | P0 | `TODO` | Confirm the distribution license | The selected license intentionally describes commercial use, modification, and redistribution; README names it accurately. |
+ * | V1-004 | P0 | `TODO` | Audit and freeze the public API | Public headers, namespaces, names, ownership, const behavior, and module dependencies are reviewed; approved breaking changes land before RC1. |
+ * | V1-005 | P1 | `TODO` | Add release history and limitations | `CHANGELOG.md` contains the 1.0.0 scope and the documentation lists known limitations. |
+ *
+ * M1 exits when the public contract no longer contradicts the build and every
+ * advertised platform has an explicit support level.
+ *
+ * @section FoundationReleaseV1M2 M2 - Continuous Integration
+ *
+ * | ID | Priority | State | Task | Acceptance criteria / evidence |
+ * | -- | -------- | ----- | ---- | ------------------------------ |
+ * | CI-001 | P0 | `TODO` | Add native build and test CI | GitHub-hosted Linux, macOS, and Windows jobs build and run non-zero Debug and Release test suites. Windows covers MSVC and Clang; Linux covers GCC and Clang. |
+ * | CI-002 | P0 | `TODO` | Validate exported packages in CI | Every native job performs a fresh Release export and a separate `find_package` consumer links `Foundation::Foundation`. |
+ * | CI-003 | P1 | `TODO` | Validate documentation on pull requests | Doxygen builds before merge and fails on structural errors or unresolved references; deployment remains a main-branch operation. |
+ * | CI-004 | P1 | `TODO` | Add embedded compile jobs | ARM and AVR jobs configure, build Debug/Release, export Release, and inspect archive identity without pretending to execute target code. |
+ * | CI-005 | P1 | `TODO` | Preserve useful failure evidence | CI uploads logs, test reports, and selected package artifacts needed to reproduce a failure. |
+ *
+ * Docker may support Linux and cross-compiler jobs. It does not replace native
+ * Windows/MSVC or macOS runners.
+ *
+ * @section FoundationReleaseV1M3 M3 - Test Depth and Code Quality
+ *
+ * | ID | Priority | State | Task | Acceptance criteria / evidence |
+ * | -- | -------- | ----- | ---- | ------------------------------ |
+ * | TEST-001 | P0 | `TODO` | Inventory public API coverage | Every public type/function maps to a test, compile check, documented exception, or target-only validation. |
+ * | TEST-002 | P0 | `TODO` | Complete Math tests | Complex, fixed/dynamic matrices, matrix operations, arithmetic, trigonometry, Ratio, and numeric edge cases are covered. |
+ * | TEST-003 | P0 | `TODO` | Complete remaining module tests | Containers, Functional, Time, Scheduling, TypeTraits, and Utils include empty, full, invalid, boundary, and lifecycle behavior where applicable. |
+ * | TEST-004 | P1 | `TODO` | Add public-header self-containment checks | Each supported public header compiles in an otherwise minimal translation unit. |
+ * | TEST-005 | P1 | `TODO` | Add warning and sanitizer jobs | Supported native compilers run an agreed warning set; AddressSanitizer and UndefinedBehaviorSanitizer pass where available. |
+ * | TEST-006 | P1 | `TODO` | Finish the coverage workflow | Coverage uses a supported compiler, produces a readable report, records a baseline, and has an agreed release threshold; otherwise the public option is removed from v1.0.0. |
+ *
+ * @section FoundationReleaseV1M4 M4 - Package and Workflow Hardening
+ *
+ * | ID | Priority | State | Task | Acceptance criteria / evidence |
+ * | -- | -------- | ----- | ---- | ------------------------------ |
+ * | PKG-001 | P0 | `TODO` | Add a repository-owned package consumer fixture | The fixture configures only from an exported prefix, includes public headers, calls a non-inline symbol, and links the imported target. |
+ * | PKG-002 | P0 | `TODO` | Validate the feature-option matrix | Default, full, each top-level module disabled, and core-only configurations either pass or fail at configure time with a precise dependency error. |
+ * | PKG-003 | P1 | `TODO` | Harden clean and fresh-state behavior | Release validation cannot accidentally reuse stale tests, examples, metadata, or binaries from an earlier configuration. |
+ * | PKG-004 | P0 | `TODO` | Verify artifact identity | Each package contains one Release archive, correct headers/metadata, no Debug import, and the expected compiler/architecture/ABI identity. |
+ * | PKG-005 | P1 | `TODO` | Validate Arduino source mode | At least the declared Arduino/AVR board compiles the documented sketches from the source layout; untested cores are not advertised as validated. |
+ *
+ * @section FoundationReleaseV1M5 M5 - Platform and Hardware Validation
+ *
+ * | ID | Priority | State | Task | Acceptance criteria / evidence |
+ * | -- | -------- | ----- | ---- | ------------------------------ |
+ * | VAL-001 | P0 | `TODO` | Validate macOS arm64 | Complete Debug, Release, tests, examples, export, architecture inspection, launcher, and external consumer checklist. |
+ * | VAL-002 | P0 | `TODO` | Validate macOS x64 | Cross-build and inspect x86-64 artifacts; run tests/consumer through Rosetta or on Intel hardware. |
+ * | VAL-003 | P0 | `TODO` | Validate Windows MSVC x64 | Complete both configurations, non-zero tests, Release export, launcher, archive inspection, and external consumer. |
+ * | VAL-004 | P0 | `TODO` | Validate Windows Clang x64 | Complete the same evidence using the Clang preset and toolchain. |
+ * | VAL-005 | P0 | `TODO` | Validate Linux x64 | GCC and Clang CI jobs complete both configurations, package checks, and consumers. |
+ * | VAL-006 | P1 | `TODO` | Validate Linux arm64 / Raspberry Pi | Native GCC/Clang build, tests, export, and consumer pass on an Arm64 Linux environment. |
+ * | VAL-007 | P0 | `TODO` | Validate AVR ATmega328P | Debug/Release compile, Release package, consumer ELF, size/architecture inspection, and board or emulator smoke result are recorded. |
+ * | VAL-008 | P0 | `TODO` | Validate STM32 | All advertised profiles compile and package; at least one real firmware consumer links and executes on representative hardware. |
+ * | VAL-009 | P1 | `TODO` | Decide PSoC 5LP status | Exact PSoC toolchain/consumer evidence promotes it to supported; otherwise v1.0.0 explicitly marks it experimental. |
+ *
+ * Store each platform's command log using the record format in
+ * @ref FoundationValidationReport. The checklist in
+ * @ref Foundation_Workflows_DesktopValidation remains the detailed procedure;
+ * this backlog records release status rather than duplicating its commands.
+ *
+ * @section FoundationReleaseV1M6 M6 - Release Candidate and Final Release
+ *
+ * | ID | Priority | State | Task | Acceptance criteria / evidence |
+ * | -- | -------- | ----- | ---- | ------------------------------ |
+ * | REL-001 | P0 | `TODO` | Freeze release documentation | README, Doxygen, changelog, support table, license, examples, and package instructions match the candidate. |
+ * | REL-002 | P0 | `TODO` | Publish `v1.0.0-rc.1` | RC tag is created from a clean, green commit and no new features enter after the tag. |
+ * | REL-003 | P0 | `TODO` | Re-run the complete release matrix | Required CI, local platform, package-consumer, and hardware evidence passes on the exact RC commit. |
+ * | REL-004 | P0 | `TODO` | Publish `v1.0.0` | Main contains the approved candidate; annotated tag, release notes, target packages, and checksums are published and downloadable. |
+ * | REL-005 | P0 | `TODO` | Prove downstream readiness | A clean external project consumes the released tag/package without repository-relative paths or unreleased files. |
+ *
+ * @section FoundationReleaseV1Gates Release Gates
+ *
+ * Every item below must be checked before `v1.0.0`:
+ *
+ * - [ ] All P0 tasks are `DONE`; remaining P1 tasks are either `DONE` or
+ *       explicitly `DEFERRED` with a documented limitation.
+ * - [ ] The support matrix matches collected evidence.
+ * - [ ] Required CI is green on the exact release commit.
+ * - [ ] Native Debug and Release tests execute and pass; zero tests is rejected.
+ * - [ ] Release packages contain no Debug artifacts.
+ * - [ ] Separate consumers link the installed packages.
+ * - [ ] Required embedded archive, firmware-link, and hardware evidence exists.
+ * - [ ] Documentation builds and contains no known release contradiction.
+ * - [ ] The worktree is clean and the release can be reproduced from a clean clone.
+ * - [ ] Release notes, packages, and checksums are ready before creating the final tag.
+ */
