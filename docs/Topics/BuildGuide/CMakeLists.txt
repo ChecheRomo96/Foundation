@@ -6,6 +6,7 @@ foundation_add_dox(
     "${CMAKE_CURRENT_LIST_DIR}/MacOS.dox"
     "${CMAKE_CURRENT_LIST_DIR}/Overview.dox"
     "${CMAKE_CURRENT_LIST_DIR}/PSoC.dox"
+    "${CMAKE_CURRENT_LIST_DIR}/SupportMatrix.dox"
     "${CMAKE_CURRENT_LIST_DIR}/STM32.dox"
     "${CMAKE_CURRENT_LIST_DIR}/Windows.dox"
 )

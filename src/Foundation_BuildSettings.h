@@ -6,7 +6,25 @@
     //  Version
 
         #ifndef FOUNDATION_VERSION
-            #define FOUNDATION_VERSION "0.x.1"
+            #define FOUNDATION_VERSION "1.0.0"
+        #endif
+
+    //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // C++ Language Standard
+
+        #ifndef FOUNDATION_CPLUSPLUS
+            #if defined(_MSVC_LANG)
+                #define FOUNDATION_CPLUSPLUS _MSVC_LANG
+            #elif defined(__cplusplus)
+                #define FOUNDATION_CPLUSPLUS __cplusplus
+            #else
+                #define FOUNDATION_CPLUSPLUS 0L
+            #endif
+        #endif
+
+        #if !defined(DOXYGEN) && (FOUNDATION_CPLUSPLUS < 201703L)
+            #error "Foundation 1.0.0 requires C++17 or newer"
         #endif
 
     //

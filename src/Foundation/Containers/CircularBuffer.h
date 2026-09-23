@@ -6,6 +6,14 @@
 
 namespace Foundation::Containers {
 
+    /**
+     * @brief Fixed-capacity FIFO with circular storage reuse.
+     * @ingroup Foundation_Containers
+     * @tparam T Stored value type.
+     *
+     * CircularBuffer operates on a caller-provided array and never allocates.
+     * The array is not owned and must outlive the buffer.
+     */
     template <typename T>
     class CircularBuffer {
     private:
@@ -16,9 +24,19 @@ namespace Foundation::Containers {
         size_t _available;
 
     public:
+        /**
+         * @brief Creates an empty buffer over existing storage.
+         * @param buffer Array containing at least `size` constructed elements.
+         * @param size Maximum number of values that may be stored.
+         * @warning `buffer` must be non-null whenever `size` is non-zero.
+         */
         CircularBuffer(T* buffer, size_t size)
             : _buffer(buffer), _size(size), _readIndex(0), _writeIndex(0), _available(0) { }
 
+        /**
+         * @brief Copies one value to the back of the buffer.
+         * @return `true` on insertion; `false` when the buffer is full.
+         */
         bool Push(const T& value) {
             if (IsFull()) { return false; }
             _buffer[_writeIndex] = value;
@@ -26,6 +44,10 @@ namespace Foundation::Containers {
             return true;
         }
 
+        /**
+         * @brief Move-assigns one value to the back of the buffer.
+         * @return `true` on insertion; `false` when the buffer is full.
+         */
         bool Push(T&& value) {
             if (IsFull()) { return false; }
             _buffer[_writeIndex] = Foundation::Utils::Move(value);
@@ -33,6 +55,11 @@ namespace Foundation::Containers {
             return true;
         }
 
+        /**
+         * @brief Removes the oldest value and move-assigns it to `out`.
+         * @param out Destination updated only when a value is available.
+         * @return `true` on removal; `false` when the buffer is empty.
+         */
         bool Pop(T& out) {
             if (IsEmpty()) { return false; }
             out = Foundation::Utils::Move(_buffer[_readIndex]);
@@ -40,12 +67,21 @@ namespace Foundation::Containers {
             return true;
         }
 
+        /** @brief Returns the number of stored values. */
         size_t GetAvailable() const { return _available; }
+        /** @brief Returns the number of additional values that fit. */
         size_t GetFreeSpace() const { return _size - _available; }
+        /** @brief Returns the fixed capacity supplied at construction. */
         size_t GetSize() const { return _size; }
+        /** @brief Reports whether no values are stored. */
         bool IsEmpty() const { return _available == 0; }
+        /** @brief Reports whether the stored count has reached capacity. */
         bool IsFull() const { return _available >= _size; }
 
+        /**
+         * @brief Clears logical contents and resets both indices.
+         * @note Existing array elements are not destroyed or overwritten.
+         */
         void Reset() {
             _readIndex = 0;
             _writeIndex = 0;

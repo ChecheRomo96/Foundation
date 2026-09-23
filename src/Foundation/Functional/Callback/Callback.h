@@ -18,6 +18,7 @@ namespace Functional {
 /**
  * @class Callback
  * @brief Generic callback wrapper.
+ * @ingroup Foundation_Callback
  *
  * Stores and invokes either:
  *
@@ -26,6 +27,10 @@ namespace Functional {
  *
  * @tparam R Return type.
  * @tparam Args Callback argument types.
+ *
+ * @note A bound object instance is not owned. It must remain alive until the
+ * callback is rebound or unbound and no invocation is in progress.
+ * @note Binding a new target replaces the previous target.
  *
  * @code
  * void OnEvent(int value) {}
@@ -78,6 +83,8 @@ public:
      * @tparam Method Member function pointer.
      *
      * @param instance Object instance used when invoking the callback.
+     * @warning `instance` is stored as a non-owning pointer and must remain
+     * valid for every invocation.
      */
     template <typename T, R (T::*Method)(Args...)>
     void bind(T* instance) {

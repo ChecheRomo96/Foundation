@@ -3,6 +3,11 @@
 Foundation is a lightweight C++ foundation library for embedded and desktop projects.
 It provides reusable low-level building blocks shared by projects such as MIDILAR and RoboFoundation.
 
+Foundation 1.0.0 requires a C++17-capable compiler in every integration mode,
+including CMake packages, direct source builds, and Arduino-style source builds.
+The language requirement does not imply a dependency on the complete C++
+standard library.
+
 ## Modules
 
 - `Containers`: CircularBuffer, Queue and Stack.
@@ -15,7 +20,7 @@ It provides reusable low-level building blocks shared by projects such as MIDILA
 
 ## Build
 
-CMake 3.25 or newer is required. Ninja is required by the Ninja presets, and
+CMake 3.25 or newer and C++17 are required. Ninja is required by the Ninja presets, and
 each cross-compiled preset requires its named compiler/runtime on `PATH` or in a
 configured toolchain location. List the presets available on the current host:
 
@@ -92,3 +97,16 @@ Copy this folder into your Arduino `libraries` folder and include:
 ```cpp
 #include <Foundation.h>
 ```
+
+## License
+
+Copyright (c) 2026 José Manuel Romo. All rights reserved.
+
+Foundation is currently proprietary and is not open-source software. No
+permission is granted for external use, compilation, modification,
+redistribution, integration, or commercial use without prior written
+authorization. See [LICENSE](LICENSE) for the complete notice.
+
+The long-term licensing and distribution model must be reviewed with qualified
+legal counsel before the public `v1.0.0` release. Until the license is replaced
+in writing, the all-rights-reserved notice applies.

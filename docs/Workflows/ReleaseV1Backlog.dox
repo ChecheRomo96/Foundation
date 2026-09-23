@@ -100,10 +100,10 @@
  *
  * | ID | Priority | State | Task | Acceptance criteria / evidence |
  * | -- | -------- | ----- | ---- | ------------------------------ |
- * | V1-001 | P0 | `NEXT` | Define the support matrix | Every preset is classified as supported, experimental, or deferred; PIC remains outside v1.0.0. |
- * | V1-002 | P0 | `TODO` | Make version and language requirements consistent | CMake and source-mode headers report 1.0.0; all documentation consistently requires C++17. |
- * | V1-003 | P0 | `TODO` | Confirm the distribution license | The selected license intentionally describes commercial use, modification, and redistribution; README names it accurately. |
- * | V1-004 | P0 | `TODO` | Audit and freeze the public API | Public headers, namespaces, names, ownership, const behavior, and module dependencies are reviewed; approved breaking changes land before RC1. |
+ * | V1-001 | P0 | `DONE` | Define the support matrix | Every public preset is classified in @ref Foundation_BuildGuide_SupportMatrix; PIC is deferred and unvalidated candidates cannot be called supported. |
+ * | V1-002 | P0 | `DONE` | Make version and language requirements consistent | CMake, `library.properties`, and source mode report 1.0.0; CMake rejects version drift; Debug and Release each pass 26 tests; direct source mode accepts C++17 and rejects C++14; Doxygen rebuild passes. |
+ * | V1-003 | P0 | `BLOCKED` | Confirm the distribution license | Interim state is `All Rights Reserved / No License Granted`; README prohibits external use and identifies the project as proprietary. A qualified legal expert must review ownership, prior grants, contribution terms, and the final distribution model before release. |
+ * | V1-004 | P0 | `IN PROGRESS` | Audit and freeze the public API | Inventory, dependency graph, evidence, and unresolved findings are recorded in @ref Foundation_Workflows_PublicApiAudit. The API is not frozen while blockers or breaking decisions remain. |
  * | V1-005 | P1 | `TODO` | Add release history and limitations | `CHANGELOG.md` contains the 1.0.0 scope and the documentation lists known limitations. |
  *
  * M1 exits when the public contract no longer contradicts the build and every
@@ -185,6 +185,8 @@
  * - [ ] Separate consumers link the installed packages.
  * - [ ] Required embedded archive, firmware-link, and hardware evidence exists.
  * - [ ] Documentation builds and contains no known release contradiction.
+ * - [ ] Qualified legal review has approved the final license, copyright
+ *       ownership, contribution terms, and intended distribution model.
  * - [ ] The worktree is clean and the release can be reproduced from a clean clone.
  * - [ ] Release notes, packages, and checksums are ready before creating the final tag.
  */

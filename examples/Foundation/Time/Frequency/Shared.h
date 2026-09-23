@@ -10,11 +10,13 @@ namespace FoundationExamples {
 
             typedef void (*RatioPrinter)(
                 const char* name,
+                const char* code,
                 const Foundation::Math::Ratio& ratio
             );
 
             typedef void (*FrequencyPrinter)(
                 const char* name,
+                const char* code,
                 const Foundation::Time::Frequency& frequency
             );
 

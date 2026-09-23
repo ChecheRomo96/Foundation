@@ -12,11 +12,13 @@
     if(FOUNDATION_CONTAINERS)
         message(STATUS "Foundation::Containers")
         target_compile_definitions(Foundation PUBLIC FOUNDATION_CONTAINERS)
+        list(APPEND ${PROJECT_NAME_UPPER}_MACROS "FOUNDATION_CONTAINERS")
     endif()
 
     if(FOUNDATION_SCHEDULING)
         message(STATUS "Foundation::Scheduling")
         target_compile_definitions(Foundation PUBLIC FOUNDATION_SCHEDULING)
+        list(APPEND ${PROJECT_NAME_UPPER}_MACROS "FOUNDATION_SCHEDULING")
     endif()
 
     if(FOUNDATION_MATH)
@@ -31,8 +33,6 @@
         message(STATUS "Foundation::Time")
         target_compile_definitions(Foundation PUBLIC FOUNDATION_TIME)
         list(APPEND ${PROJECT_NAME_UPPER}_MACROS "FOUNDATION_TIME")
-
-        include(${CMAKE_CURRENT_LIST_DIR}/Time/CMakeMacros.cmake)
     endif()
 
     if(FOUNDATION_FUNCTIONAL)

@@ -1,15 +1,63 @@
 /**
- * @file Functional.dox
- *
  * @defgroup Foundation_Functional Functional
  * @ingroup Foundation
+ * @brief Allocation-free callable utilities for embedded and desktop code.
  *
- * @brief Callable and callback utilities.
+ * Functional currently exposes one public component:
+ * @ref Foundation_Callback "Callback". This is the complete implemented v1
+ * surface of the module, not a missing-documentation placeholder. Additional
+ * functional utilities should appear here only after they have an implemented,
+ * tested, and reviewed public contract.
  *
- * The Functional module provides lightweight abstractions for
- * callbacks, delegates, function binding, and other callable
- * utilities intended for embedded and desktop applications.
+ * @section FoundationFunctionalHeaders Public Headers
  *
- * The module focuses on minimizing runtime overhead while providing
- * flexible mechanisms for event handling and callback dispatch.
+ * | Need | Header |
+ * | ---- | ------ |
+ * | Entire Foundation library | `#include <Foundation.h>` |
+ * | Entire Functional module | `#include <Foundation_Functional.h>` |
+ * | Nested module umbrella | `#include <Foundation/Functional.h>` |
+ * | Callback only | `#include <Foundation/Functional/Callback.h>` |
+ *
+ * @section FoundationFunctionalUsage Basic Usage
+ *
+ * @code{.cpp}
+ * #include <Foundation_Functional.h>
+ *
+ * int Add(int first, int second) {
+ *     return first + second;
+ * }
+ *
+ * Foundation::Functional::Callback<int, int, int> callback;
+ * callback.bind(Add);
+ * const int result = callback.invoke(2, 3);
+ * @endcode
+ *
+ * Callback stores either a free/static function pointer or a non-owning object
+ * pointer plus a member-function invoker. It performs no heap allocation and
+ * offers `status()` and `unbind()` for explicit state management.
+ *
+ * @section FoundationFunctionalContract Current Contract
+ *
+ * - Bound objects are not owned; they must outlive the binding and every call.
+ * - The current public API binds non-const member functions only.
+ * - If `FOUNDATION_EXCEPTIONS` is enabled, invoking an empty callback throws
+ *   `std::runtime_error`. Otherwise a non-void callback returns `R()` and a
+ *   void callback performs no operation.
+ * - Callback invocation is synchronous and is not internally synchronized.
+ *
+ * @warning Naming, const-member support, and the zero-argument specialization
+ * model remain pre-1.0 decisions under `API-008` in
+ * @ref Foundation_Workflows_PublicApiAudit.
+ *
+ * @section FoundationFunctionalExample Runnable Example
+ *
+ * `Foundation_Functional_Callback` demonstrates free functions, member
+ * functions, return values, binding state, and unbinding. See
+ * @ref Foundation_Examples "Examples" for build and launch instructions.
+ */
+
+/**
+ * @namespace Foundation::Functional
+ * @ingroup Foundation_Functional
+ * @brief Allocation-free callable abstractions.
  */

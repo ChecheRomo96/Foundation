@@ -1,8 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <Foundation/Containers/CircularBuffer.h>
-#include <Foundation/Containers/Queue.h>
-#include <Foundation/Containers/Stack.h>
+#include <Foundation/Containers.h>
 
 using Foundation::Containers::CircularBuffer;
 using Foundation::Containers::Queue;

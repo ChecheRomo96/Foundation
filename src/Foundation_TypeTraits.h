@@ -7,7 +7,7 @@
             #define FOUNDATION_TYPE_TRAITS
         #endif
     
-        #include <Foundation/TypeTraits/TypeTraits.h>
+        #include <Foundation/TypeTraits.h>
     #endif
 
 #endif//FOUNDATION_TYPE_TRAITS_TOP_H

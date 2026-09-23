@@ -64,6 +64,20 @@
  * and register the file in the local CMakeLists. Platform-specific integration
  * belongs under Build Guide / Platforms; reusable command behavior belongs here.
  *
+ * @section FoundationWorkflowDocsIndexes Collapsible Indexes
+ *
+ * The generated **Topics** and **Class List** pages open at detail level 2:
+ * modules and namespaces remain visible while their child entries start
+ * collapsed. Readers can use the native Doxygen arrows or **detail level**
+ * controls to expand the hierarchy.
+ *
+ * Doxygen does not expose a configuration value for the initial detail level.
+ * `docs/assets/FoundationDocs.js` applies the default by calling Doxygen's own
+ * `dynsection.toggleLevel()` implementation, and `FoundationFooter.html` loads
+ * that script through `HTML_FOOTER` and `HTML_EXTRA_FILES`. If the project
+ * upgrades Doxygen, compare the custom footer against the new generated default
+ * before accepting the upgrade.
+ *
  * @section FoundationWorkflowDocsQuality Quality Checks
  *
  * After changing documentation:

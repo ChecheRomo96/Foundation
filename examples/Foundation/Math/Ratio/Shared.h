@@ -9,6 +9,7 @@ namespace FoundationExamples {
 
             typedef void (*Printer)(
                 const char* name,
+                const char* code,
                 const Foundation::Math::Ratio& ratio
             );
 

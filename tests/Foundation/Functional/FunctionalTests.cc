@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <Foundation/Functional/Callback.h>
+#include <Foundation/Functional.h>
 
 namespace {
 

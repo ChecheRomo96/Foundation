@@ -73,13 +73,31 @@
  * | `FOUNDATION_TYPE_TRAITS` | `ON` | Includes TypeTraits. |
  * | `FOUNDATION_CONTAINERS` | `ON` | Includes Containers. |
  * | `FOUNDATION_SCHEDULING` | `ON` | Includes Scheduling. |
- * | `FOUNDATION_TIME` | `ON` | Includes Time and its selected submodules. |
+ * | `FOUNDATION_TIME` | `ON` | Includes the complete Time family. |
  * | `FOUNDATION_FUNCTIONAL` | `ON` | Includes Functional. |
  * | `FOUNDATION_UTILS` | `ON` | Includes Utils. |
  *
- * Math, Time, Matrix, and Functional expose additional submodule options in
- * their `CMakeOptions.cmake` files. When a parent is disabled, its child code is
- * not added even if a child cache option remains `ON`.
+ * Math and Functional expose additional component options. Matrix and Time are
+ * indivisible v1 features: enabling Matrix provides `Matrix::Fixed`,
+ * `Matrix::Dynamic`, and `Matrix::Multiply`; enabling Time provides Clock,
+ * Duration, Frequency, Period, Tick, and TimePoint.
+ *
+ * @subsection FoundationWorkflowConfigureDependencies Feature Dependencies
+ *
+ * CMake validates module dependencies before creating any build targets:
+ *
+ * | Feature | Required feature |
+ * | ------- | ---------------- |
+ * | `FOUNDATION_CONTAINERS` | `FOUNDATION_UTILS` |
+ * | `FOUNDATION_TIME` | `FOUNDATION_MATH` |
+ * | `FOUNDATION_TIME` | `FOUNDATION_MATH_RATIO` |
+ * | `FOUNDATION_TIME` | `FOUNDATION_FUNCTIONAL` |
+ * | `FOUNDATION_TIME` | `FOUNDATION_FUNCTIONAL_CALLBACK` |
+ * | `FOUNDATION_SCHEDULING` | `FOUNDATION_TIME` |
+ *
+ * Invalid combinations are rejected instead of silently changing cache values.
+ * For example, Containers without Utils reports the conflicting options and
+ * explains that the caller must either enable Utils or disable Containers.
  *
  * Target presets intentionally leave module options in the CMake cache. This
  * allows a caller to configure a custom feature set once and reuse it for both

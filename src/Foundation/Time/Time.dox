@@ -2,4 +2,91 @@
  * @defgroup Foundation_Time Time
  * @ingroup Foundation
  * @brief Clock abstractions and time utilities.
+ *
+ * Time models a monotonic tick source and the values derived from it. A Clock
+ * binds a tick-reading function and a Frequency; `Now()` combines the current
+ * Tick with the identity of that Clock in a TimePoint. Duration stores a count
+ * of ticks, while Frequency and Period describe the scale of each tick.
+ * `FOUNDATION_TIME` enables this complete family. Consumers choose which time
+ * types to instantiate in source code; Clock, Duration, Frequency, Period,
+ * Tick, and TimePoint are not separate CMake features.
+ *
+ * @section FoundationTimeHeaders Public Headers
+ *
+ * | Need | Header |
+ * | ---- | ------ |
+ * | Entire Foundation library | `#include <Foundation.h>` |
+ * | Entire Time module | `#include <Foundation_Time.h>` |
+ * | Nested module umbrella | `#include <Foundation/Time.h>` |
+ * | One time type | `#include <Foundation/Time/<Type>.h>` |
+ *
+ * @section FoundationTimeTypes Public Types
+ *
+ * | Type | Meaning |
+ * | ---- | ------- |
+ * | @ref Foundation_Time_Tick "Tick" | Unsigned 32-bit counter value. |
+ * | @ref Foundation_Time_Frequency "Frequency" | Ticks per second as a ratio. |
+ * | @ref Foundation_Time_Period "Period" | Seconds per tick as a ratio. |
+ * | @ref Foundation_Time_Duration "Duration" | Number of elapsed ticks without clock identity. |
+ * | @ref Foundation_Time_TimePoint "TimePoint" | Tick value associated with one Clock instance. |
+ * | @ref Foundation_Time_Clock "Clock" | Callback-backed tick source and its frequency. |
+ *
+ * @section FoundationTimeUsage Basic Usage
+ *
+ * @code{.cpp}
+ * Foundation::Time::Tick ReadTick();
+ *
+ * Foundation::Time::Clock clock(ReadTick, Foundation::Time::Frequency(1000, 1));
+ *
+ * const Foundation::Time::TimePoint start = clock.Now();
+ * // Work performed here...
+ * const Foundation::Time::TimePoint end = clock.Now();
+ * const Foundation::Time::Duration elapsed = end - start;
+ * const float milliseconds = elapsed.Milliseconds(clock.GetPeriod());
+ * @endcode
+ *
+ * @section FoundationTimeModel Model and Validity
+ *
+ * - Tick is `uint32_t`; arithmetic follows unsigned wraparound semantics.
+ * - A default TimePoint has no Clock and `IsValid()` returns false.
+ * - TimePoints compare as ordered only when they reference the same Clock
+ *   instance. Subtracting points from different clocks returns zero Duration.
+ * - TimePoint stores a non-owning Clock pointer; the Clock must outlive every
+ *   point that retains its identity.
+ * - Frequency and Period are backed by Math::Ratio. A zero denominator is
+ *   invalid and conversion methods return the behavior documented by each type.
+ * - Duration conversion requires the Period belonging to the relevant Clock.
+ *
+ * @warning Wraparound, cross-clock arithmetic, zero-frequency reciprocal
+ * behavior, and raw Clock identity remain pre-1.0 decisions under `API-011` in
+ * @ref Foundation_Workflows_PublicApiAudit.
+ *
+ * @section FoundationTimeExamples Runnable Examples
+ *
+ * The examples `Foundation_Time_Frequency`, `Foundation_Time_Period`, and
+ * `Foundation_Time_ClockAndDuration` demonstrate construction, conversion,
+ * mutation, clock identity, arithmetic, and units. See
+ * @ref Foundation_Examples "Examples" for build and launch instructions.
  */
+
+/**
+ * @namespace Foundation::Time
+ * @ingroup Foundation_Time
+ * @brief Tick sources, time values, and unit conversions.
+ */
+
+/** @defgroup Foundation_Time_Tick Tick
+ * @ingroup Foundation_Time
+ * @brief Unsigned tick-counter representation. */
+
+/** @defgroup Foundation_Time_Duration Duration
+ * @ingroup Foundation_Time
+ * @brief Elapsed tick counts and unit conversion. */
+
+/** @defgroup Foundation_Time_TimePoint Time Point
+ * @ingroup Foundation_Time
+ * @brief Tick values associated with a Clock identity. */
+
+/** @defgroup Foundation_Time_Clock Clock
+ * @ingroup Foundation_Time
+ * @brief Callback-backed tick source with a frequency. */

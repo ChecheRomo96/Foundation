@@ -6,7 +6,9 @@
     add_library(Foundation STATIC)
     add_library(Foundation::Foundation ALIAS Foundation)
 
-    target_compile_features(Foundation PUBLIC cxx_std_17)
+    target_compile_features(Foundation PUBLIC
+        cxx_std_${FOUNDATION_REQUIRED_CXX_STANDARD}
+    )
 
     if(NOT FOUNDATION_PLATFORM)
         set(FOUNDATION_PLATFORM "desktop")
@@ -89,6 +91,12 @@
     if(FOUNDATION_CONTAINERS)
         list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
             "${CMAKE_CURRENT_LIST_DIR}/Foundation_Containers.h"
+        )
+    endif()
+
+    if(FOUNDATION_FUNCTIONAL)
+        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
+            "${CMAKE_CURRENT_LIST_DIR}/Foundation_Functional.h"
         )
     endif()
 

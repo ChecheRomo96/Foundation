@@ -25,18 +25,35 @@ namespace Foundation::TypeTraits {
 
 #else
 
+    /**
+     * @brief Reports whether a type is an lvalue or rvalue reference.
+     * @ingroup Foundation_TypeTraits_Composite
+     * @tparam T Type to inspect.
+     */
     template <typename T>
     struct is_reference : bool_constant<
         is_lvalue_reference<T>::value ||
         is_rvalue_reference<T>::value
     > {};
 
+    /**
+     * @brief Reports whether a type is any pointer-to-member type.
+     * @ingroup Foundation_TypeTraits_Composite
+     * @tparam T Type to inspect.
+     */
     template <typename T>
     struct is_member_pointer : bool_constant<
         is_member_object_pointer<T>::value ||
         is_member_function_pointer<T>::value
     > {};
 
+    /**
+     * @brief Reports whether a type is an object type.
+     * @ingroup Foundation_TypeTraits_Composite
+     * @tparam T Type to inspect.
+     *
+     * Object types exclude functions, `void`, and references.
+     */
     template <typename T>
     struct is_object : bool_constant<
         !is_function<T>::value &&
@@ -44,12 +61,25 @@ namespace Foundation::TypeTraits {
         !is_reference<T>::value
     > {};
 
+    /**
+     * @brief Reports whether a type is integral or floating-point.
+     * @ingroup Foundation_TypeTraits_Composite
+     * @tparam T Type to inspect.
+     */
     template <typename T>
     struct is_arithmetic : bool_constant<
         is_integral<T>::value ||
         is_floating_point<T>::value
     > {};
 
+    /**
+     * @brief Reports whether a type is scalar.
+     * @ingroup Foundation_TypeTraits_Composite
+     * @tparam T Type to inspect.
+     *
+     * Scalar types include arithmetic, pointer, member-pointer, enumeration,
+     * and `nullptr_t` types.
+     */
     template <typename T>
     struct is_scalar : bool_constant<
         is_arithmetic<T>::value ||
@@ -59,6 +89,14 @@ namespace Foundation::TypeTraits {
         is_same<decltype(nullptr), typename remove_cv<T>::type>::value
     > {};
 
+    /**
+     * @brief Reports whether a type is fundamental.
+     * @ingroup Foundation_TypeTraits_Composite
+     * @tparam T Type to inspect.
+     *
+     * Fundamental types include integral, floating-point, `void`, and
+     * `nullptr_t` types.
+     */
     template <typename T>
     struct is_fundamental : bool_constant<
         is_integral<T>::value ||
@@ -67,6 +105,11 @@ namespace Foundation::TypeTraits {
         is_same<decltype(nullptr), typename remove_cv<T>::type>::value
     > {};
 
+    /**
+     * @brief Reports whether a type is not fundamental.
+     * @ingroup Foundation_TypeTraits_Composite
+     * @tparam T Type to inspect.
+     */
     template <typename T>
     struct is_compound : bool_constant<
         !is_fundamental<T>::value
@@ -76,26 +119,40 @@ namespace Foundation::TypeTraits {
 
 #if FOUNDATION_CPLUSPLUS >= 201402L
 
+    /** @brief `is_arithmetic<T>::value` convenience variable.
+     * @ingroup Foundation_TypeTraits_Composite */
     template <typename T>
-    INLINE_MACRO constexpr bool is_arithmetic_v = is_arithmetic<T>::value;
+    inline constexpr bool is_arithmetic_v = is_arithmetic<T>::value;
 
+    /** @brief `is_fundamental<T>::value` convenience variable.
+     * @ingroup Foundation_TypeTraits_Composite */
     template <typename T>
-    INLINE_MACRO constexpr bool is_fundamental_v = is_fundamental<T>::value;
+    inline constexpr bool is_fundamental_v = is_fundamental<T>::value;
 
+    /** @brief `is_member_pointer<T>::value` convenience variable.
+     * @ingroup Foundation_TypeTraits_Composite */
     template <typename T>
-    INLINE_MACRO constexpr bool is_member_pointer_v = is_member_pointer<T>::value;
+    inline constexpr bool is_member_pointer_v = is_member_pointer<T>::value;
 
+    /** @brief `is_object<T>::value` convenience variable.
+     * @ingroup Foundation_TypeTraits_Composite */
     template <typename T>
-    INLINE_MACRO constexpr bool is_object_v = is_object<T>::value;
+    inline constexpr bool is_object_v = is_object<T>::value;
 
+    /** @brief `is_reference<T>::value` convenience variable.
+     * @ingroup Foundation_TypeTraits_Composite */
     template <typename T>
-    INLINE_MACRO constexpr bool is_reference_v = is_reference<T>::value;
+    inline constexpr bool is_reference_v = is_reference<T>::value;
 
+    /** @brief `is_scalar<T>::value` convenience variable.
+     * @ingroup Foundation_TypeTraits_Composite */
     template <typename T>
-    INLINE_MACRO constexpr bool is_scalar_v = is_scalar<T>::value;
+    inline constexpr bool is_scalar_v = is_scalar<T>::value;
 
+    /** @brief `is_compound<T>::value` convenience variable.
+     * @ingroup Foundation_TypeTraits_Composite */
     template <typename T>
-    INLINE_MACRO constexpr bool is_compound_v = is_compound<T>::value;
+    inline constexpr bool is_compound_v = is_compound<T>::value;
 
 #endif
 

@@ -37,8 +37,7 @@
 #################################################################################################################################
 # Time
 
-    option(FOUNDATION_TIME "Enables the compilation of Foundation::Time" ON)
-    include(${CMAKE_CURRENT_LIST_DIR}/Time/CMakeOptions.cmake)
+    option(FOUNDATION_TIME "Enables the complete Foundation::Time family" ON)
 #
 #################################################################################################################################
 # Utils

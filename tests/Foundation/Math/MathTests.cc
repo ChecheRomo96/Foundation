@@ -3,17 +3,20 @@
 #include <cstdint>
 #include <limits>
 
-#include <Foundation/Math/Arithmetic.h>
-#include <Foundation/Math/Ratio.h>
+#include <Foundation/Math.h>
 
 using Foundation::Math::GCD;
+
+#if defined(FOUNDATION_MATH_RATIO)
 using Foundation::Math::Ratio;
+#endif
 
 TEST(ArithmeticTest, CalculatesGreatestCommonDivisor) {
     EXPECT_EQ(GCD(54, 24), 6u);
     EXPECT_EQ(GCD(0, 7), 7u);
 }
 
+#if defined(FOUNDATION_MATH_RATIO)
 TEST(RatioTest, SupportsConstantConstructionAndConversion) {
     constexpr Ratio half(1, 2);
     static_assert(half.Num() == 1, "Ratio numerator must be constexpr");
@@ -69,3 +72,4 @@ TEST(RatioTest, HandlesAnInvalidDenominator) {
     EXPECT_EQ(reduced.Num(), 0);
     EXPECT_EQ(reduced.Den(), 1);
 }
+#endif

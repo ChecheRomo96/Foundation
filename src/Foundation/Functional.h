@@ -1,12 +1,12 @@
-#ifndef FOUNDATION_UTILS_H
-#define FOUNDATION_UTILS_H
+#ifndef FOUNDATION_FUNCTIONAL_H
+#define FOUNDATION_FUNCTIONAL_H
 
-    #if __has_include(<Foundation/Utils/Utils.h>)
+    #if __has_include(<Foundation/Functional/Functional.h>)
 
-        #ifndef FOUNDATION_UTILS
-            #define FOUNDATION_UTILS
+        #ifndef FOUNDATION_FUNCTIONAL
+            #define FOUNDATION_FUNCTIONAL
         #endif
-        #include <Foundation/Utils/Utils.h>
+        #include <Foundation/Functional/Functional.h>
     #endif
 
-#endif//FOUNDATION_UTILS_H 
+#endif//FOUNDATION_FUNCTIONAL_H

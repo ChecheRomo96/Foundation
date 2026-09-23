@@ -8,9 +8,25 @@
  *
  * @section FoundationExamplesAvailable Available Native Examples
  *
- * - Math: `Foundation_Math_Ratio`;
- * - Time: `Foundation_Time_Frequency` and `Foundation_Time_Period`;
- * - TypeTraits: `Foundation_TypeTraits_BasicChecks`.
+ * | Module | Native executable | Public APIs demonstrated |
+ * | ------ | ----------------- | ------------------------ |
+ * | TypeTraits | `Foundation_TypeTraits_BasicChecks` | Type categories, relationships, compile-time constraints, and an arithmetic-only generic buffer. |
+ * | Math | `Foundation_Math_Arithmetic` | `GCD`, `Pi`, `DegToRad`, and `RadToDeg`. |
+ * | Math | `Foundation_Math_Ratio` | Ratio construction, validity, numerator/denominator access, and floating-point conversion. |
+ * | Math | `Foundation_Math_Complex` | Complex construction, addition, multiplication, conjugation, and squared magnitude. |
+ * | Math | `Foundation_Math_Matrix` | Fixed and dynamic matrices, element access, transpose, ownership reporting, and multiplication. |
+ * | Containers | `Foundation_Containers_DataStructures` | Circular-buffer wraparound, FIFO `Queue`, and LIFO `Stack`. |
+ * | Functional | `Foundation_Functional_Callback` | Binding, invoking, querying, and unbinding free and member functions. |
+ * | Time | `Foundation_Time_Frequency` | Frequencies, periods, ratios, mutation, conversion, and invalid values. |
+ * | Time | `Foundation_Time_Period` | Periods, frequencies, ratios, mutation, conversion, and invalid values. |
+ * | Time | `Foundation_Time_ClockAndDuration` | `Tick`, callback-backed `Clock`, `TimePoint`, `Duration`, clock identity, arithmetic, and unit conversion. |
+ * | Scheduling | `Foundation_Scheduling_TaskScheduler` | `Task`, `PeriodicTask`, `OneShotTask`, `TaskScheduler`, capacity, and simulated clock updates. |
+ * | Utils | `Foundation_Utils_MoveAndSwap` | Moving a non-copyable object and swapping values without the STL. |
+ *
+ * Together these examples cover every current top-level Foundation module and
+ * every implemented public component intended for v1. Empty placeholders such
+ * as `Forward.h` and `Exchange.h` deliberately have no examples because they
+ * do not yet provide an API.
  *
  * Each example lives under the module that owns the demonstrated API:
  *
@@ -30,6 +46,61 @@
  * Arduino `Serial`, while `Desktop/main.cpp` adapts it to a native console
  * executable. This prevents the Arduino and desktop versions from silently
  * becoming different examples.
+ *
+ * @subsection FoundationExamplesPresentation Presentation Contract
+ *
+ * An example must teach a small, recognizable API scenario rather than print
+ * unexplained values. Its output should let a reader understand the following
+ * without opening the source first:
+ *
+ * 1. **Purpose** -- what API concept the example demonstrates.
+ * 2. **Scenario or input** -- what values or simulated situation are used.
+ * 3. **Code** -- the copyable Foundation construction or API call that
+ *    produced the displayed result.
+ * 4. **Interpreted result** -- what the output means, including units and
+ *    descriptive `yes`/`no` state instead of bare numbers or booleans.
+ * 5. **Takeaway** -- the design rule a consumer should remember.
+ *
+ * Terminal and serial output follows a portable 60-column visual system. Use
+ * plain UTF-8 text so the same presentation remains legible in macOS Terminal,
+ * Windows terminals, CI logs, and embedded serial monitors. General layout
+ * uses ASCII; domain-specific mathematical glyphs are allowed when they make
+ * the represented structure materially clearer. Do not require ANSI colors to
+ * communicate hierarchy or state.
+ *
+ * @code{.text}
+ * ============================================================
+ *  FOUNDATION :: Module / Example
+ * ============================================================
+ *
+ * PURPOSE
+ *   One concise description of the demonstrated behavior.
+ *
+ * [1] SCENARIO OR OPERATION
+ * ------------------------------------------------------------
+ *   CODE
+ *     Foundation::Module::Type value(arguments);
+ *   Input ................ meaningful value with units
+ *   Result ............... interpreted value with units
+ *
+ * ------------------------------------------------------------
+ * TAKEAWAY
+ *   The API rule a consumer should remember.
+ * ============================================================
+ * @endcode
+ *
+ * Keep emitted lines at or below 60 columns. Use section separators and
+ * aligned dotted labels for visual scanning; wrap long explanations on a new
+ * line with the same two-space content indentation. Each result-bearing
+ * section must show its relevant source expression under `CODE` before the
+ * interpreted values; do not make the reader infer the call from prose.
+ *
+ * Desktop and Arduino adapters must communicate the same scenario, even when
+ * their output APIs differ. Presentation code belongs in `Desktop/main.cpp`
+ * and `<example>.ino`; the shared implementation remains focused on portable
+ * API usage. Examples may describe observations, but they must not print
+ * `PASS`/`FAIL` or imitate a test report. Automated assertions and edge-case
+ * coverage belong in `tests/Foundation`.
  *
  * The CMake hierarchy mirrors `src/Foundation`: `examples/CMakeLists.txt`
  * provides the common example helper and launcher, `examples/Foundation`
@@ -58,6 +129,13 @@
  * Examples are added only when their required Foundation modules are enabled.
  * They link `Foundation::Foundation` and therefore exercise the public target
  * usage requirements.
+ *
+ * Each example includes the narrowest supported public header that communicates
+ * its dependency. A component example such as Ratio includes
+ * `Foundation/Math/Ratio.h`; a module-wide example such as Containers includes
+ * `Foundation/Containers.h`. This keeps the same source suitable for desktop
+ * and constrained Arduino builds while teaching consumers not to rely on
+ * accidental transitive includes.
  *
  * @subsection FoundationExamplesAdd Adding an Example
  *

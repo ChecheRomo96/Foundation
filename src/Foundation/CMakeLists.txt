@@ -21,10 +21,16 @@
     endif()
 
     if(FOUNDATION_TYPE_TRAITS)
+        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
+            "${CMAKE_CURRENT_LIST_DIR}/TypeTraits.h"
+        )
         add_subdirectory(TypeTraits)
     endif()
 
     if(FOUNDATION_CONTAINERS)
+        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
+            "${CMAKE_CURRENT_LIST_DIR}/Containers.h"
+        )
         add_subdirectory(Containers)
     endif()
 
@@ -43,6 +49,9 @@
     endif()
 
     if(FOUNDATION_SCHEDULING)
+        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
+            "${CMAKE_CURRENT_LIST_DIR}/Scheduling.h"
+        )
         add_subdirectory(Scheduling)
     endif()
     

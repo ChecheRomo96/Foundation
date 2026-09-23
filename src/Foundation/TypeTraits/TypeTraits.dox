@@ -1,6 +1,135 @@
 /**
  * @defgroup Foundation_TypeTraits Type Traits
  * @ingroup Foundation
+ * @brief Compile-time type inspection and relationships for generic code.
  *
- * Compile-time type utilities.
+ * TypeTraits provides small, allocation-free compile-time utilities with an API
+ * shaped like the corresponding C++ standard-library traits. A trait exposes a
+ * compile-time `value`; C++17 consumers may use its shorter `_v` form.
+ *
+ * @code{.cpp}
+ * #include <Foundation_TypeTraits.h>
+ *
+ * using namespace Foundation::TypeTraits;
+ *
+ * static_assert(is_integral<int>::value, "int must be integral");
+ * static_assert(is_pointer_v<const char*>, "expected a pointer");
+ * static_assert(is_same_v<remove_cv<const int>::type, int>,
+ *               "remove_cv must remove top-level qualifiers");
+ * @endcode
+ *
+ * @section FoundationTypeTraitsHeaders Public Headers
+ *
+ * Prefer one of these supported entry points:
+ *
+ * | Need | Header |
+ * | ---- | ------ |
+ * | Entire Foundation library | `#include <Foundation.h>` |
+ * | Entire TypeTraits module | `#include <Foundation_TypeTraits.h>` |
+ * | Nested module umbrella | `#include <Foundation/TypeTraits.h>` |
+ * | One trait family only | `#include <Foundation/TypeTraits/<Family>.h>` |
+ *
+ * The top-level and nested module umbrellas expose the same TypeTraits surface.
+ * Selective family headers are useful on embedded targets when minimizing
+ * parsed declarations matters.
+ *
+ * @section FoundationTypeTraitsFamilies Trait Families
+ *
+ * | Family | Purpose | Representative traits |
+ * | ------ | ------- | --------------------- |
+ * | @ref Foundation_TypeTraits_Helpers "Helper classes" | Store a typed compile-time value. | `integral_constant`, `bool_constant`, `true_type`, `false_type` |
+ * | @ref Foundation_TypeTraits_Properties "Type properties and transformations" | Inspect qualifiers and transform a type. | `is_const`, `is_volatile`, `is_unsigned`, `remove_cv` |
+ * | @ref Foundation_TypeTraits_Primary "Primary categories" | Classify one fundamental kind of type. | `is_integral`, `is_pointer`, `is_class`, `is_function` |
+ * | @ref Foundation_TypeTraits_Composite "Composite categories" | Combine primary classifications. | `is_arithmetic`, `is_scalar`, `is_object`, `is_reference` |
+ * | @ref Foundation_TypeTraits_Relationships "Type relationships" | Compare types or expressions. | `is_same`, `is_base_of`, `is_convertible`, `is_invocable` |
+ *
+ * @section FoundationTypeTraitsPatterns Usage Patterns
+ *
+ * Traits may guard a complete generic type:
+ *
+ * @code{.cpp}
+ * template <typename T>
+ * class NumericBuffer {
+ *     static_assert(
+ *         Foundation::TypeTraits::is_arithmetic_v<T>,
+ *         "NumericBuffer requires an arithmetic type"
+ *     );
+ * };
+ * @endcode
+ *
+ * They may also select code without creating runtime state:
+ *
+ * @code{.cpp}
+ * template <typename T>
+ * constexpr bool CanStoreByValue() {
+ *     return Foundation::TypeTraits::is_scalar_v<T>;
+ * }
+ * @endcode
+ *
+ * Every available `_v` name is a C++17 inline variable equivalent to reading the
+ * corresponding trait's `::value`. The class form remains useful when a trait
+ * type must be inherited from or passed to another metaprogram.
+ *
+ * @section FoundationTypeTraitsContract Current Contract
+ *
+ * - The project language baseline is C++17, so the documented `_v` forms are
+ *   available on supported builds.
+ * - Traits are evaluated at compile time and do not allocate memory.
+ * - `remove_const`, `remove_volatile`, and `remove_cv` remove top-level
+ *   qualifiers and expose the result as a nested `type`.
+ * - The API uses standard-style lowercase names intentionally; this is the
+ *   documented naming exception to Foundation's normal PascalCase type style.
+ * - Include a public Foundation header instead of depending on transitive
+ *   includes or implementation files.
+ *
+ * @warning The TypeTraits surface is still under the pre-1.0 API audit. The
+ * custom implementation is not yet guaranteed to match every edge case of
+ * `std::type_traits`, including all extended character types, every qualified
+ * function type, member-pointer invocation, and every nothrow conversion.
+ * `FOUNDATION_USING_STL` is not a frozen consumer-facing configuration switch.
+ * See finding `API-007` in @ref Foundation_Workflows_PublicApiAudit.
+ *
+ * @section FoundationTypeTraitsExample Runnable Example
+ *
+ * The `Foundation_TypeTraits_BasicChecks` example demonstrates type
+ * classification, relationships, compile-time constraints, and a numeric
+ * buffer shared by the desktop executable and Arduino sketch. See
+ * @ref FoundationExamplesTypeTraits "TypeTraits BasicChecks" and
+ * @ref Foundation_Examples "Examples" for build and launch instructions.
+ */
+
+/**
+ * @namespace Foundation::TypeTraits
+ * @ingroup Foundation_TypeTraits
+ * @brief Public namespace for Foundation compile-time type utilities.
+ */
+
+/**
+ * @defgroup Foundation_TypeTraits_Helpers Helper Classes
+ * @ingroup Foundation_TypeTraits
+ * @brief Typed compile-time constants used as trait results.
+ */
+
+/**
+ * @defgroup Foundation_TypeTraits_Properties Type Properties and Transformations
+ * @ingroup Foundation_TypeTraits
+ * @brief Qualifier inspection, signedness inspection, and type transformations.
+ */
+
+/**
+ * @defgroup Foundation_TypeTraits_Primary Primary Type Categories
+ * @ingroup Foundation_TypeTraits
+ * @brief Traits that identify one primary category of a type.
+ */
+
+/**
+ * @defgroup Foundation_TypeTraits_Composite Composite Type Categories
+ * @ingroup Foundation_TypeTraits
+ * @brief Traits composed from multiple primary classifications.
+ */
+
+/**
+ * @defgroup Foundation_TypeTraits_Relationships Type Relationships
+ * @ingroup Foundation_TypeTraits
+ * @brief Traits that compare types or test whether an expression is valid.
  */

@@ -34,7 +34,7 @@
  *
  * @code
  * build/<preset>/   Temporary CMake cache and build artifacts
- * dist/<preset>/    Installed, redistributable package
+ * dist/<preset>/    Installed package; redistribution requires authorization
  * docs/Workflows/   Source documentation for these workflows
  * @endcode
  *

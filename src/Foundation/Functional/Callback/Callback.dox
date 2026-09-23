@@ -35,9 +35,7 @@
  * Binding a free function:
  *
  * @code
- * void OnMessage(uint8_t value)
- * {
- * }
+ * void OnMessage(uint8_t value) { }
  *
  * Foundation::Functional::Callback<void, uint8_t> callback;
  *
@@ -53,20 +51,14 @@
  * @code
  * class Printer {
  * public:
- *
- *     void Print(uint8_t value)
- *     {
- *     }
+ *     void Print(uint8_t value) { }
  * };
  *
  * Printer printer;
  *
  * Foundation::Functional::Callback<void, uint8_t> callback;
  *
- * callback.bind<
- *     Printer,
- *     &Printer::Print
- * >(&printer);
+ * callback.bind<Printer, &Printer::Print>(&printer);
  *
  * callback.invoke(42);
  * @endcode
@@ -76,10 +68,7 @@
  * Callbacks may return values:
  *
  * @code
- * int Add(
- *     int a,
- *     int b
- * ) {
+ * int Add(int a, int b) {
  *     return a + b;
  * }
  *
