@@ -2,4 +2,74 @@
  * @defgroup Foundation_Scheduling Scheduling
  * @ingroup Foundation
  * @brief Cooperative task scheduling primitives.
+ *
+ * Scheduling provides a small synchronous scheduler driven by a
+ * Foundation::Time::Clock. Tasks are checked and executed from the caller's
+ * `TaskScheduler::Update()` call; the module creates no threads and performs no
+ * heap allocation.
+ *
+ * @section FoundationSchedulingHeaders Public Headers
+ *
+ * | Need | Header |
+ * | ---- | ------ |
+ * | Entire Foundation library | `#include <Foundation.h>` |
+ * | Entire Scheduling module | `#include <Foundation_Scheduling.h>` |
+ * | Nested module umbrella | `#include <Foundation/Scheduling.h>` |
+ * | One scheduling type | `#include <Foundation/Scheduling/<Type>.h>` |
+ *
+ * @section FoundationSchedulingTypes Public Types
+ *
+ * | Type | Role |
+ * | ---- | ---- |
+ * | Foundation::Scheduling::Task | Polymorphic interface queried and executed by a scheduler. |
+ * | Foundation::Scheduling::PeriodicTask | Runs immediately, then whenever its tick period has elapsed. |
+ * | Foundation::Scheduling::OneShotTask | Runs once at or after its trigger TimePoint. |
+ * | Foundation::Scheduling::TaskScheduler | Stores non-owning task pointers and evaluates them using one Clock. |
+ *
+ * @section FoundationSchedulingFlow Execution Flow
+ *
+ * Each `Update()` obtains one TimePoint from the configured clock, visits tasks
+ * in registration order, calls `ShouldRun(now)`, and calls `Run(now)` when the
+ * result is true. Callbacks run inline, so a long-running callback delays every
+ * task that follows it.
+ *
+ * @section FoundationSchedulingUsage Basic Usage
+ *
+ * @code{.cpp}
+ * void Increment(void* context) {
+ *     ++(*static_cast<unsigned int*>(context));
+ * }
+ *
+ * Foundation::Scheduling::Task* storage[2] = {};
+ * Foundation::Scheduling::TaskScheduler scheduler(storage, 2, &clock);
+ *
+ * unsigned int runs = 0;
+ * Foundation::Scheduling::PeriodicTask task(Increment, &runs, Foundation::Time::Duration(10));
+ * scheduler.AddTask(&task);
+ * scheduler.Update();
+ * @endcode
+ *
+ * @section FoundationSchedulingOwnership Ownership and Timing Contract
+ *
+ * - TaskScheduler does not own its storage array, Clock, or Task objects.
+ * - PeriodicTask and OneShotTask do not own their callback context pointers.
+ * - Every referenced object and storage array must outlive its consumer.
+ * - Periods and trigger times are expressed in clock ticks; compatible units
+ *   and clock identity are the caller's responsibility.
+ * - `Clear()` forgets registered pointers but does not destroy tasks.
+ *
+ * @warning Raw-pointer lifetime validation and wrapping-tick behavior remain
+ * under `API-010` and `API-011` in @ref Foundation_Workflows_PublicApiAudit.
+ *
+ * @section FoundationSchedulingExample Runnable Example
+ *
+ * `Foundation_Scheduling_TaskScheduler` demonstrates a simulated clock,
+ * periodic and one-shot tasks, capacity, and repeated updates. See
+ * @ref Foundation_Examples "Examples" for build and launch instructions.
+ */
+
+/**
+ * @namespace Foundation::Scheduling
+ * @ingroup Foundation_Scheduling
+ * @brief Cooperative scheduling types driven by Foundation Time.
  */

@@ -25,6 +25,11 @@ namespace Foundation::TypeTraits {
 
 #else
 
+    /**
+     * @brief Removes a top-level `const` qualifier from a type.
+     * @ingroup Foundation_TypeTraits_Properties
+     * @tparam T Type to transform.
+     */
     template <typename T>
     struct remove_const {
         using type = T;
@@ -35,6 +40,11 @@ namespace Foundation::TypeTraits {
         using type = T;
     };
 
+    /**
+     * @brief Removes a top-level `volatile` qualifier from a type.
+     * @ingroup Foundation_TypeTraits_Properties
+     * @tparam T Type to transform.
+     */
     template <typename T>
     struct remove_volatile {
         using type = T;
@@ -45,23 +55,45 @@ namespace Foundation::TypeTraits {
         using type = T;
     };
 
+    /**
+     * @brief Removes top-level `const` and `volatile` qualifiers.
+     * @ingroup Foundation_TypeTraits_Properties
+     * @tparam T Type to transform.
+     */
     template <typename T>
     struct remove_cv {
         using type = typename remove_volatile<typename remove_const<T>::type>::type;
     };
 
+    /**
+     * @brief Reports whether a type has a top-level `const` qualifier.
+     * @ingroup Foundation_TypeTraits_Properties
+     * @tparam T Type to inspect.
+     */
     template <typename T>
     struct is_const : false_type {};
 
     template <typename T>
     struct is_const<const T> : true_type {};
 
+    /**
+     * @brief Reports whether a type has a top-level `volatile` qualifier.
+     * @ingroup Foundation_TypeTraits_Properties
+     * @tparam T Type to inspect.
+     */
     template <typename T>
     struct is_volatile : false_type {};
 
     template <typename T>
     struct is_volatile<volatile T> : true_type {};
 
+    /**
+     * @brief Reports whether an arithmetic type is unsigned.
+     * @ingroup Foundation_TypeTraits_Properties
+     * @tparam T Arithmetic type to inspect.
+     * @warning The pre-1.0 custom implementation is not yet constrained for
+     * non-arithmetic types; see API-007 in the public API audit.
+     */
     template <typename T>
     struct is_unsigned : bool_constant<(T(0) < T(-1))> {};
 

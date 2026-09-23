@@ -10,7 +10,46 @@
     # Project Name, Version, and Language
 
         project(Foundation VERSION 1.0.0 LANGUAGES C CXX)
+
+        set(FOUNDATION_REQUIRED_CXX_STANDARD 17)
+
+        file(STRINGS
+            "${CMAKE_CURRENT_LIST_DIR}/library.properties"
+            FOUNDATION_ARDUINO_VERSION_LINE
+            REGEX "^version="
+            LIMIT_COUNT 1
+        )
+        string(REGEX REPLACE "^version=" "" FOUNDATION_ARDUINO_VERSION
+            "${FOUNDATION_ARDUINO_VERSION_LINE}"
+        )
+        if(NOT FOUNDATION_ARDUINO_VERSION STREQUAL PROJECT_VERSION)
+            message(FATAL_ERROR
+                "Version mismatch: CMake declares ${PROJECT_VERSION}, but "
+                "library.properties declares ${FOUNDATION_ARDUINO_VERSION}"
+            )
+        endif()
+
+        file(STRINGS
+            "${CMAKE_CURRENT_LIST_DIR}/src/Foundation_BuildSettings.h"
+            FOUNDATION_SOURCE_VERSION_LINE
+            REGEX "^[ \t]*#define[ \t]+FOUNDATION_VERSION[ \t]+\"[^\"]+\""
+            LIMIT_COUNT 1
+        )
+        if(NOT FOUNDATION_SOURCE_VERSION_LINE MATCHES "\"([^\"]+)\"")
+            message(FATAL_ERROR
+                "Foundation_BuildSettings.h does not declare FOUNDATION_VERSION"
+            )
+        endif()
+        set(FOUNDATION_SOURCE_VERSION "${CMAKE_MATCH_1}")
+        if(NOT FOUNDATION_SOURCE_VERSION STREQUAL PROJECT_VERSION)
+            message(FATAL_ERROR
+                "Version mismatch: CMake declares ${PROJECT_VERSION}, but "
+                "Foundation_BuildSettings.h declares ${FOUNDATION_SOURCE_VERSION}"
+            )
+        endif()
+
         message(STATUS "Building ${PROJECT_NAME} Version = ${PROJECT_VERSION}")
+        message(STATUS "Required C++ standard = C++${FOUNDATION_REQUIRED_CXX_STANDARD}")
         message(STATUS "System      = ${CMAKE_SYSTEM_NAME}")
         message(STATUS "Processor   = ${CMAKE_SYSTEM_PROCESSOR}")
         message(STATUS "C Compiler  = ${CMAKE_C_COMPILER}")
@@ -31,7 +70,7 @@
     #################################################################################################
     # Set up C++ Version
 
-        set(CMAKE_CXX_STANDARD 17)
+        set(CMAKE_CXX_STANDARD ${FOUNDATION_REQUIRED_CXX_STANDARD})
         set(CMAKE_CXX_STANDARD_REQUIRED ON)
         set(CMAKE_CXX_EXTENSIONS OFF)
     #
@@ -62,6 +101,9 @@
     else()
         message(WARNING "CMakeOptions.cmake not found! Using default configuration.")
     endif()
+
+    include(cmake/FoundationDependencies.cmake)
+    foundation_validate_dependencies()
 #
 ######################################################################################################
 # Append Source

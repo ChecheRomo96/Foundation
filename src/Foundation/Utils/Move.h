@@ -24,6 +24,17 @@
         }
         /// @endcond
 
+        /**
+         * @brief Casts a value to an rvalue reference.
+         * @ingroup Foundation_Utils
+         * @tparam T Deduced source type.
+         * @param value Value whose resources may be transferred by a later operation.
+         * @return An rvalue reference with reference qualifiers removed.
+         *
+         * Move itself transfers no data and leaves `value` unchanged. The move
+         * constructor or move assignment receiving the result defines the
+         * transferred state and the valid state of the source afterward.
+         */
         template <typename T>
         typename Detail::RemoveReference<T>::Type&& Move(T&& value) {
             return static_cast<typename Detail::RemoveReference<T>::Type&&>(value);

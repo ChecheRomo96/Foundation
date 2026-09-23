@@ -1,0 +1,21 @@
+/**
+ * @defgroup Foundation_Matrix_Dynamic Dynamic Matrix
+ * @ingroup Foundation_Matrix
+ * @brief Runtime-sized matrix storage and operations.
+ *
+ * `Foundation::Math::Matrix::Dynamic<T>` allocates storage when constructed
+ * with dimensions or when `Allocate()` is called. It can alternatively attach
+ * to caller-owned storage; in that case the caller must keep the buffer alive
+ * until the matrix is cleared, destroyed, or attached to different storage.
+ *
+ * @code
+ * Foundation::Math::Matrix::Dynamic<float> matrix(3, 3);
+ * matrix.At(0, 0) = 1.0f;
+ * @endcode
+ *
+ * @warning Dynamic storage is available whenever Matrix support is enabled,
+ * but embedded applications remain free to use only `Matrix::Fixed` and avoid
+ * heap allocation entirely.
+ *
+ * @see Foundation::Math::Matrix::Dynamic
+ */

@@ -2,4 +2,46 @@
  * @defgroup Foundation_Utils Utils
  * @ingroup Foundation
  * @brief Low-level move, swap, and utility helpers.
+ *
+ * Utils provides the small operations needed by Foundation containers without
+ * requiring `<utility>`. The current public surface consists of Move and Swap.
+ * Empty historical placeholders such as `Forward.h` and `Exchange.h` are not
+ * installed and are not part of the supported API.
+ *
+ * @section FoundationUtilsHeaders Public Headers
+ *
+ * | Need | Header |
+ * | ---- | ------ |
+ * | Entire Foundation library | `#include <Foundation.h>` |
+ * | Entire Utils module | `#include <Foundation_Utils.h>` |
+ * | Nested module umbrella | `#include <Foundation/Utils.h>` |
+ * | Move only | `#include <Foundation/Utils/Move.h>` |
+ * | Swap only | `#include <Foundation/Utils/Swap.h>` |
+ *
+ * @section FoundationUtilsUsage Basic Usage
+ *
+ * @code{.cpp}
+ * int first = 3;
+ * int second = 9;
+ * Foundation::Utils::Swap(first, second);
+ *
+ * MoveOnly destination(Foundation::Utils::Move(source));
+ * @endcode
+ *
+ * Move performs an rvalue cast; it does not move data by itself. The selected
+ * constructor or assignment operator defines the resulting transfer and the
+ * valid state of the moved-from object. Swap requires move construction and
+ * move assignment compatible with the supplied type.
+ *
+ * @section FoundationUtilsExample Runnable Example
+ *
+ * `Foundation_Utils_MoveAndSwap` demonstrates swapping integers and moving a
+ * non-copyable object. See @ref Foundation_Examples "Examples" for build and
+ * launch instructions.
+ */
+
+/**
+ * @namespace Foundation::Utils
+ * @ingroup Foundation_Utils
+ * @brief Low-level move and swap helpers.
  */

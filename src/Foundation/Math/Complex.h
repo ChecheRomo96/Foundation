@@ -2,9 +2,9 @@
 #define FOUNDATION_MATH_COMPLEX_TOP_H
 
 
-    #if __has_include("Complex.h")
-        #ifndef FOUNDATION_COMPLEX
-            #define FOUNDATION_COMPLEX
+    #if __has_include(<Foundation/Math/Complex/Complex.h>)
+        #ifndef FOUNDATION_MATH_COMPLEX
+            #define FOUNDATION_MATH_COMPLEX
         #endif
 
         #include <Foundation/Math/Complex/Complex.h>

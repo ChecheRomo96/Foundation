@@ -10,6 +10,7 @@
 # Append Headers (local to this subdirectory)
 
     list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
+        "${CMAKE_CURRENT_SOURCE_DIR}/Scheduling.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/Task.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/PeriodicTask.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/OneShotTask.h"

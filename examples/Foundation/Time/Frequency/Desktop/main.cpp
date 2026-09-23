@@ -6,35 +6,56 @@ namespace {
 
     void PrintRatio(
         const char* name,
+        const char* code,
         const Foundation::Math::Ratio& ratio
     ) {
         std::cout << name << '\n';
-        std::cout << "  Num:      " << ratio.Num() << '\n';
-        std::cout << "  Den:      " << ratio.Den() << '\n';
-        std::cout << "  IsValid:  " << ratio.IsValid() << '\n';
-        std::cout << "  ToFloat:  " << ratio.ToFloat() << "\n\n";
+        std::cout << "------------------------------------------------------------\n";
+        std::cout << "  CODE\n";
+        std::cout << "    " << code << '\n';
+        std::cout << "  Exact ratio .......... " << ratio.Num() << " / " << ratio.Den() << '\n';
+        std::cout << "  Valid ................ " << (ratio.IsValid() ? "yes" : "no") << '\n';
+        std::cout << "  Decimal view ......... " << ratio.ToFloat() << "\n\n";
     }
 
     void PrintFrequency(
         const char* name,
+        const char* code,
         const Foundation::Time::Frequency& frequency
     ) {
         std::cout << name << '\n';
-        std::cout << "  Num:                 " << frequency.Num() << '\n';
-        std::cout << "  Den:                 " << frequency.Den() << '\n';
-        std::cout << "  IsValid:             " << frequency.IsValid() << '\n';
-        std::cout << "  Hertz:               " << frequency.Hertz() << " Hz\n";
-        std::cout << "  PeriodSeconds:       "
-                  << frequency.PeriodSeconds() << " s\n";
-        std::cout << "  PeriodMilliseconds:  "
+        std::cout << "------------------------------------------------------------\n";
+        std::cout << "  CODE\n";
+        std::cout << "    " << code << '\n';
+        std::cout << "  Exact frequency ...... " << frequency.Num()
+                  << " / " << frequency.Den() << " ticks per second\n";
+        std::cout << "  Valid ................ " << (frequency.IsValid() ? "yes" : "no") << '\n';
+        std::cout << "  Rate ................. " << frequency.Hertz() << " Hz\n";
+        std::cout << "  Seconds/tick ......... " << frequency.PeriodSeconds() << " s\n";
+        std::cout << "  Milliseconds/tick .... "
                   << frequency.PeriodMilliseconds() << " ms\n";
-        std::cout << "  PeriodMicroseconds:  "
+        std::cout << "  Microseconds/tick .... "
                   << frequency.PeriodMicroseconds() << " us\n\n";
     }
 
 }
 
 int main() {
+    std::cout
+        << "============================================================\n"
+        << " FOUNDATION :: Time / Frequency\n"
+        << "============================================================\n"
+        << "\nPURPOSE\n"
+        << "  Represent ticks-per-second exactly, derive time per tick,\n"
+        << "  mutate values, and expose invalid input.\n\n";
+
     FoundationExamples::Time::Frequency::Run(PrintRatio, PrintFrequency);
+
+    std::cout
+        << "------------------------------------------------------------\n"
+        << "TAKEAWAY\n"
+        << "  Frequency stores an exact ratio; Hertz is its value and\n"
+        << "  Period is its reciprocal.\n"
+        << "============================================================\n";
     return 0;
 }

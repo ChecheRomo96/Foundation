@@ -1,0 +1,5 @@
+/**
+ * @defgroup Foundation_Time_Period Period
+ * @ingroup Foundation_Time
+ * @brief Rational seconds-per-tick representation and reciprocal frequency.
+ */

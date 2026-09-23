@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <Foundation/TypeTraits/TypeTraits.h>
+#include <Foundation/TypeTraits.h>
 
 namespace {
 

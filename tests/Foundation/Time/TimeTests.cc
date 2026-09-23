@@ -1,10 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <Foundation/Time/Clock.h>
-#include <Foundation/Time/Duration.h>
-#include <Foundation/Time/Frequency.h>
-#include <Foundation/Time/Period.h>
-#include <Foundation/Time/TimePoint.h>
+#include <Foundation/Time.h>
 
 namespace {
 

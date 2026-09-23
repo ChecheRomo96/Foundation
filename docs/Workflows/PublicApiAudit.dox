@@ -1,0 +1,183 @@
+/**
+ * @defgroup Foundation_Workflows_PublicApiAudit Public API Audit
+ * @ingroup Foundation_Workflows_ReleaseV1
+ * @brief Inventory, findings, and freeze decisions for the Foundation 1.0 API.
+ *
+ * This page is the version-controlled evidence for backlog item `V1-004`.
+ * The audit distinguishes the API that consumers are meant to use from files
+ * that merely have to be installed because template definitions include them.
+ * Finding an issue here does not silently approve a breaking change. Every
+ * blocker and breaking decision must be resolved before the API is frozen.
+ *
+ * @section FoundationPublicApiAuditStatus Status
+ *
+ * | Field | Value |
+ * | ----- | ----- |
+ * | Audit state | `IN PROGRESS` |
+ * | Version under review | `1.0.0` |
+ * | Public API frozen | No |
+ * | Inventory baseline | Default full-feature macOS Arm64 configuration |
+ * | Last reviewed | 2026-09-23 |
+ *
+ * @section FoundationPublicApiAuditMethod Method and Scope
+ *
+ * The audit reviewed:
+ *
+ * - the headers staged by CMake under `include/Foundation-1.0.0`;
+ * - top-level and module umbrella headers;
+ * - public classes, aliases, free functions, constants, and macros;
+ * - namespaces and naming conventions;
+ * - const behavior and compile-time language requirements;
+ * - owned and non-owned storage, object identity, and lifetime assumptions;
+ * - direct module dependencies and feature-option behavior;
+ * - the compiled symbols in the Debug and Release static archives;
+ * - direct C++17 syntax compilation of every installed `.h` file;
+ * - selected behavioral comparisons for the TypeTraits API.
+ *
+ * The default package currently stages 57 `.h` files and three `.tpp` files.
+ * All 57 headers pass a direct C++17 syntax check. The `.tpp` files are template
+ * implementation dependencies and are not promised as direct include entry
+ * points; `Fixed.tpp` correctly requires its declaring header first.
+ *
+ * Passing a syntax check proves only that a header can be parsed. It does not
+ * prove that the umbrella includes the intended symbols, that a partial package
+ * contains all dependencies, or that runtime behavior is safe.
+ *
+ * @section FoundationPublicApiAuditInventory Public Surface Inventory
+ *
+ * | Module | Intended public surface |
+ * | ------ | ----------------------- |
+ * | Build contract | `FOUNDATION_VERSION`, `FOUNDATION_CPLUSPLUS`, feature macros, `PROGMEM_MACRO` |
+ * | TypeTraits | `integral_constant`, `bool_constant`, `true_type`, `false_type`, property/category/relationship traits, and `_v` constants |
+ * | Math | `GCD`, `Pi`, `DegToRad`, `RadToDeg`, `Ratio`, `Complex`, `Matrix::Fixed`, `Matrix::Dynamic`, `Matrix::Multiply` |
+ * | Containers | `CircularBuffer`, `Queue`, `Stack` |
+ * | Functional | `Callback` |
+ * | Time | `Tick`, `Duration`, `TimePoint`, `Frequency`, `Period`, `Clock` |
+ * | Scheduling | `Task`, `PeriodicTask`, `OneShotTask`, `TaskScheduler` |
+ * | Utils | `Move`, `Swap` |
+ *
+ * The non-template compiled ABI is intentionally small. It currently contains
+ * `Math::GCD` and the out-of-line `Frequency` and `Period` members. Most of the
+ * consumer contract is header-defined and therefore requires extra care: even
+ * apparently small header changes can be source or behavior breaking.
+ *
+ * @section FoundationPublicApiAuditDependencies Module Dependencies
+ *
+ * The dependencies discovered from public headers are:
+ *
+ * @dot
+ * digraph FoundationPublicApiDependencies {
+ *     rankdir=LR;
+ *     graph [bgcolor="transparent", pad="0.2", nodesep="0.45", ranksep="0.65"];
+ *     node [shape=box, style="rounded,filled", fillcolor="#d6eaf8",
+ *           color="#34495e", fontname="Helvetica"];
+ *     edge [color="#5d6d7e", penwidth=1.4, arrowsize=0.8];
+ *
+ *     TypeTraits;
+ *     Utils;
+ *     Math;
+ *     Functional;
+ *     Containers;
+ *     Time;
+ *     Scheduling;
+ *
+ *     Containers -> Utils [label="Move"];
+ *     Time -> Math [label="Ratio"];
+ *     Time -> Functional [label="Callback"];
+ *     Scheduling -> Time [label="Clock, Duration, TimePoint"];
+ * }
+ * @enddot
+ *
+ * Internal Math dependencies also matter: `Ratio` requires `Arithmetic`, and
+ * the indivisible Matrix feature provides fixed storage, dynamic storage, and
+ * their common operations together. Time is likewise an indivisible v1 feature
+ * because Clock, Duration, Frequency, Period, Tick, and TimePoint form one
+ * dependency chain.
+ *
+ * @section FoundationPublicApiAuditSeverity Severity
+ *
+ * | Severity | Meaning |
+ * | -------- | ------- |
+ * | `BLOCKER` | The advertised API is missing, wrong, unusable, or can silently produce an invalid package. Must be fixed before freeze. |
+ * | `BREAKING DECISION` | More than one defensible API exists. Select and implement one before freeze. |
+ * | `HARDENING` | The shape can remain, but its contract, validation, or documentation must be strengthened. |
+ *
+ * @section FoundationPublicApiAuditFindings Findings
+ *
+ * | ID | Severity | Area | Finding and required disposition |
+ * | -- | -------- | ---- | -------------------------------- |
+ * | API-001 | `BLOCKER` | Functional umbrella | **Resolved.** `Foundation/Functional.h` now has its own guard, defines `FOUNDATION_FUNCTIONAL`, and includes the Functional module umbrella. Regression coverage consumes `Foundation/Functional.h` directly, consumes `Foundation.h`, and includes Functional with Utils in both possible orders. |
+ * | API-002 | `BLOCKER` | Top-level headers | **Resolved.** `Foundation_Functional.h` now exists, is staged and installed whenever Functional is enabled, and exposes the module through `Foundation/Functional.h`. `Foundation.h` consumes this top-level header consistently with the other modules, and a regression test compiles and uses it directly. |
+ * | API-003 | `BLOCKER` | Feature macros | **Resolved.** Module and component umbrellas use the same `FOUNDATION_<MODULE>` vocabulary as CMake, including `FOUNDATION_MATH_*` and `FOUNDATION_FUNCTIONAL_CALLBACK`; Containers and Scheduling have complete wrapper layers. Matrix and Time now each expose one truthful feature macro instead of misleading child options. |
+ * | API-004 | `BLOCKER` | Module dependencies | **Resolved.** CMake validates dependencies before creating targets and rejects invalid combinations with the exact conflicting options and corrective flags. Containers requires Utils; Time requires Math, Math::Ratio, Functional, and Functional::Callback; Scheduling requires Time transitively. Valid reduced builds and representative invalid configurations are covered by configuration checks. |
+ * | API-005 | `BLOCKER` | Matrix options | **Resolved.** Matrix is an indivisible v1 feature controlled only by `FOUNDATION_MATH_MATRIX`. Its public API is grouped under `Foundation::Math::Matrix` as `Fixed`, `Dynamic`, and `Multiply`; choosing fixed or dynamic storage is a source-level decision. |
+ * | API-006 | `BLOCKER` | Matrix overloads | **Resolved.** The unused `ColsB` template parameter was removed from fixed-by-dynamic `Matrix::Multiply`. Regression coverage now invokes all four fixed/dynamic operand combinations using normal template deduction. |
+ * | API-007 | `BLOCKER` | TypeTraits | The non-STL traits do not consistently match the standard-shaped names. Confirmed differences include `is_integral<char16_t>`, noexcept function types, member-pointer invocation, and nothrow conversion. `is_unsigned<void>` is ill-formed instead of false. Define a supported subset and make it behaviorally consistent; do not silently switch public identities with the undocumented `FOUNDATION_USING_STL` macro. |
+ * | API-008 | `BREAKING DECISION` | Callback | Public methods use `bind`, `unbind`, `status`, and `invoke` while the documented project convention is PascalCase. Zero-argument callbacks have duplicate spellings through `Callback<R>` and `Callback<R, void>`. Const member functions are unsupported and stored object pointers are non-owning. Select one template model and naming convention before downstream adoption. |
+ * | API-009 | `BREAKING DECISION` | `Matrix::Dynamic` | The type may own a `new[]` allocation or attach non-owned memory. Allocation failure behavior is not validly represented by a null check under normal throwing `new`; move operations are not `noexcept`; size multiplication can overflow; and output aliasing in transpose/multiply can invalidate inputs. Define the allocation, ownership, aliasing, and failure contract. |
+ * | API-010 | `HARDENING` | Non-owning storage | CircularBuffer, Stack, TaskScheduler, Callback member bindings, PeriodicTask/OneShotTask contexts, and TimePoint store pointers they do not own. Their documentation now states the required ownership and lifetime contract, but invalid pointer/capacity combinations remain mostly unchecked. Add safe validation where possible. |
+ * | API-011 | `BREAKING DECISION` | Time model | `Tick` is a wrapping `uint32_t`; subtraction can underflow. TimePoint comparisons across different clocks return false rather than reporting an error. TimePoint retains Clock identity through a raw pointer. Frequency/Period expose unsigned values backed by signed Ratio storage, and zero-frequency reciprocal behavior is inconsistent. Freeze these semantics explicitly or revise them. |
+ * | API-012 | `HARDENING` | Const/exception guarantees | Accessors are mostly const-correct, but opportunities such as const `Task::ShouldRun`, constexpr value operations, and `noexcept` moves are inconsistent. Add only guarantees that can be supported on all declared toolchains; guarantees become part of the API. |
+ * | API-013 | `HARDENING` | Naming | Object APIs mix `Num`, `Ticks`, `RowsCount`, and `GetFrequency`; Callback alone uses lower camel case. TypeTraits intentionally follows standard snake_case. Approve documented exceptions and avoid cosmetic renames after freeze. |
+ * | API-014 | `HARDENING` | Macro namespace | `PROGMEM_MACRO` is an unprefixed global macro and risks consumer collisions. Public build/feature macros must use the `FOUNDATION_` prefix. Empty platform blocks do not form a useful public contract and should be removed or specified. |
+ * | API-015 | `HARDENING` | File surface | `Exchange.h` and `Forward.h` are empty and not installed. Installed `.tpp` files are implementation dependencies, not supported direct includes. Remove empty placeholders and document that consumer entry points are `.h` umbrella or component headers. |
+ * | API-016 | `HARDENING` | Documentation/tests | Every module now has regression consumers for its nested umbrella, top-level header, and `Foundation.h` entry point. TypeTraits, Containers, Functional, Scheduling, Time, and Utils now have module and member-level reference documentation, including non-owning lifetime contracts. `Matrix::Dynamic` and Ratio still need complete member-level ownership/error contract documentation before freeze. |
+ *
+ * @section FoundationPublicApiAuditTraitEvidence TypeTraits Evidence
+ *
+ * A C++17 comparison consumer produced the following results. The value before
+ * the slash is Foundation and the value after it is the standard or expected
+ * contract:
+ *
+ * @code
+ * is_integral<char16_t>:                 0 / 1
+ * is_function<void() noexcept>:          0 / 1
+ * is_invocable<member, object>:          0 / 1
+ * is_nothrow_convertible<int, long>:     0 / 1
+ * is_unsigned<void>:                     ill-formed / false
+ * @endcode
+ *
+ * These are contract differences, not merely missing tests. The v1 decision is
+ * to implement and test the advertised standard-shaped subset consistently on
+ * supported compilers, or rename/remove traits whose semantics intentionally
+ * differ.
+ *
+ * @section FoundationPublicApiAuditRecommendations Recommended Freeze Decisions
+ *
+ * The recommended default decisions are:
+ *
+ * 1. Retain the `Foundation::<Module>` namespace hierarchy.
+ * 2. Retain PascalCase for Foundation object methods and standard-style
+ *    snake_case only for TypeTraits.
+ * 3. Add the missing Functional top-level header and make every umbrella
+ *    include exactly its own module.
+ * 4. Treat source mode as a full source distribution by default. Selective
+ *    component headers may reduce includes; feature macros must describe real
+ *    availability rather than pretending to remove files that are present.
+ * 5. Make CMake reject invalid dependency combinations. Do not silently
+ *    advertise a reduced package that cannot compile a consumer.
+ * 6. Keep `.tpp` files installed where required, but classify them as
+ *    implementation details rather than direct include entry points.
+ * 7. Define every raw pointer as owned or non-owned in the declaration's
+ *    documentation and state the required lifetime.
+ * 8. Make the TypeTraits subset match the corresponding standard semantics for
+ *    supported C++17 types and expressions.
+ * 9. Do not freeze `Matrix::Dynamic` until allocation failure and aliasing behavior
+ *    are explicit and tested.
+ *
+ * @section FoundationPublicApiAuditExit Freeze Exit Criteria
+ *
+ * `V1-004` can move to `DONE` only when:
+ *
+ * - [ ] every `BLOCKER` has a merged fix and regression evidence;
+ * - [ ] every `BREAKING DECISION` has an approved, documented disposition;
+ * - [ ] installed top-level and component headers match the documented surface;
+ * - [ ] module dependencies cannot produce a known-invalid package;
+ * - [ ] ownership, lifetime, invalid-state, allocation, and aliasing contracts
+ *       are documented for affected types;
+ * - [ ] Debug and Release tests pass after the selected changes;
+ * - [ ] a separate consumer compiles the approved umbrella and selective-header
+ *       include styles;
+ * - [ ] the final public symbol/header inventory is recorded here;
+ * - [ ] no unresolved public API breaking change remains for RC1.
+ */

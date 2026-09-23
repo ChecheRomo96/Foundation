@@ -1,15 +1,5 @@
-if(FOUNDATION_TIME
-   AND FOUNDATION_TIME_CLOCK
-   AND FOUNDATION_TIME_DURATION
-   AND FOUNDATION_TIME_FREQUENCY
-   AND FOUNDATION_TIME_PERIOD
-   AND FOUNDATION_TIME_TICK
-   AND FOUNDATION_TIME_TIME_POINT
-   AND FOUNDATION_MATH
-   AND FOUNDATION_MATH_RATIO
-   AND FOUNDATION_FUNCTIONAL
-   AND FOUNDATION_FUNCTIONAL_CALLBACK)
-    foundation_add_test(FoundationSchedulingTests
-        SchedulingTests.cc
-    )
-endif()
+foundation_add_test(FoundationSchedulingTests
+    SchedulingTests.cc
+    FoundationUmbrellaTests.cc
+    TopLevelSchedulingTests.cc
+)

@@ -1,5 +1,5 @@
-if(FOUNDATION_UTILS)
-    foundation_add_test(FoundationContainersTests
-        ContainersTests.cc
-    )
-endif()
+foundation_add_test(FoundationContainersTests
+    ContainersTests.cc
+    FoundationUmbrellaTests.cc
+    TopLevelContainersTests.cc
+)

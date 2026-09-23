@@ -17,6 +17,12 @@ namespace Foundation::TypeTraits {
 
 #else
 
+    /**
+     * @brief Reports whether two types are identical, including qualifiers.
+     * @ingroup Foundation_TypeTraits_Relationships
+     * @tparam T First type.
+     * @tparam U Second type.
+     */
     template <class T, class U>
     struct is_same : false_type {};
 
@@ -26,8 +32,10 @@ namespace Foundation::TypeTraits {
 #endif
 
 #if FOUNDATION_CPLUSPLUS >= 201402L
+    /** @brief `is_same<T, U>::value` convenience variable.
+     * @ingroup Foundation_TypeTraits_Relationships */
     template <class T, class U>
-    constexpr bool is_same_v = is_same<T, U>::value;
+    inline constexpr bool is_same_v = is_same<T, U>::value;
 #endif
 
 
@@ -38,6 +46,12 @@ namespace Foundation::TypeTraits {
 
 #else
 
+    /**
+     * @brief Reports whether `Derived` derives from `Base`.
+     * @ingroup Foundation_TypeTraits_Relationships
+     * @tparam Base Candidate base type.
+     * @tparam Derived Candidate derived type.
+     */
     template <class Base, class Derived>
     struct is_base_of {
     private:
@@ -54,8 +68,10 @@ namespace Foundation::TypeTraits {
 #endif
 
 #if FOUNDATION_CPLUSPLUS >= 201402L
+    /** @brief `is_base_of<Base, Derived>::value` convenience variable.
+     * @ingroup Foundation_TypeTraits_Relationships */
     template <class Base, class Derived>
-    constexpr bool is_base_of_v = is_base_of<Base, Derived>::value;
+    inline constexpr bool is_base_of_v = is_base_of<Base, Derived>::value;
 #endif
 
 
@@ -66,6 +82,12 @@ namespace Foundation::TypeTraits {
 
 #else
 
+    /**
+     * @brief Reports whether a value of `From` can be implicitly converted to `To`.
+     * @ingroup Foundation_TypeTraits_Relationships
+     * @tparam From Source type.
+     * @tparam To Destination type.
+     */
     template <class From, class To>
     struct is_convertible {
     private:
@@ -89,8 +111,10 @@ namespace Foundation::TypeTraits {
 #endif
 
 #if FOUNDATION_CPLUSPLUS >= 201402L
+    /** @brief `is_convertible<From, To>::value` convenience variable.
+     * @ingroup Foundation_TypeTraits_Relationships */
     template <class From, class To>
-    constexpr bool is_convertible_v = is_convertible<From, To>::value;
+    inline constexpr bool is_convertible_v = is_convertible<From, To>::value;
 #endif
 
 
@@ -101,6 +125,14 @@ namespace Foundation::TypeTraits {
 
 #else
 
+    /**
+     * @brief Reports whether a callable can be invoked with the supplied arguments.
+     * @ingroup Foundation_TypeTraits_Relationships
+     * @tparam Fn Callable type.
+     * @tparam Args Argument types.
+     * @warning Member-pointer invocation support is part of the open API-007
+     * conformance work.
+     */
     template <class Fn, class... Args>
     struct is_invocable {
     private:
@@ -124,8 +156,10 @@ namespace Foundation::TypeTraits {
 #endif
 
 #if FOUNDATION_CPLUSPLUS >= 201402L
+    /** @brief `is_invocable<Fn, Args...>::value` convenience variable.
+     * @ingroup Foundation_TypeTraits_Relationships */
     template <class Fn, class... Args>
-    constexpr bool is_invocable_v = is_invocable<Fn, Args...>::value;
+    inline constexpr bool is_invocable_v = is_invocable<Fn, Args...>::value;
 #endif
 
 
@@ -136,6 +170,12 @@ namespace Foundation::TypeTraits {
 
 #else
 
+    /**
+     * @brief Reports whether a supported invocation is valid and non-throwing.
+     * @ingroup Foundation_TypeTraits_Relationships
+     * @tparam Fn Callable type.
+     * @tparam Args Argument types.
+     */
     template <class Fn, class... Args>
     struct is_nothrow_invocable {
     private:
@@ -163,8 +203,10 @@ namespace Foundation::TypeTraits {
 #endif
 
 #if FOUNDATION_CPLUSPLUS >= 201402L
+    /** @brief `is_nothrow_invocable<Fn, Args...>::value` convenience variable.
+     * @ingroup Foundation_TypeTraits_Relationships */
     template <class Fn, class... Args>
-    constexpr bool is_nothrow_invocable_v =
+    inline constexpr bool is_nothrow_invocable_v =
         is_nothrow_invocable<Fn, Args...>::value;
 #endif
 
@@ -176,6 +218,14 @@ namespace Foundation::TypeTraits {
 
 #else
 
+    /**
+     * @brief Reports whether a supported implicit conversion is non-throwing.
+     * @ingroup Foundation_TypeTraits_Relationships
+     * @tparam From Source type.
+     * @tparam To Destination type.
+     * @warning Complete standard-compatible behavior is part of the open
+     * API-007 conformance work.
+     */
     template <class From, class To>
     struct is_nothrow_convertible {
     private:
@@ -195,8 +245,10 @@ namespace Foundation::TypeTraits {
 #endif
 
 #if FOUNDATION_CPLUSPLUS >= 201402L
+    /** @brief `is_nothrow_convertible<From, To>::value` convenience variable.
+     * @ingroup Foundation_TypeTraits_Relationships */
     template <class From, class To>
-    constexpr bool is_nothrow_convertible_v =
+    inline constexpr bool is_nothrow_convertible_v =
         is_nothrow_convertible<From, To>::value;
 #endif
 

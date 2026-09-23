@@ -19,8 +19,8 @@
         #include "Foundation_Containers.h"
     #endif
 
-    #if __has_include(<Foundation/Functional.h>)
-        #include <Foundation/Functional.h>
+    #if __has_include("Foundation_Functional.h")
+        #include "Foundation_Functional.h"
     #endif
 
     #if __has_include("Foundation_Scheduling.h")

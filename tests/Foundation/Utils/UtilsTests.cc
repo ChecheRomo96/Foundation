@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <Foundation/Utils/Move.h>
-#include <Foundation/Utils/Swap.h>
+#include <Foundation/Utils.h>
 
 namespace {
 

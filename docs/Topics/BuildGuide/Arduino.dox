@@ -18,6 +18,8 @@
  * @section FoundationBuildArduinoSource Source Mode
  *
  * Arduino should normally use Foundation in source mode.
+ * The selected board core and compiler must enable C++17 or newer. Source mode
+ * does not relax Foundation's language requirement.
  *
  * Example:
  *

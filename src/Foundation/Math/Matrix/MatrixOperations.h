@@ -6,13 +6,13 @@
 #ifndef FOUNDATION_MATH_MATRIX_OPERATIONS_H
 #define FOUNDATION_MATH_MATRIX_OPERATIONS_H
 
-    #include <Foundation/Math/Matrix/FixedMatrix/FixedMatrix.h>
-    #include <Foundation/Math/Matrix/DynamicMatrix/DynamicMatrix.h>
+#include <Foundation/Math/Matrix/Fixed.h>
+#include <Foundation/Math/Matrix/Dynamic.h>
 
-    namespace Foundation {
-    namespace Math {
+namespace Foundation::Math::Matrix {
 
     /**
+     * @ingroup Foundation_MatrixOperations
      * @brief Multiplies two fixed-size matrices.
      *
      * Computes:
@@ -40,9 +40,9 @@
         unsigned int ColsB
     >
     void Multiply(
-        const FixedMatrix<T, RowsA, ColsA>& a,
-        const FixedMatrix<T, ColsA, ColsB>& b,
-        FixedMatrix<T, RowsA, ColsB>& result
+        const Fixed<T, RowsA, ColsA>& a,
+        const Fixed<T, ColsA, ColsB>& b,
+        Fixed<T, RowsA, ColsB>& result
     ) {
         for(unsigned int i = 0; i < RowsA; i++) {
             for(unsigned int j = 0; j < ColsB; j++) {
@@ -56,6 +56,7 @@
     }
 
     /**
+     * @ingroup Foundation_MatrixOperations
      * @brief Multiplies two dynamic matrices.
      *
      * The matrix dimensions are validated at runtime. The result matrix is
@@ -72,9 +73,9 @@
      */
     template <typename T>
     bool Multiply(
-        const DynamicMatrix<T>& a,
-        const DynamicMatrix<T>& b,
-        DynamicMatrix<T>& result
+        const Dynamic<T>& a,
+        const Dynamic<T>& b,
+        Dynamic<T>& result
     ) {
         if(a.ColsCount() != b.RowsCount()) {
             return false;
@@ -98,6 +99,7 @@
     }
 
     /**
+     * @ingroup Foundation_MatrixOperations
      * @brief Multiplies a fixed-size matrix by a dynamic matrix.
      *
      * The number of rows in the dynamic matrix must match the number of columns
@@ -112,8 +114,6 @@
      * @tparam T Element type.
      * @tparam RowsA Number of rows in matrix a.
      * @tparam ColsA Number of columns in matrix a.
-     * @tparam ColsB Unused compatibility template parameter.
-     *
      * @param a Left-hand fixed-size matrix.
      * @param b Right-hand dynamic matrix.
      * @param result Output dynamic matrix.
@@ -124,13 +124,12 @@
     template <
         typename T,
         unsigned int RowsA,
-        unsigned int ColsA,
-        unsigned int ColsB
+        unsigned int ColsA
     >
     bool Multiply(
-        const FixedMatrix<T, RowsA, ColsA>& a,
-        const DynamicMatrix<T>& b,
-        DynamicMatrix<T>& result
+        const Fixed<T, RowsA, ColsA>& a,
+        const Dynamic<T>& b,
+        Dynamic<T>& result
     ) {
         if(b.RowsCount() != ColsA) {
             return false;
@@ -154,6 +153,7 @@
     }
 
     /**
+     * @ingroup Foundation_MatrixOperations
      * @brief Multiplies a dynamic matrix by a fixed-size matrix.
      *
      * The number of columns in the dynamic matrix must match the number of rows
@@ -182,9 +182,9 @@
         unsigned int ColsB
     >
     bool Multiply(
-        const DynamicMatrix<T>& a,
-        const FixedMatrix<T, RowsB, ColsB>& b,
-        DynamicMatrix<T>& result
+        const Dynamic<T>& a,
+        const Fixed<T, RowsB, ColsB>& b,
+        Dynamic<T>& result
     ) {
         if(a.ColsCount() != RowsB) {
             return false;
@@ -207,7 +207,6 @@
         return true;
     }
 
-} // namespace Math
-} // namespace Foundation
+} // namespace Foundation::Math::Matrix
 
-#endif
+#endif // FOUNDATION_MATH_MATRIX_OPERATIONS_H

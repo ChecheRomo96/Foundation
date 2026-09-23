@@ -1,9 +1,12 @@
-#ifndef FOUNDATION_SCHEDULING_H
-#define FOUNDATION_SCHEDULING_H
+#ifndef FOUNDATION_SCHEDULING_TOP_H
+#define FOUNDATION_SCHEDULING_TOP_H
 
-#include <Foundation/Scheduling/Task.h>
-#include <Foundation/Scheduling/PeriodicTask.h>
-#include <Foundation/Scheduling/OneShotTask.h>
-#include <Foundation/Scheduling/TaskScheduler.h>
+    #if __has_include(<Foundation/Scheduling/Scheduling.h>)
+        #ifndef FOUNDATION_SCHEDULING
+            #define FOUNDATION_SCHEDULING
+        #endif
 
-#endif
+        #include <Foundation/Scheduling.h>
+    #endif
+
+#endif//FOUNDATION_SCHEDULING_TOP_H

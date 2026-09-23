@@ -12,20 +12,20 @@
 
     list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
         "${CMAKE_CURRENT_SOURCE_DIR}/Matrix.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Fixed.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Fixed.tpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Dynamic.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Dynamic.tpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/MatrixOperations.h"
     )
 
     list(APPEND FOUNDATION_DOX_LOCAL
         "${CMAKE_CURRENT_SOURCE_DIR}/Matrix.dox"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Fixed.dox"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Dynamic.dox"
         "${CMAKE_CURRENT_SOURCE_DIR}/MatrixOperations.dox"
     )
 
-#
-######################################################################################################
-# Add sources to the Foundation target
-
-    add_subdirectory(FixedMatrix)
-    add_subdirectory(DynamicMatrix)
 #
 ######################################################################################################
 # Add sources to the Foundation target

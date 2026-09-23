@@ -19,45 +19,65 @@ namespace FoundationExamples {
                 }
 
                 const Period samplingPeriod(1, 48000);
-                periodPrinter("Period samplingPeriod(1, 48000)", samplingPeriod);
+                periodPrinter(
+                    "[1] AUDIO SAMPLING PERIOD",
+                    "const Period samplingPeriod(1, 48000);",
+                    samplingPeriod
+                );
 
                 const Frequency samplingRate = samplingPeriod.GetFrequency();
                 const Period roundTripPeriod = samplingRate.GetPeriod();
                 periodPrinter(
-                    "Period roundTripPeriod = samplingRate.GetPeriod()",
+                    "[2] ROUND TRIP / PERIOD -> FREQUENCY -> PERIOD",
+                    "const Frequency samplingRate =\n"
+                    "        samplingPeriod.GetFrequency();\n"
+                    "    const Period roundTripPeriod = samplingRate.GetPeriod();",
                     roundTripPeriod
                 );
 
                 const Period videoPeriod(1001, 30000);
-                periodPrinter("Period videoPeriod(1001, 30000)", videoPeriod);
+                periodPrinter(
+                    "[3] FRACTIONAL NTSC VIDEO PERIOD",
+                    "const Period videoPeriod(1001, 30000);",
+                    videoPeriod
+                );
 
                 Period mutablePeriod;
                 mutablePeriod.Set(1, 1000);
                 periodPrinter(
-                    "Period mutablePeriod after Set(1, 1000)",
+                    "[4] MUTATION / SET(1, 1000)",
+                    "mutablePeriod.Set(1, 1000);",
                     mutablePeriod
                 );
 
                 mutablePeriod.SetNum(1);
                 mutablePeriod.SetDen(48000);
                 periodPrinter(
-                    "Period mutablePeriod after SetNum(1), SetDen(48000)",
+                    "[5] MUTATION / SETNUM(1), SETDEN(48000)",
+                    "mutablePeriod.SetNum(1);\n"
+                    "    mutablePeriod.SetDen(48000);",
                     mutablePeriod
                 );
 
                 const Ratio rawPeriodRatio(1, 96000);
                 const Period periodFromRatio(rawPeriodRatio);
                 periodPrinter(
-                    "Period periodFromRatio(Ratio(1, 96000))",
+                    "[6] CONSTRUCTION FROM RATIO(1, 96000)",
+                    "const Period periodFromRatio(rawPeriodRatio);",
                     periodFromRatio
                 );
                 ratioPrinter(
-                    "periodFromRatio.GetRatio()",
+                    "[7] RATIO VIEW / PERIOD::GETRATIO()",
+                    "periodFromRatio.GetRatio();",
                     periodFromRatio.GetRatio()
                 );
 
                 const Period invalidPeriod(1, 0);
-                periodPrinter("Period invalidPeriod(1, 0)", invalidPeriod);
+                periodPrinter(
+                    "[8] INVALID INPUT / ZERO DENOMINATOR",
+                    "const Period invalidPeriod(1, 0);",
+                    invalidPeriod
+                );
             }
 
         }
