@@ -14,21 +14,20 @@ namespace Foundation {
          * @brief Rational number of seconds represented by one tick.
          * @ingroup Foundation_Time_Period
          *
-         * Period is backed by Math::Ratio and may be converted to its reciprocal
-         * Frequency.
-         *
-         * @warning The public unsigned interface and signed Ratio storage,
-         * plus zero-period reciprocal behavior, remain under API-011.
+         * Period is backed by Math::UnsignedRatio and may be converted to its
+         * reciprocal Frequency. Both terms must be non-zero for a Period to be
+         * valid, ensuring every valid value has a finite, representable
+         * reciprocal.
          */
         class Period {
         private:
-            Foundation::Math::Ratio _ratio;
+            Foundation::Math::UnsignedRatio _ratio;
 
         public:
 
             /**
              * @brief Creates a period of `num / den` seconds per tick.
-             * @param num Period numerator.
+             * @param num Period numerator; zero creates an invalid value.
              * @param den Period denominator; zero creates an invalid ratio.
              */
             Period(
@@ -36,9 +35,9 @@ namespace Foundation {
                 uint32_t den = 1
             );
 
-            /** @brief Creates a period from an existing ratio. */
+            /** @brief Creates a period from an existing unsigned ratio. */
             Period(
-                const Foundation::Math::Ratio& ratio
+                const Foundation::Math::UnsignedRatio& ratio
             );
 
             /** @brief Returns the period numerator. */
@@ -47,7 +46,7 @@ namespace Foundation {
             /** @brief Returns the period denominator. */
             uint32_t Den() const;
 
-            /** @brief Replaces the numerator. */
+            /** @brief Replaces the numerator; zero makes the period invalid. */
             void SetNum(uint32_t num);
 
             /** @brief Replaces the denominator; zero makes the ratio invalid. */
@@ -59,7 +58,7 @@ namespace Foundation {
                 uint32_t den
             );
 
-            /** @brief Reports whether the backing ratio denominator is non-zero. */
+            /** @brief Reports whether both ratio terms are non-zero. */
             bool IsValid() const;
 
             /** @brief Returns `num / den` seconds, or zero when invalid. */
@@ -71,11 +70,15 @@ namespace Foundation {
             /** @brief Returns the period in microseconds. */
             float Microseconds() const;
 
-            /** @brief Returns a const reference to the backing ratio. */
-            const Foundation::Math::Ratio&
+            /**
+             * @brief Returns a const reference to the backing mathematical ratio.
+             * @note Use Period::IsValid() for the domain contract. A mathematical
+             * `0 / 1` ratio is valid even though zero is not a valid Period.
+             */
+            const Foundation::Math::UnsignedRatio&
             GetRatio() const;
 
-            /** @brief Returns a Frequency with numerator and denominator exchanged. */
+            /** @brief Returns the reciprocal Frequency, or an invalid Frequency. */
             Frequency GetFrequency() const;
         };
 

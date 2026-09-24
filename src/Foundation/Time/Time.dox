@@ -104,13 +104,13 @@
  * - TimePoint stores a non-owning Clock pointer. Clock is neither copyable nor
  *   movable, which keeps its object identity stable; it must still outlive
  *   every point, task, and scheduler that references it.
- * - Frequency and Period are backed by Math::Ratio. A zero denominator is
- *   invalid and conversion methods return the behavior documented by each type.
+ * - Frequency and Period are backed by Math::UnsignedRatio. Both numerator and
+ *   denominator must be non-zero; zero represents an invalid or unconfigured
+ *   value rather than a frequency or period with an undefined reciprocal.
+ * - Every valid Frequency has a valid reciprocal Period and vice versa.
+ *   Invalid numeric conversions return zero and reciprocal conversions return
+ *   an invalid value of the opposite type.
  * - Duration conversion requires the Period belonging to the relevant Clock.
- *
- * @warning Zero-frequency reciprocal behavior remains a pre-1.0 decision under
- * `API-011` in
- * @ref Foundation_Workflows_PublicApiAudit.
  *
  * @section FoundationTimeExamples Runnable Examples
  *

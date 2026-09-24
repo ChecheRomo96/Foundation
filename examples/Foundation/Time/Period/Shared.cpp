@@ -7,10 +7,10 @@ namespace FoundationExamples {
         namespace Period {
 
             void Run(
-                RatioPrinter ratioPrinter,
+                UnsignedRatioPrinter ratioPrinter,
                 PeriodPrinter periodPrinter
             ) {
-                using Foundation::Math::Ratio;
+                using Foundation::Math::UnsignedRatio;
                 using Foundation::Time::Frequency;
                 using Foundation::Time::Period;
 
@@ -59,7 +59,7 @@ namespace FoundationExamples {
                     mutablePeriod
                 );
 
-                const Ratio rawPeriodRatio(1, 96000);
+                const UnsignedRatio rawPeriodRatio(1, 96000);
                 const Period periodFromRatio(rawPeriodRatio);
                 periodPrinter(
                     "[6] CONSTRUCTION FROM RATIO(1, 96000)",
@@ -72,10 +72,10 @@ namespace FoundationExamples {
                     periodFromRatio.GetRatio()
                 );
 
-                const Period invalidPeriod(1, 0);
+                const Period invalidPeriod(0, 1);
                 periodPrinter(
-                    "[8] INVALID INPUT / ZERO DENOMINATOR",
-                    "const Period invalidPeriod(1, 0);",
+                    "[8] INVALID INPUT / ZERO PERIOD",
+                    "const Period invalidPeriod(0, 1);",
                     invalidPeriod
                 );
             }

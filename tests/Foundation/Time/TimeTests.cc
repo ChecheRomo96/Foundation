@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <limits>
 #include <type_traits>
 
 #include <Foundation/Time.h>
@@ -68,6 +69,32 @@ TEST(FrequencyTest, ConvertsFrequencyAndPeriodUnits) {
     EXPECT_FLOAT_EQ(frequency.PeriodMicroseconds(), 1000.0f);
 }
 
+TEST(FrequencyTest, RejectsZeroTermsAndPreservesUnsignedValues) {
+    constexpr uint32_t maximum = std::numeric_limits<uint32_t>::max();
+    const Foundation::Math::UnsignedRatio ratio(maximum, 1);
+    const Frequency maximumFrequency(ratio);
+
+    EXPECT_TRUE(maximumFrequency.IsValid());
+    EXPECT_EQ(maximumFrequency.Num(), maximum);
+    EXPECT_EQ(maximumFrequency.GetRatio().Num(), maximum);
+
+    const Period maximumPeriod = maximumFrequency.GetPeriod();
+    EXPECT_TRUE(maximumPeriod.IsValid());
+    EXPECT_EQ(maximumPeriod.Num(), 1u);
+    EXPECT_EQ(maximumPeriod.Den(), maximum);
+    EXPECT_EQ(maximumPeriod.GetFrequency().Num(), maximum);
+
+    const Frequency zeroFrequency(0, 1);
+    const Frequency zeroDenominator(1, 0);
+    EXPECT_FALSE(Frequency().IsValid());
+    EXPECT_FALSE(zeroFrequency.IsValid());
+    EXPECT_FALSE(zeroDenominator.IsValid());
+    EXPECT_FLOAT_EQ(zeroFrequency.Hertz(), 0.0f);
+    EXPECT_FLOAT_EQ(zeroFrequency.PeriodSeconds(), 0.0f);
+    EXPECT_FALSE(zeroFrequency.GetPeriod().IsValid());
+    EXPECT_FALSE(zeroDenominator.GetPeriod().IsValid());
+}
+
 TEST(PeriodTest, RoundTripsThroughFrequency) {
     const Period period = Frequency(1000, 1).GetPeriod();
 
@@ -76,6 +103,19 @@ TEST(PeriodTest, RoundTripsThroughFrequency) {
     EXPECT_NEAR(period.Seconds(), 0.001f, 0.000001f);
     EXPECT_EQ(period.GetFrequency().Num(), 1000u);
     EXPECT_EQ(period.GetFrequency().Den(), 1u);
+}
+
+TEST(PeriodTest, RejectsZeroTermsAndInvalidReciprocals) {
+    const Period zeroPeriod(0, 1);
+    const Period zeroDenominator(1, 0);
+
+    EXPECT_FALSE(Period().IsValid());
+    EXPECT_FALSE(zeroPeriod.IsValid());
+    EXPECT_FALSE(zeroDenominator.IsValid());
+    EXPECT_FLOAT_EQ(zeroPeriod.Seconds(), 0.0f);
+    EXPECT_FLOAT_EQ(zeroPeriod.Milliseconds(), 0.0f);
+    EXPECT_FALSE(zeroPeriod.GetFrequency().IsValid());
+    EXPECT_FALSE(zeroDenominator.GetFrequency().IsValid());
 }
 
 TEST(DurationTest, SupportsConversionsArithmeticAndComparison) {
