@@ -46,7 +46,7 @@ namespace Foundation::Scheduling {
               _hasRun(false) { }
 
         /** @brief Reports whether this task is ready at `now`. */
-        bool ShouldRun(TimePointType now) override {
+        bool ShouldRun(TimePointType now) const override {
             return !_hasRun && now >= _triggerTime;
         }
 

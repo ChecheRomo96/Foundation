@@ -36,7 +36,8 @@
          * transferred state and the valid state of the source afterward.
          */
         template <typename T>
-        typename Detail::RemoveReference<T>::Type&& Move(T&& value) {
+        constexpr typename Detail::RemoveReference<T>::Type&&
+        Move(T&& value) noexcept {
             return static_cast<typename Detail::RemoveReference<T>::Type&&>(value);
         }
     }

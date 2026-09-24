@@ -21,4 +21,6 @@
  * `int32_t` specialization for general mathematics, while `UnsignedRatio` is
  * the `uint32_t` specialization used for non-negative quantities such as Time
  * frequencies and periods.
+ * Ratio construction, access, mutation, conversion, and reduction are
+ * `constexpr` and `noexcept`. `GCD()` provides the same guarantees.
  */

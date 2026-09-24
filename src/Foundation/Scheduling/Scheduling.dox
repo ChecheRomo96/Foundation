@@ -51,6 +51,8 @@
  * in registration order, calls `ShouldRun(now)`, and calls `Run(now)` when the
  * result is true. Callbacks run inline, so a long-running callback delays every
  * task that follows it.
+ * `ShouldRun()` is a const query: deciding readiness must not mutate a task.
+ * Built-in tasks perform their state transition in `Run()` instead.
  *
  * @section FoundationSchedulingUsage Basic Usage
  *

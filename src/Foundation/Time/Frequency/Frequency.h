@@ -30,50 +30,50 @@
                  * @param num Frequency numerator; zero creates an invalid value.
                  * @param den Frequency denominator; zero creates an invalid ratio.
                  */
-                Frequency(
+                constexpr Frequency(
                     uint32_t num = 0,
                     uint32_t den = 1
-                );
+                ) noexcept;
 
                 /** @brief Creates a frequency from an existing unsigned ratio. */
                 constexpr Frequency(
                     const Foundation::Math::UnsignedRatio& ratio
-                );
+                ) noexcept;
 
                 /** @brief Returns the frequency numerator. */
-                constexpr uint32_t Num() const;
+                constexpr uint32_t Num() const noexcept;
 
                 /** @brief Returns the frequency denominator. */
-                constexpr uint32_t Den() const;
+                constexpr uint32_t Den() const noexcept;
 
                 /** @brief Replaces the numerator; zero makes the frequency invalid. */
-                void SetNum(uint32_t num);
+                constexpr void SetNum(uint32_t num) noexcept;
 
                 /** @brief Replaces the denominator; zero makes the ratio invalid. */
-                void SetDen(uint32_t den);
+                constexpr void SetDen(uint32_t den) noexcept;
 
                 /** @brief Replaces both ratio terms. */
-                void Set(
+                constexpr void Set(
                     uint32_t num,
                     uint32_t den
-                );
+                ) noexcept;
 
                 /** @brief Reports whether both ratio terms are non-zero. */
-                bool IsValid() const;
+                constexpr bool IsValid() const noexcept;
 
                 /** @brief Returns `num / den` ticks per second, or zero when invalid. */
-                float Hertz() const;
+                constexpr float Hertz() const noexcept;
 
                 /**
                  * @brief Returns reciprocal seconds per tick, or zero when invalid.
                  */
-                float PeriodSeconds() const;
+                constexpr float PeriodSeconds() const noexcept;
 
                 /** @brief Returns reciprocal milliseconds per tick, or zero when invalid. */
-                float PeriodMilliseconds() const;
+                constexpr float PeriodMilliseconds() const noexcept;
 
                 /** @brief Returns reciprocal microseconds per tick, or zero when invalid. */
-                float PeriodMicroseconds() const;
+                constexpr float PeriodMicroseconds() const noexcept;
 
                 /**
                  * @brief Returns a const reference to the backing mathematical ratio.
@@ -81,26 +81,75 @@
                  * mathematical `0 / 1` ratio is valid even though zero is not
                  * a valid Frequency.
                  */
-                const Foundation::Math::UnsignedRatio&
-                GetRatio() const;
+                constexpr const Foundation::Math::UnsignedRatio&
+                GetRatio() const noexcept;
 
                 /** @brief Returns the reciprocal Period, or an invalid Period. */
-                Period GetPeriod() const;
+                Period GetPeriod() const noexcept;
             };
 
             constexpr Frequency::Frequency(
+                uint32_t num,
+                uint32_t den
+            ) noexcept
+                : _ratio(num, den) {}
+
+            constexpr Frequency::Frequency(
                 const Foundation::Math::UnsignedRatio& ratio
-            )
+            ) noexcept
                 : _ratio(ratio) {}
 
             constexpr uint32_t
-            Frequency::Num() const {
+            Frequency::Num() const noexcept {
                 return _ratio.Num();
             }
 
             constexpr uint32_t
-            Frequency::Den() const {
+            Frequency::Den() const noexcept {
                 return _ratio.Den();
+            }
+
+            constexpr void Frequency::SetNum(uint32_t num) noexcept {
+                _ratio.SetNum(num);
+            }
+
+            constexpr void Frequency::SetDen(uint32_t den) noexcept {
+                _ratio.SetDen(den);
+            }
+
+            constexpr void Frequency::Set(
+                uint32_t num,
+                uint32_t den
+            ) noexcept {
+                _ratio.Set(num, den);
+            }
+
+            constexpr bool Frequency::IsValid() const noexcept {
+                return _ratio.IsValid() && Num() != 0;
+            }
+
+            constexpr float Frequency::Hertz() const noexcept {
+                return IsValid() ? _ratio.ToFloat() : 0.0f;
+            }
+
+            constexpr float Frequency::PeriodSeconds() const noexcept {
+                return IsValid()
+                    ? static_cast<float>(Den()) /
+                      static_cast<float>(Num())
+                    : 0.0f;
+            }
+
+            constexpr float Frequency::PeriodMilliseconds() const noexcept {
+                return PeriodSeconds() * 1000.0f;
+            }
+
+            constexpr float Frequency::PeriodMicroseconds() const noexcept {
+                return PeriodSeconds() * 1000000.0f;
+            }
+
+            constexpr const Foundation::Math::UnsignedRatio&
+            Frequency::GetRatio() const noexcept {
+                return _ratio;
             }
 
         }

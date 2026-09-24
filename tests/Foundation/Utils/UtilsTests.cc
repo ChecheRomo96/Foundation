@@ -30,6 +30,11 @@ public:
 } // namespace
 
 TEST(MoveTest, TransfersAValueToANewObject) {
+    constexpr int constantSource = 42;
+    constexpr int constantResult = Foundation::Utils::Move(constantSource);
+    static_assert(constantResult == 42);
+    static_assert(noexcept(Foundation::Utils::Move(constantSource)));
+
     MoveOnly source(42);
     MoveOnly destination(Foundation::Utils::Move(source));
 

@@ -52,6 +52,13 @@ TEST(SchedulingTypeTest, DefaultAliasesUseTick32) {
         >::value,
         "TaskScheduler must use Tick32 by default"
     );
+    static_assert(
+        Foundation::TypeTraits::is_same<
+            decltype(&Task::ShouldRun),
+            bool (Task::*)(Task::TimePointType) const
+        >::value,
+        "Task::ShouldRun must be a const query"
+    );
 
     SUCCEED();
 }
@@ -103,9 +110,10 @@ TEST(OneShotTaskTest, RunsOnceAtOrAfterItsTriggerTime) {
     Clock clock(ReadTick, Frequency(1000, 1));
     int runs = 0;
     OneShotTask task(Increment, &runs, clock.At(10));
+    const OneShotTask& query = task;
 
-    EXPECT_FALSE(task.ShouldRun(clock.At(9)));
-    EXPECT_TRUE(task.ShouldRun(clock.At(10)));
+    EXPECT_FALSE(query.ShouldRun(clock.At(9)));
+    EXPECT_TRUE(query.ShouldRun(clock.At(10)));
     task.Run(clock.At(10));
     EXPECT_EQ(runs, 1);
     EXPECT_TRUE(task.HasRun());

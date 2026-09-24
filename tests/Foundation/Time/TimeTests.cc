@@ -45,6 +45,9 @@ TEST(TickTest, ProvidesExplicitUnsignedWidths) {
         >::value,
         "Tick<> must default to Tick32"
     );
+    constexpr Tick32 compileTimeTick(32);
+    static_assert(compileTimeTick.Value() == 32u);
+    static_assert(noexcept(compileTimeTick.Value()));
 
     const Tick8 tick8(8);
     const Tick16 tick16(16);
@@ -57,6 +60,27 @@ TEST(TickTest, ProvidesExplicitUnsignedWidths) {
     EXPECT_EQ(tick64.Value(), 64u);
     EXPECT_EQ(Tick8::HalfRange(), 128u);
     EXPECT_EQ(Tick16::HalfRange(), 32768u);
+}
+
+TEST(TimeValueTest, SupportsConstantEvaluationWithoutExceptions) {
+    constexpr Frequency frequency(1000, 1);
+    constexpr Period period(1, 1000);
+    constexpr Duration duration(5);
+    constexpr TimePoint invalidPoint;
+
+    static_assert(frequency.IsValid());
+    static_assert(frequency.Hertz() == 1000.0f);
+    static_assert(period.IsValid());
+    static_assert(period.Milliseconds() == 1.0f);
+    static_assert(duration.IsValid());
+    static_assert(duration.Milliseconds(period) == 5.0f);
+    static_assert(!invalidPoint.IsValid());
+    static_assert(noexcept(frequency.GetPeriod()));
+    static_assert(noexcept(period.GetFrequency()));
+    static_assert(noexcept(duration + Duration(1)));
+    static_assert(noexcept(invalidPoint - invalidPoint));
+
+    SUCCEED();
 }
 
 TEST(FrequencyTest, ConvertsFrequencyAndPeriodUnits) {
