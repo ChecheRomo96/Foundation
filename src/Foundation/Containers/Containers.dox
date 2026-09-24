@@ -45,8 +45,12 @@
  * @section FoundationContainersOwnership Storage and Lifetime Contract
  *
  * - A container does not own, allocate, resize, or release its backing array.
- * - For non-zero capacity, the storage pointer must be non-null and must remain
- *   valid for the complete lifetime of the container.
+ * - A null pointer with zero capacity is a valid empty container. `IsFull()`
+ *   returns true and insertion fails because no element can fit.
+ * - A null pointer with non-zero capacity is invalid. `IsValid()` reports false,
+ *   `Push()` and `Pop()` return false, and no pointer is dereferenced.
+ * - Non-null storage must remain valid for the complete lifetime of the
+ *   container.
  * - The caller must provide at least `capacity` constructed `T` objects because
  *   insertion uses assignment into existing array elements.
  * - `Push(const T&)` requires copy assignment; `Push(T&&)` and `Pop()` require
@@ -55,9 +59,9 @@
  * - Operations are not synchronized; external synchronization is required when
  *   one container is shared across execution contexts.
  *
- * @warning These invariants are part of the pre-1.0 hardening tracked by
- * `API-010` in @ref Foundation_Workflows_PublicApiAudit. Invalid pointers or a
- * capacity larger than the supplied array cannot be detected by the container.
+ * @warning The container can validate a null pointer/capacity combination, but
+ * it cannot determine the actual length or lifetime of a non-null array. The
+ * caller remains responsible for providing at least the declared capacity.
  *
  * @section FoundationContainersExample Runnable Example
  *

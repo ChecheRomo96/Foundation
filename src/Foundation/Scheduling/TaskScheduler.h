@@ -27,8 +27,11 @@ namespace Foundation::Scheduling {
          * @param tasks Array capable of storing `capacity` Task pointers.
          * @param capacity Maximum number of registered tasks.
          * @param clock Non-owning clock used by Update(); may be null.
-         * @warning For non-zero capacity, `tasks` must be non-null. The storage,
-         * clock, and registered tasks must outlive their use by the scheduler.
+         * @note A null tasks pointer with zero capacity is valid. A null pointer
+         * with non-zero capacity creates an invalid but safe scheduler for
+         * which AddTask() returns false and Update() is a no-op.
+         * @warning The storage, clock, and registered tasks must outlive their
+         * use by the scheduler.
          */
         TaskScheduler(Task** tasks, size_t capacity, Foundation::Time::Clock* clock)
             : _tasks(tasks), _capacity(capacity), _count(0), _clock(clock) { }
@@ -39,7 +42,9 @@ namespace Foundation::Scheduling {
          * @return `true` when registered; `false` for null or full capacity.
          */
         bool AddTask(Task* task) {
-            if (_count >= _capacity || task == 0) { return false; }
+            if (!IsValid() || _count >= _capacity || task == 0) {
+                return false;
+            }
             _tasks[_count++] = task;
             return true;
         }
@@ -51,7 +56,7 @@ namespace Foundation::Scheduling {
          * by all task decisions and executions in this update.
          */
         void Update() {
-            if (_clock == 0) { return; }
+            if (!IsValid() || _clock == 0) { return; }
             Foundation::Time::TimePoint now = _clock->Now();
             for (size_t i = 0; i < _count; ++i) {
                 if (_tasks[i] && _tasks[i]->ShouldRun(now)) {
@@ -64,6 +69,8 @@ namespace Foundation::Scheduling {
         size_t GetTaskCount() const { return _count; }
         /** @brief Returns the fixed registration capacity. */
         size_t GetCapacity() const { return _capacity; }
+        /** @brief Validates the task-storage pointer and capacity combination. */
+        bool IsValid() const { return _capacity == 0 || _tasks != 0; }
         /** @brief Forgets all tasks without destroying them. */
         void Clear() { _count = 0; }
     };

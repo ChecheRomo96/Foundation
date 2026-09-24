@@ -30,6 +30,9 @@ namespace Foundation::Scheduling {
          * @param callback Function invoked when the task runs; may be null.
          * @param context Non-owning pointer forwarded unchanged to `callback`.
          * @param period Minimum number of ticks between runs after the first.
+         * @note A null context is allowed and is forwarded to a non-null
+         * callback. A null callback makes Run() update timing without invoking
+         * user code.
          * @warning A non-null context must outlive the task and all invocations.
          */
         PeriodicTask(Callback callback, void* context, Foundation::Time::Duration period)
