@@ -6,6 +6,7 @@
 namespace {
 
 Foundation::Time::Tick CurrentTick = 0;
+bool NullContextWasForwarded = false;
 
 Foundation::Time::Tick ReadTick() {
     return CurrentTick;
@@ -13,6 +14,10 @@ Foundation::Time::Tick ReadTick() {
 
 void Increment(void* context) {
     ++(*static_cast<int*>(context));
+}
+
+void ObserveNullContext(void* context) {
+    NullContextWasForwarded = context == nullptr;
 }
 
 } // namespace
@@ -75,4 +80,76 @@ TEST(TaskSchedulerTest, ExecutesDueTasksUsingItsClock) {
 
     scheduler.Clear();
     EXPECT_EQ(scheduler.GetTaskCount(), 0u);
+}
+
+TEST(TaskSchedulerTest, RejectsNullStorageWithNonzeroCapacity) {
+    Clock clock(ReadTick, Frequency(1000, 1));
+    int runs = 0;
+    OneShotTask task(Increment, &runs, TimePoint(0, &clock));
+    TaskScheduler scheduler(nullptr, 1, &clock);
+
+    EXPECT_FALSE(scheduler.IsValid());
+    EXPECT_EQ(scheduler.GetCapacity(), 1u);
+    EXPECT_FALSE(scheduler.AddTask(&task));
+    EXPECT_EQ(scheduler.GetTaskCount(), 0u);
+
+    scheduler.Update();
+    EXPECT_EQ(runs, 0);
+}
+
+TEST(TaskSchedulerTest, AcceptsNullStorageForZeroCapacity) {
+    Clock clock(ReadTick, Frequency(1000, 1));
+    int runs = 0;
+    OneShotTask task(Increment, &runs, TimePoint(0, &clock));
+    TaskScheduler scheduler(nullptr, 0, &clock);
+
+    EXPECT_TRUE(scheduler.IsValid());
+    EXPECT_FALSE(scheduler.AddTask(&task));
+    scheduler.Update();
+    EXPECT_EQ(runs, 0);
+}
+
+TEST(TaskSchedulerTest, NullClockDisablesUpdateWithoutInvalidatingStorage) {
+    Clock taskClock(ReadTick, Frequency(1000, 1));
+    int runs = 0;
+    OneShotTask task(Increment, &runs, TimePoint(0, &taskClock));
+    Task* storage[1] = {};
+    TaskScheduler scheduler(storage, 1, nullptr);
+
+    EXPECT_TRUE(scheduler.IsValid());
+    ASSERT_TRUE(scheduler.AddTask(&task));
+    scheduler.Update();
+    EXPECT_EQ(runs, 0);
+}
+
+TEST(SchedulingContextTest, ForwardsIntentionalNullContexts) {
+    Clock clock(ReadTick, Frequency(1000, 1));
+
+    NullContextWasForwarded = false;
+    PeriodicTask periodic(ObserveNullContext, nullptr, Duration(1));
+    periodic.Run(TimePoint(0, &clock));
+    EXPECT_TRUE(NullContextWasForwarded);
+
+    NullContextWasForwarded = false;
+    OneShotTask oneShot(
+        ObserveNullContext,
+        nullptr,
+        TimePoint(0, &clock)
+    );
+    oneShot.Run(TimePoint(0, &clock));
+    EXPECT_TRUE(NullContextWasForwarded);
+}
+
+TEST(SchedulingContextTest, NullCallbacksRemainSafe) {
+    Clock clock(ReadTick, Frequency(1000, 1));
+    int context = 42;
+    PeriodicTask periodic(nullptr, &context, Duration(1));
+    OneShotTask oneShot(nullptr, &context, TimePoint(0, &clock));
+
+    periodic.Run(TimePoint(0, &clock));
+    oneShot.Run(TimePoint(0, &clock));
+
+    EXPECT_FALSE(periodic.ShouldRun(TimePoint(0, &clock)));
+    EXPECT_TRUE(oneShot.HasRun());
+    EXPECT_EQ(context, 42);
 }

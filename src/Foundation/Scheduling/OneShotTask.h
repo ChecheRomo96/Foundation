@@ -26,6 +26,8 @@ namespace Foundation::Scheduling {
          * @param callback Function invoked once when due; may be null.
          * @param context Non-owning pointer forwarded unchanged to `callback`.
          * @param triggerTime Earliest TimePoint at which the task is due.
+         * @note A null context is allowed and is forwarded to a non-null
+         * callback. A null callback still allows Run() to complete the task.
          * @warning The trigger and scheduler TimePoints must use the same Clock.
          * A non-null context must outlive the task and its invocation.
          */

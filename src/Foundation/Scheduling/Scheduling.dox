@@ -54,12 +54,20 @@
  * - TaskScheduler does not own its storage array, Clock, or Task objects.
  * - PeriodicTask and OneShotTask do not own their callback context pointers.
  * - Every referenced object and storage array must outlive its consumer.
+ * - A null task-storage pointer is valid only with zero capacity. `IsValid()`
+ *   reports the storage invariant; invalid storage makes `AddTask()` fail and
+ *   `Update()` a no-op.
+ * - A null Clock is allowed and disables `Update()` without making task storage
+ *   invalid.
+ * - A null callback context is allowed and is forwarded unchanged when the
+ *   callback itself is non-null. The callback decides whether null is useful.
  * - Periods and trigger times are expressed in clock ticks; compatible units
  *   and clock identity are the caller's responsibility.
  * - `Clear()` forgets registered pointers but does not destroy tasks.
  *
- * @warning Raw-pointer lifetime validation and wrapping-tick behavior remain
- * under `API-010` and `API-011` in @ref Foundation_Workflows_PublicApiAudit.
+ * @warning A raw pointer's true lifetime cannot be determined at runtime.
+ * Wrapping-tick and Clock-identity behavior remain under `API-011` in
+ * @ref Foundation_Workflows_PublicApiAudit.
  *
  * @section FoundationSchedulingExample Runnable Example
  *

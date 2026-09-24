@@ -28,7 +28,9 @@ namespace Foundation::Containers {
          * @brief Creates an empty buffer over existing storage.
          * @param buffer Array containing at least `size` constructed elements.
          * @param size Maximum number of values that may be stored.
-         * @warning `buffer` must be non-null whenever `size` is non-zero.
+         * @note A null pointer with zero capacity is a valid empty buffer. A
+         * null pointer with non-zero capacity creates an invalid but safe
+         * buffer for which Push() and Pop() return false.
          */
         CircularBuffer(T* buffer, size_t size)
             : _buffer(buffer), _size(size), _readIndex(0), _writeIndex(0), _available(0) { }
@@ -38,7 +40,7 @@ namespace Foundation::Containers {
          * @return `true` on insertion; `false` when the buffer is full.
          */
         bool Push(const T& value) {
-            if (IsFull()) { return false; }
+            if (!IsValid() || IsFull()) { return false; }
             _buffer[_writeIndex] = value;
             AdvanceWrite();
             return true;
@@ -49,7 +51,7 @@ namespace Foundation::Containers {
          * @return `true` on insertion; `false` when the buffer is full.
          */
         bool Push(T&& value) {
-            if (IsFull()) { return false; }
+            if (!IsValid() || IsFull()) { return false; }
             _buffer[_writeIndex] = Foundation::Utils::Move(value);
             AdvanceWrite();
             return true;
@@ -61,7 +63,7 @@ namespace Foundation::Containers {
          * @return `true` on removal; `false` when the buffer is empty.
          */
         bool Pop(T& out) {
-            if (IsEmpty()) { return false; }
+            if (!IsValid() || IsEmpty()) { return false; }
             out = Foundation::Utils::Move(_buffer[_readIndex]);
             AdvanceRead();
             return true;
@@ -69,14 +71,18 @@ namespace Foundation::Containers {
 
         /** @brief Returns the number of stored values. */
         size_t GetAvailable() const { return _available; }
-        /** @brief Returns the number of additional values that fit. */
-        size_t GetFreeSpace() const { return _size - _available; }
+        /** @brief Returns available capacity, or zero when invalid. */
+        size_t GetFreeSpace() const {
+            return IsValid() ? _size - _available : 0;
+        }
         /** @brief Returns the fixed capacity supplied at construction. */
         size_t GetSize() const { return _size; }
+        /** @brief Validates the storage pointer and capacity combination. */
+        bool IsValid() const { return _size == 0 || _buffer != 0; }
         /** @brief Reports whether no values are stored. */
         bool IsEmpty() const { return _available == 0; }
-        /** @brief Reports whether the stored count has reached capacity. */
-        bool IsFull() const { return _available >= _size; }
+        /** @brief Reports whether invalid or at capacity. */
+        bool IsFull() const { return !IsValid() || _available >= _size; }
 
         /**
          * @brief Clears logical contents and resets both indices.
