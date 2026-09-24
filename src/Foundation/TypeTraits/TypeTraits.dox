@@ -43,6 +43,22 @@
  * | @ref Foundation_TypeTraits_Composite "Composite categories" | Combine primary classifications. | `is_arithmetic`, `is_scalar`, `is_object`, `is_reference` |
  * | @ref Foundation_TypeTraits_Relationships "Type relationships" | Compare types or expressions. | `is_same`, `is_base_of`, `is_convertible`, `is_invocable` |
  *
+ * @section FoundationTypeTraitsSurface Supported v1 Surface
+ *
+ * | Family | Supported names |
+ * | ------ | --------------- |
+ * | Helpers | `integral_constant`, `bool_constant`, `true_type`, `false_type` |
+ * | Transformations | `remove_const`, `remove_volatile`, `remove_cv`, and their `_t` aliases |
+ * | Properties | `is_const`, `is_volatile`, `is_unsigned` |
+ * | Primary categories | `is_array`, `is_class`, `is_enum`, `is_floating_point`, `is_function`, `is_integral`, `is_lvalue_reference`, `is_member_function_pointer`, `is_member_object_pointer`, `is_pointer`, `is_rvalue_reference`, `is_union`, `is_void` |
+ * | Composite categories | `is_arithmetic`, `is_compound`, `is_fundamental`, `is_member_pointer`, `is_object`, `is_reference`, `is_scalar` |
+ * | Relationships | `is_same`, `is_base_of`, `is_convertible`, `is_invocable`, `is_nothrow_invocable`, `is_nothrow_convertible` |
+ *
+ * Every predicate has a C++17 `_v` convenience variable. The supported
+ * integral set is the standard C++17 set through `char16_t`, `char32_t`, and
+ * `unsigned long long`; compiler-specific extended integers are outside the
+ * v1 contract.
+ *
  * @section FoundationTypeTraitsPatterns Usage Patterns
  *
  * Traits may guard a complete generic type:
@@ -75,19 +91,29 @@
  * - The project language baseline is C++17, so the documented `_v` forms are
  *   available on supported builds.
  * - Traits are evaluated at compile time and do not allocate memory.
+ * - Foundation automatically uses the C++ standard `<type_traits>` backend
+ *   when the header and the required C++17 invocation traits are available.
+ * - Toolchains without that standard-library support use Foundation's local
+ *   fallback implementation. The public Foundation trait types and names stay
+ *   identical regardless of the selected backend.
  * - `remove_const`, `remove_volatile`, and `remove_cv` remove top-level
  *   qualifiers and expose the result as a nested `type`.
+ * - Function classification includes variadic, cv-qualified, ref-qualified,
+ *   and `noexcept` function types.
+ * - Invocation checks support functions, function objects, member functions,
+ *   and member objects through direct objects, pointers, dereferenceable
+ *   wrappers, and reference-wrapper-like `get()` access.
+ * - `is_nothrow_convertible` is intentionally available under the C++17
+ *   baseline even though the similarly named standard trait was added later.
  * - The API uses standard-style lowercase names intentionally; this is the
  *   documented naming exception to Foundation's normal PascalCase type style.
  * - Include a public Foundation header instead of depending on transitive
  *   includes or implementation files.
  *
- * @warning The TypeTraits surface is still under the pre-1.0 API audit. The
- * custom implementation is not yet guaranteed to match every edge case of
- * `std::type_traits`, including all extended character types, every qualified
- * function type, member-pointer invocation, and every nothrow conversion.
- * `FOUNDATION_USING_STL` is not a frozen consumer-facing configuration switch.
- * See finding `API-007` in @ref Foundation_Workflows_PublicApiAudit.
+ * Backend selection is an implementation detail and requires no consumer
+ * configuration. The conformance suite compiles every supported trait twice on
+ * desktop hosts: once through `<type_traits>` and once through the forced local
+ * fallback. Both routes are checked against the standard C++17 results.
  *
  * @section FoundationTypeTraitsExample Runnable Example
  *
