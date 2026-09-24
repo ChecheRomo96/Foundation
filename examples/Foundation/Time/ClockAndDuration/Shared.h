@@ -8,11 +8,11 @@ namespace Time {
 namespace ClockAndDuration {
 
     struct Result {
-        Foundation::Time::Tick StartingTick;
-        Foundation::Time::Tick EndingTick;
-        Foundation::Time::Tick ElapsedTicks;
+        Foundation::Time::Tick32::Representation StartingTick;
+        Foundation::Time::Tick32::Representation EndingTick;
+        Foundation::Time::Tick32::Representation ElapsedTicks;
         float ElapsedMilliseconds;
-        Foundation::Time::Tick FutureTick;
+        Foundation::Time::Tick32::Representation FutureTick;
         bool SameClock;
         bool BoundAfterUnbind;
     };

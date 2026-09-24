@@ -19,7 +19,7 @@
  * | Functional | `Foundation_Functional_Callback` | Binding, invoking, querying, and unbinding free and member functions. |
  * | Time | `Foundation_Time_Frequency` | Frequencies, periods, ratios, mutation, conversion, and invalid values. |
  * | Time | `Foundation_Time_Period` | Periods, frequencies, ratios, mutation, conversion, and invalid values. |
- * | Time | `Foundation_Time_ClockAndDuration` | `Tick`, callback-backed `Clock`, `TimePoint`, `Duration`, clock identity, arithmetic, and unit conversion. |
+ * | Time | `Foundation_Time_ClockAndDuration` | `Tick32`, callback-backed `Clock`, modular `TimePoint`, validated `Duration`, clock identity, arithmetic, and unit conversion. |
  * | Scheduling | `Foundation_Scheduling_TaskScheduler` | `Task`, `PeriodicTask`, `OneShotTask`, `TaskScheduler`, capacity, and simulated clock updates. |
  * | Utils | `Foundation_Utils_MoveAndSwap` | Moving a non-copyable object and swapping values without the STL. |
  *

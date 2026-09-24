@@ -21,6 +21,10 @@ function(foundation_validate_dependencies)
     )
     foundation_require_feature(
         FOUNDATION_TIME
+        FOUNDATION_TYPE_TRAITS
+    )
+    foundation_require_feature(
+        FOUNDATION_TIME
         FOUNDATION_MATH_RATIO
     )
     foundation_require_feature(

@@ -8,94 +8,166 @@ namespace Foundation {
     namespace Time {
 
         /**
-         * @brief Count of elapsed ticks without an associated Clock.
+         * @brief Validated count of elapsed ticks without an associated Clock.
          * @ingroup Foundation_Time_Duration
+         * @tparam TickType Tick specialization that defines the representation.
          *
-         * Supply the relevant Period when converting ticks to physical units.
+         * A valid duration is shorter than half of the TickType modular range.
+         * This is the interval in which wrapped counter values can be ordered
+         * unambiguously. Supply the relevant Period when converting ticks to
+         * physical units.
          */
-        class Duration {
+        template <typename TickType = Tick32>
+        class BasicDuration {
+        public:
+            using Representation = typename TickType::Representation;
+
         private:
-            Tick _ticks;
+            Representation _ticks;
+
+            static constexpr Representation Normalize(
+                Representation ticks
+            ) {
+                return ticks < TickType::HalfRange()
+                    ? ticks
+                    : TickType::MaximumValue();
+            }
 
         public:
 
             /** @brief Creates a duration containing `ticks` ticks. */
-            constexpr Duration(Tick ticks = 0)
-                : _ticks(ticks) {}
+            constexpr BasicDuration(Representation ticks = 0)
+                : _ticks(Normalize(ticks)) {}
+
+            /** @brief Creates the invalid Duration value. */
+            static constexpr BasicDuration Invalid() {
+                return BasicDuration(
+                    TickType::MaximumValue(),
+                    InvalidTag()
+                );
+            }
+
+            /** @brief Returns the largest unambiguously comparable duration. */
+            static constexpr Representation MaximumTicks() {
+                return static_cast<Representation>(
+                    TickType::HalfRange() - 1
+                );
+            }
+
+            /** @brief Reports whether this duration can participate in arithmetic. */
+            constexpr bool IsValid() const {
+                return _ticks < TickType::HalfRange();
+            }
 
             /** @brief Returns the stored tick count. */
-            constexpr Tick Ticks() const {
+            constexpr Representation Ticks() const {
                 return _ticks;
             }
 
             /** @brief Replaces the stored tick count. */
-            void SetTicks(Tick ticks) {
-                _ticks = ticks;
+            void SetTicks(Representation ticks) {
+                _ticks = Normalize(ticks);
             }
 
             /** @brief Reports whether the duration contains zero ticks. */
-            bool IsZero() const {
-                return _ticks == 0;
+            constexpr bool IsZero() const {
+                return IsValid() && (_ticks == 0);
             }
 
             /** @brief Converts this tick count to seconds using `period`. */
             float Seconds(const Period& period) const {
-                return static_cast<float>(_ticks) * period.Seconds();
+                return IsValid()
+                    ? static_cast<float>(_ticks) * period.Seconds()
+                    : 0.0f;
             }
 
             /** @brief Converts this tick count to milliseconds using `period`. */
             float Milliseconds(const Period& period) const {
-                return static_cast<float>(_ticks) * period.Milliseconds();
+                return IsValid()
+                    ? static_cast<float>(_ticks) * period.Milliseconds()
+                    : 0.0f;
             }
 
             /** @brief Converts this tick count to microseconds using `period`. */
             float Microseconds(const Period& period) const {
-                return static_cast<float>(_ticks) * period.Microseconds();
+                return IsValid()
+                    ? static_cast<float>(_ticks) * period.Microseconds()
+                    : 0.0f;
             }
 
-            /** @brief Adds two unsigned tick counts. */
-            Duration operator+(const Duration& rhs) const {
-                return Duration(_ticks + rhs._ticks);
+            /** @brief Adds durations, returning invalid on range overflow. */
+            constexpr BasicDuration operator+(
+                const BasicDuration& rhs
+            ) const {
+                if (!IsValid() || !rhs.IsValid()) {
+                    return Invalid();
+                }
+
+                if (rhs._ticks > MaximumTicks() - _ticks) {
+                    return Invalid();
+                }
+
+                return BasicDuration(
+                    static_cast<Representation>(_ticks + rhs._ticks)
+                );
             }
 
             /**
-             * @brief Subtracts one unsigned tick count from another.
-             * @warning The result wraps when `rhs` is greater than this value.
+             * @brief Subtracts durations, returning invalid on underflow.
              */
-            Duration operator-(const Duration& rhs) const {
-                return Duration(_ticks - rhs._ticks);
+            constexpr BasicDuration operator-(
+                const BasicDuration& rhs
+            ) const {
+                if (!IsValid() || !rhs.IsValid() || rhs._ticks > _ticks) {
+                    return Invalid();
+                }
+
+                return BasicDuration(
+                    static_cast<Representation>(_ticks - rhs._ticks)
+                );
             }
 
-            /** @brief Compares tick counts for equality. */
-            bool operator==(const Duration& rhs) const {
+            /** @brief Compares states and tick counts for equality. */
+            constexpr bool operator==(const BasicDuration& rhs) const {
                 return _ticks == rhs._ticks;
             }
 
-            /** @brief Compares tick counts for inequality. */
-            bool operator!=(const Duration& rhs) const {
+            /** @brief Compares states and tick counts for inequality. */
+            constexpr bool operator!=(const BasicDuration& rhs) const {
                 return _ticks != rhs._ticks;
             }
 
-            /** @brief Orders durations by their stored tick counts. */
-            bool operator<(const Duration& rhs) const {
-                return _ticks < rhs._ticks;
+            /** @brief Orders valid durations by their stored tick counts. */
+            constexpr bool operator<(const BasicDuration& rhs) const {
+                return IsValid() && rhs.IsValid() && (_ticks < rhs._ticks);
             }
 
-            /** @brief Orders durations by their stored tick counts. */
-            bool operator>(const Duration& rhs) const {
-                return _ticks > rhs._ticks;
+            /** @brief Orders valid durations by their stored tick counts. */
+            constexpr bool operator>(const BasicDuration& rhs) const {
+                return IsValid() && rhs.IsValid() && (_ticks > rhs._ticks);
             }
 
-            /** @brief Orders durations by their stored tick counts. */
-            bool operator<=(const Duration& rhs) const {
-                return _ticks <= rhs._ticks;
+            /** @brief Orders valid durations by their stored tick counts. */
+            constexpr bool operator<=(const BasicDuration& rhs) const {
+                return IsValid() && rhs.IsValid() && (_ticks <= rhs._ticks);
             }
 
-            /** @brief Orders durations by their stored tick counts. */
-            bool operator>=(const Duration& rhs) const {
-                return _ticks >= rhs._ticks;
+            /** @brief Orders valid durations by their stored tick counts. */
+            constexpr bool operator>=(const BasicDuration& rhs) const {
+                return IsValid() && rhs.IsValid() && (_ticks >= rhs._ticks);
             }
+
+        private:
+            struct InvalidTag {};
+
+            constexpr BasicDuration(
+                Representation ticks,
+                InvalidTag
+            ) : _ticks(ticks) {}
         };
+
+        /** @brief Default 32-bit Duration specialization. */
+        using Duration = BasicDuration<>;
     }
 }
 

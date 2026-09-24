@@ -7,19 +7,33 @@
     namespace Foundation {
         namespace Time {
 
-            class Clock;
+            template <typename TickType>
+            class BasicClock;
 
             /**
              * @brief Tick value associated with the identity of one Clock.
              * @ingroup Foundation_Time_TimePoint
+             * @tparam TickType Tick specialization shared with the Clock.
              *
              * The Clock pointer is non-owning and is used for compatibility
              * checks; it must outlive every operation that inspects the point.
              */
-            class TimePoint {
+            template <typename TickType = Tick32>
+            class BasicTimePoint {
+            public:
+                using Representation = typename TickType::Representation;
+                using DurationType = BasicDuration<TickType>;
+                using ClockType = BasicClock<TickType>;
+
             private:
-                Tick _ticks;
-                const Clock* _clock;
+                Representation _ticks;
+                const ClockType* _clock;
+
+                bool IsComparable(const BasicTimePoint& rhs) const {
+                    return IsValid() &&
+                        rhs.IsValid() &&
+                        (_clock == rhs._clock);
+                }
 
             public:
 
@@ -28,20 +42,20 @@
                  * @param ticks Stored tick value.
                  * @param clock Non-owning Clock pointer; null creates an invalid point.
                  */
-                constexpr TimePoint(
-                    Tick ticks = 0,
-                    const Clock* clock = nullptr
+                constexpr BasicTimePoint(
+                    Representation ticks = 0,
+                    const ClockType* clock = nullptr
                 )
                     : _ticks(ticks),
                     _clock(clock) {}
 
                 /** @brief Returns the stored tick value. */
-                constexpr Tick Ticks() const {
+                constexpr Representation Ticks() const {
                     return _ticks;
                 }
 
                 /** @brief Returns the non-owning Clock identity, which may be null. */
-                const Clock* GetClock() const {
+                const ClockType* GetClock() const {
                     return _clock;
                 }
 
@@ -51,67 +65,102 @@
                 }
 
                 /**
-                 * @brief Returns the unsigned tick difference between compatible points.
-                 * @return Zero Duration when the Clock identities differ.
-                 * @warning Compatible subtraction wraps if `rhs` is later than this point.
+                 * @brief Returns the modular elapsed duration from `rhs` to this point.
+                 * @return Invalid Duration for incompatible clocks, invalid points,
+                 * reverse ordering, or the ambiguous half-range distance.
                  */
-                Duration operator-(const TimePoint& rhs) const {
-                    if (_clock != rhs._clock) {
-                        return Duration(0);
+                DurationType operator-(const BasicTimePoint& rhs) const {
+                    if (!IsComparable(rhs)) {
+                        return DurationType::Invalid();
                     }
 
-                    return Duration(_ticks - rhs._ticks);
+                    const Representation difference =
+                        static_cast<Representation>(_ticks - rhs._ticks);
+
+                    if (difference >= TickType::HalfRange()) {
+                        return DurationType::Invalid();
+                    }
+
+                    return DurationType(difference);
                 }
 
-                /** @brief Adds an unsigned tick Duration while preserving Clock identity. */
-                TimePoint operator+(const Duration& duration) const {
-                    return TimePoint(_ticks + duration.Ticks(), _clock);
+                /** @brief Adds a valid Duration while preserving Clock identity. */
+                BasicTimePoint operator+(const DurationType& duration) const {
+                    if (!IsValid() || !duration.IsValid()) {
+                        return BasicTimePoint();
+                    }
+
+                    return BasicTimePoint(
+                        static_cast<Representation>(
+                            _ticks + duration.Ticks()
+                        ),
+                        _clock
+                    );
                 }
 
                 /**
-                 * @brief Subtracts an unsigned tick Duration while preserving Clock identity.
-                 * @warning The tick value wraps when the duration is larger.
+                 * @brief Subtracts a valid Duration while preserving Clock identity.
                  */
-                TimePoint operator-(const Duration& duration) const {
-                    return TimePoint(_ticks - duration.Ticks(), _clock);
+                BasicTimePoint operator-(const DurationType& duration) const {
+                    if (!IsValid() || !duration.IsValid()) {
+                        return BasicTimePoint();
+                    }
+
+                    return BasicTimePoint(
+                        static_cast<Representation>(
+                            _ticks - duration.Ticks()
+                        ),
+                        _clock
+                    );
                 }
 
                 /** @brief Reports whether two points store the same Clock pointer. */
-                bool SameClock(const TimePoint& rhs) const {
+                bool SameClock(const BasicTimePoint& rhs) const {
                     return _clock == rhs._clock;
                 }
 
                 /** @brief Compares Clock identity and tick value for equality. */
-                bool operator==(const TimePoint& rhs) const {
+                bool operator==(const BasicTimePoint& rhs) const {
                     return (_clock == rhs._clock) &&
                         (_ticks == rhs._ticks);
                 }
 
                 /** @brief Negates equality. */
-                bool operator!=(const TimePoint& rhs) const {
+                bool operator!=(const BasicTimePoint& rhs) const {
                     return !(*this == rhs);
                 }
 
-                /** @brief Orders tick values only when Clock identities match. */
-                bool operator<(const TimePoint& rhs) const {
-                    return SameClock(rhs) && (_ticks < rhs._ticks);
+                /** @brief Orders compatible points within the modular half-range. */
+                bool operator<(const BasicTimePoint& rhs) const {
+                    if (!IsComparable(rhs)) {
+                        return false;
+                    }
+
+                    const Representation forward =
+                        static_cast<Representation>(rhs._ticks - _ticks);
+                    return forward != 0 && forward < TickType::HalfRange();
                 }
 
-                /** @brief Orders tick values only when Clock identities match. */
-                bool operator>(const TimePoint& rhs) const {
+                /** @brief Orders compatible points within the modular half-range. */
+                bool operator>(const BasicTimePoint& rhs) const {
                     return rhs < *this;
                 }
 
-                /** @brief Orders tick values only when Clock identities match. */
-                bool operator<=(const TimePoint& rhs) const {
-                    return SameClock(rhs) && (_ticks <= rhs._ticks);
+                /** @brief Orders compatible points within the modular half-range. */
+                bool operator<=(const BasicTimePoint& rhs) const {
+                    return IsComparable(rhs) &&
+                        ((*this == rhs) || (*this < rhs));
                 }
 
-                /** @brief Orders tick values only when Clock identities match. */
-                bool operator>=(const TimePoint& rhs) const {
-                    return SameClock(rhs) && (_ticks >= rhs._ticks);
+                /** @brief Orders compatible points within the modular half-range. */
+                bool operator>=(const BasicTimePoint& rhs) const {
+                    return IsComparable(rhs) &&
+                        ((*this == rhs) || (*this > rhs));
                 }
             };
+
+            /** @brief Default 32-bit TimePoint specialization. */
+            using TimePoint = BasicTimePoint<>;
         }
     }
 

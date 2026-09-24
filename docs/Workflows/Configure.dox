@@ -80,7 +80,7 @@
  * Math and Functional expose additional component options. Matrix and Time are
  * indivisible v1 features: enabling Matrix provides `Matrix::Fixed`,
  * `Matrix::Dynamic`, and `Matrix::Multiply`; enabling Time provides Clock,
- * Duration, Frequency, Period, Tick, and TimePoint.
+ * Duration, Frequency, Period, the Tick specializations, and TimePoint.
  *
  * @subsection FoundationWorkflowConfigureDependencies Feature Dependencies
  *
@@ -90,6 +90,7 @@
  * | ------- | ---------------- |
  * | `FOUNDATION_CONTAINERS` | `FOUNDATION_UTILS` |
  * | `FOUNDATION_TIME` | `FOUNDATION_MATH` |
+ * | `FOUNDATION_TIME` | `FOUNDATION_TYPE_TRAITS` |
  * | `FOUNDATION_TIME` | `FOUNDATION_MATH_RATIO` |
  * | `FOUNDATION_TIME` | `FOUNDATION_FUNCTIONAL` |
  * | `FOUNDATION_TIME` | `FOUNDATION_FUNCTIONAL_CALLBACK` |

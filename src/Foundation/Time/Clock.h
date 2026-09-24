@@ -13,24 +13,29 @@
             /**
              * @brief Callback-backed tick source with an associated Frequency.
              * @ingroup Foundation_Time_Clock
+             * @tparam TickType Tick specialization returned by this clock.
              *
              * Clock does not own external state used by the tick callback.
              * TimePoints returned by Now() retain this Clock's address as their
              * identity, so the Clock must outlive those TimePoints.
              */
-            class Clock {
+            template <typename TickType = Tick32>
+            class BasicClock {
             public:
-                /** @brief Free/static function returning the current Tick. */
-                using Callback = Tick (*)();
+                using Representation = typename TickType::Representation;
+                using TimePointType = BasicTimePoint<TickType>;
+
+                /** @brief Free/static function returning the raw counter value. */
+                using Callback = Representation (*)();
 
             private:
-                Functional::Callback<Tick> _callback;
+                Functional::Callback<Representation> _callback;
                 Frequency _frequency;
 
             public:
 
                 /** @brief Creates an unbound clock with a zero frequency. */
-                Clock()
+                BasicClock()
                     : _frequency(0, 1) {}
 
                 /**
@@ -38,7 +43,7 @@
                  * @param callback Free/static function returning the current tick.
                  * @param frequency Number of callback ticks per second.
                  */
-                Clock( Callback callback, const Frequency& frequency )
+                BasicClock(Callback callback, const Frequency& frequency)
                     : _frequency(frequency) {
                     _callback.Bind(callback);
                 }
@@ -48,8 +53,8 @@
                  * @return A TimePoint containing the sampled tick, or tick zero when unbound.
                  * @note The returned point still references this Clock when unbound.
                  */
-                TimePoint Now() const {
-                    return TimePoint(
+                TimePointType Now() const {
+                    return TimePointType(
                         _callback.IsBound() ? _callback.Invoke() : 0,
                         this
                     );
@@ -85,6 +90,9 @@
                     _frequency = frequency;
                 }
             };
+
+            /** @brief Default 32-bit Clock specialization. */
+            using Clock = BasicClock<>;
         }
     }
 

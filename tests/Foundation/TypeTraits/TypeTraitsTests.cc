@@ -36,6 +36,18 @@ TEST(TypeTraitsTest, ClassifiesPrimaryAndCompositeTypes) {
     static_assert(is_pointer<int*>::value, "int* must be a pointer");
     static_assert(is_reference<int&>::value, "int& must be a reference");
     static_assert(is_scalar<State>::value, "State must be scalar");
+    static_assert(
+        is_unsigned_integer<unsigned int>::value,
+        "unsigned int must be an unsigned integer"
+    );
+    static_assert(
+        !is_unsigned_integer<bool>::value,
+        "bool must not be accepted as an unsigned integer"
+    );
+    static_assert(
+        !is_unsigned_integer<int>::value,
+        "signed int must not be an unsigned integer"
+    );
     static_assert(is_object<Sample>::value, "Sample must be an object type");
     static_assert(!is_object<void>::value, "void must not be an object type");
     static_assert(is_function<decltype(Transform)>::value, "Transform must be a function");

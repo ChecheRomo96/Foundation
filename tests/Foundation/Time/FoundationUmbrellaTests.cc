@@ -3,7 +3,7 @@
 #include <Foundation.h>
 
 TEST(FoundationUmbrellaTimeTest, ExposesTime) {
-    const Foundation::Time::Tick tick = 42;
+    const Foundation::Time::Tick32 tick = 42;
 
-    EXPECT_EQ(tick, 42u);
+    EXPECT_EQ(tick.Value(), 42u);
 }
