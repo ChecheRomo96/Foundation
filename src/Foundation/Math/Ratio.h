@@ -82,22 +82,22 @@
                     _den(den) {}
 
                 /** @brief Returns the stored numerator. */
-                constexpr Representation Num() const noexcept {
+                constexpr Representation Numerator() const noexcept {
                     return _num;
                 }
 
                 /** @brief Returns the stored denominator. */
-                constexpr Representation Den() const noexcept {
+                constexpr Representation Denominator() const noexcept {
                     return _den;
                 }
 
                 /** @brief Replaces the numerator without reducing the ratio. */
-                constexpr void SetNum(Representation num) noexcept {
+                constexpr void SetNumerator(Representation num) noexcept {
                     _num = num;
                 }
 
                 /** @brief Replaces the denominator without reducing the ratio. */
-                constexpr void SetDen(Representation den) noexcept {
+                constexpr void SetDenominator(Representation den) noexcept {
                     _den = den;
                 }
 

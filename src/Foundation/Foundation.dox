@@ -205,6 +205,13 @@
  *
  * - PascalCase for class names.
  * - PascalCase for public function names.
+ * - Descriptive accessor nouns such as `Numerator()`, `Ticks()`,
+ *   `RowCount()`, `Size()`, and `Data()`; avoid unclear abbreviations.
+ * - `Get...()` for associated or configured objects when the direct noun would
+ *   collide with a public type name, as in `GetFrequency()` and `GetClock()`.
+ * - `Is...()` and `Has...()` for Boolean state queries.
+ * - Standard-compatible snake_case only in TypeTraits, where matching
+ *   `<type_traits>` is part of the public contract.
  * - Nested namespaces.
  * - Explicit module ownership.
  * - Small focused headers.

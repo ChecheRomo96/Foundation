@@ -49,12 +49,12 @@ Fixed<T, Rows, Cols>& Fixed<T, Rows, Cols>::operator=(
 }
 
 template <typename T, unsigned int Rows, unsigned int Cols>
-unsigned int Fixed<T, Rows, Cols>::RowsCount() const {
+unsigned int Fixed<T, Rows, Cols>::RowCount() const {
     return Rows;
 }
 
 template <typename T, unsigned int Rows, unsigned int Cols>
-unsigned int Fixed<T, Rows, Cols>::ColsCount() const {
+unsigned int Fixed<T, Rows, Cols>::ColumnCount() const {
     return Cols;
 }
 

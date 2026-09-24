@@ -13,9 +13,9 @@ namespace {
         Serial.print("    ");
         Serial.println(code);
         Serial.print("  Numerator ............ ");
-        Serial.println(ratio.Num());
+        Serial.println(ratio.Numerator());
         Serial.print("  Denominator .......... ");
-        Serial.println(ratio.Den());
+        Serial.println(ratio.Denominator());
         Serial.print("  Valid ................ ");
         Serial.println(ratio.IsValid() ? "yes" : "no");
         Serial.print("  Decimal view ......... ");
@@ -34,9 +34,9 @@ namespace {
         Serial.print("    ");
         Serial.println(code);
         Serial.print("  Numerator ............ ");
-        Serial.println(frequency.Num());
+        Serial.println(frequency.Numerator());
         Serial.print("  Denominator .......... ");
-        Serial.println(frequency.Den());
+        Serial.println(frequency.Denominator());
         Serial.print("  Valid ................ ");
         Serial.println(frequency.IsValid() ? "yes" : "no");
         Serial.print("  Rate ................. ");

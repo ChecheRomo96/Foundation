@@ -8,7 +8,7 @@ namespace Foundation {
 
         Frequency Period::GetFrequency() const noexcept {
             return IsValid()
-                ? Frequency(_ratio.Den(), _ratio.Num())
+                ? Frequency(_ratio.Denominator(), _ratio.Numerator())
                 : Frequency();
         }
 

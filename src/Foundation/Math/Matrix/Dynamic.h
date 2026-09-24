@@ -90,10 +90,10 @@ public:
     void Clear();
 
     /** @brief Returns the number of rows, or zero for an empty matrix. */
-    unsigned int RowsCount() const;
+    unsigned int RowCount() const;
 
     /** @brief Returns the number of columns, or zero for an empty matrix. */
-    unsigned int ColsCount() const;
+    unsigned int ColumnCount() const;
 
     /** @brief Returns the validated element count, or zero when empty. */
     unsigned int Size() const;

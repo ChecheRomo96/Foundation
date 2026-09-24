@@ -99,14 +99,14 @@ TEST(FrequencyTest, RejectsZeroTermsAndPreservesUnsignedValues) {
     const Frequency maximumFrequency(ratio);
 
     EXPECT_TRUE(maximumFrequency.IsValid());
-    EXPECT_EQ(maximumFrequency.Num(), maximum);
-    EXPECT_EQ(maximumFrequency.GetRatio().Num(), maximum);
+    EXPECT_EQ(maximumFrequency.Numerator(), maximum);
+    EXPECT_EQ(maximumFrequency.GetRatio().Numerator(), maximum);
 
     const Period maximumPeriod = maximumFrequency.GetPeriod();
     EXPECT_TRUE(maximumPeriod.IsValid());
-    EXPECT_EQ(maximumPeriod.Num(), 1u);
-    EXPECT_EQ(maximumPeriod.Den(), maximum);
-    EXPECT_EQ(maximumPeriod.GetFrequency().Num(), maximum);
+    EXPECT_EQ(maximumPeriod.Numerator(), 1u);
+    EXPECT_EQ(maximumPeriod.Denominator(), maximum);
+    EXPECT_EQ(maximumPeriod.GetFrequency().Numerator(), maximum);
 
     const Frequency zeroFrequency(0, 1);
     const Frequency zeroDenominator(1, 0);
@@ -122,11 +122,11 @@ TEST(FrequencyTest, RejectsZeroTermsAndPreservesUnsignedValues) {
 TEST(PeriodTest, RoundTripsThroughFrequency) {
     const Period period = Frequency(1000, 1).GetPeriod();
 
-    EXPECT_EQ(period.Num(), 1u);
-    EXPECT_EQ(period.Den(), 1000u);
+    EXPECT_EQ(period.Numerator(), 1u);
+    EXPECT_EQ(period.Denominator(), 1000u);
     EXPECT_NEAR(period.Seconds(), 0.001f, 0.000001f);
-    EXPECT_EQ(period.GetFrequency().Num(), 1000u);
-    EXPECT_EQ(period.GetFrequency().Den(), 1u);
+    EXPECT_EQ(period.GetFrequency().Numerator(), 1000u);
+    EXPECT_EQ(period.GetFrequency().Denominator(), 1u);
 }
 
 TEST(PeriodTest, RejectsZeroTermsAndInvalidReciprocals) {
@@ -166,7 +166,7 @@ TEST(DurationTest, RejectsUnderflowOverflowAndOutOfRangeValues) {
 TEST(ClockTest, ProducesTimePointsAndCanBeUnbound) {
     Clock clock(ReadTick, Frequency(1000, 1));
     ASSERT_TRUE(clock.IsBound());
-    EXPECT_EQ(clock.GetFrequency().Num(), 1000u);
+    EXPECT_EQ(clock.GetFrequency().Numerator(), 1000u);
 
     CurrentTick = 125;
     const TimePoint now = clock.Now();

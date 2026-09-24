@@ -101,6 +101,11 @@
  * `_MSVC_LANG` on MSVC and `__cplusplus` elsewhere. Including the header from
  * a language mode older than C++17 produces a compile error.
  *
+ * The header does not invent platform markers or include target SDK headers.
+ * Platform detection remains the responsibility of the compiler, toolchain,
+ * and consuming application until Foundation exposes a concrete portable
+ * abstraction that requires it.
+ *
  * Example:
  *
  * @code{.cpp}

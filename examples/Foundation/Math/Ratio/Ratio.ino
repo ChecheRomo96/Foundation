@@ -13,9 +13,9 @@ namespace {
         Serial.print("    ");
         Serial.println(code);
         Serial.print("  Numerator ............ ");
-        Serial.println(ratio.Num());
+        Serial.println(ratio.Numerator());
         Serial.print("  Denominator .......... ");
-        Serial.println(ratio.Den());
+        Serial.println(ratio.Denominator());
         Serial.print("  Valid denominator .... ");
         Serial.println(ratio.IsValid() ? "yes" : "no");
         Serial.print("  Decimal view ......... ");

@@ -13,7 +13,7 @@ namespace {
         std::cout << "------------------------------------------------------------\n";
         std::cout << "  CODE\n";
         std::cout << "    " << code << '\n';
-        std::cout << "  Exact ratio .......... " << ratio.Num() << " / " << ratio.Den() << '\n';
+        std::cout << "  Exact ratio .......... " << ratio.Numerator() << " / " << ratio.Denominator() << '\n';
         std::cout << "  Valid ................ " << (ratio.IsValid() ? "yes" : "no") << '\n';
         std::cout << "  Decimal view ......... " << ratio.ToFloat() << "\n\n";
     }
@@ -27,8 +27,8 @@ namespace {
         std::cout << "------------------------------------------------------------\n";
         std::cout << "  CODE\n";
         std::cout << "    " << code << '\n';
-        std::cout << "  Exact period ......... " << period.Num()
-                  << " / " << period.Den() << " seconds per tick\n";
+        std::cout << "  Exact period ......... " << period.Numerator()
+                  << " / " << period.Denominator() << " seconds per tick\n";
         std::cout << "  Valid ................ " << (period.IsValid() ? "yes" : "no") << '\n';
         std::cout << "  Seconds/tick ......... " << period.Seconds() << " s\n";
         std::cout << "  Milliseconds/tick .... " << period.Milliseconds() << " ms\n";

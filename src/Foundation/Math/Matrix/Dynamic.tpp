@@ -310,12 +310,12 @@ void Dynamic<T>::Clear() {
 }
 
 template <typename T>
-unsigned int Dynamic<T>::RowsCount() const {
+unsigned int Dynamic<T>::RowCount() const {
     return _rows;
 }
 
 template <typename T>
-unsigned int Dynamic<T>::ColsCount() const {
+unsigned int Dynamic<T>::ColumnCount() const {
     return _cols;
 }
 

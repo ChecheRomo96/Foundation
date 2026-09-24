@@ -13,7 +13,7 @@ namespace {
         std::cout << "------------------------------------------------------------\n";
         std::cout << "  CODE\n";
         std::cout << "    " << code << '\n';
-        std::cout << "  Exact value .......... " << ratio.Num() << " / " << ratio.Den() << '\n';
+        std::cout << "  Exact value .......... " << ratio.Numerator() << " / " << ratio.Denominator() << '\n';
         std::cout << "  Valid denominator .... "
                   << (ratio.IsValid() ? "yes" : "no") << '\n';
         std::cout << "  Decimal view ......... " << ratio.ToFloat() << "\n\n";

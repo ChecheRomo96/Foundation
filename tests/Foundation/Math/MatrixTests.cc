@@ -67,8 +67,8 @@ TEST(MatrixTest, MultipliesDynamicMatrices) {
     Matrix::Dynamic<int> result;
 
     int value = 1;
-    for(unsigned int row = 0; row < left.RowsCount(); ++row) {
-        for(unsigned int col = 0; col < left.ColsCount(); ++col) {
+    for(unsigned int row = 0; row < left.RowCount(); ++row) {
+        for(unsigned int col = 0; col < left.ColumnCount(); ++col) {
             left.At(row, col) = value++;
         }
     }
@@ -78,15 +78,15 @@ TEST(MatrixTest, MultipliesDynamicMatrices) {
         {9, 10},
         {11, 12}
     };
-    for(unsigned int row = 0; row < right.RowsCount(); ++row) {
-        for(unsigned int col = 0; col < right.ColsCount(); ++col) {
+    for(unsigned int row = 0; row < right.RowCount(); ++row) {
+        for(unsigned int col = 0; col < right.ColumnCount(); ++col) {
             right.At(row, col) = rightValues[row][col];
         }
     }
 
     ASSERT_TRUE(Matrix::Multiply(left, right, result));
-    EXPECT_EQ(result.RowsCount(), 2u);
-    EXPECT_EQ(result.ColsCount(), 2u);
+    EXPECT_EQ(result.RowCount(), 2u);
+    EXPECT_EQ(result.ColumnCount(), 2u);
     EXPECT_EQ(result.At(0, 0), 58);
     EXPECT_EQ(result.At(0, 1), 64);
     EXPECT_EQ(result.At(1, 0), 139);
@@ -106,8 +106,8 @@ TEST(MatrixTest, DeducesFixedByDynamicMultiplication) {
     Matrix::Dynamic<int> result;
 
     ASSERT_TRUE(Matrix::Multiply(left, right, result));
-    EXPECT_EQ(result.RowsCount(), 2u);
-    EXPECT_EQ(result.ColsCount(), 1u);
+    EXPECT_EQ(result.RowCount(), 2u);
+    EXPECT_EQ(result.ColumnCount(), 1u);
     EXPECT_EQ(result.At(0, 0), 50);
     EXPECT_EQ(result.At(1, 0), 122);
 }
@@ -143,8 +143,8 @@ TEST(MatrixTest, AllocatesOwnedDynamicStorage) {
     ASSERT_TRUE(matrix.Allocate(2, 3));
     EXPECT_TRUE(matrix.IsValid());
     EXPECT_TRUE(matrix.OwnsData());
-    EXPECT_EQ(matrix.RowsCount(), 2u);
-    EXPECT_EQ(matrix.ColsCount(), 3u);
+    EXPECT_EQ(matrix.RowCount(), 2u);
+    EXPECT_EQ(matrix.ColumnCount(), 3u);
     EXPECT_EQ(matrix.Size(), 6u);
 }
 
@@ -165,8 +165,8 @@ TEST(MatrixTest, PreservesDynamicStorageWhenDimensionsAreInvalid) {
     EXPECT_FALSE(matrix.Allocate(0, 1));
     EXPECT_FALSE(matrix.Allocate(maximum, 2));
     EXPECT_EQ(matrix.Data(), originalStorage);
-    EXPECT_EQ(matrix.RowsCount(), 1u);
-    EXPECT_EQ(matrix.ColsCount(), 1u);
+    EXPECT_EQ(matrix.RowCount(), 1u);
+    EXPECT_EQ(matrix.ColumnCount(), 1u);
     EXPECT_EQ(matrix.At(0, 0), 42);
 }
 
@@ -180,8 +180,8 @@ TEST(MatrixTest, ReportsAllocationFailureWithoutChangingMatrix) {
     ControlledAllocationElement::FailAllocation = true;
     EXPECT_FALSE(matrix.Allocate(2, 2));
     EXPECT_EQ(matrix.Data(), originalStorage);
-    EXPECT_EQ(matrix.RowsCount(), 1u);
-    EXPECT_EQ(matrix.ColsCount(), 1u);
+    EXPECT_EQ(matrix.RowCount(), 1u);
+    EXPECT_EQ(matrix.ColumnCount(), 1u);
     EXPECT_EQ(matrix.At(0, 0).Value, 42);
     ControlledAllocationElement::FailAllocation = false;
 }
@@ -198,8 +198,8 @@ TEST(MatrixTest, CopyAssignmentPreservesDestinationOnAllocationFailure) {
     ControlledAllocationElement::FailAllocation = true;
     destination = source;
     EXPECT_EQ(destination.Data(), originalStorage);
-    EXPECT_EQ(destination.RowsCount(), 1u);
-    EXPECT_EQ(destination.ColsCount(), 1u);
+    EXPECT_EQ(destination.RowCount(), 1u);
+    EXPECT_EQ(destination.ColumnCount(), 1u);
     EXPECT_EQ(destination.At(0, 0).Value, 42);
     ControlledAllocationElement::FailAllocation = false;
 }
@@ -303,8 +303,8 @@ TEST(MatrixTest, MoveTransfersOwnedAndAttachedStorageWithoutThrowing) {
 TEST(MatrixTest, TransposesIntoAttachedStorage) {
     Matrix::Dynamic<int> source(2, 3);
     int value = 1;
-    for(unsigned int row = 0; row < source.RowsCount(); ++row) {
-        for(unsigned int col = 0; col < source.ColsCount(); ++col) {
+    for(unsigned int row = 0; row < source.RowCount(); ++row) {
+        for(unsigned int col = 0; col < source.ColumnCount(); ++col) {
             source.At(row, col) = value++;
         }
     }
