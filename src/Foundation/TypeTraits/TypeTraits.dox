@@ -40,7 +40,7 @@
  * | @ref Foundation_TypeTraits_Helpers "Helper classes" | Store a typed compile-time value. | `integral_constant`, `bool_constant`, `true_type`, `false_type` |
  * | @ref Foundation_TypeTraits_Properties "Type properties and transformations" | Inspect qualifiers and transform a type. | `is_const`, `is_volatile`, `is_unsigned`, `remove_cv` |
  * | @ref Foundation_TypeTraits_Primary "Primary categories" | Classify one fundamental kind of type. | `is_integral`, `is_pointer`, `is_class`, `is_function` |
- * | @ref Foundation_TypeTraits_Composite "Composite categories" | Combine primary classifications. | `is_arithmetic`, `is_scalar`, `is_object`, `is_reference` |
+ * | @ref Foundation_TypeTraits_Composite "Composite categories" | Combine primary classifications. | `is_arithmetic`, `is_scalar`, `is_object`, `is_reference`, `is_unsigned_integer` |
  * | @ref Foundation_TypeTraits_Relationships "Type relationships" | Compare types or expressions. | `is_same`, `is_base_of`, `is_convertible`, `is_invocable` |
  *
  * @section FoundationTypeTraitsSurface Supported v1 Surface
@@ -51,13 +51,16 @@
  * | Transformations | `remove_const`, `remove_volatile`, `remove_cv`, and their `_t` aliases |
  * | Properties | `is_const`, `is_volatile`, `is_unsigned` |
  * | Primary categories | `is_array`, `is_class`, `is_enum`, `is_floating_point`, `is_function`, `is_integral`, `is_lvalue_reference`, `is_member_function_pointer`, `is_member_object_pointer`, `is_pointer`, `is_rvalue_reference`, `is_union`, `is_void` |
- * | Composite categories | `is_arithmetic`, `is_compound`, `is_fundamental`, `is_member_pointer`, `is_object`, `is_reference`, `is_scalar` |
+ * | Composite categories | `is_arithmetic`, `is_compound`, `is_fundamental`, `is_member_pointer`, `is_object`, `is_reference`, `is_scalar`, `is_unsigned_integer` |
  * | Relationships | `is_same`, `is_base_of`, `is_convertible`, `is_invocable`, `is_nothrow_invocable`, `is_nothrow_convertible` |
  *
  * Every predicate has a C++17 `_v` convenience variable. The supported
  * integral set is the standard C++17 set through `char16_t`, `char32_t`, and
  * `unsigned long long`; compiler-specific extended integers are outside the
  * v1 contract.
+ * `is_unsigned_integer` is a Foundation-specific composite trait that combines
+ * `is_integral` and `is_unsigned` while excluding `bool`; it is intended for
+ * numeric counters and storage representations.
  *
  * @section FoundationTypeTraitsPatterns Usage Patterns
  *

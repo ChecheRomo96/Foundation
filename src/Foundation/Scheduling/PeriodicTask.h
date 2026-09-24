@@ -8,20 +8,25 @@ namespace Foundation::Scheduling {
     /**
      * @brief Task that runs immediately and then at a fixed tick interval.
      * @ingroup Foundation_Scheduling
+     * @tparam TickType Tick specialization shared with its scheduler.
      *
      * The first ShouldRun() returns true. After Run(), the next due time is
      * measured from the TimePoint passed to that invocation.
      */
-    class PeriodicTask : public Task {
+    template <typename TickType = Foundation::Time::Tick32>
+    class BasicPeriodicTask : public BasicTask<TickType> {
     public:
+        using DurationType = Foundation::Time::BasicDuration<TickType>;
+        using TimePointType = Foundation::Time::BasicTimePoint<TickType>;
+
         /** @brief Callback receiving the stored context pointer. */
         typedef void (*Callback)(void* context);
 
     private:
         Callback _callback;
         void* _context;
-        Foundation::Time::Duration _period;
-        Foundation::Time::TimePoint _lastRun;
+        DurationType _period;
+        TimePointType _lastRun;
         bool _firstRun;
 
     public:
@@ -35,24 +40,35 @@ namespace Foundation::Scheduling {
          * user code.
          * @warning A non-null context must outlive the task and all invocations.
          */
-        PeriodicTask(Callback callback, void* context, Foundation::Time::Duration period)
-            : _callback(callback), _context(context), _period(period), _lastRun(0), _firstRun(true) { }
+        BasicPeriodicTask(
+            Callback callback,
+            void* context,
+            DurationType period
+        )
+            : _callback(callback),
+              _context(context),
+              _period(period),
+              _lastRun(0),
+              _firstRun(true) { }
 
-        /** @copydoc Task::ShouldRun */
-        bool ShouldRun(Foundation::Time::TimePoint now) override {
+        /** @brief Reports whether this task is ready at `now`. */
+        bool ShouldRun(TimePointType now) override {
             return _firstRun || ((now - _lastRun) >= _period);
         }
 
         /**
-         * @copydoc Task::Run
+         * @brief Records `now` and invokes the callback when one is bound.
          * @note Records `now` even when the callback is null.
          */
-        void Run(Foundation::Time::TimePoint now) override {
+        void Run(TimePointType now) override {
             _firstRun = false;
             _lastRun = now;
             if (_callback) { _callback(_context); }
         }
     };
+
+    /** @brief Default 32-bit periodic task specialization. */
+    using PeriodicTask = BasicPeriodicTask<>;
 }
 
 #endif

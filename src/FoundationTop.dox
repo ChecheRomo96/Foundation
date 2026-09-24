@@ -169,7 +169,7 @@
  * - Frequency.
  * - Period.
  * - Duration.
- * - Tick.
+ * - Width-explicit Tick specializations.
  * - TimePoint.
  * - Clock.
  *

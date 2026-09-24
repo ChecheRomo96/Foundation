@@ -154,6 +154,22 @@ namespace Foundation::TypeTraits {
     struct is_compound
         : bool_constant<Detail::is_compound_backend<T>::value> {};
 
+    /**
+     * @brief Reports whether a type is an unsigned integer other than `bool`.
+     * @ingroup Foundation_TypeTraits_Composite
+     * @tparam T Type to inspect; top-level cv qualifiers are ignored.
+     *
+     * Unlike `is_unsigned`, this Foundation-specific composite trait excludes
+     * `bool`, making it suitable for counters, sizes, and numeric storage.
+     */
+    template <typename T>
+    struct is_unsigned_integer
+        : bool_constant<
+            is_integral<T>::value &&
+            is_unsigned<T>::value &&
+            !is_same<remove_cv_t<T>, bool>::value
+        > {};
+
     /** @brief `is_arithmetic<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Composite */
     template <typename T>
@@ -188,6 +204,12 @@ namespace Foundation::TypeTraits {
      * @ingroup Foundation_TypeTraits_Composite */
     template <typename T>
     inline constexpr bool is_compound_v = is_compound<T>::value;
+
+    /** @brief `is_unsigned_integer<T>::value` convenience variable.
+     * @ingroup Foundation_TypeTraits_Composite */
+    template <typename T>
+    inline constexpr bool is_unsigned_integer_v =
+        is_unsigned_integer<T>::value;
 
 }
 

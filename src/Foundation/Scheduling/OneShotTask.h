@@ -8,16 +8,20 @@ namespace Foundation::Scheduling {
     /**
      * @brief Task that becomes due once at or after a trigger TimePoint.
      * @ingroup Foundation_Scheduling
+     * @tparam TickType Tick specialization shared with its scheduler.
      */
-    class OneShotTask : public Task {
+    template <typename TickType = Foundation::Time::Tick32>
+    class BasicOneShotTask : public BasicTask<TickType> {
     public:
+        using TimePointType = Foundation::Time::BasicTimePoint<TickType>;
+
         /** @brief Callback receiving the stored context pointer. */
         typedef void (*Callback)(void* context);
 
     private:
         Callback _callback;
         void* _context;
-        Foundation::Time::TimePoint _triggerTime;
+        TimePointType _triggerTime;
         bool _hasRun;
 
     public:
@@ -31,11 +35,18 @@ namespace Foundation::Scheduling {
          * @warning The trigger and scheduler TimePoints must use the same Clock.
          * A non-null context must outlive the task and its invocation.
          */
-        OneShotTask(Callback callback, void* context, Foundation::Time::TimePoint triggerTime)
-            : _callback(callback), _context(context), _triggerTime(triggerTime), _hasRun(false) { }
+        BasicOneShotTask(
+            Callback callback,
+            void* context,
+            TimePointType triggerTime
+        )
+            : _callback(callback),
+              _context(context),
+              _triggerTime(triggerTime),
+              _hasRun(false) { }
 
-        /** @copydoc Task::ShouldRun */
-        bool ShouldRun(Foundation::Time::TimePoint now) override {
+        /** @brief Reports whether this task is ready at `now`. */
+        bool ShouldRun(TimePointType now) override {
             return !_hasRun && now >= _triggerTime;
         }
 
@@ -46,7 +57,7 @@ namespace Foundation::Scheduling {
          * trigger comparison already occurred in ShouldRun().
          * @note Marks the task as completed even when the callback is null.
          */
-        void Run(Foundation::Time::TimePoint) override {
+        void Run(TimePointType) override {
             _hasRun = true;
             if (_callback) { _callback(_context); }
         }
@@ -54,6 +65,9 @@ namespace Foundation::Scheduling {
         /** @brief Reports whether Run() has already been called. */
         bool HasRun() const { return _hasRun; }
     };
+
+    /** @brief Default 32-bit one-shot task specialization. */
+    using OneShotTask = BasicOneShotTask<>;
 }
 
 #endif

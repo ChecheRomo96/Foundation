@@ -48,12 +48,12 @@
  * | Module | Intended public surface |
  * | ------ | ----------------------- |
  * | Build contract | `FOUNDATION_VERSION`, `FOUNDATION_CPLUSPLUS`, feature macros, `PROGMEM_MACRO` |
- * | TypeTraits | `integral_constant`, `bool_constant`, `true_type`, `false_type`, property/category/relationship traits, and `_v` constants |
+ * | TypeTraits | `integral_constant`, `bool_constant`, `true_type`, `false_type`, property/category/relationship traits including `is_unsigned_integer`, and `_v` constants |
  * | Math | `GCD`, `Pi`, `DegToRad`, `RadToDeg`, `Ratio`, `Complex`, `Matrix::Fixed`, `Matrix::Dynamic`, `Matrix::Multiply` |
  * | Containers | `CircularBuffer`, `Queue`, `Stack` |
  * | Functional | `Callback` |
- * | Time | `Tick`, `Duration`, `TimePoint`, `Frequency`, `Period`, `Clock` |
- * | Scheduling | `Task`, `PeriodicTask`, `OneShotTask`, `TaskScheduler` |
+ * | Time | `Tick<T = uint32_t>`, `Tick8`, `Tick16`, `Tick32`, `Tick64`, `BasicDuration<TickType = Tick32>`, `Duration`, `BasicTimePoint<TickType = Tick32>`, `TimePoint`, `Frequency`, `Period`, `BasicClock<TickType = Tick32>`, `Clock` |
+ * | Scheduling | `BasicTask<TickType>`, `BasicPeriodicTask<TickType>`, `BasicOneShotTask<TickType>`, `BasicTaskScheduler<TickType>`, plus their default aliases `Task`, `PeriodicTask`, `OneShotTask`, and `TaskScheduler` |
  * | Utils | `Move`, `Swap` |
  *
  * The non-template compiled ABI is intentionally small. It currently contains
@@ -82,6 +82,7 @@
  *     Scheduling;
  *
  *     Containers -> Utils [label="Move"];
+ *     Time -> TypeTraits [label="unsigned integer constraint"];
  *     Time -> Math [label="Ratio"];
  *     Time -> Functional [label="Callback"];
  *     Scheduling -> Time [label="Clock, Duration, TimePoint"];
@@ -91,8 +92,8 @@
  * Internal Math dependencies also matter: `Ratio` requires `Arithmetic`, and
  * the indivisible Matrix feature provides fixed storage, dynamic storage, and
  * their common operations together. Time is likewise an indivisible v1 feature
- * because Clock, Duration, Frequency, Period, Tick, and TimePoint form one
- * dependency chain.
+ * because Clock, Duration, Frequency, Period, Tick, TimePoint, and their
+ * compile-time representation constraints form one dependency chain.
  *
  * @section FoundationPublicApiAuditSeverity Severity
  *
@@ -109,14 +110,14 @@
  * | API-001 | `BLOCKER` | Functional umbrella | **Resolved.** `Foundation/Functional.h` now has its own guard, defines `FOUNDATION_FUNCTIONAL`, and includes the Functional module umbrella. Regression coverage consumes `Foundation/Functional.h` directly, consumes `Foundation.h`, and includes Functional with Utils in both possible orders. |
  * | API-002 | `BLOCKER` | Top-level headers | **Resolved.** `Foundation_Functional.h` now exists, is staged and installed whenever Functional is enabled, and exposes the module through `Foundation/Functional.h`. `Foundation.h` consumes this top-level header consistently with the other modules, and a regression test compiles and uses it directly. |
  * | API-003 | `BLOCKER` | Feature macros | **Resolved.** Module and component umbrellas use the same `FOUNDATION_<MODULE>` vocabulary as CMake, including `FOUNDATION_MATH_*` and `FOUNDATION_FUNCTIONAL_CALLBACK`; Containers and Scheduling have complete wrapper layers. Matrix and Time now each expose one truthful feature macro instead of misleading child options. |
- * | API-004 | `BLOCKER` | Module dependencies | **Resolved.** CMake validates dependencies before creating targets and rejects invalid combinations with the exact conflicting options and corrective flags. Containers requires Utils; Time requires Math, Math::Ratio, Functional, and Functional::Callback; Scheduling requires Time transitively. Valid reduced builds and representative invalid configurations are covered by configuration checks. |
+ * | API-004 | `BLOCKER` | Module dependencies | **Resolved.** CMake validates dependencies before creating targets and rejects invalid combinations with the exact conflicting options and corrective flags. Containers requires Utils; Time requires TypeTraits, Math, Math::Ratio, Functional, and Functional::Callback; Scheduling requires Time transitively. Valid reduced builds and representative invalid configurations are covered by configuration checks. |
  * | API-005 | `BLOCKER` | Matrix options | **Resolved.** Matrix is an indivisible v1 feature controlled only by `FOUNDATION_MATH_MATRIX`. Its public API is grouped under `Foundation::Math::Matrix` as `Fixed`, `Dynamic`, and `Multiply`; choosing fixed or dynamic storage is a source-level decision. |
  * | API-006 | `BLOCKER` | Matrix overloads | **Resolved.** The unused `ColsB` template parameter was removed from fixed-by-dynamic `Matrix::Multiply`. Regression coverage now invokes all four fixed/dynamic operand combinations using normal template deduction. |
  * | API-007 | `BLOCKER` | TypeTraits | **Resolved.** The supported v1 subset is listed in @ref Foundation_TypeTraits. Its stable Foundation API uses `<type_traits>` when the required C++17 facilities are available and otherwise selects the local fallback internally. Both backends run the same conformance comparisons covering extended character types, qualified and `noexcept` functions, private inheritance, conversions, member-function/member-object invocation, result shape, and invalid inputs such as `is_unsigned<void>`. |
  * | API-008 | `BREAKING DECISION` | Callback | **Resolved.** The canonical forms are `Callback<R, Args...>`, `Callback<R>`, `Callback<void, Args...>`, and `Callback<void>`; an empty pack, never a `void` argument, represents no arguments. The API consistently uses `Bind`, `Unbind`, `IsBound`, and `Invoke`, supports non-const and const member functions, rejects null member instances as empty bindings, and documents bound objects as non-owned. |
  * | API-009 | `BREAKING DECISION` | `Matrix::Dynamic` | **Resolved.** The type supports owned heap storage and attached caller-owned storage. Allocation failure is reported without exceptions, invalid and overflowing dimensions preserve existing state, copies own their data, moves transfer either storage mode with `noexcept`, and transpose/multiply reject overlapping output storage before mutation. AVR retains heap support while attached storage provides a deterministic alternative. |
  * | API-010 | `HARDENING` | Non-owning storage | **Resolved.** CircularBuffer, Stack, and TaskScheduler expose storage validity and safely reject null pointers paired with non-zero capacities; null with zero capacity is a valid empty configuration. Callback already rejects null member instances. PeriodicTask and OneShotTask explicitly allow and forward null contexts, while null callbacks remain safe. Non-null storage, bound objects, task/context objects, and Clock identities remain non-owned and require caller-controlled lifetimes that cannot be inferred at runtime. |
- * | API-011 | `BREAKING DECISION` | Time model | `Tick` is a wrapping `uint32_t`; subtraction can underflow. TimePoint comparisons across different clocks return false rather than reporting an error. TimePoint retains Clock identity through a raw pointer. Frequency/Period expose unsigned values backed by signed Ratio storage, and zero-frequency reciprocal behavior is inconsistent. Freeze these semantics explicitly or revise them. |
+ * | API-011 | `BREAKING DECISION` | Time model | **Partially resolved.** `Tick<T>` defaults to `uint32_t`, requires a non-`bool` unsigned integer, and exposes the explicit `Tick8`, `Tick16`, `Tick32`, and `Tick64` aliases. Time and Scheduling propagate a default `Tick32` through their generic `Basic...<TickType>` families; the short public names use the template defaults. Duration rejects underflow and values outside the modular half-range; TimePoint subtraction and ordering handle counter rollover inside that range and produce an invalid Duration for incompatible or reverse subtraction. Still to decide: the raw Clock identity lifetime contract and the signed Ratio/unsigned Frequency/Period representation, including zero reciprocals. |
  * | API-012 | `HARDENING` | Const/exception guarantees | Accessors are mostly const-correct, but opportunities such as const `Task::ShouldRun`, constexpr value operations, and `noexcept` moves are inconsistent. Add only guarantees that can be supported on all declared toolchains; guarantees become part of the API. |
  * | API-013 | `HARDENING` | Naming | Object APIs mix `Num`, `Ticks`, `RowsCount`, and `GetFrequency`; Callback alone uses lower camel case. TypeTraits intentionally follows standard snake_case. Approve documented exceptions and avoid cosmetic renames after freeze. |
  * | API-014 | `HARDENING` | Macro namespace | `PROGMEM_MACRO` is an unprefixed global macro and risks consumer collisions. Public build/feature macros must use the `FOUNDATION_` prefix. Empty platform blocks do not form a useful public contract and should be removed or specified. |

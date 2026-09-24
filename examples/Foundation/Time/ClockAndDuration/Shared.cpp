@@ -6,9 +6,9 @@ namespace ClockAndDuration {
 
     namespace {
 
-        Foundation::Time::Tick CurrentTick = 0;
+        Foundation::Time::Tick32::Representation CurrentTick = 0;
 
-        Foundation::Time::Tick ReadTick() {
+        Foundation::Time::Tick32::Representation ReadTick() {
             return CurrentTick;
         }
 

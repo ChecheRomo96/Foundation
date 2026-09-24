@@ -10,16 +10,23 @@ namespace Foundation::Scheduling {
     /**
      * @brief Fixed-capacity cooperative scheduler driven by a Clock.
      * @ingroup Foundation_Scheduling
+     * @tparam TickType Tick specialization shared by its Clock and Tasks.
      *
-     * Stores non-owning Task pointers in caller-provided storage. Update()
-     * executes due tasks synchronously in registration order.
+     * Stores non-owning BasicTask pointers in caller-provided storage.
+     * Update() executes due tasks synchronously in registration order.
      */
-    class TaskScheduler {
+    template <typename TickType = Foundation::Time::Tick32>
+    class BasicTaskScheduler {
+    public:
+        using TaskType = BasicTask<TickType>;
+        using ClockType = Foundation::Time::BasicClock<TickType>;
+        using TimePointType = Foundation::Time::BasicTimePoint<TickType>;
+
     private:
-        Task** _tasks;
+        TaskType** _tasks;
         size_t _capacity;
         size_t _count;
-        Foundation::Time::Clock* _clock;
+        ClockType* _clock;
 
     public:
         /**
@@ -33,7 +40,11 @@ namespace Foundation::Scheduling {
          * @warning The storage, clock, and registered tasks must outlive their
          * use by the scheduler.
          */
-        TaskScheduler(Task** tasks, size_t capacity, Foundation::Time::Clock* clock)
+        BasicTaskScheduler(
+            TaskType** tasks,
+            size_t capacity,
+            ClockType* clock
+        )
             : _tasks(tasks), _capacity(capacity), _count(0), _clock(clock) { }
 
         /**
@@ -41,7 +52,7 @@ namespace Foundation::Scheduling {
          * @param task Non-owning task pointer.
          * @return `true` when registered; `false` for null or full capacity.
          */
-        bool AddTask(Task* task) {
+        bool AddTask(TaskType* task) {
             if (!IsValid() || _count >= _capacity || task == 0) {
                 return false;
             }
@@ -57,7 +68,7 @@ namespace Foundation::Scheduling {
          */
         void Update() {
             if (!IsValid() || _clock == 0) { return; }
-            Foundation::Time::TimePoint now = _clock->Now();
+            TimePointType now = _clock->Now();
             for (size_t i = 0; i < _count; ++i) {
                 if (_tasks[i] && _tasks[i]->ShouldRun(now)) {
                     _tasks[i]->Run(now);
@@ -74,6 +85,9 @@ namespace Foundation::Scheduling {
         /** @brief Forgets all tasks without destroying them. */
         void Clear() { _count = 0; }
     };
+
+    /** @brief Default 32-bit cooperative scheduler specialization. */
+    using TaskScheduler = BasicTaskScheduler<>;
 }
 
 #endif
