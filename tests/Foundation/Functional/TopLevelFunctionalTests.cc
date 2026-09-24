@@ -12,7 +12,7 @@ int IncrementFromTopLevelFunctionalHeader(int value) {
 
 TEST(FoundationFunctionalHeaderTest, ExposesFunctionalCallback) {
     Foundation::Functional::Callback<int, int> callback;
-    callback.bind(IncrementFromTopLevelFunctionalHeader);
+    callback.Bind(IncrementFromTopLevelFunctionalHeader);
 
-    EXPECT_EQ(callback.invoke(41), 42);
+    EXPECT_EQ(callback.Invoke(41), 42);
 }

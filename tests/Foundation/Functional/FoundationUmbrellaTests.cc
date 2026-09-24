@@ -12,7 +12,7 @@ int IncrementFromFoundationUmbrella(int value) {
 
 TEST(FoundationUmbrellaTest, ExposesFunctionalCallback) {
     Foundation::Functional::Callback<int, int> callback;
-    callback.bind(IncrementFromFoundationUmbrella);
+    callback.Bind(IncrementFromFoundationUmbrella);
 
-    EXPECT_EQ(callback.invoke(41), 42);
+    EXPECT_EQ(callback.Invoke(41), 42);
 }

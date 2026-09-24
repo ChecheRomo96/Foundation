@@ -16,8 +16,8 @@ void setup() {
     Serial.println("[1] FREE FUNCTION BINDING");
     Serial.println("------------------------------------------------------------");
     Serial.println("  CODE");
-    Serial.println("    freeFunction.bind(Add);");
-    Serial.println("    freeFunction.invoke(4, 5);");
+    Serial.println("    freeFunction.Bind(Add);");
+    Serial.println("    freeFunction.Invoke(4, 5);");
     Serial.println("  Target .............. Add(first, second)");
     Serial.println("  Invocation .......... Add(4, 5)");
     Serial.print("  Returned ............ ");
@@ -26,10 +26,10 @@ void setup() {
     Serial.println("[2] MEMBER FUNCTION BINDING");
     Serial.println("------------------------------------------------------------");
     Serial.println("  CODE");
-    Serial.println("    memberFunction.bind<Accumulator,");
+    Serial.println("    memberFunction.Bind<Accumulator,");
     Serial.println("        &Accumulator::AddValue>(&accumulator);");
-    Serial.println("    memberFunction.invoke(5);");
-    Serial.println("    memberFunction.invoke(3);");
+    Serial.println("    memberFunction.Invoke(5);");
+    Serial.println("    memberFunction.Invoke(3);");
     Serial.println("  Target .............. Accumulator::AddValue(value)");
     Serial.println("  Invocations ......... AddValue(5), then AddValue(3)");
     Serial.print("  Accumulated total ... ");
@@ -38,8 +38,8 @@ void setup() {
     Serial.println("[3] EXPLICIT BINDING STATE");
     Serial.println("------------------------------------------------------------");
     Serial.println("  CODE");
-    Serial.println("    memberFunction.status();");
-    Serial.println("    memberFunction.unbind();");
+    Serial.println("    memberFunction.IsBound();");
+    Serial.println("    memberFunction.Unbind();");
     Serial.print("  Before unbind() ..... ");
     Serial.println(result.BoundBeforeUnbind ? "bound" : "empty");
     Serial.print("  After unbind() ...... ");

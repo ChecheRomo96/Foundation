@@ -13,13 +13,13 @@ int IncrementWithFunctionalFirst(int value) {
 
 TEST(FunctionalUmbrellaTest, CoexistsWithUtilsWhenIncludedFirst) {
     Foundation::Functional::Callback<int, int> callback;
-    callback.bind(IncrementWithFunctionalFirst);
+    callback.Bind(IncrementWithFunctionalFirst);
 
     int first = 1;
     int second = 2;
     Foundation::Utils::Swap(first, second);
 
-    EXPECT_EQ(callback.invoke(41), 42);
+    EXPECT_EQ(callback.Invoke(41), 42);
     EXPECT_EQ(first, 2);
     EXPECT_EQ(second, 1);
 }
