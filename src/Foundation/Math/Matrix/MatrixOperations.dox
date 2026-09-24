@@ -53,7 +53,14 @@
  * }
  * @endcode
  *
- * The result matrix is automatically resized when required.
+ * The result matrix is automatically resized when required. Compatible
+ * attached storage is reused, so an embedded application can provide the
+ * output buffer without allocating from the heap.
+ *
+ * `Multiply()` returns false without modifying the output when an input is
+ * invalid, dimensions are incompatible, allocation fails, or output storage
+ * overlaps either input. Pass a distinct result matrix; this includes matrices
+ * attached to different regions of the same overlapping buffer.
  *
  * @section FoundationMatrixOperationsMixed Mixed Matrices
  *

@@ -1,10 +1,91 @@
 #ifndef FOUNDATION_MATH_MATRIX_DYNAMIC_TPP
 #define FOUNDATION_MATH_MATRIX_DYNAMIC_TPP
 
+#include <stddef.h>
+#include <stdint.h>
 #include <stdlib.h>
+
+#if defined(__has_include)
+    #if __has_include(<new>)
+        #include <new>
+        #define FOUNDATION_DETAIL_MATRIX_HAS_NOTHROW_NEW 1
+    #endif
+#endif
+
+#ifndef FOUNDATION_DETAIL_MATRIX_HAS_NOTHROW_NEW
+    #define FOUNDATION_DETAIL_MATRIX_HAS_NOTHROW_NEW 0
+#endif
+
 #include "Dynamic.h"
 
 namespace Foundation::Math::Matrix {
+
+namespace Detail {
+
+    template <typename T>
+    bool DynamicDimensionsFit(
+        unsigned int rows,
+        unsigned int cols,
+        unsigned int& count
+    ) {
+        if(rows == 0 || cols == 0) {
+            return false;
+        }
+
+        const unsigned int maxCount = static_cast<unsigned int>(-1);
+        if(rows > maxCount / cols) {
+            return false;
+        }
+
+        count = rows * cols;
+
+        const size_t maxBytes = static_cast<size_t>(-1);
+        const size_t arrayMetadataAllowance = sizeof(size_t);
+        return maxBytes > arrayMetadataAllowance &&
+            static_cast<size_t>(count) <=
+                (maxBytes - arrayMetadataAllowance) / sizeof(T);
+    }
+
+    template <typename T>
+    T* AllocateDynamicStorage(unsigned int count) {
+#if FOUNDATION_DETAIL_MATRIX_HAS_NOTHROW_NEW
+        return new (std::nothrow) T[count];
+#else
+        /*
+         * Bare-metal targets without <new> must provide a null-returning array
+         * allocation backend. Their toolchain must preserve null checks (for
+         * example with GCC's -fcheck-new) and compile without exceptions.
+         */
+        return new T[count];
+#endif
+    }
+
+    template <typename T>
+    bool DynamicStorageOverlaps(
+        const Dynamic<T>& first,
+        const Dynamic<T>& second
+    ) {
+        if(!first.IsValid() || !second.IsValid()) {
+            return false;
+        }
+
+        const uintptr_t firstAddress =
+            reinterpret_cast<uintptr_t>(first.Data());
+        const uintptr_t secondAddress =
+            reinterpret_cast<uintptr_t>(second.Data());
+        const uintptr_t firstBytes =
+            static_cast<uintptr_t>(first.Size()) * sizeof(T);
+        const uintptr_t secondBytes =
+            static_cast<uintptr_t>(second.Size()) * sizeof(T);
+
+        if(firstAddress <= secondAddress) {
+            return secondAddress - firstAddress < firstBytes;
+        }
+
+        return firstAddress - secondAddress < secondBytes;
+    }
+
+}
 
 template <typename T>
 Dynamic<T>::Dynamic()
@@ -64,7 +145,7 @@ Dynamic<T>::Dynamic(const Dynamic<T>& other)
 }
 
 template <typename T>
-Dynamic<T>::Dynamic(Dynamic<T>&& other)
+Dynamic<T>::Dynamic(Dynamic<T>&& other) noexcept
     : _data(other._data),
       _rows(other._rows),
       _cols(other._cols),
@@ -88,11 +169,26 @@ Dynamic<T>& Dynamic<T>::operator=(
         return *this;
     }
 
-    Allocate(other._rows, other._cols);
-
-    for(unsigned int i = 0; i < Size(); i++) {
-        _data[i] = other._data[i];
+    if(!other.IsValid()) {
+        Clear();
+        return *this;
     }
+
+    if(_ownsData && IsValid() &&
+       _rows == other._rows && _cols == other._cols) {
+        for(unsigned int i = 0; i < Size(); i++) {
+            _data[i] = other._data[i];
+        }
+
+        return *this;
+    }
+
+    Dynamic<T> replacement(other);
+    if(!replacement.IsValid()) {
+        return *this;
+    }
+
+    *this = static_cast<Dynamic<T>&&>(replacement);
 
     return *this;
 }
@@ -100,7 +196,7 @@ Dynamic<T>& Dynamic<T>::operator=(
 template <typename T>
 Dynamic<T>& Dynamic<T>::operator=(
     Dynamic<T>&& other
-) {
+) noexcept {
     if(this == &other) {
         return *this;
     }
@@ -149,26 +245,23 @@ unsigned int Dynamic<T>::Index(unsigned int row, unsigned int col) const {
 
 template <typename T>
 bool Dynamic<T>::Allocate(unsigned int rows, unsigned int cols) {
-    if(rows == 0 || cols == 0) {
-        Release();
+    unsigned int count = 0;
+    if(!Detail::DynamicDimensionsFit<T>(rows, cols, count)) {
         return false;
     }
 
-    if(_ownsData && _data != 0 && _rows == rows && _cols == cols) {
+    if(IsValid() && _rows == rows && _cols == cols) {
         return true;
+    }
+
+    T* replacement = Detail::AllocateDynamicStorage<T>(count);
+    if(replacement == 0) {
+        return false;
     }
 
     Release();
 
-    _data = new T[rows * cols];
-
-    if(_data == 0) {
-        _rows = 0;
-        _cols = 0;
-        _ownsData = false;
-        return false;
-    }
-
+    _data = replacement;
     _rows = rows;
     _cols = cols;
     _ownsData = true;
@@ -177,17 +270,38 @@ bool Dynamic<T>::Allocate(unsigned int rows, unsigned int cols) {
 }
 
 template <typename T>
-void Dynamic<T>::Attach(
+bool Dynamic<T>::Attach(
     unsigned int rows,
     unsigned int cols,
     T* externalData
 ) {
+    unsigned int count = 0;
+    if(externalData == 0 ||
+       !Detail::DynamicDimensionsFit<T>(rows, cols, count)) {
+        return false;
+    }
+
+    if(_ownsData && IsValid()) {
+        const uintptr_t ownedAddress = reinterpret_cast<uintptr_t>(_data);
+        const uintptr_t externalAddress =
+            reinterpret_cast<uintptr_t>(externalData);
+        const uintptr_t ownedBytes =
+            static_cast<uintptr_t>(Size()) * sizeof(T);
+
+        if(externalAddress >= ownedAddress &&
+           externalAddress - ownedAddress < ownedBytes) {
+            return false;
+        }
+    }
+
     Release();
 
     _data = externalData;
     _rows = rows;
     _cols = cols;
     _ownsData = false;
+
+    return true;
 }
 
 template <typename T>
@@ -244,10 +358,13 @@ template <typename T>
 Dynamic<T> Dynamic<T>::operator+(
     const Dynamic<T>& other
 ) const {
-    Dynamic<T> result(_rows, _cols);
+    if(!IsValid() || !other.IsValid() ||
+       _rows != other._rows || _cols != other._cols) {
+        return Dynamic<T>();
+    }
 
-    if(_rows != other._rows || _cols != other._cols) {
-        result.Clear();
+    Dynamic<T> result(_rows, _cols);
+    if(!result.IsValid()) {
         return result;
     }
 
@@ -262,10 +379,13 @@ template <typename T>
 Dynamic<T> Dynamic<T>::operator-(
     const Dynamic<T>& other
 ) const {
-    Dynamic<T> result(_rows, _cols);
+    if(!IsValid() || !other.IsValid() ||
+       _rows != other._rows || _cols != other._cols) {
+        return Dynamic<T>();
+    }
 
-    if(_rows != other._rows || _cols != other._cols) {
-        result.Clear();
+    Dynamic<T> result(_rows, _cols);
+    if(!result.IsValid()) {
         return result;
     }
 
@@ -280,7 +400,8 @@ template <typename T>
 Dynamic<T>& Dynamic<T>::operator+=(
     const Dynamic<T>& other
 ) {
-    if(_rows != other._rows || _cols != other._cols) {
+    if(!IsValid() || !other.IsValid() ||
+       _rows != other._rows || _cols != other._cols) {
         return *this;
     }
 
@@ -295,7 +416,8 @@ template <typename T>
 Dynamic<T>& Dynamic<T>::operator-=(
     const Dynamic<T>& other
 ) {
-    if(_rows != other._rows || _cols != other._cols) {
+    if(!IsValid() || !other.IsValid() ||
+       _rows != other._rows || _cols != other._cols) {
         return *this;
     }
 
@@ -308,7 +430,14 @@ Dynamic<T>& Dynamic<T>::operator-=(
 
 template <typename T>
 Dynamic<T> Dynamic<T>::operator*(T scalar) const {
+    if(!IsValid()) {
+        return Dynamic<T>();
+    }
+
     Dynamic<T> result(_rows, _cols);
+    if(!result.IsValid()) {
+        return result;
+    }
 
     for(unsigned int i = 0; i < Size(); i++) {
         result._data[i] = _data[i] * scalar;
@@ -319,7 +448,14 @@ Dynamic<T> Dynamic<T>::operator*(T scalar) const {
 
 template <typename T>
 Dynamic<T> Dynamic<T>::operator/(T scalar) const {
+    if(!IsValid()) {
+        return Dynamic<T>();
+    }
+
     Dynamic<T> result(_rows, _cols);
+    if(!result.IsValid()) {
+        return result;
+    }
 
     for(unsigned int i = 0; i < Size(); i++) {
         result._data[i] = _data[i] / scalar;
@@ -380,6 +516,10 @@ void Dynamic<T>::Zero() {
 
 template <typename T>
 bool Dynamic<T>::TransposeTo(Dynamic<T>& result) const {
+    if(!IsValid() || Detail::DynamicStorageOverlaps(*this, result)) {
+        return false;
+    }
+
     if(!result.Allocate(_cols, _rows)) {
         return false;
     }
@@ -395,7 +535,7 @@ bool Dynamic<T>::TransposeTo(Dynamic<T>& result) const {
 
 template <typename T>
 Dynamic<T> Dynamic<T>::Transposed() const {
-    Dynamic<T> result(_cols, _rows);
+    Dynamic<T> result;
     TransposeTo(result);
     return result;
 }
@@ -406,5 +546,7 @@ Dynamic<T> operator*(T scalar, const Dynamic<T>& matrix) {
 }
 
 } // namespace Foundation::Math::Matrix
+
+#undef FOUNDATION_DETAIL_MATRIX_HAS_NOTHROW_NEW
 
 #endif // FOUNDATION_MATH_MATRIX_DYNAMIC_TPP

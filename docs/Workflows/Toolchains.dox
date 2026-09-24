@@ -34,7 +34,8 @@
  * - `FOUNDATION_ARM_ADDITIONAL_FLAGS`: extra C and C++ target flags.
  *
  * Hard-float profiles require an explicit FPU. All profiles use Thumb mode,
- * section-level garbage collection support, and disable C++ exceptions and RTTI.
+ * section-level garbage collection support, disable C++ exceptions and RTTI,
+ * and preserve null checks for allocation backends with `-fcheck-new`.
  *
  * | Profile | CPU flag | Float ABI | FPU |
  * | --- | --- | --- | --- |
@@ -67,7 +68,8 @@
  *
  * The profile fixes `-mmcu=atmega328p` and reports `avr5` as the system
  * processor. The common toolchain also enables function/data sections, garbage
- * collection at executable link time, and disables exceptions and RTTI.
+ * collection at executable link time, disables exceptions and RTTI, and uses
+ * `-fcheck-new` so a null-returning allocation backend remains observable.
  * `FOUNDATION_AVR_ADDITIONAL_FLAGS` is available for product-specific compiler
  * flags, but an MCU change requires a new profile and preset.
  *
@@ -75,6 +77,11 @@
  * Foundation requires C++17 language compilation but avoids a dependency on the
  * general C++ standard library. Validate each compiler version and real consumer
  * rather than assuming every AVR package is equivalent.
+ *
+ * Heap use remains available. Arduino AVR Core supplies non-throwing allocation
+ * overloads backed by `malloc()`; a bare-metal runtime must provide compatible
+ * array allocation and deallocation functions before instantiating heap-backed
+ * templates such as `Matrix::Dynamic`. Attached matrix storage requires no heap.
  *
  * @section FoundationWorkflowToolchainInspect Inspecting Cross Outputs
  *
