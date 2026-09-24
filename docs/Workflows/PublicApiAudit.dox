@@ -112,7 +112,7 @@
  * | API-004 | `BLOCKER` | Module dependencies | **Resolved.** CMake validates dependencies before creating targets and rejects invalid combinations with the exact conflicting options and corrective flags. Containers requires Utils; Time requires Math, Math::Ratio, Functional, and Functional::Callback; Scheduling requires Time transitively. Valid reduced builds and representative invalid configurations are covered by configuration checks. |
  * | API-005 | `BLOCKER` | Matrix options | **Resolved.** Matrix is an indivisible v1 feature controlled only by `FOUNDATION_MATH_MATRIX`. Its public API is grouped under `Foundation::Math::Matrix` as `Fixed`, `Dynamic`, and `Multiply`; choosing fixed or dynamic storage is a source-level decision. |
  * | API-006 | `BLOCKER` | Matrix overloads | **Resolved.** The unused `ColsB` template parameter was removed from fixed-by-dynamic `Matrix::Multiply`. Regression coverage now invokes all four fixed/dynamic operand combinations using normal template deduction. |
- * | API-007 | `BLOCKER` | TypeTraits | The non-STL traits do not consistently match the standard-shaped names. Confirmed differences include `is_integral<char16_t>`, noexcept function types, member-pointer invocation, and nothrow conversion. `is_unsigned<void>` is ill-formed instead of false. Define a supported subset and make it behaviorally consistent; do not silently switch public identities with the undocumented `FOUNDATION_USING_STL` macro. |
+ * | API-007 | `BLOCKER` | TypeTraits | **Resolved.** The supported v1 subset is listed in @ref Foundation_TypeTraits. Its stable Foundation API uses `<type_traits>` when the required C++17 facilities are available and otherwise selects the local fallback internally. Both backends run the same conformance comparisons covering extended character types, qualified and `noexcept` functions, private inheritance, conversions, member-function/member-object invocation, result shape, and invalid inputs such as `is_unsigned<void>`. |
  * | API-008 | `BREAKING DECISION` | Callback | Public methods use `bind`, `unbind`, `status`, and `invoke` while the documented project convention is PascalCase. Zero-argument callbacks have duplicate spellings through `Callback<R>` and `Callback<R, void>`. Const member functions are unsupported and stored object pointers are non-owning. Select one template model and naming convention before downstream adoption. |
  * | API-009 | `BREAKING DECISION` | `Matrix::Dynamic` | The type may own a `new[]` allocation or attach non-owned memory. Allocation failure behavior is not validly represented by a null check under normal throwing `new`; move operations are not `noexcept`; size multiplication can overflow; and output aliasing in transpose/multiply can invalidate inputs. Define the allocation, ownership, aliasing, and failure contract. |
  * | API-010 | `HARDENING` | Non-owning storage | CircularBuffer, Stack, TaskScheduler, Callback member bindings, PeriodicTask/OneShotTask contexts, and TimePoint store pointers they do not own. Their documentation now states the required ownership and lifetime contract, but invalid pointer/capacity combinations remain mostly unchecked. Add safe validation where possible. |
@@ -125,22 +125,23 @@
  *
  * @section FoundationPublicApiAuditTraitEvidence TypeTraits Evidence
  *
- * A C++17 comparison consumer produced the following results. The value before
- * the slash is Foundation and the value after it is the standard or expected
- * contract:
+ * The original comparison consumer exposed five contract differences. The
+ * conformance suite now produces the expected result for each case:
  *
  * @code
- * is_integral<char16_t>:                 0 / 1
- * is_function<void() noexcept>:          0 / 1
- * is_invocable<member, object>:          0 / 1
- * is_nothrow_convertible<int, long>:     0 / 1
- * is_unsigned<void>:                     ill-formed / false
+ * is_integral<char16_t>:                 true
+ * is_function<void() noexcept>:          true
+ * is_invocable<member, object>:          true
+ * is_nothrow_convertible<int, long>:     true
+ * is_unsigned<void>:                     false
  * @endcode
  *
- * These are contract differences, not merely missing tests. The v1 decision is
- * to implement and test the advertised standard-shaped subset consistently on
- * supported compilers, or rename/remove traits whose semantics intentionally
- * differ.
+ * The same tests compile once with automatic standard-backend selection and
+ * once with the local fallback forced. Both compare the Foundation result
+ * against `<type_traits>` where the corresponding trait exists in C++17.
+ * Foundation's
+ * `is_nothrow_convertible` is additionally tested against explicit throwing,
+ * non-throwing, invalid, and `void` conversion expectations.
  *
  * @section FoundationPublicApiAuditRecommendations Recommended Freeze Decisions
  *
