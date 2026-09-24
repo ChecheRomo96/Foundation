@@ -24,9 +24,7 @@
  * | Utils | `Foundation_Utils_MoveAndSwap` | Moving a non-copyable object and swapping values without the STL. |
  *
  * Together these examples cover every current top-level Foundation module and
- * every implemented public component intended for v1. Empty placeholders such
- * as `Forward.h` and `Exchange.h` deliberately have no examples because they
- * do not yet provide an API.
+ * every implemented public component intended for v1.
  *
  * Each example lives under the module that owns the demonstrated API:
  *

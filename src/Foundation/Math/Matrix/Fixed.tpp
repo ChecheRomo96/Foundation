@@ -1,4 +1,6 @@
-#ifndef FOUNDATION_MATH_MATRIX_FIXED_TPP
+#ifndef FOUNDATION_MATH_MATRIX_FIXED_H
+    #error "Include <Foundation/Math/Matrix/Fixed.h> instead of Fixed.tpp"
+#elif !defined(FOUNDATION_MATH_MATRIX_FIXED_TPP)
 #define FOUNDATION_MATH_MATRIX_FIXED_TPP
 
 namespace Foundation::Math::Matrix {

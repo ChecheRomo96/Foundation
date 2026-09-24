@@ -21,7 +21,7 @@
  * They provide a stable access layer that keeps application code
  * independent from the internal folder structure of the framework.
  *
- * User code should prefer:
+ * For broad access, user code should prefer:
  *
  * @code{.cpp}
  * #include <Foundation.h>
@@ -29,16 +29,20 @@
  * #include <Foundation_Time.h>
  * @endcode
  *
- * instead of including internal module headers directly:
+ * A documented component header is also a supported public entry point when
+ * code needs a narrow dependency:
  *
  * @code{.cpp}
  * #include <Foundation/Math/Ratio.h>
  * #include <Foundation/Time/Clock.h>
  * @endcode
  *
- * Internal headers may still exist and may be used inside the
- * Foundation source tree, but top-level headers are the recommended
- * public entry points for applications.
+ * Headers ending in `.tpp` are installed only because the declaring template
+ * headers include their definitions. They are implementation dependencies,
+ * not direct consumer entry points. Include the matching `.h` instead; it
+ * brings in the required `.tpp` automatically. Other internal headers may
+ * exist inside the Foundation source tree but are not part of the supported
+ * consumer interface.
  *
  * @section FoundationTop_HeaderList Top-Level Header List
  *

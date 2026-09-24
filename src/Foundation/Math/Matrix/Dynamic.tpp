@@ -1,4 +1,6 @@
-#ifndef FOUNDATION_MATH_MATRIX_DYNAMIC_TPP
+#ifndef FOUNDATION_MATH_MATRIX_DYNAMIC_H
+    #error "Include <Foundation/Math/Matrix/Dynamic.h> instead of Dynamic.tpp"
+#elif !defined(FOUNDATION_MATH_MATRIX_DYNAMIC_TPP)
 #define FOUNDATION_MATH_MATRIX_DYNAMIC_TPP
 
 #include <stddef.h>
@@ -15,8 +17,6 @@
 #ifndef FOUNDATION_DETAIL_MATRIX_HAS_NOTHROW_NEW
     #define FOUNDATION_DETAIL_MATRIX_HAS_NOTHROW_NEW 0
 #endif
-
-#include "Dynamic.h"
 
 namespace Foundation::Math::Matrix {
 
