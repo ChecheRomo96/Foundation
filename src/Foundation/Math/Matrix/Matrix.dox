@@ -57,13 +57,17 @@
  *
  * @code
  * Foundation::Math::Matrix::Dynamic<float> matrix;
- * matrix.Allocate(3, 3);
+ * if (!matrix.Allocate(3, 3)) {
+ *     // Invalid dimensions or insufficient memory.
+ * }
  * @endcode
  *
  * Advantages:
  *
  * - Flexible dimensions.
  * - Runtime resizing.
+ * - Owned heap storage or attached caller-owned storage.
+ * - Non-throwing allocation-failure reporting.
  *
  * See:
  *
@@ -94,7 +98,9 @@
  * Foundation::Math::Matrix::Fixed<float, 2, 2> B;
  * Foundation::Math::Matrix::Fixed<float, 2, 2> C;
  *
- * Foundation::Math::Matrix::Multiply(A, B, C);
+ * if (!Foundation::Math::Matrix::Multiply(A, B, C)) {
+ *     // Invalid dimensions, allocation failure, or overlapping storage.
+ * }
  * @endcode
  *
  * Dynamic multiplication:

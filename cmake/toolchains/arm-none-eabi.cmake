@@ -71,7 +71,7 @@ set(_foundation_common_flags
 
 set(CMAKE_C_FLAGS_INIT "${_foundation_common_flags}")
 set(CMAKE_CXX_FLAGS_INIT
-    "${_foundation_common_flags} -fno-exceptions -fno-rtti"
+    "${_foundation_common_flags} -fno-exceptions -fno-rtti -fcheck-new"
 )
 set(CMAKE_EXE_LINKER_FLAGS_INIT
     "${_foundation_arm_flags} -Wl,--gc-sections"

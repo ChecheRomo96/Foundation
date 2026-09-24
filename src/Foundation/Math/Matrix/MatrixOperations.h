@@ -69,7 +69,9 @@ namespace Foundation::Math::Matrix {
      * @param result Output matrix.
      *
      * @return true if the multiplication was successful.
-     * @return false if the matrix dimensions are incompatible or allocation fails.
+     * @return false if an input is invalid, dimensions are incompatible,
+     * allocation fails, or result storage overlaps either input. On failure,
+     * @p result remains unchanged.
      */
     template <typename T>
     bool Multiply(
@@ -77,7 +79,10 @@ namespace Foundation::Math::Matrix {
         const Dynamic<T>& b,
         Dynamic<T>& result
     ) {
-        if(a.ColsCount() != b.RowsCount()) {
+        if(!a.IsValid() || !b.IsValid() ||
+           a.ColsCount() != b.RowsCount() ||
+           Detail::DynamicStorageOverlaps(a, result) ||
+           Detail::DynamicStorageOverlaps(b, result)) {
             return false;
         }
 
@@ -119,7 +124,9 @@ namespace Foundation::Math::Matrix {
      * @param result Output dynamic matrix.
      *
      * @return true if the multiplication was successful.
-     * @return false if the matrix dimensions are incompatible or allocation fails.
+     * @return false if the dynamic input is invalid, dimensions are
+     * incompatible, allocation fails, or result storage overlaps @p b. On
+     * failure, @p result remains unchanged.
      */
     template <
         typename T,
@@ -131,7 +138,8 @@ namespace Foundation::Math::Matrix {
         const Dynamic<T>& b,
         Dynamic<T>& result
     ) {
-        if(b.RowsCount() != ColsA) {
+        if(!b.IsValid() || b.RowsCount() != ColsA ||
+           Detail::DynamicStorageOverlaps(b, result)) {
             return false;
         }
 
@@ -174,7 +182,9 @@ namespace Foundation::Math::Matrix {
      * @param result Output dynamic matrix.
      *
      * @return true if the multiplication was successful.
-     * @return false if the matrix dimensions are incompatible or allocation fails.
+     * @return false if the dynamic input is invalid, dimensions are
+     * incompatible, allocation fails, or result storage overlaps @p a. On
+     * failure, @p result remains unchanged.
      */
     template <
         typename T,
@@ -186,7 +196,8 @@ namespace Foundation::Math::Matrix {
         const Fixed<T, RowsB, ColsB>& b,
         Dynamic<T>& result
     ) {
-        if(a.ColsCount() != RowsB) {
+        if(!a.IsValid() || a.ColsCount() != RowsB ||
+           Detail::DynamicStorageOverlaps(a, result)) {
             return false;
         }
 

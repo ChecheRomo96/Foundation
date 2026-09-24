@@ -3,19 +3,72 @@
  * @ingroup Foundation_Matrix
  * @brief Runtime-sized matrix storage and operations.
  *
- * `Foundation::Math::Matrix::Dynamic<T>` allocates storage when constructed
- * with dimensions or when `Allocate()` is called. It can alternatively attach
- * to caller-owned storage; in that case the caller must keep the buffer alive
- * until the matrix is cleared, destroyed, or attached to different storage.
+ * `Foundation::Math::Matrix::Dynamic<T>` supports two explicit storage modes:
+ *
+ * - **Owned storage:** a dimension constructor or `Allocate()` obtains a heap
+ *   buffer and the matrix releases it during `Clear()`, reassignment, or
+ *   destruction.
+ * - **Attached storage:** a pointer constructor or `Attach()` uses a buffer
+ *   owned by the caller. The matrix never releases that buffer, and the caller
+ *   must keep it alive until the matrix is cleared, destroyed, moved, or
+ *   attached to different storage.
  *
  * @code
  * Foundation::Math::Matrix::Dynamic<float> matrix(3, 3);
+ * if (!matrix.IsValid()) {
+ *     // Allocation failed.
+ * }
  * matrix.At(0, 0) = 1.0f;
  * @endcode
  *
- * @warning Dynamic storage is available whenever Matrix support is enabled,
- * but embedded applications remain free to use only `Matrix::Fixed` and avoid
- * heap allocation entirely.
+ * @section FoundationMatrixDynamicExternalStorage External Storage
+ *
+ * Attached storage makes runtime dimensions available without a heap
+ * allocation:
+ *
+ * @code
+ * float storage[9] = {};
+ * Foundation::Math::Matrix::Dynamic<float> matrix;
+ *
+ * if (!matrix.Attach(3, 3, storage)) {
+ *     // Null pointer, invalid dimensions, or an unrepresentable size.
+ * }
+ * @endcode
+ *
+ * `OwnsData()` distinguishes the two modes. Copies always produce independent
+ * owned storage; moves transfer the original mode and leave the source empty.
+ * Calling `Clear()` on an attached matrix only detaches the buffer.
+ *
+ * @section FoundationMatrixDynamicFailure Failure Contract
+ *
+ * Foundation does not use exceptions to report matrix allocation failure.
+ * `Allocate()` returns false and preserves the previous matrix when dimensions
+ * are zero, their product or byte count overflows, or the allocator returns a
+ * null pointer. A dimension constructor cannot return a status, so it produces
+ * an empty matrix on failure; check `IsValid()` before use. Copy construction
+ * follows the same rule. Copy assignment preserves its previous value if a new
+ * allocation cannot be obtained.
+ *
+ * Allocation uses `new (std::nothrow)` when the target provides `<new>`. A
+ * bare-metal toolchain without that header must provide a null-returning array
+ * allocation backend and preserve the null check. Foundation's Arm and AVR
+ * toolchains compile without exceptions and use `-fcheck-new` for that route.
+ * Element construction and arithmetic are also required not to throw.
+ *
+ * @section FoundationMatrixDynamicAliasing Aliasing
+ *
+ * Output parameters to `TransposeTo()` and dynamic `Matrix::Multiply()` must
+ * not overlap any input storage. Known overlap, including passing an input as
+ * its own output, returns false before modifying either matrix. This rule also
+ * applies to multiple matrices attached to the same buffer.
+ *
+ * `At()` and `operator[]` are intentionally unchecked. The caller must provide
+ * indices inside `RowsCount()` and `ColsCount()`.
+ *
+ * @warning Heap-backed matrices are supported on embedded targets, including
+ * AVR, when their runtime supplies the required allocation functions. Prefer
+ * `Matrix::Fixed` or attached storage when deterministic memory use is more
+ * important than runtime resizing.
  *
  * @see Foundation::Math::Matrix::Dynamic
  */

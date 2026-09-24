@@ -38,6 +38,23 @@
  * @warning AVR C++ standard-library support varies by toolchain distribution.
  * Foundation avoids requiring the C++ standard library, but every new profile
  * must still be compiled and consumer-tested with its intended AVR-GCC version.
+ * The toolchain disables exceptions and RTTI and enables `-fcheck-new` so a
+ * target allocator can report exhaustion with a null pointer.
+ *
+ * @section FoundationBuildAVRMemory Dynamic Memory
+ *
+ * AVR builds may use heap-backed APIs; disabling exceptions does not disable
+ * the heap. `Matrix::Dynamic::Allocate()` reports failure with false rather
+ * than throwing. Arduino AVR Core provides the required non-throwing allocation
+ * functions. A bare-metal runtime must supply its own compatible `new[]` and
+ * `delete[]` implementation. Applications that require deterministic memory
+ * can attach a caller-owned buffer instead:
+ *
+ * @code{cpp}
+ * float storage[9] = {};
+ * Foundation::Math::Matrix::Dynamic<float> matrix;
+ * const bool attached = matrix.Attach(3, 3, storage);
+ * @endcode
  *
  * @section FoundationBuildAVRCommands Complete Local Sequence
  *
