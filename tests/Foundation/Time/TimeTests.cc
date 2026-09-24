@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <type_traits>
+
 #include <Foundation/Time.h>
 
 namespace {
@@ -113,16 +115,37 @@ TEST(ClockTest, ProducesTimePointsAndCanBeUnbound) {
     EXPECT_EQ(clock.Now().Ticks(), 0u);
 }
 
+TEST(ClockTest, KeepsObjectIdentityStable) {
+    static_assert(!std::is_copy_constructible<Clock>::value);
+    static_assert(!std::is_copy_assignable<Clock>::value);
+    static_assert(!std::is_move_constructible<Clock>::value);
+    static_assert(!std::is_move_assignable<Clock>::value);
+    static_assert(
+        !std::is_constructible<
+            TimePoint,
+            TimePoint::Representation,
+            const Clock*
+        >::value
+    );
+
+    Clock clock(ReadTick, Frequency(1000, 1));
+    const TimePoint point = clock.At(125);
+
+    EXPECT_TRUE(point.IsValid());
+    EXPECT_EQ(point.Ticks(), 125u);
+    EXPECT_EQ(point.GetClock(), &clock);
+}
+
 TEST(TimePointTest, ComparesOnlyPointsFromTheSameClock) {
     Clock clock(ReadTick, Frequency(1000, 1));
-    const TimePoint now(125, &clock);
+    const TimePoint now = clock.At(125);
     const TimePoint later = now + Duration(10);
 
     EXPECT_GT(later, now);
     EXPECT_EQ((later - now).Ticks(), 10u);
 
     Clock otherClock(ReadTick, Frequency(1000, 1));
-    const TimePoint other(125, &otherClock);
+    const TimePoint other = otherClock.At(125);
     EXPECT_FALSE(now.SameClock(other));
     EXPECT_FALSE((now - other).IsValid());
     EXPECT_FALSE((now < other));

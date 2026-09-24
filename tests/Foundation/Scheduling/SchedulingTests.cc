@@ -34,7 +34,6 @@ using Foundation::Scheduling::TaskScheduler;
 using Foundation::Time::Clock;
 using Foundation::Time::Duration;
 using Foundation::Time::Frequency;
-using Foundation::Time::TimePoint;
 
 TEST(SchedulingTypeTest, DefaultAliasesUseTick32) {
     static_assert(
@@ -61,7 +60,6 @@ TEST(SchedulingTypeTest, RunsAnEightBitSchedulerAcrossCounterWrap) {
     using TickType = Foundation::Time::Tick8;
     using Clock8 = Foundation::Time::BasicClock<TickType>;
     using Duration8 = Foundation::Time::BasicDuration<TickType>;
-    using TimePoint8 = Foundation::Time::BasicTimePoint<TickType>;
     using Task8 = Foundation::Scheduling::BasicTask<TickType>;
     using PeriodicTask8 =
         Foundation::Scheduling::BasicPeriodicTask<TickType>;
@@ -77,7 +75,7 @@ TEST(SchedulingTypeTest, RunsAnEightBitSchedulerAcrossCounterWrap) {
     OneShotTask8 oneShot(
         Increment,
         &oneShotRuns,
-        TimePoint8(1, &clock)
+        clock.At(1)
     );
     Task8* storage[2] = {};
     TaskScheduler8 scheduler(storage, 2, &clock);
@@ -104,23 +102,23 @@ TEST(SchedulingTypeTest, RunsAnEightBitSchedulerAcrossCounterWrap) {
 TEST(OneShotTaskTest, RunsOnceAtOrAfterItsTriggerTime) {
     Clock clock(ReadTick, Frequency(1000, 1));
     int runs = 0;
-    OneShotTask task(Increment, &runs, TimePoint(10, &clock));
+    OneShotTask task(Increment, &runs, clock.At(10));
 
-    EXPECT_FALSE(task.ShouldRun(TimePoint(9, &clock)));
-    EXPECT_TRUE(task.ShouldRun(TimePoint(10, &clock)));
-    task.Run(TimePoint(10, &clock));
+    EXPECT_FALSE(task.ShouldRun(clock.At(9)));
+    EXPECT_TRUE(task.ShouldRun(clock.At(10)));
+    task.Run(clock.At(10));
     EXPECT_EQ(runs, 1);
     EXPECT_TRUE(task.HasRun());
-    EXPECT_FALSE(task.ShouldRun(TimePoint(11, &clock)));
+    EXPECT_FALSE(task.ShouldRun(clock.At(11)));
 }
 
 TEST(OneShotTaskTest, BecomesDueAcrossCounterWrap) {
     Clock clock(ReadTick, Frequency(1000, 1));
     int runs = 0;
-    OneShotTask task(Increment, &runs, TimePoint(1, &clock));
+    OneShotTask task(Increment, &runs, clock.At(1));
 
-    EXPECT_FALSE(task.ShouldRun(TimePoint(0xFFFFFFFEu, &clock)));
-    EXPECT_TRUE(task.ShouldRun(TimePoint(1, &clock)));
+    EXPECT_FALSE(task.ShouldRun(clock.At(0xFFFFFFFEu)));
+    EXPECT_TRUE(task.ShouldRun(clock.At(1)));
 }
 
 TEST(PeriodicTaskTest, RunsImmediatelyAndThenAtItsPeriod) {
@@ -128,12 +126,12 @@ TEST(PeriodicTaskTest, RunsImmediatelyAndThenAtItsPeriod) {
     int runs = 0;
     PeriodicTask task(Increment, &runs, Duration(5));
 
-    EXPECT_TRUE(task.ShouldRun(TimePoint(2, &clock)));
-    task.Run(TimePoint(2, &clock));
+    EXPECT_TRUE(task.ShouldRun(clock.At(2)));
+    task.Run(clock.At(2));
     EXPECT_EQ(runs, 1);
-    EXPECT_FALSE(task.ShouldRun(TimePoint(6, &clock)));
-    EXPECT_TRUE(task.ShouldRun(TimePoint(7, &clock)));
-    task.Run(TimePoint(7, &clock));
+    EXPECT_FALSE(task.ShouldRun(clock.At(6)));
+    EXPECT_TRUE(task.ShouldRun(clock.At(7)));
+    task.Run(clock.At(7));
     EXPECT_EQ(runs, 2);
 }
 
@@ -142,10 +140,10 @@ TEST(PeriodicTaskTest, MeasuresItsPeriodAcrossCounterWrap) {
     int runs = 0;
     PeriodicTask task(Increment, &runs, Duration(5));
 
-    task.Run(TimePoint(0xFFFFFFFDu, &clock));
+    task.Run(clock.At(0xFFFFFFFDu));
 
-    EXPECT_FALSE(task.ShouldRun(TimePoint(1, &clock)));
-    EXPECT_TRUE(task.ShouldRun(TimePoint(2, &clock)));
+    EXPECT_FALSE(task.ShouldRun(clock.At(1)));
+    EXPECT_TRUE(task.ShouldRun(clock.At(2)));
 }
 
 TEST(PeriodicTaskTest, RejectsElapsedTimeFromAnotherClock) {
@@ -154,15 +152,15 @@ TEST(PeriodicTaskTest, RejectsElapsedTimeFromAnotherClock) {
     int runs = 0;
     PeriodicTask task(Increment, &runs, Duration(1));
 
-    task.Run(TimePoint(10, &taskClock));
+    task.Run(taskClock.At(10));
 
-    EXPECT_FALSE(task.ShouldRun(TimePoint(20, &otherClock)));
+    EXPECT_FALSE(task.ShouldRun(otherClock.At(20)));
 }
 
 TEST(TaskSchedulerTest, ExecutesDueTasksUsingItsClock) {
     Clock clock(ReadTick, Frequency(1000, 1));
     int runs = 0;
-    OneShotTask scheduled(Increment, &runs, TimePoint(20, &clock));
+    OneShotTask scheduled(Increment, &runs, clock.At(20));
     Task* storage[1] = {};
     TaskScheduler scheduler(storage, 1, &clock);
 
@@ -186,7 +184,7 @@ TEST(TaskSchedulerTest, ExecutesDueTasksUsingItsClock) {
 TEST(TaskSchedulerTest, RejectsNullStorageWithNonzeroCapacity) {
     Clock clock(ReadTick, Frequency(1000, 1));
     int runs = 0;
-    OneShotTask task(Increment, &runs, TimePoint(0, &clock));
+    OneShotTask task(Increment, &runs, clock.At(0));
     TaskScheduler scheduler(nullptr, 1, &clock);
 
     EXPECT_FALSE(scheduler.IsValid());
@@ -201,7 +199,7 @@ TEST(TaskSchedulerTest, RejectsNullStorageWithNonzeroCapacity) {
 TEST(TaskSchedulerTest, AcceptsNullStorageForZeroCapacity) {
     Clock clock(ReadTick, Frequency(1000, 1));
     int runs = 0;
-    OneShotTask task(Increment, &runs, TimePoint(0, &clock));
+    OneShotTask task(Increment, &runs, clock.At(0));
     TaskScheduler scheduler(nullptr, 0, &clock);
 
     EXPECT_TRUE(scheduler.IsValid());
@@ -213,7 +211,7 @@ TEST(TaskSchedulerTest, AcceptsNullStorageForZeroCapacity) {
 TEST(TaskSchedulerTest, NullClockDisablesUpdateWithoutInvalidatingStorage) {
     Clock taskClock(ReadTick, Frequency(1000, 1));
     int runs = 0;
-    OneShotTask task(Increment, &runs, TimePoint(0, &taskClock));
+    OneShotTask task(Increment, &runs, taskClock.At(0));
     Task* storage[1] = {};
     TaskScheduler scheduler(storage, 1, nullptr);
 
@@ -228,16 +226,16 @@ TEST(SchedulingContextTest, ForwardsIntentionalNullContexts) {
 
     NullContextWasForwarded = false;
     PeriodicTask periodic(ObserveNullContext, nullptr, Duration(1));
-    periodic.Run(TimePoint(0, &clock));
+    periodic.Run(clock.At(0));
     EXPECT_TRUE(NullContextWasForwarded);
 
     NullContextWasForwarded = false;
     OneShotTask oneShot(
         ObserveNullContext,
         nullptr,
-        TimePoint(0, &clock)
+        clock.At(0)
     );
-    oneShot.Run(TimePoint(0, &clock));
+    oneShot.Run(clock.At(0));
     EXPECT_TRUE(NullContextWasForwarded);
 }
 
@@ -245,12 +243,12 @@ TEST(SchedulingContextTest, NullCallbacksRemainSafe) {
     Clock clock(ReadTick, Frequency(1000, 1));
     int context = 42;
     PeriodicTask periodic(nullptr, &context, Duration(1));
-    OneShotTask oneShot(nullptr, &context, TimePoint(0, &clock));
+    OneShotTask oneShot(nullptr, &context, clock.At(0));
 
-    periodic.Run(TimePoint(0, &clock));
-    oneShot.Run(TimePoint(0, &clock));
+    periodic.Run(clock.At(0));
+    oneShot.Run(clock.At(0));
 
-    EXPECT_FALSE(periodic.ShouldRun(TimePoint(0, &clock)));
+    EXPECT_FALSE(periodic.ShouldRun(clock.At(0)));
     EXPECT_TRUE(oneShot.HasRun());
     EXPECT_EQ(context, 42);
 }

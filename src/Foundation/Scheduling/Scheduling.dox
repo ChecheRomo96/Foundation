@@ -71,6 +71,8 @@
  * @section FoundationSchedulingOwnership Ownership and Timing Contract
  *
  * - TaskScheduler does not own its storage array, Clock, or Task objects.
+ * - Clock is neither copyable nor movable. This keeps the object identity used
+ *   by TimePoint stable while tasks and the scheduler refer to it.
  * - PeriodicTask and OneShotTask do not own their callback context pointers.
  * - Every referenced object and storage array must outlive its consumer.
  * - A null task-storage pointer is valid only with zero capacity. `IsValid()`
@@ -93,9 +95,9 @@
  *   identities, never satisfies a periodic task's due-time comparison.
  * - `Clear()` forgets registered pointers but does not destroy tasks.
  *
- * @warning A raw pointer's true lifetime cannot be determined at runtime.
- * Clock-identity behavior remains under `API-011` in
- * @ref Foundation_Workflows_PublicApiAudit.
+ * @warning A raw pointer's true lifetime cannot be determined at runtime. The
+ * caller must keep the Clock, Task objects, contexts, and storage alive for
+ * every consumer that references them.
  *
  * @section FoundationSchedulingExample Runnable Example
  *

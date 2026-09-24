@@ -89,6 +89,10 @@
  * - `Duration::IsValid()` distinguishes invalid arithmetic from a real zero
  *   duration. Conversion methods return zero for an invalid Duration.
  * - A default TimePoint has no Clock and `IsValid()` returns false.
+ * - Raw counter samples enter the model through `Clock::Now()` or
+ *   `Clock::At(ticks)`. TimePoint arithmetic may derive new points while
+ *   preserving that identity. The raw identity constructor is not public, so
+ *   callers cannot attach a point to an unrelated Clock.
  * - Compatible TimePoints are ordered using modular half-range arithmetic.
  *   This correctly handles one counter rollover when the actual separation is
  *   less than half the selected Tick range.
@@ -97,14 +101,15 @@
  *   invalid points, and different Clock identities return an invalid Duration.
  * - Relational operators return false when points have different Clock
  *   identities or their order is ambiguous.
- * - TimePoint stores a non-owning Clock pointer; the Clock must outlive every
- *   point that retains its identity.
+ * - TimePoint stores a non-owning Clock pointer. Clock is neither copyable nor
+ *   movable, which keeps its object identity stable; it must still outlive
+ *   every point, task, and scheduler that references it.
  * - Frequency and Period are backed by Math::Ratio. A zero denominator is
  *   invalid and conversion methods return the behavior documented by each type.
  * - Duration conversion requires the Period belonging to the relevant Clock.
  *
- * @warning Raw Clock identity and zero-frequency reciprocal behavior remain
- * pre-1.0 decisions under `API-011` in
+ * @warning Zero-frequency reciprocal behavior remains a pre-1.0 decision under
+ * `API-011` in
  * @ref Foundation_Workflows_PublicApiAudit.
  *
  * @section FoundationTimeExamples Runnable Examples

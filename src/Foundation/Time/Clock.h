@@ -16,8 +16,9 @@
              * @tparam TickType Tick specialization returned by this clock.
              *
              * Clock does not own external state used by the tick callback.
-             * TimePoints returned by Now() retain this Clock's address as their
-             * identity, so the Clock must outlive those TimePoints.
+             * TimePoints returned by Now() and At() retain this Clock's address
+             * as their identity, so the Clock must outlive those TimePoints.
+             * Copy and move operations are disabled to keep that identity stable.
              */
             template <typename TickType = Tick32>
             class BasicClock {
@@ -48,16 +49,30 @@
                     _callback.Bind(callback);
                 }
 
+                BasicClock(const BasicClock&) = delete;
+                BasicClock& operator=(const BasicClock&) = delete;
+                BasicClock(BasicClock&&) = delete;
+                BasicClock& operator=(BasicClock&&) = delete;
+
                 /**
                  * @brief Samples the bound callback and associates the result with this Clock.
                  * @return A TimePoint containing the sampled tick, or tick zero when unbound.
                  * @note The returned point still references this Clock when unbound.
                  */
                 TimePointType Now() const {
-                    return TimePointType(
-                        _callback.IsBound() ? _callback.Invoke() : 0,
-                        this
-                    );
+                    return At(_callback.IsBound() ? _callback.Invoke() : 0);
+                }
+
+                /**
+                 * @brief Associates an explicit raw counter value with this Clock.
+                 * @param ticks Raw counter value in this Clock's Tick representation.
+                 * @return A valid TimePoint carrying this Clock's identity.
+                 *
+                 * This factory supports deterministic deadlines and simulations
+                 * without exposing a public TimePoint identity constructor.
+                 */
+                constexpr TimePointType At(Representation ticks) const {
+                    return TimePointType(ticks, this);
                 }
 
                 /** @brief Reports whether a tick callback is currently bound. */
