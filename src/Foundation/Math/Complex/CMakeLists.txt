@@ -4,6 +4,7 @@
     set(FOUNDATION_SOURCES_LOCAL "")
     set(FOUNDATION_PRIVATE_HEADERS_LOCAL "")
     set(FOUNDATION_PUBLIC_HEADERS_LOCAL "")
+    set(FOUNDATION_TEMPLATE_IMPLEMENTATIONS_LOCAL "")
     set(FOUNDATION_DOX_LOCAL "")
 
 #
@@ -12,6 +13,9 @@
 
     list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
         "${CMAKE_CURRENT_SOURCE_DIR}/Complex.h"
+    )
+
+    list(APPEND FOUNDATION_TEMPLATE_IMPLEMENTATIONS_LOCAL
         "${CMAKE_CURRENT_SOURCE_DIR}/Complex.tpp"
     )
 
@@ -26,6 +30,7 @@
     target_sources(Foundation PRIVATE
         ${FOUNDATION_PUBLIC_HEADERS_LOCAL}
         ${FOUNDATION_PRIVATE_HEADERS_LOCAL}
+        ${FOUNDATION_TEMPLATE_IMPLEMENTATIONS_LOCAL}
         ${FOUNDATION_SOURCES_LOCAL}
     )
 #
@@ -42,14 +47,19 @@
 ######################################################################################################
 # Stage headers
 
-    foundation_stage_headers(${FOUNDATION_PUBLIC_HEADERS_LOCAL})
+    foundation_stage_headers(
+        ${FOUNDATION_PUBLIC_HEADERS_LOCAL}
+        ${FOUNDATION_TEMPLATE_IMPLEMENTATIONS_LOCAL}
+    )
 
 #
 ######################################################################################################
 # Foundation install process
 
     install(
-        FILES ${FOUNDATION_PUBLIC_HEADERS_LOCAL}
+        FILES
+            ${FOUNDATION_PUBLIC_HEADERS_LOCAL}
+            ${FOUNDATION_TEMPLATE_IMPLEMENTATIONS_LOCAL}
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/Foundation/Math/Complex"
     )
 
