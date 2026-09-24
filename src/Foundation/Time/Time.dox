@@ -112,6 +112,15 @@
  *   an invalid value of the opposite type.
  * - Duration conversion requires the Period belonging to the relevant Clock.
  *
+ * @section FoundationTimeCompileTime Compile-Time and Exception Contract
+ *
+ * Construction, access, mutation, validation, scalar conversion, and
+ * arithmetic on Tick, Frequency, Period, Duration, and TimePoint are
+ * `constexpr` and `noexcept` where applicable. Reciprocal conversion between
+ * Frequency and Period is non-throwing. Clock configuration accessors are also
+ * non-throwing, but `Clock::Now()` intentionally has no `noexcept` guarantee
+ * because it invokes caller-provided code.
+ *
  * @section FoundationTimeExamples Runnable Examples
  *
  * The examples `Foundation_Time_Frequency`, `Foundation_Time_Period`, and

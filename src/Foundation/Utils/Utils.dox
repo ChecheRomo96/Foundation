@@ -31,7 +31,9 @@
  * Move performs an rvalue cast; it does not move data by itself. The selected
  * constructor or assignment operator defines the resulting transfer and the
  * valid state of the moved-from object. Swap requires move construction and
- * move assignment compatible with the supplied type.
+ * move assignment compatible with the supplied type. Move itself is
+ * `constexpr` and `noexcept`; Swap does not promise `noexcept` because the
+ * selected type's move operations may throw.
  *
  * @section FoundationUtilsExample Runnable Example
  *

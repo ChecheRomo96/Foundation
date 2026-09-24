@@ -52,7 +52,7 @@ namespace Foundation::Scheduling {
               _firstRun(true) { }
 
         /** @brief Reports whether this task is ready at `now`. */
-        bool ShouldRun(TimePointType now) override {
+        bool ShouldRun(TimePointType now) const override {
             return _firstRun || ((now - _lastRun) >= _period);
         }
 

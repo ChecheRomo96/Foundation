@@ -35,21 +35,21 @@ namespace Foundation {
 
         public:
             /** @brief Creates a tick from a raw counter value. */
-            constexpr Tick(Representation value = 0)
+            constexpr Tick(Representation value = 0) noexcept
                 : _value(value) {}
 
             /** @brief Returns the raw counter value. */
-            constexpr Representation Value() const {
+            constexpr Representation Value() const noexcept {
                 return _value;
             }
 
             /** @brief Replaces the raw counter value. */
-            void SetValue(Representation value) {
+            constexpr void SetValue(Representation value) noexcept {
                 _value = value;
             }
 
             /** @brief Returns the largest value supported by Representation. */
-            static constexpr Representation MaximumValue() {
+            static constexpr Representation MaximumValue() noexcept {
                 return static_cast<Representation>(
                     ~static_cast<Representation>(0)
                 );
@@ -61,19 +61,19 @@ namespace Foundation {
              * Two counter values can be ordered unambiguously only when their
              * distance is strictly less than this value.
              */
-            static constexpr Representation HalfRange() {
+            static constexpr Representation HalfRange() noexcept {
                 return static_cast<Representation>(
                     (MaximumValue() / 2) + 1
                 );
             }
 
             /** @brief Compares raw counter values for equality. */
-            constexpr bool operator==(const Tick& rhs) const {
+            constexpr bool operator==(const Tick& rhs) const noexcept {
                 return _value == rhs._value;
             }
 
             /** @brief Compares raw counter values for inequality. */
-            constexpr bool operator!=(const Tick& rhs) const {
+            constexpr bool operator!=(const Tick& rhs) const noexcept {
                 return !(*this == rhs);
             }
         };

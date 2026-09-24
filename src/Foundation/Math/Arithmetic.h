@@ -6,7 +6,14 @@
     namespace Foundation {
         namespace Math {
 
-            uint32_t GCD(uint32_t a, uint32_t b);
+            constexpr uint32_t GCD(uint32_t a, uint32_t b) noexcept {
+                while (b != 0) {
+                    const uint32_t temp = b;
+                    b = a % b;
+                    a = temp;
+                }
+                return a;
+            }
 
         }
     }

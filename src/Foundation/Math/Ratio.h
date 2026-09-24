@@ -57,7 +57,9 @@
                 Representation _num;
                 Representation _den;
 
-                static uint32_t AbsoluteMagnitude(Representation value) {
+                static constexpr uint32_t AbsoluteMagnitude(
+                    Representation value
+                ) noexcept {
                     if constexpr (
                         Detail::RatioRepresentationTraits<T>::IsSigned
                     ) {
@@ -75,41 +77,41 @@
                 constexpr BasicRatio(
                     Representation num = 0,
                     Representation den = 1
-                )
+                ) noexcept
                     : _num(num),
                     _den(den) {}
 
                 /** @brief Returns the stored numerator. */
-                constexpr Representation Num() const {
+                constexpr Representation Num() const noexcept {
                     return _num;
                 }
 
                 /** @brief Returns the stored denominator. */
-                constexpr Representation Den() const {
+                constexpr Representation Den() const noexcept {
                     return _den;
                 }
 
                 /** @brief Replaces the numerator without reducing the ratio. */
-                void SetNum(Representation num) {
+                constexpr void SetNum(Representation num) noexcept {
                     _num = num;
                 }
 
                 /** @brief Replaces the denominator without reducing the ratio. */
-                void SetDen(Representation den) {
+                constexpr void SetDen(Representation den) noexcept {
                     _den = den;
                 }
 
                 /** @brief Replaces both terms without reducing the ratio. */
-                void Set(
+                constexpr void Set(
                     Representation num,
                     Representation den
-                ) {
+                ) noexcept {
                     _num = num;
                     _den = den;
                 }
 
                 /** @brief Returns `-1`, `0`, or `1` according to the ratio sign. */
-                constexpr int8_t Sign() const {
+                constexpr int8_t Sign() const noexcept {
                     if constexpr (
                         Detail::RatioRepresentationTraits<T>::IsSigned
                     ) {
@@ -126,12 +128,12 @@
                 }
 
                 /** @brief Reports whether the denominator is non-zero. */
-                constexpr bool IsValid() const {
+                constexpr bool IsValid() const noexcept {
                     return _den != 0;
                 }
 
                 /** @brief Converts the ratio to float, or zero when invalid. */
-                constexpr float ToFloat() const {
+                constexpr float ToFloat() const noexcept {
                     return IsValid()
                         ? static_cast<float>(_num) /
                           static_cast<float>(_den)
@@ -142,7 +144,7 @@
                  * @brief Returns a reduced copy.
                  * @return `0 / 1` when this ratio is invalid.
                  */
-                BasicRatio Reduced() const {
+                constexpr BasicRatio Reduced() const noexcept {
                     if (!IsValid()) {
                         return BasicRatio(0, 1);
                     }
@@ -166,7 +168,7 @@
                  * @brief Reduces this ratio in place.
                  * @post An invalid ratio becomes the canonical `0 / 1` value.
                  */
-                void Reduce() {
+                constexpr void Reduce() noexcept {
                     if (!IsValid()) {
                         _num = 0;
                         _den = 1;

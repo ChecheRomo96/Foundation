@@ -25,8 +25,10 @@ namespace Foundation::Scheduling {
          * @brief Decides whether the task is due at `now`.
          * @param now Time sampled once by the scheduler for the current update.
          * @return `true` when Run() should be called.
+         * @note This query must not mutate the task. State transitions belong
+         * to Run().
          */
-        virtual bool ShouldRun(TimePointType now) = 0;
+        virtual bool ShouldRun(TimePointType now) const = 0;
 
         /**
          * @brief Executes the task at `now`.

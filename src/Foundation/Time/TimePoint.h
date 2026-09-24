@@ -36,11 +36,13 @@
                 constexpr BasicTimePoint(
                     Representation ticks,
                     const ClockType* clock
-                )
+                ) noexcept
                     : _ticks(ticks),
                     _clock(clock) {}
 
-                bool IsComparable(const BasicTimePoint& rhs) const {
+                constexpr bool IsComparable(
+                    const BasicTimePoint& rhs
+                ) const noexcept {
                     return IsValid() &&
                         rhs.IsValid() &&
                         (_clock == rhs._clock);
@@ -49,22 +51,22 @@
             public:
 
                 /** @brief Creates an invalid point with no Clock identity. */
-                constexpr BasicTimePoint()
+                constexpr BasicTimePoint() noexcept
                     : _ticks(0),
                     _clock(nullptr) {}
 
                 /** @brief Returns the stored tick value. */
-                constexpr Representation Ticks() const {
+                constexpr Representation Ticks() const noexcept {
                     return _ticks;
                 }
 
                 /** @brief Returns the non-owning Clock identity, which may be null. */
-                const ClockType* GetClock() const {
+                constexpr const ClockType* GetClock() const noexcept {
                     return _clock;
                 }
 
                 /** @brief Reports whether this point has a non-null Clock identity. */
-                bool IsValid() const {
+                constexpr bool IsValid() const noexcept {
                     return _clock != nullptr;
                 }
 
@@ -73,7 +75,9 @@
                  * @return Invalid Duration for incompatible clocks, invalid points,
                  * reverse ordering, or the ambiguous half-range distance.
                  */
-                DurationType operator-(const BasicTimePoint& rhs) const {
+                constexpr DurationType operator-(
+                    const BasicTimePoint& rhs
+                ) const noexcept {
                     if (!IsComparable(rhs)) {
                         return DurationType::Invalid();
                     }
@@ -89,7 +93,9 @@
                 }
 
                 /** @brief Adds a valid Duration while preserving Clock identity. */
-                BasicTimePoint operator+(const DurationType& duration) const {
+                constexpr BasicTimePoint operator+(
+                    const DurationType& duration
+                ) const noexcept {
                     if (!IsValid() || !duration.IsValid()) {
                         return BasicTimePoint();
                     }
@@ -105,7 +111,9 @@
                 /**
                  * @brief Subtracts a valid Duration while preserving Clock identity.
                  */
-                BasicTimePoint operator-(const DurationType& duration) const {
+                constexpr BasicTimePoint operator-(
+                    const DurationType& duration
+                ) const noexcept {
                     if (!IsValid() || !duration.IsValid()) {
                         return BasicTimePoint();
                     }
@@ -119,23 +127,31 @@
                 }
 
                 /** @brief Reports whether two points store the same Clock pointer. */
-                bool SameClock(const BasicTimePoint& rhs) const {
+                constexpr bool SameClock(
+                    const BasicTimePoint& rhs
+                ) const noexcept {
                     return _clock == rhs._clock;
                 }
 
                 /** @brief Compares Clock identity and tick value for equality. */
-                bool operator==(const BasicTimePoint& rhs) const {
+                constexpr bool operator==(
+                    const BasicTimePoint& rhs
+                ) const noexcept {
                     return (_clock == rhs._clock) &&
                         (_ticks == rhs._ticks);
                 }
 
                 /** @brief Negates equality. */
-                bool operator!=(const BasicTimePoint& rhs) const {
+                constexpr bool operator!=(
+                    const BasicTimePoint& rhs
+                ) const noexcept {
                     return !(*this == rhs);
                 }
 
                 /** @brief Orders compatible points within the modular half-range. */
-                bool operator<(const BasicTimePoint& rhs) const {
+                constexpr bool operator<(
+                    const BasicTimePoint& rhs
+                ) const noexcept {
                     if (!IsComparable(rhs)) {
                         return false;
                     }
@@ -146,18 +162,24 @@
                 }
 
                 /** @brief Orders compatible points within the modular half-range. */
-                bool operator>(const BasicTimePoint& rhs) const {
+                constexpr bool operator>(
+                    const BasicTimePoint& rhs
+                ) const noexcept {
                     return rhs < *this;
                 }
 
                 /** @brief Orders compatible points within the modular half-range. */
-                bool operator<=(const BasicTimePoint& rhs) const {
+                constexpr bool operator<=(
+                    const BasicTimePoint& rhs
+                ) const noexcept {
                     return IsComparable(rhs) &&
                         ((*this == rhs) || (*this < rhs));
                 }
 
                 /** @brief Orders compatible points within the modular half-range. */
-                bool operator>=(const BasicTimePoint& rhs) const {
+                constexpr bool operator>=(
+                    const BasicTimePoint& rhs
+                ) const noexcept {
                     return IsComparable(rhs) &&
                         ((*this == rhs) || (*this > rhs));
                 }

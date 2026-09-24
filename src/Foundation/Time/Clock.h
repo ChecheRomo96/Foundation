@@ -36,7 +36,7 @@
             public:
 
                 /** @brief Creates an unbound clock with a zero frequency. */
-                BasicClock()
+                BasicClock() noexcept
                     : _frequency(0, 1) {}
 
                 /**
@@ -44,7 +44,10 @@
                  * @param callback Free/static function returning the current tick.
                  * @param frequency Number of callback ticks per second.
                  */
-                BasicClock(Callback callback, const Frequency& frequency)
+                BasicClock(
+                    Callback callback,
+                    const Frequency& frequency
+                ) noexcept
                     : _frequency(frequency) {
                     _callback.Bind(callback);
                 }
@@ -71,37 +74,39 @@
                  * This factory supports deterministic deadlines and simulations
                  * without exposing a public TimePoint identity constructor.
                  */
-                constexpr TimePointType At(Representation ticks) const {
+                constexpr TimePointType At(
+                    Representation ticks
+                ) const noexcept {
                     return TimePointType(ticks, this);
                 }
 
                 /** @brief Reports whether a tick callback is currently bound. */
-                bool IsBound() const {
+                bool IsBound() const noexcept {
                     return _callback.IsBound();
                 }
 
                 /** @brief Binds or replaces the free/static tick callback. */
-                void Bind(Callback callback) {
+                void Bind(Callback callback) noexcept {
                     _callback.Bind(callback);
                 }
 
                 /** @brief Removes the tick callback without changing frequency. */
-                void Unbind() {
+                void Unbind() noexcept {
                     _callback.Unbind();
                 }
 
                 /** @brief Returns the configured ticks-per-second value. */
-                Frequency GetFrequency() const {
+                Frequency GetFrequency() const noexcept {
                     return _frequency;
                 }
 
                 /** @brief Returns the reciprocal seconds-per-tick value. */
-                Period GetPeriod() const {
+                Period GetPeriod() const noexcept {
                     return _frequency.GetPeriod();
                 }
 
                 /** @brief Replaces the ticks-per-second value. */
-                void SetFrequency(const Frequency& frequency) {
+                void SetFrequency(const Frequency& frequency) noexcept {
                     _frequency = frequency;
                 }
             };

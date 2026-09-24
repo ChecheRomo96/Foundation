@@ -15,6 +15,9 @@ using Foundation::Math::UnsignedRatio;
 #endif
 
 TEST(ArithmeticTest, CalculatesGreatestCommonDivisor) {
+    static_assert(GCD(54, 24) == 6u, "GCD must be constexpr");
+    static_assert(noexcept(GCD(54, 24)), "GCD must not throw");
+
     EXPECT_EQ(GCD(54, 24), 6u);
     EXPECT_EQ(GCD(0, 7), 7u);
 }
@@ -27,9 +30,13 @@ TEST(RatioTest, SupportsConstantConstructionAndConversion) {
     );
 
     constexpr Ratio half(1, 2);
+    constexpr Ratio reduced = Ratio(-42, 56).Reduced();
     static_assert(half.Num() == 1, "Ratio numerator must be constexpr");
     static_assert(half.Den() == 2, "Ratio denominator must be constexpr");
     static_assert(half.IsValid(), "A nonzero denominator must be valid");
+    static_assert(reduced.Num() == -3, "Ratio reduction must be constexpr");
+    static_assert(reduced.Den() == 4, "Ratio reduction must be constexpr");
+    static_assert(noexcept(half.ToFloat()), "Ratio value operations must not throw");
 
     EXPECT_FLOAT_EQ(half.ToFloat(), 0.5f);
 }
