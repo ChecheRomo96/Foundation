@@ -7,10 +7,10 @@ namespace FoundationExamples {
         namespace Frequency {
 
             void Run(
-                RatioPrinter ratioPrinter,
+                UnsignedRatioPrinter ratioPrinter,
                 FrequencyPrinter frequencyPrinter
             ) {
-                using Foundation::Math::Ratio;
+                using Foundation::Math::UnsignedRatio;
                 using Foundation::Time::Frequency;
                 using Foundation::Time::Period;
 
@@ -18,10 +18,10 @@ namespace FoundationExamples {
                     return;
                 }
 
-                const Ratio audioRatio(48000, 1);
+                const UnsignedRatio audioRatio(48000, 1);
                 ratioPrinter(
                     "[1] SOURCE RATIO / AUDIO SAMPLING RATE",
-                    "const Ratio audioRatio(48000, 1);",
+                    "const UnsignedRatio audioRatio(48000, 1);",
                     audioRatio
                 );
 
@@ -65,7 +65,7 @@ namespace FoundationExamples {
                     mutableFrequency
                 );
 
-                const Ratio rawFrequencyRatio(96000, 1);
+                const UnsignedRatio rawFrequencyRatio(96000, 1);
                 const Frequency frequencyFromRatio(rawFrequencyRatio);
                 frequencyPrinter(
                     "[7] CONSTRUCTION FROM RATIO(96000, 1)",
@@ -78,10 +78,10 @@ namespace FoundationExamples {
                     frequencyFromRatio.GetRatio()
                 );
 
-                const Frequency invalidFrequency(1, 0);
+                const Frequency invalidFrequency(0, 1);
                 frequencyPrinter(
-                    "[9] INVALID INPUT / ZERO DENOMINATOR",
-                    "const Frequency invalidFrequency(1, 0);",
+                    "[9] INVALID INPUT / ZERO FREQUENCY",
+                    "const Frequency invalidFrequency(0, 1);",
                     invalidFrequency
                 );
             }

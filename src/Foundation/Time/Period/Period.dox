@@ -1,5 +1,8 @@
 /**
  * @defgroup Foundation_Time_Period Period
  * @ingroup Foundation_Time
- * @brief Rational seconds-per-tick representation and reciprocal frequency.
+ * @brief Positive unsigned rational seconds-per-tick representation.
+ *
+ * Both ratio terms must be non-zero. Invalid values convert numerically to zero
+ * and produce an invalid Frequency instead of attempting division by zero.
  */

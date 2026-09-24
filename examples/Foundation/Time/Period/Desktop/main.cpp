@@ -7,7 +7,7 @@ namespace {
     void PrintRatio(
         const char* name,
         const char* code,
-        const Foundation::Math::Ratio& ratio
+        const Foundation::Math::UnsignedRatio& ratio
     ) {
         std::cout << name << '\n';
         std::cout << "------------------------------------------------------------\n";
@@ -51,8 +51,8 @@ int main() {
     std::cout
         << "------------------------------------------------------------\n"
         << "TAKEAWAY\n"
-        << "  Period stores exact seconds per tick; Frequency is its\n"
-        << "  reciprocal.\n"
+        << "  Period uses an exact unsigned ratio. Both terms must be\n"
+        << "  non-zero before a reciprocal Frequency exists.\n"
         << "============================================================\n";
     return 0;
 }

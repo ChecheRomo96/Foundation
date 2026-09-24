@@ -8,10 +8,10 @@ namespace FoundationExamples {
     namespace Time {
         namespace Frequency {
 
-            typedef void (*RatioPrinter)(
+            typedef void (*UnsignedRatioPrinter)(
                 const char* name,
                 const char* code,
-                const Foundation::Math::Ratio& ratio
+                const Foundation::Math::UnsignedRatio& ratio
             );
 
             typedef void (*FrequencyPrinter)(
@@ -21,7 +21,7 @@ namespace FoundationExamples {
             );
 
             void Run(
-                RatioPrinter ratioPrinter,
+                UnsignedRatioPrinter ratioPrinter,
                 FrequencyPrinter frequencyPrinter
             );
 

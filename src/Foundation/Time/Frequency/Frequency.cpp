@@ -28,11 +28,11 @@ namespace Foundation {
         }
 
         bool Frequency::IsValid() const {
-            return _ratio.IsValid();
+            return _ratio.IsValid() && Num() != 0;
         }
 
         float Frequency::Hertz() const {
-            return _ratio.ToFloat();
+            return IsValid() ? _ratio.ToFloat() : 0.0f;
         }
 
         float Frequency::PeriodSeconds() const {
@@ -50,16 +50,15 @@ namespace Foundation {
             return PeriodSeconds() * 1000000.0f;
         }
 
-        const Foundation::Math::Ratio&
+        const Foundation::Math::UnsignedRatio&
         Frequency::GetRatio() const {
             return _ratio;
         }
 
         Period Frequency::GetPeriod() const {
-            return Period(
-                _ratio.Den(),
-                _ratio.Num()
-            );
+            return IsValid()
+                ? Period(_ratio.Den(), _ratio.Num())
+                : Period();
         }
 
     }

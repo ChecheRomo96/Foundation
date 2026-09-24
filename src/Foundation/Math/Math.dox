@@ -11,3 +11,14 @@
  *
  * Mathematical algorithms, numeric types, and linear algebra utilities.
  */
+
+/**
+ * @defgroup Foundation_Math_Ratio Ratio
+ * @ingroup Foundation_Math
+ * @brief Signed and unsigned exact 32-bit rational values.
+ *
+ * `BasicRatio<T>` contains the shared implementation. `Ratio` is the signed
+ * `int32_t` specialization for general mathematics, while `UnsignedRatio` is
+ * the `uint32_t` specialization used for non-negative quantities such as Time
+ * frequencies and periods.
+ */

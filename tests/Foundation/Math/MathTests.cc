@@ -2,13 +2,16 @@
 
 #include <cstdint>
 #include <limits>
+#include <type_traits>
 
 #include <Foundation/Math.h>
 
 using Foundation::Math::GCD;
 
 #if defined(FOUNDATION_MATH_RATIO)
+using Foundation::Math::BasicRatio;
 using Foundation::Math::Ratio;
+using Foundation::Math::UnsignedRatio;
 #endif
 
 TEST(ArithmeticTest, CalculatesGreatestCommonDivisor) {
@@ -18,12 +21,30 @@ TEST(ArithmeticTest, CalculatesGreatestCommonDivisor) {
 
 #if defined(FOUNDATION_MATH_RATIO)
 TEST(RatioTest, SupportsConstantConstructionAndConversion) {
+    static_assert(std::is_same<Ratio, BasicRatio<int32_t>>::value);
+    static_assert(
+        std::is_same<UnsignedRatio, BasicRatio<uint32_t>>::value
+    );
+
     constexpr Ratio half(1, 2);
     static_assert(half.Num() == 1, "Ratio numerator must be constexpr");
     static_assert(half.Den() == 2, "Ratio denominator must be constexpr");
     static_assert(half.IsValid(), "A nonzero denominator must be valid");
 
     EXPECT_FLOAT_EQ(half.ToFloat(), 0.5f);
+}
+
+TEST(RatioTest, PreservesTheFullUnsignedRange) {
+    constexpr uint32_t maximum = std::numeric_limits<uint32_t>::max();
+    constexpr UnsignedRatio maximumRatio(maximum, 1);
+    static_assert(maximumRatio.Num() == maximum);
+    static_assert(maximumRatio.Den() == 1);
+    static_assert(maximumRatio.IsValid());
+
+    const UnsignedRatio reduced = UnsignedRatio(42, 56).Reduced();
+    EXPECT_EQ(reduced.Num(), 3u);
+    EXPECT_EQ(reduced.Den(), 4u);
+    EXPECT_EQ(reduced.Sign(), 1);
 }
 
 TEST(RatioTest, ReducesWithoutLosingTheSign) {

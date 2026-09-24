@@ -12,7 +12,7 @@
  * | ------ | ----------------- | ------------------------ |
  * | TypeTraits | `Foundation_TypeTraits_BasicChecks` | Type categories, relationships, compile-time constraints, and an arithmetic-only generic buffer. |
  * | Math | `Foundation_Math_Arithmetic` | `GCD`, `Pi`, `DegToRad`, and `RadToDeg`. |
- * | Math | `Foundation_Math_Ratio` | Ratio construction, validity, numerator/denominator access, and floating-point conversion. |
+ * | Math | `Foundation_Math_Ratio` | Signed Ratio construction, validity, exact terms, and floating-point conversion. |
  * | Math | `Foundation_Math_Complex` | Complex construction, addition, multiplication, conjugation, and squared magnitude. |
  * | Math | `Foundation_Math_Matrix` | Fixed and dynamic matrices, element access, transpose, ownership reporting, and multiplication. |
  * | Containers | `Foundation_Containers_DataStructures` | Circular-buffer wraparound, FIFO `Queue`, and LIFO `Stack`. |

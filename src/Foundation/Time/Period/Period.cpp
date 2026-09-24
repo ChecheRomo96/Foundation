@@ -13,7 +13,7 @@ namespace Foundation {
             : _ratio(num, den) {}
 
         Period::Period(
-            const Foundation::Math::Ratio& ratio
+            const Foundation::Math::UnsignedRatio& ratio
         )
             : _ratio(ratio) {}
 
@@ -43,11 +43,11 @@ namespace Foundation {
         }
 
         bool Period::IsValid() const {
-            return _ratio.IsValid();
+            return _ratio.IsValid() && Num() != 0;
         }
 
         float Period::Seconds() const {
-            return _ratio.ToFloat();
+            return IsValid() ? _ratio.ToFloat() : 0.0f;
         }
 
         float Period::Milliseconds() const {
@@ -58,16 +58,15 @@ namespace Foundation {
             return Seconds() * 1000000.0f;
         }
 
-        const Foundation::Math::Ratio&
+        const Foundation::Math::UnsignedRatio&
         Period::GetRatio() const {
             return _ratio;
         }
 
         Frequency Period::GetFrequency() const {
-            return Frequency(
-                _ratio.Den(),
-                _ratio.Num()
-            );
+            return IsValid()
+                ? Frequency(_ratio.Den(), _ratio.Num())
+                : Frequency();
         }
 
     }
