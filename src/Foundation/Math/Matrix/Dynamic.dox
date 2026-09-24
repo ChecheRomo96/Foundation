@@ -63,7 +63,7 @@
  * applies to multiple matrices attached to the same buffer.
  *
  * `At()` and `operator[]` are intentionally unchecked. The caller must provide
- * indices inside `RowsCount()` and `ColsCount()`.
+ * indices inside `RowCount()` and `ColumnCount()`.
  *
  * @warning Heap-backed matrices are supported on embedded targets, including
  * AVR, when their runtime supplies the required allocation functions. Prefer

@@ -80,21 +80,21 @@ namespace Foundation::Math::Matrix {
         Dynamic<T>& result
     ) {
         if(!a.IsValid() || !b.IsValid() ||
-           a.ColsCount() != b.RowsCount() ||
+           a.ColumnCount() != b.RowCount() ||
            Detail::DynamicStorageOverlaps(a, result) ||
            Detail::DynamicStorageOverlaps(b, result)) {
             return false;
         }
 
-        if(!result.Allocate(a.RowsCount(), b.ColsCount())) {
+        if(!result.Allocate(a.RowCount(), b.ColumnCount())) {
             return false;
         }
 
-        for(unsigned int i = 0; i < a.RowsCount(); i++) {
-            for(unsigned int j = 0; j < b.ColsCount(); j++) {
+        for(unsigned int i = 0; i < a.RowCount(); i++) {
+            for(unsigned int j = 0; j < b.ColumnCount(); j++) {
                 result.At(i, j) = T();
 
-                for(unsigned int k = 0; k < a.ColsCount(); k++) {
+                for(unsigned int k = 0; k < a.ColumnCount(); k++) {
                     result.At(i, j) += a.At(i, k) * b.At(k, j);
                 }
             }
@@ -113,7 +113,7 @@ namespace Foundation::Math::Matrix {
      * The result matrix is allocated or resized to:
      *
      * @code
-     * RowsA x b.ColsCount()
+     * RowsA x b.ColumnCount()
      * @endcode
      *
      * @tparam T Element type.
@@ -138,17 +138,17 @@ namespace Foundation::Math::Matrix {
         const Dynamic<T>& b,
         Dynamic<T>& result
     ) {
-        if(!b.IsValid() || b.RowsCount() != ColsA ||
+        if(!b.IsValid() || b.RowCount() != ColsA ||
            Detail::DynamicStorageOverlaps(b, result)) {
             return false;
         }
 
-        if(!result.Allocate(RowsA, b.ColsCount())) {
+        if(!result.Allocate(RowsA, b.ColumnCount())) {
             return false;
         }
 
         for(unsigned int i = 0; i < RowsA; i++) {
-            for(unsigned int j = 0; j < b.ColsCount(); j++) {
+            for(unsigned int j = 0; j < b.ColumnCount(); j++) {
                 result.At(i, j) = T();
 
                 for(unsigned int k = 0; k < ColsA; k++) {
@@ -170,7 +170,7 @@ namespace Foundation::Math::Matrix {
      * The result matrix is allocated or resized to:
      *
      * @code
-     * a.RowsCount() x ColsB
+     * a.RowCount() x ColsB
      * @endcode
      *
      * @tparam T Element type.
@@ -196,16 +196,16 @@ namespace Foundation::Math::Matrix {
         const Fixed<T, RowsB, ColsB>& b,
         Dynamic<T>& result
     ) {
-        if(!a.IsValid() || a.ColsCount() != RowsB ||
+        if(!a.IsValid() || a.ColumnCount() != RowsB ||
            Detail::DynamicStorageOverlaps(a, result)) {
             return false;
         }
 
-        if(!result.Allocate(a.RowsCount(), ColsB)) {
+        if(!result.Allocate(a.RowCount(), ColsB)) {
             return false;
         }
 
-        for(unsigned int i = 0; i < a.RowsCount(); i++) {
+        for(unsigned int i = 0; i < a.RowCount(); i++) {
             for(unsigned int j = 0; j < ColsB; j++) {
                 result.At(i, j) = T();
 

@@ -41,16 +41,16 @@
                 ) noexcept;
 
                 /** @brief Returns the frequency numerator. */
-                constexpr uint32_t Num() const noexcept;
+                constexpr uint32_t Numerator() const noexcept;
 
                 /** @brief Returns the frequency denominator. */
-                constexpr uint32_t Den() const noexcept;
+                constexpr uint32_t Denominator() const noexcept;
 
                 /** @brief Replaces the numerator; zero makes the frequency invalid. */
-                constexpr void SetNum(uint32_t num) noexcept;
+                constexpr void SetNumerator(uint32_t num) noexcept;
 
                 /** @brief Replaces the denominator; zero makes the ratio invalid. */
-                constexpr void SetDen(uint32_t den) noexcept;
+                constexpr void SetDenominator(uint32_t den) noexcept;
 
                 /** @brief Replaces both ratio terms. */
                 constexpr void Set(
@@ -100,21 +100,21 @@
                 : _ratio(ratio) {}
 
             constexpr uint32_t
-            Frequency::Num() const noexcept {
-                return _ratio.Num();
+            Frequency::Numerator() const noexcept {
+                return _ratio.Numerator();
             }
 
             constexpr uint32_t
-            Frequency::Den() const noexcept {
-                return _ratio.Den();
+            Frequency::Denominator() const noexcept {
+                return _ratio.Denominator();
             }
 
-            constexpr void Frequency::SetNum(uint32_t num) noexcept {
-                _ratio.SetNum(num);
+            constexpr void Frequency::SetNumerator(uint32_t num) noexcept {
+                _ratio.SetNumerator(num);
             }
 
-            constexpr void Frequency::SetDen(uint32_t den) noexcept {
-                _ratio.SetDen(den);
+            constexpr void Frequency::SetDenominator(uint32_t den) noexcept {
+                _ratio.SetDenominator(den);
             }
 
             constexpr void Frequency::Set(
@@ -125,7 +125,7 @@
             }
 
             constexpr bool Frequency::IsValid() const noexcept {
-                return _ratio.IsValid() && Num() != 0;
+                return _ratio.IsValid() && Numerator() != 0;
             }
 
             constexpr float Frequency::Hertz() const noexcept {
@@ -134,8 +134,8 @@
 
             constexpr float Frequency::PeriodSeconds() const noexcept {
                 return IsValid()
-                    ? static_cast<float>(Den()) /
-                      static_cast<float>(Num())
+                    ? static_cast<float>(Denominator()) /
+                      static_cast<float>(Numerator())
                     : 0.0f;
             }
 

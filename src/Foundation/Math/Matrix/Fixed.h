@@ -65,12 +65,12 @@ namespace Foundation::Math::Matrix {
         /**
          * @brief Returns the number of rows.
          */
-        unsigned int RowsCount() const;
+        unsigned int RowCount() const;
 
         /**
          * @brief Returns the number of columns.
          */
-        unsigned int ColsCount() const;
+        unsigned int ColumnCount() const;
 
         /**
          * @brief Returns a pointer to the internal data buffer.

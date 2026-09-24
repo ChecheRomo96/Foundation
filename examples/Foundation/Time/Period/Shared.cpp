@@ -50,12 +50,12 @@ namespace FoundationExamples {
                     mutablePeriod
                 );
 
-                mutablePeriod.SetNum(1);
-                mutablePeriod.SetDen(48000);
+                mutablePeriod.SetNumerator(1);
+                mutablePeriod.SetDenominator(48000);
                 periodPrinter(
                     "[5] MUTATION / SETNUM(1), SETDEN(48000)",
-                    "mutablePeriod.SetNum(1);\n"
-                    "    mutablePeriod.SetDen(48000);",
+                    "mutablePeriod.SetNumerator(1);\n"
+                    "    mutablePeriod.SetDenominator(48000);",
                     mutablePeriod
                 );
 

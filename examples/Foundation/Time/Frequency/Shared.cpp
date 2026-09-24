@@ -56,12 +56,12 @@ namespace FoundationExamples {
                     mutableFrequency
                 );
 
-                mutableFrequency.SetNum(44100);
-                mutableFrequency.SetDen(1);
+                mutableFrequency.SetNumerator(44100);
+                mutableFrequency.SetDenominator(1);
                 frequencyPrinter(
                     "[6] MUTATION / SETNUM(44100), SETDEN(1)",
-                    "mutableFrequency.SetNum(44100);\n"
-                    "    mutableFrequency.SetDen(1);",
+                    "mutableFrequency.SetNumerator(44100);\n"
+                    "    mutableFrequency.SetDenominator(1);",
                     mutableFrequency
                 );
 

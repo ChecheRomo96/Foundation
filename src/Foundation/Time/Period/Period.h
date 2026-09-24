@@ -41,16 +41,16 @@ namespace Foundation {
             ) noexcept;
 
             /** @brief Returns the period numerator. */
-            constexpr uint32_t Num() const noexcept;
+            constexpr uint32_t Numerator() const noexcept;
 
             /** @brief Returns the period denominator. */
-            constexpr uint32_t Den() const noexcept;
+            constexpr uint32_t Denominator() const noexcept;
 
             /** @brief Replaces the numerator; zero makes the period invalid. */
-            constexpr void SetNum(uint32_t num) noexcept;
+            constexpr void SetNumerator(uint32_t num) noexcept;
 
             /** @brief Replaces the denominator; zero makes the ratio invalid. */
-            constexpr void SetDen(uint32_t den) noexcept;
+            constexpr void SetDenominator(uint32_t den) noexcept;
 
             /** @brief Replaces both ratio terms. */
             constexpr void Set(
@@ -93,20 +93,20 @@ namespace Foundation {
         ) noexcept
             : _ratio(ratio) {}
 
-        constexpr uint32_t Period::Num() const noexcept {
-            return _ratio.Num();
+        constexpr uint32_t Period::Numerator() const noexcept {
+            return _ratio.Numerator();
         }
 
-        constexpr uint32_t Period::Den() const noexcept {
-            return _ratio.Den();
+        constexpr uint32_t Period::Denominator() const noexcept {
+            return _ratio.Denominator();
         }
 
-        constexpr void Period::SetNum(uint32_t num) noexcept {
-            _ratio.SetNum(num);
+        constexpr void Period::SetNumerator(uint32_t num) noexcept {
+            _ratio.SetNumerator(num);
         }
 
-        constexpr void Period::SetDen(uint32_t den) noexcept {
-            _ratio.SetDen(den);
+        constexpr void Period::SetDenominator(uint32_t den) noexcept {
+            _ratio.SetDenominator(den);
         }
 
         constexpr void Period::Set(
@@ -117,7 +117,7 @@ namespace Foundation {
         }
 
         constexpr bool Period::IsValid() const noexcept {
-            return _ratio.IsValid() && Num() != 0;
+            return _ratio.IsValid() && Numerator() != 0;
         }
 
         constexpr float Period::Seconds() const noexcept {
