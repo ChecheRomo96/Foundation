@@ -29,19 +29,19 @@ namespace Callback {
 
     Result Run() {
         Foundation::Functional::Callback<int, int, int> freeFunction;
-        freeFunction.bind(Add);
+        freeFunction.Bind(Add);
 
         Accumulator accumulator;
         Foundation::Functional::Callback<int, int> memberFunction;
-        memberFunction.bind<Accumulator, &Accumulator::AddValue>(&accumulator);
-        memberFunction.invoke(5);
+        memberFunction.Bind<Accumulator, &Accumulator::AddValue>(&accumulator);
+        memberFunction.Invoke(5);
 
         Result result;
-        result.FreeFunctionValue = freeFunction.invoke(4, 5);
-        result.MemberFunctionValue = memberFunction.invoke(3);
-        result.BoundBeforeUnbind = memberFunction.status();
-        memberFunction.unbind();
-        result.BoundAfterUnbind = memberFunction.status();
+        result.FreeFunctionValue = freeFunction.Invoke(4, 5);
+        result.MemberFunctionValue = memberFunction.Invoke(3);
+        result.BoundBeforeUnbind = memberFunction.IsBound();
+        memberFunction.Unbind();
+        result.BoundAfterUnbind = memberFunction.IsBound();
         return result;
     }
 

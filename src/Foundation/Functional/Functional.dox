@@ -28,26 +28,25 @@
  * }
  *
  * Foundation::Functional::Callback<int, int, int> callback;
- * callback.bind(Add);
- * const int result = callback.invoke(2, 3);
+ * callback.Bind(Add);
+ * const int result = callback.Invoke(2, 3);
  * @endcode
  *
  * Callback stores either a free/static function pointer or a non-owning object
  * pointer plus a member-function invoker. It performs no heap allocation and
- * offers `status()` and `unbind()` for explicit state management.
+ * offers `IsBound()` and `Unbind()` for explicit state management.
  *
  * @section FoundationFunctionalContract Current Contract
  *
  * - Bound objects are not owned; they must outlive the binding and every call.
- * - The current public API binds non-const member functions only.
+ * - Non-const and const member functions are supported. Const functions may be
+ *   bound to const objects.
+ * - A callback without arguments uses an empty pack: `Callback<R>` or
+ *   `Callback<void>`. `void` is not an argument placeholder.
  * - If `FOUNDATION_EXCEPTIONS` is enabled, invoking an empty callback throws
- *   `std::runtime_error`. Otherwise a non-void callback returns `R()` and a
+ *   `std::runtime_error`. Otherwise a non-void callback returns `R{}` and a
  *   void callback performs no operation.
  * - Callback invocation is synchronous and is not internally synchronized.
- *
- * @warning Naming, const-member support, and the zero-argument specialization
- * model remain pre-1.0 decisions under `API-008` in
- * @ref Foundation_Workflows_PublicApiAudit.
  *
  * @section FoundationFunctionalExample Runnable Example
  *

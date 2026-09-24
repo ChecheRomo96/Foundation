@@ -13,6 +13,7 @@ int ReadConstant() {
 }
 
 int LastValue = 0;
+int ConstInvocationCount = 0;
 
 void Store(int value) {
     LastValue = value;
@@ -29,8 +30,12 @@ public:
         total = value;
     }
 
-    int Read() {
+    int Read() const {
         return total;
+    }
+
+    void Touch() const {
+        ++ConstInvocationCount;
     }
 
     int total = 0;
@@ -42,44 +47,61 @@ using Foundation::Functional::Callback;
 
 TEST(CallbackTest, BindsAndUnbindsAFreeFunction) {
     Callback<int, int, int> callback;
-    EXPECT_FALSE(callback.status());
+    EXPECT_FALSE(callback.IsBound());
 
-    callback.bind(Add);
-    EXPECT_TRUE(callback.status());
-    EXPECT_EQ(callback.invoke(4, 5), 9);
+    callback.Bind(Add);
+    EXPECT_TRUE(callback.IsBound());
+    EXPECT_EQ(callback.Invoke(4, 5), 9);
 
-    callback.unbind();
-    EXPECT_FALSE(callback.status());
+    callback.Unbind();
+    EXPECT_FALSE(callback.IsBound());
 }
 
 TEST(CallbackTest, InvokesVoidAndNoArgumentFunctions) {
     Callback<void, int> voidCallback;
-    voidCallback.bind(Store);
-    voidCallback.invoke(23);
+    voidCallback.Bind(Store);
+    voidCallback.Invoke(23);
     EXPECT_EQ(LastValue, 23);
 
     Callback<int> noArgumentCallback;
-    noArgumentCallback.bind(ReadConstant);
-    EXPECT_EQ(noArgumentCallback.invoke(), 17);
+    noArgumentCallback.Bind(ReadConstant);
+    EXPECT_EQ(noArgumentCallback.Invoke(), 17);
 }
 
 TEST(CallbackTest, BindsMemberFunctionsWithArguments) {
     Accumulator accumulator;
     Callback<int, int> callback;
-    callback.bind<Accumulator, &Accumulator::AddValue>(&accumulator);
+    callback.Bind<Accumulator, &Accumulator::AddValue>(&accumulator);
 
-    EXPECT_EQ(callback.invoke(6), 6);
-    EXPECT_EQ(callback.invoke(4), 10);
+    EXPECT_EQ(callback.Invoke(6), 6);
+    EXPECT_EQ(callback.Invoke(4), 10);
 }
 
 TEST(CallbackTest, BindsVoidAndNoArgumentMemberFunctions) {
     Accumulator accumulator;
     Callback<void, int> resetCallback;
-    resetCallback.bind<Accumulator, &Accumulator::ResetTo>(&accumulator);
-    resetCallback.invoke(3);
+    resetCallback.Bind<Accumulator, &Accumulator::ResetTo>(&accumulator);
+    resetCallback.Invoke(3);
     EXPECT_EQ(accumulator.total, 3);
 
     Callback<int> readCallback;
-    readCallback.bind<Accumulator, &Accumulator::Read>(&accumulator);
-    EXPECT_EQ(readCallback.invoke(), 3);
+    readCallback.Bind<Accumulator, &Accumulator::Read>(&accumulator);
+    EXPECT_EQ(readCallback.Invoke(), 3);
+}
+
+TEST(CallbackTest, SupportsVoidCallbacksWithoutArguments) {
+    const Accumulator accumulator;
+    Callback<void> callback;
+
+    callback.Bind<Accumulator, &Accumulator::Touch>(&accumulator);
+    callback.Invoke();
+
+    EXPECT_EQ(ConstInvocationCount, 1);
+}
+
+TEST(CallbackTest, RejectsNullMemberInstances) {
+    Callback<int, int> callback;
+    callback.Bind<Accumulator, &Accumulator::AddValue>(nullptr);
+
+    EXPECT_FALSE(callback.IsBound());
 }

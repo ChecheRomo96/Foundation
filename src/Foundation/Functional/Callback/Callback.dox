@@ -11,7 +11,8 @@
  *
  * - Free functions.
  * - Static member functions.
- * - Non-static member functions.
+ * - Non-const member functions.
+ * - Const member functions, including bindings to const objects.
  *
  * The implementation is intended for embedded and desktop applications
  * where deterministic memory usage is important.
@@ -27,7 +28,7 @@
  * Invocation is performed through a common interface:
  *
  * @code
- * callback.invoke(...);
+ * callback.Invoke(...);
  * @endcode
  *
  * @section FoundationCallbackFreeFunctions Free Functions
@@ -39,9 +40,9 @@
  *
  * Foundation::Functional::Callback<void, uint8_t> callback;
  *
- * callback.bind(OnMessage);
+ * callback.Bind(OnMessage);
  *
- * callback.invoke(42);
+ * callback.Invoke(42);
  * @endcode
  *
  * @section FoundationCallbackMemberFunctions Member Functions
@@ -58,9 +59,9 @@
  *
  * Foundation::Functional::Callback<void, uint8_t> callback;
  *
- * callback.bind<Printer, &Printer::Print>(&printer);
+ * callback.Bind<Printer, &Printer::Print>(&printer);
  *
- * callback.invoke(42);
+ * callback.Invoke(42);
  * @endcode
  *
  * @section FoundationCallbackReturnValues Return Values
@@ -74,22 +75,33 @@
  *
  * Foundation::Functional::Callback<int, int, int> callback;
  *
- * callback.bind(Add);
+ * callback.Bind(Add);
  *
- * int result = callback.invoke(2, 3);
+ * int result = callback.Invoke(2, 3);
  * @endcode
  *
- * @section FoundationCallbackVoidSpecializations Void Specializations
+ * @section FoundationCallbackSignatures Signature Model
  *
- * The library provides internal specializations for:
+ * An empty parameter pack represents a callback without arguments. Do not use
+ * `void` as an argument placeholder.
  *
- * - Callback<R, void>
- * - Callback<void, Args...>
- * - Callback<void, void>
+ * | Signature | Meaning |
+ * | --------- | ------- |
+ * | `Callback<R, Args...>` | Returns `R` and receives one or more declared arguments. |
+ * | `Callback<R>` | Returns `R` and receives no arguments. |
+ * | `Callback<void, Args...>` | Returns nothing and receives one or more declared arguments. |
+ * | `Callback<void>` | Returns nothing and receives no arguments. |
  *
- * These specializations reduce implementation complexity and avoid
- * unnecessary argument handling when no parameters or return values
- * are required.
+ * The implementation therefore needs only the primary non-void template and
+ * one partial specialization for a `void` return. The empty `Args...` pack
+ * naturally covers both no-argument forms.
+ *
+ * @section FoundationCallbackState Binding State and Lifetime
+ *
+ * `IsBound()` reports whether a target is available and `Unbind()` clears it.
+ * Passing a null free-function or object pointer leaves the callback empty.
+ * A member binding never owns its object; the object must outlive the binding
+ * and every synchronous `Invoke()` call.
  *
  * @section FoundationCallbackEmbedded Embedded Usage
  *

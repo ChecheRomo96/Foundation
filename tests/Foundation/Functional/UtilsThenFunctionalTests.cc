@@ -17,9 +17,9 @@ TEST(FunctionalUmbrellaTest, CoexistsWithUtilsWhenIncludedSecond) {
     Foundation::Utils::Swap(first, second);
 
     Foundation::Functional::Callback<int, int> callback;
-    callback.bind(IncrementWithUtilsFirst);
+    callback.Bind(IncrementWithUtilsFirst);
 
     EXPECT_EQ(first, 2);
     EXPECT_EQ(second, 1);
-    EXPECT_EQ(callback.invoke(41), 42);
+    EXPECT_EQ(callback.Invoke(41), 42);
 }

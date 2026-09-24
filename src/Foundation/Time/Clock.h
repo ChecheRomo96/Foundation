@@ -40,7 +40,7 @@
                  */
                 Clock( Callback callback, const Frequency& frequency )
                     : _frequency(frequency) {
-                    _callback.bind(callback);
+                    _callback.Bind(callback);
                 }
 
                 /**
@@ -50,24 +50,24 @@
                  */
                 TimePoint Now() const {
                     return TimePoint(
-                        _callback.status() ? _callback.invoke() : 0,
+                        _callback.IsBound() ? _callback.Invoke() : 0,
                         this
                     );
                 }
 
                 /** @brief Reports whether a tick callback is currently bound. */
                 bool IsBound() const {
-                    return _callback.status();
+                    return _callback.IsBound();
                 }
 
                 /** @brief Binds or replaces the free/static tick callback. */
                 void Bind(Callback callback) {
-                    _callback.bind(callback);
+                    _callback.Bind(callback);
                 }
 
                 /** @brief Removes the tick callback without changing frequency. */
                 void Unbind() {
-                    _callback.unbind();
+                    _callback.Unbind();
                 }
 
                 /** @brief Returns the configured ticks-per-second value. */
