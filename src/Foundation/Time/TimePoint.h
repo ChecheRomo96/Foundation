@@ -16,7 +16,9 @@
              * @tparam TickType Tick specialization shared with the Clock.
              *
              * The Clock pointer is non-owning and is used for compatibility
-             * checks; it must outlive every operation that inspects the point.
+             * checks. Valid points can only be created by their Clock through
+             * `Now()` or `At()`, and that Clock must outlive every operation
+             * that inspects the point.
              */
             template <typename TickType = Tick32>
             class BasicTimePoint {
@@ -29,6 +31,15 @@
                 Representation _ticks;
                 const ClockType* _clock;
 
+                friend class BasicClock<TickType>;
+
+                constexpr BasicTimePoint(
+                    Representation ticks,
+                    const ClockType* clock
+                )
+                    : _ticks(ticks),
+                    _clock(clock) {}
+
                 bool IsComparable(const BasicTimePoint& rhs) const {
                     return IsValid() &&
                         rhs.IsValid() &&
@@ -37,17 +48,10 @@
 
             public:
 
-                /**
-                 * @brief Creates a point from a tick value and optional Clock identity.
-                 * @param ticks Stored tick value.
-                 * @param clock Non-owning Clock pointer; null creates an invalid point.
-                 */
-                constexpr BasicTimePoint(
-                    Representation ticks = 0,
-                    const ClockType* clock = nullptr
-                )
-                    : _ticks(ticks),
-                    _clock(clock) {}
+                /** @brief Creates an invalid point with no Clock identity. */
+                constexpr BasicTimePoint()
+                    : _ticks(0),
+                    _clock(nullptr) {}
 
                 /** @brief Returns the stored tick value. */
                 constexpr Representation Ticks() const {

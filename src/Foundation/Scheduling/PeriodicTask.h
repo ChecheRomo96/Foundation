@@ -48,7 +48,7 @@ namespace Foundation::Scheduling {
             : _callback(callback),
               _context(context),
               _period(period),
-              _lastRun(0),
+              _lastRun(),
               _firstRun(true) { }
 
         /** @brief Reports whether this task is ready at `now`. */
