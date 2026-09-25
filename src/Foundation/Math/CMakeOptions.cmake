@@ -21,7 +21,6 @@
 #################################################################################################################################
 # Matrix
 
-    option(FOUNDATION_MATH_MATRIX "Enables the compilation of Foundation::Math::Matrix" ON)
-    include(${CMAKE_CURRENT_LIST_DIR}/Matrix/CMakeOptions.cmake)
+    option(FOUNDATION_MATH_MATRIX "Enables Foundation::Math::Matrix, including fixed and dynamic storage" ON)
 #
 #################################################################################################################################

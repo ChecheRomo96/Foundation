@@ -1,9 +1,211 @@
-/*! 
-@defgroup Foundation_Examples Examples
-
-Examples are organized by module:
-- Containers
-- Time
-- Scheduling
-
-*/
+/**
+ * @defgroup Foundation_Examples Examples
+ * @brief Executable demonstrations of Foundation's public APIs.
+ *
+ * Examples are normal CMake executable targets. They demonstrate API usage;
+ * they are not correctness tests, are not registered with CTest, and must not
+ * be reported as test results.
+ *
+ * @section FoundationExamplesAvailable Available Native Examples
+ *
+ * | Module | Native executable | Public APIs demonstrated |
+ * | ------ | ----------------- | ------------------------ |
+ * | TypeTraits | `Foundation_TypeTraits_BasicChecks` | Type categories, relationships, compile-time constraints, and an arithmetic-only generic buffer. |
+ * | Math | `Foundation_Math_Arithmetic` | `GCD`, `Pi`, `DegToRad`, and `RadToDeg`. |
+ * | Math | `Foundation_Math_Ratio` | Signed Ratio construction, validity, exact terms, and floating-point conversion. |
+ * | Math | `Foundation_Math_Complex` | Complex construction, addition, multiplication, conjugation, and squared magnitude. |
+ * | Math | `Foundation_Math_Matrix` | Fixed and dynamic matrices, element access, transpose, ownership reporting, and multiplication. |
+ * | Containers | `Foundation_Containers_DataStructures` | Circular-buffer wraparound, FIFO `Queue`, and LIFO `Stack`. |
+ * | Functional | `Foundation_Functional_Callback` | Binding, invoking, querying, and unbinding free and member functions. |
+ * | Time | `Foundation_Time_Frequency` | Frequencies, periods, ratios, mutation, conversion, and invalid values. |
+ * | Time | `Foundation_Time_Period` | Periods, frequencies, ratios, mutation, conversion, and invalid values. |
+ * | Time | `Foundation_Time_ClockAndDuration` | `Tick32`, callback-backed `Clock`, modular `TimePoint`, validated `Duration`, clock identity, arithmetic, and unit conversion. |
+ * | Scheduling | `Foundation_Scheduling_TaskScheduler` | `Task`, `PeriodicTask`, `OneShotTask`, `TaskScheduler`, capacity, and simulated clock updates. |
+ * | Utils | `Foundation_Utils_MoveAndSwap` | Moving a non-copyable object and swapping values without the STL. |
+ *
+ * Together these examples cover every current top-level Foundation module and
+ * every implemented public component intended for v1.
+ *
+ * Each example lives under the module that owns the demonstrated API:
+ *
+ * @code
+ * examples/Foundation/<module>/<example>/
+ * |-- CMakeLists.txt
+ * |-- <example>.ino
+ * |-- Shared.h
+ * |-- Shared.cpp
+ * `-- Desktop/
+ *     |-- CMakeLists.txt
+ *     `-- main.cpp
+ * @endcode
+ *
+ * The top-level `Shared.h` and `Shared.cpp` contain the actual API scenario.
+ * Both entry points reuse that scenario: `<example>.ino` adapts its output to
+ * Arduino `Serial`, while `Desktop/main.cpp` adapts it to a native console
+ * executable. This prevents the Arduino and desktop versions from silently
+ * becoming different examples.
+ *
+ * @subsection FoundationExamplesPresentation Presentation Contract
+ *
+ * An example must teach a small, recognizable API scenario rather than print
+ * unexplained values. Its output should let a reader understand the following
+ * without opening the source first:
+ *
+ * 1. **Purpose** -- what API concept the example demonstrates.
+ * 2. **Scenario or input** -- what values or simulated situation are used.
+ * 3. **Code** -- the copyable Foundation construction or API call that
+ *    produced the displayed result.
+ * 4. **Interpreted result** -- what the output means, including units and
+ *    descriptive `yes`/`no` state instead of bare numbers or booleans.
+ * 5. **Takeaway** -- the design rule a consumer should remember.
+ *
+ * Terminal and serial output follows a portable 60-column visual system. Use
+ * plain UTF-8 text so the same presentation remains legible in macOS Terminal,
+ * Windows terminals, CI logs, and embedded serial monitors. General layout
+ * uses ASCII; domain-specific mathematical glyphs are allowed when they make
+ * the represented structure materially clearer. Do not require ANSI colors to
+ * communicate hierarchy or state.
+ *
+ * @code{.text}
+ * ============================================================
+ *  FOUNDATION :: Module / Example
+ * ============================================================
+ *
+ * PURPOSE
+ *   One concise description of the demonstrated behavior.
+ *
+ * [1] SCENARIO OR OPERATION
+ * ------------------------------------------------------------
+ *   CODE
+ *     Foundation::Module::Type value(arguments);
+ *   Input ................ meaningful value with units
+ *   Result ............... interpreted value with units
+ *
+ * ------------------------------------------------------------
+ * TAKEAWAY
+ *   The API rule a consumer should remember.
+ * ============================================================
+ * @endcode
+ *
+ * Keep emitted lines at or below 60 columns. Use section separators and
+ * aligned dotted labels for visual scanning; wrap long explanations on a new
+ * line with the same two-space content indentation. Each result-bearing
+ * section must show its relevant source expression under `CODE` before the
+ * interpreted values; do not make the reader infer the call from prose.
+ *
+ * Desktop and Arduino adapters must communicate the same scenario, even when
+ * their output APIs differ. Presentation code belongs in `Desktop/main.cpp`
+ * and `<example>.ino`; the shared implementation remains focused on portable
+ * API usage. Examples may describe observations, but they must not print
+ * `PASS`/`FAIL` or imitate a test report. Automated assertions and edge-case
+ * coverage belong in `tests/Foundation`.
+ *
+ * The CMake hierarchy mirrors `src/Foundation`: `examples/CMakeLists.txt`
+ * provides the common example helper and launcher, `examples/Foundation`
+ * selects enabled modules, and each example's own `CMakeLists.txt` selects its
+ * platform adapter. The `Desktop/CMakeLists.txt` explicitly compiles the entry
+ * point together with the parent directory's `Shared.cpp`.
+ *
+ * @note Arduino `.ino` entry points are sketches, not native CMake targets.
+ * Open the complete example directory as a sketch so that the Arduino build
+ * also compiles its adjacent `Shared.cpp`. Native CMake builds enter only the
+ * `Desktop` subdirectory on macOS, Windows, and Linux.
+ *
+ * @section FoundationExamplesBuild Build Through CMake
+ *
+ * Enable examples through the build workflow and select the aggregate
+ * `FoundationExamples` target. Source-tree examples may be built in Debug or
+ * Release; this is separate from their Release-only export policy.
+ *
+ * @code{bash}
+ * ./scripts/build.sh macos_arm64 --config Debug \
+ *     --target FoundationExamples --examples-on --fresh
+ * ./scripts/build.sh macos_arm64 --config Release \
+ *     --target FoundationExamples --examples-on
+ * @endcode
+ *
+ * Examples are added only when their required Foundation modules are enabled.
+ * They link `Foundation::Foundation` and therefore exercise the public target
+ * usage requirements.
+ *
+ * Each example includes the narrowest supported public header that communicates
+ * its dependency. A component example such as Ratio includes
+ * `Foundation/Math/Ratio.h`; a module-wide example such as Containers includes
+ * `Foundation/Containers.h`. This keeps the same source suitable for desktop
+ * and constrained Arduino builds while teaching consumers not to rely on
+ * accidental transitive includes.
+ *
+ * @subsection FoundationExamplesAdd Adding an Example
+ *
+ * 1. Create `examples/Foundation/<module>/<example>` using the structure above.
+ * 2. Put platform-independent Foundation API usage in `Shared.h` and
+ *    `Shared.cpp`; do not put `Serial`, `iostream`, `main()`, `setup()`, or
+ *    `loop()` there.
+ * 3. Add the Arduino entry point as `<example>.ino` in the example root.
+ * 4. Add the native entry point as `Desktop/main.cpp`.
+ * 5. In `Desktop/CMakeLists.txt`, pass both sources to
+ *    `foundation_add_example()` and add the parent directory as a private
+ *    include directory.
+ * 6. Register the example directory from its module `CMakeLists.txt`, guarded
+ *    by every Foundation option required by the demonstrated API.
+ *
+ * A desktop registration follows this pattern:
+ *
+ * @code{.cmake}
+ * foundation_add_example(
+ *     Foundation_Module_Example
+ *     main.cpp
+ *     ../Shared.cpp
+ * )
+ * target_include_directories(Foundation_Module_Example PRIVATE ..)
+ * @endcode
+ *
+ * `foundation_add_example()` accepts one or more source files, links the public
+ * Foundation target, registers the executable with `FoundationExamples`, and
+ * applies the Release-only installation policy. A newly added example must
+ * remain a demonstration; correctness assertions belong in `tests/Foundation`
+ * and CTest.
+ *
+ * @section FoundationExamplesExport Export as Executables
+ *
+ * When examples are enabled, export builds the dedicated
+ * `FoundationExportArtifacts` target for Release and installs every configured
+ * Release example beside the library package:
+ *
+ * @code{bash}
+ * ./scripts/export.sh macos_arm64 --fresh --examples-on
+ * @endcode
+ *
+ * @code
+ * dist/<preset>/bin/examples/<example>          Release executable
+ * dist/<preset>/bin/examples/FoundationExamples.command  macOS launcher
+ * @endcode
+ *
+ * Windows appends `.exe` to each executable and installs the single
+ * `FoundationExamples.cmd` launcher. Double-clicking the platform launcher opens
+ * a console menu that discovers the adjacent Release examples. After each run,
+ * it reports the exit code and asks whether to run another example. Press Enter
+ * or answer `y` to return to the selection menu; answer `n` or `q` to exit.
+ * Choosing `q` from the initial menu also exits the launcher. The executable
+ * remains the real artifact used from a terminal or CI. On macOS, whether
+ * Terminal then closes the window is controlled by the active Terminal profile's
+ * **When the shell exits** preference.
+ *
+ * Launchers are created only for native macOS and Windows packages. Embedded
+ * targets cannot run on the host, and Linux desktop integration is not currently
+ * generated. Debug examples remain available to developers through a normal
+ * source-tree Debug build, but are not distribution artifacts.
+ *
+ * @section FoundationExamplesTypeTraits TypeTraits BasicChecks
+ *
+ * `Foundation_TypeTraits_BasicChecks` demonstrates compile-time type-category
+ * checks and an embedded-style `NumericBuffer<T>` restricted to arithmetic
+ * types. It covers integral, floating-point, arithmetic, class, union, enum,
+ * pointer, reference, object, scalar, fundamental, compound, and function
+ * traits. The shared implementation performs the same compile-time checks for
+ * the desktop executable and Arduino sketch.
+ *
+ * @note These convenience scripts are not application bundles and do not bypass
+ * operating-system security. A downloaded package may still require the normal
+ * macOS Gatekeeper or Windows security approval applicable to unsigned software.
+ */

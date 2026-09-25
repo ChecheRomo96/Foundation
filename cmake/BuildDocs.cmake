@@ -4,6 +4,10 @@ if(DOXYGEN_FOUND)
 
     set(DOXYGEN_IN  ${FOUNDATION_ROOT_DIRECTORY}/docs/Doxyfile)
     set(DOXYGEN_OUT ${CMAKE_BINARY_DIR}/docs/Doxyfile)
+    set(DOXYGEN_HTML_FOOTER
+        ${FOUNDATION_ROOT_DIRECTORY}/docs/assets/FoundationFooter.html)
+    set(DOXYGEN_HTML_EXTRA_FILES
+        ${FOUNDATION_ROOT_DIRECTORY}/docs/assets/FoundationDocs.js)
 
     add_subdirectory(${FOUNDATION_ROOT_DIRECTORY}/docs)
 
@@ -17,6 +21,15 @@ if(DOXYGEN_FOUND)
     if(NOT FOUNDATION_DOXYGEN_INPUTS)
         set(FOUNDATION_DOXYGEN_INPUTS "")
     endif()
+
+    # Doxygen does not run a C++ compiler, so it cannot infer the language
+    # feature-test value selected by the Foundation target. Keep conditional
+    # declarations such as the C++17 `_v` TypeTraits variables visible and
+    # enable documentation-only preprocessor paths.
+    list(APPEND FOUNDATION_DOXYGEN_PREDEFS
+        DOXYGEN=1
+        FOUNDATION_CPLUSPLUS=201703L
+    )
     
     string(REPLACE ";" " " DOXYGEN_PREDEFINED "${FOUNDATION_DOXYGEN_PREDEFS}")
     string(REPLACE ";" " " DOXYGEN_INPUT "${FOUNDATION_DOXYGEN_INPUTS}")

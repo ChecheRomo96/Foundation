@@ -1,7 +1,7 @@
 #ifndef FOUNDATION_UTILS_MOVE_H
 #define FOUNDATION_UTILS_MOVE_H
 
-    namespace Foundation{
+    namespace Foundation::Utils {
 
         /// @cond INTERNAL
         namespace Detail {
@@ -24,8 +24,20 @@
         }
         /// @endcond
 
+        /**
+         * @brief Casts a value to an rvalue reference.
+         * @ingroup Foundation_Utils
+         * @tparam T Deduced source type.
+         * @param value Value whose resources may be transferred by a later operation.
+         * @return An rvalue reference with reference qualifiers removed.
+         *
+         * Move itself transfers no data and leaves `value` unchanged. The move
+         * constructor or move assignment receiving the result defines the
+         * transferred state and the valid state of the source afterward.
+         */
         template <typename T>
-        typename Detail::RemoveReference<T>::Type&& Move(T&& value) {
+        constexpr typename Detail::RemoveReference<T>::Type&&
+        Move(T&& value) noexcept {
             return static_cast<typename Detail::RemoveReference<T>::Type&&>(value);
         }
     }

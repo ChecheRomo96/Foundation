@@ -1,6 +1,7 @@
 #ifndef FOUNDATION_TIME_MODULE_H
 #define FOUNDATION_TIME_MODULE_H
 
+    #include <Foundation_BuildSettings.h>
     #include <Foundation/Time/Tick.h>
     #include <Foundation/Time/Frequency.h>
     #include <Foundation/Time/Period.h>

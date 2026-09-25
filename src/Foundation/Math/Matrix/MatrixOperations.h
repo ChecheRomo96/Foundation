@@ -6,13 +6,13 @@
 #ifndef FOUNDATION_MATH_MATRIX_OPERATIONS_H
 #define FOUNDATION_MATH_MATRIX_OPERATIONS_H
 
-    #include <Foundation/Math/Matrix/FixedMatrix/FixedMatrix.h>
-    #include <Foundation/Math/Matrix/DynamicMatrix/DynamicMatrix.h>
+#include <Foundation/Math/Matrix/Fixed.h>
+#include <Foundation/Math/Matrix/Dynamic.h>
 
-    namespace Foundation {
-    namespace Math {
+namespace Foundation::Math::Matrix {
 
     /**
+     * @ingroup Foundation_MatrixOperations
      * @brief Multiplies two fixed-size matrices.
      *
      * Computes:
@@ -40,9 +40,9 @@
         unsigned int ColsB
     >
     void Multiply(
-        const FixedMatrix<T, RowsA, ColsA>& a,
-        const FixedMatrix<T, ColsA, ColsB>& b,
-        FixedMatrix<T, RowsA, ColsB>& result
+        const Fixed<T, RowsA, ColsA>& a,
+        const Fixed<T, ColsA, ColsB>& b,
+        Fixed<T, RowsA, ColsB>& result
     ) {
         for(unsigned int i = 0; i < RowsA; i++) {
             for(unsigned int j = 0; j < ColsB; j++) {
@@ -56,6 +56,7 @@
     }
 
     /**
+     * @ingroup Foundation_MatrixOperations
      * @brief Multiplies two dynamic matrices.
      *
      * The matrix dimensions are validated at runtime. The result matrix is
@@ -68,27 +69,32 @@
      * @param result Output matrix.
      *
      * @return true if the multiplication was successful.
-     * @return false if the matrix dimensions are incompatible or allocation fails.
+     * @return false if an input is invalid, dimensions are incompatible,
+     * allocation fails, or result storage overlaps either input. On failure,
+     * @p result remains unchanged.
      */
     template <typename T>
     bool Multiply(
-        const DynamicMatrix<T>& a,
-        const DynamicMatrix<T>& b,
-        DynamicMatrix<T>& result
+        const Dynamic<T>& a,
+        const Dynamic<T>& b,
+        Dynamic<T>& result
     ) {
-        if(a.ColsCount() != b.RowsCount()) {
+        if(!a.IsValid() || !b.IsValid() ||
+           a.ColumnCount() != b.RowCount() ||
+           Detail::DynamicStorageOverlaps(a, result) ||
+           Detail::DynamicStorageOverlaps(b, result)) {
             return false;
         }
 
-        if(!result.Allocate(a.RowsCount(), b.ColsCount())) {
+        if(!result.Allocate(a.RowCount(), b.ColumnCount())) {
             return false;
         }
 
-        for(unsigned int i = 0; i < a.RowsCount(); i++) {
-            for(unsigned int j = 0; j < b.ColsCount(); j++) {
+        for(unsigned int i = 0; i < a.RowCount(); i++) {
+            for(unsigned int j = 0; j < b.ColumnCount(); j++) {
                 result.At(i, j) = T();
 
-                for(unsigned int k = 0; k < a.ColsCount(); k++) {
+                for(unsigned int k = 0; k < a.ColumnCount(); k++) {
                     result.At(i, j) += a.At(i, k) * b.At(k, j);
                 }
             }
@@ -98,6 +104,7 @@
     }
 
     /**
+     * @ingroup Foundation_MatrixOperations
      * @brief Multiplies a fixed-size matrix by a dynamic matrix.
      *
      * The number of rows in the dynamic matrix must match the number of columns
@@ -106,42 +113,42 @@
      * The result matrix is allocated or resized to:
      *
      * @code
-     * RowsA x b.ColsCount()
+     * RowsA x b.ColumnCount()
      * @endcode
      *
      * @tparam T Element type.
      * @tparam RowsA Number of rows in matrix a.
      * @tparam ColsA Number of columns in matrix a.
-     * @tparam ColsB Unused compatibility template parameter.
-     *
      * @param a Left-hand fixed-size matrix.
      * @param b Right-hand dynamic matrix.
      * @param result Output dynamic matrix.
      *
      * @return true if the multiplication was successful.
-     * @return false if the matrix dimensions are incompatible or allocation fails.
+     * @return false if the dynamic input is invalid, dimensions are
+     * incompatible, allocation fails, or result storage overlaps @p b. On
+     * failure, @p result remains unchanged.
      */
     template <
         typename T,
         unsigned int RowsA,
-        unsigned int ColsA,
-        unsigned int ColsB
+        unsigned int ColsA
     >
     bool Multiply(
-        const FixedMatrix<T, RowsA, ColsA>& a,
-        const DynamicMatrix<T>& b,
-        DynamicMatrix<T>& result
+        const Fixed<T, RowsA, ColsA>& a,
+        const Dynamic<T>& b,
+        Dynamic<T>& result
     ) {
-        if(b.RowsCount() != ColsA) {
+        if(!b.IsValid() || b.RowCount() != ColsA ||
+           Detail::DynamicStorageOverlaps(b, result)) {
             return false;
         }
 
-        if(!result.Allocate(RowsA, b.ColsCount())) {
+        if(!result.Allocate(RowsA, b.ColumnCount())) {
             return false;
         }
 
         for(unsigned int i = 0; i < RowsA; i++) {
-            for(unsigned int j = 0; j < b.ColsCount(); j++) {
+            for(unsigned int j = 0; j < b.ColumnCount(); j++) {
                 result.At(i, j) = T();
 
                 for(unsigned int k = 0; k < ColsA; k++) {
@@ -154,6 +161,7 @@
     }
 
     /**
+     * @ingroup Foundation_MatrixOperations
      * @brief Multiplies a dynamic matrix by a fixed-size matrix.
      *
      * The number of columns in the dynamic matrix must match the number of rows
@@ -162,7 +170,7 @@
      * The result matrix is allocated or resized to:
      *
      * @code
-     * a.RowsCount() x ColsB
+     * a.RowCount() x ColsB
      * @endcode
      *
      * @tparam T Element type.
@@ -174,7 +182,9 @@
      * @param result Output dynamic matrix.
      *
      * @return true if the multiplication was successful.
-     * @return false if the matrix dimensions are incompatible or allocation fails.
+     * @return false if the dynamic input is invalid, dimensions are
+     * incompatible, allocation fails, or result storage overlaps @p a. On
+     * failure, @p result remains unchanged.
      */
     template <
         typename T,
@@ -182,19 +192,20 @@
         unsigned int ColsB
     >
     bool Multiply(
-        const DynamicMatrix<T>& a,
-        const FixedMatrix<T, RowsB, ColsB>& b,
-        DynamicMatrix<T>& result
+        const Dynamic<T>& a,
+        const Fixed<T, RowsB, ColsB>& b,
+        Dynamic<T>& result
     ) {
-        if(a.ColsCount() != RowsB) {
+        if(!a.IsValid() || a.ColumnCount() != RowsB ||
+           Detail::DynamicStorageOverlaps(a, result)) {
             return false;
         }
 
-        if(!result.Allocate(a.RowsCount(), ColsB)) {
+        if(!result.Allocate(a.RowCount(), ColsB)) {
             return false;
         }
 
-        for(unsigned int i = 0; i < a.RowsCount(); i++) {
+        for(unsigned int i = 0; i < a.RowCount(); i++) {
             for(unsigned int j = 0; j < ColsB; j++) {
                 result.At(i, j) = T();
 
@@ -207,7 +218,6 @@
         return true;
     }
 
-} // namespace Math
-} // namespace Foundation
+} // namespace Foundation::Math::Matrix
 
-#endif
+#endif // FOUNDATION_MATH_MATRIX_OPERATIONS_H

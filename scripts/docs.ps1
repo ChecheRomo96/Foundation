@@ -1,28 +1,27 @@
 param(
-    [string]$Preset = "documentation"
+    [Parameter(Position = 0)]
+    [string]$Preset = "documentation",
+
+    [int]$Parallel = 0,
+    [switch]$Fresh
 )
 
-cmake --preset $Preset
+. "$PSScriptRoot/common.ps1"
 
+$buildParameters = @{
+    Preset = $Preset
+    Target = "docs"
+}
+if ($Parallel -gt 0) {
+    $buildParameters.Parallel = $Parallel
+}
+if ($Fresh) {
+    $buildParameters.Fresh = $true
+}
+
+& "$PSScriptRoot/build.ps1" @buildParameters
 if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
 }
 
-cmake --build --preset $Preset --target docs
-
-if ($LASTEXITCODE -ne 0) {
-    exit $LASTEXITCODE
-}
-
-$IndexA = "build/$Preset/docs/html/index.html"
-$IndexB = "build/$Preset/html/index.html"
-
-if (Test-Path $IndexA) {
-    Start-Process $IndexA
-}
-elseif (Test-Path $IndexB) {
-    Start-Process $IndexB
-}
-else {
-    Write-Host "Documentation was built, but index.html was not found in the expected paths."
-}
+Write-Host "Documentation: $(Join-Path $script:FoundationBuildRoot "$Preset/docs/html/index.html")"

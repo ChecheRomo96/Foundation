@@ -1,0 +1,42 @@
+/**
+ * @defgroup Foundation_Workflows_Install Install
+ * @ingroup Foundation_Workflows_Delivery
+ * @brief Install an already configured build into a selected prefix.
+ *
+ * Install does not configure or build the project and does not delete existing
+ * content. It always installs Release, which must already be configured and
+ * compiled. Use install when the caller controls the destination and wants
+ * normal CMake overlay semantics.
+ *
+ * @section FoundationWorkflowInstallBash Bash
+ *
+ * @code{bash}
+ * ./scripts/install.sh <preset> [--prefix <path>]
+ *
+ * ./scripts/install.sh macos_arm64 --prefix /opt/Foundation
+ * ./scripts/install.sh macos_arm64
+ * @endcode
+ *
+ * @section FoundationWorkflowInstallPowerShell PowerShell
+ *
+ * @code{powershell}
+ * ./scripts/install.ps1 <preset> [-Prefix <path>]
+ * @endcode
+ *
+ * Without an explicit prefix, the destination is `dist/<preset>`. The installed
+ * tree contains public headers, the static library, and the CMake package files
+ * required by `find_package(Foundation CONFIG)`. The installed package contains
+ * only the Release library and `FoundationTargets-release.cmake`.
+ *
+ * Debug remains a source-tree build configuration for development, diagnostics,
+ * and tests. It is intentionally not installed. Consumers that must step into a
+ * Debug Foundation build should build Foundation from source rather than expect
+ * a precompiled Debug archive in the distribution package.
+ *
+ * Install never removes stale files. If a feature was disabled after an earlier
+ * installation, old headers or archives may remain in the prefix. Use export for
+ * a clean repository-owned destination, or clean a caller-owned prefix yourself.
+ *
+ * Use @ref Foundation_Workflows_Export when a clean, reproducible distribution
+ * should be created in one command.
+ */

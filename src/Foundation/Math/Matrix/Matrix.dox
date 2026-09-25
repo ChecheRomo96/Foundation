@@ -6,6 +6,8 @@
  *
  * The Matrix module provides both fixed-size and dynamic matrix
  * implementations together with common matrix algorithms.
+ * The entire family is enabled by `FOUNDATION_MATH_MATRIX`; applications
+ * select the storage model when declaring each matrix.
  *
  * Matrix support is intended for:
  *
@@ -20,13 +22,13 @@
  *
  * Two matrix storage models are provided:
  *
- * - FixedMatrix
- * - DynamicMatrix
+ * - Fixed
+ * - Dynamic
  *
- * FixedMatrix stores its data directly inside the object and is intended
+ * Fixed stores its data directly inside the object and is intended
  * for applications where matrix dimensions are known at compile time.
  *
- * DynamicMatrix allocates storage at runtime and is intended for
+ * Dynamic allocates storage at runtime and is intended for
  * applications where matrix dimensions are not known until execution.
  *
  * @section FoundationMatrixTypes Matrix Types
@@ -36,7 +38,7 @@
  * Fixed-size matrices use compile-time dimensions:
  *
  * @code
- * FixedMatrix<float, 3, 3> matrix;
+ * Foundation::Math::Matrix::Fixed<float, 3, 3> matrix;
  * @endcode
  *
  * Advantages:
@@ -47,25 +49,29 @@
  *
  * See:
  *
- * - @ref Foundation_FixedMatrix
+ * - @ref Foundation_Matrix_Fixed
  *
  * @subsection FoundationMatrixDynamic Dynamic Matrices
  *
  * Dynamic matrices determine their dimensions at runtime:
  *
  * @code
- * DynamicMatrix<float> matrix;
- * matrix.Allocate(3, 3);
+ * Foundation::Math::Matrix::Dynamic<float> matrix;
+ * if (!matrix.Allocate(3, 3)) {
+ *     // Invalid dimensions or insufficient memory.
+ * }
  * @endcode
  *
  * Advantages:
  *
  * - Flexible dimensions.
  * - Runtime resizing.
+ * - Owned heap storage or attached caller-owned storage.
+ * - Non-throwing allocation-failure reporting.
  *
  * See:
  *
- * - @ref Foundation_DynamicMatrix
+ * - @ref Foundation_Matrix_Dynamic
  *
  * @section FoundationMatrixOperationsSection Operations
  *
@@ -88,21 +94,23 @@
  * Fixed-size multiplication:
  *
  * @code
- * FixedMatrix<float, 2, 2> A;
- * FixedMatrix<float, 2, 2> B;
- * FixedMatrix<float, 2, 2> C;
+ * Foundation::Math::Matrix::Fixed<float, 2, 2> A;
+ * Foundation::Math::Matrix::Fixed<float, 2, 2> B;
+ * Foundation::Math::Matrix::Fixed<float, 2, 2> C;
  *
- * Multiply(A, B, C);
+ * if (!Foundation::Math::Matrix::Multiply(A, B, C)) {
+ *     // Invalid dimensions, allocation failure, or overlapping storage.
+ * }
  * @endcode
  *
  * Dynamic multiplication:
  *
  * @code
- * DynamicMatrix<float> A;
- * DynamicMatrix<float> B;
- * DynamicMatrix<float> C;
+ * Foundation::Math::Matrix::Dynamic<float> A;
+ * Foundation::Math::Matrix::Dynamic<float> B;
+ * Foundation::Math::Matrix::Dynamic<float> C;
  *
- * Multiply(A, B, C);
+ * Foundation::Math::Matrix::Multiply(A, B, C);
  * @endcode
  *
  * @section FoundationMatrixApplications Applications
@@ -118,7 +126,10 @@
  *
  * @section FoundationMatrixRelated Related Modules
  *
- * - @ref Foundation_FixedMatrix
- * - @ref Foundation_DynamicMatrix
+ * - @ref Foundation_Matrix_Fixed
+ * - @ref Foundation_Matrix_Dynamic
  * - @ref Foundation_MatrixOperations
+ *
+ * @namespace Foundation::Math::Matrix
+ * @brief Fixed-size and runtime-sized matrix types and their algorithms.
  */

@@ -1,4 +1,77 @@
 /**
  * @defgroup Foundation_Containers Containers
+ * @ingroup Foundation
  * @brief Static-memory containers for embedded systems.
+ *
+ * Containers provides bounded FIFO and LIFO data structures backed by storage
+ * supplied by the caller. The module performs no heap allocation and keeps its
+ * memory requirements explicit, which makes it suitable for embedded and
+ * deterministic applications.
+ *
+ * @section FoundationContainersHeaders Public Headers
+ *
+ * | Need | Header |
+ * | ---- | ------ |
+ * | Entire Foundation library | `#include <Foundation.h>` |
+ * | Entire Containers module | `#include <Foundation_Containers.h>` |
+ * | Nested module umbrella | `#include <Foundation/Containers.h>` |
+ * | One container only | `#include <Foundation/Containers/<Container>.h>` |
+ *
+ * @section FoundationContainersTypes Container Types
+ *
+ * | Type | Ordering | Full operation | Empty operation |
+ * | ---- | -------- | -------------- | --------------- |
+ * | Foundation::Containers::CircularBuffer | FIFO with wraparound | `Push()` returns `false` | `Pop()` returns `false` |
+ * | Foundation::Containers::Queue | FIFO alias of `CircularBuffer` | `Push()` returns `false` | `Pop()` returns `false` |
+ * | Foundation::Containers::Stack | LIFO | `Push()` returns `false` | `Pop()` returns `false` |
+ *
+ * @section FoundationContainersUsage Basic Usage
+ *
+ * @code{.cpp}
+ * #include <Foundation_Containers.h>
+ *
+ * int storage[4] = {};
+ * Foundation::Containers::Queue<int> queue(storage, 4);
+ *
+ * queue.Push(10);
+ * queue.Push(20);
+ *
+ * int next = 0;
+ * if (queue.Pop(next)) {
+ *     // next == 10
+ * }
+ * @endcode
+ *
+ * @section FoundationContainersOwnership Storage and Lifetime Contract
+ *
+ * - A container does not own, allocate, resize, or release its backing array.
+ * - A null pointer with zero capacity is a valid empty container. `IsFull()`
+ *   returns true and insertion fails because no element can fit.
+ * - A null pointer with non-zero capacity is invalid. `IsValid()` reports false,
+ *   `Push()` and `Pop()` return false, and no pointer is dereferenced.
+ * - Non-null storage must remain valid for the complete lifetime of the
+ *   container.
+ * - The caller must provide at least `capacity` constructed `T` objects because
+ *   insertion uses assignment into existing array elements.
+ * - `Push(const T&)` requires copy assignment; `Push(T&&)` and `Pop()` require
+ *   move assignment compatible with Foundation::Utils::Move.
+ * - `Reset()` clears logical state but does not destroy or overwrite elements.
+ * - Operations are not synchronized; external synchronization is required when
+ *   one container is shared across execution contexts.
+ *
+ * @warning The container can validate a null pointer/capacity combination, but
+ * it cannot determine the actual length or lifetime of a non-null array. The
+ * caller remains responsible for providing at least the declared capacity.
+ *
+ * @section FoundationContainersExample Runnable Example
+ *
+ * `Foundation_Containers_DataStructures` demonstrates CircularBuffer
+ * wraparound, Queue FIFO ordering, and Stack LIFO ordering. See
+ * @ref Foundation_Examples "Examples" for build and launch instructions.
+ */
+
+/**
+ * @namespace Foundation::Containers
+ * @ingroup Foundation_Containers
+ * @brief Bounded containers backed by caller-provided storage.
  */
