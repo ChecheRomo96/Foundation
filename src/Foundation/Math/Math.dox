@@ -5,8 +5,10 @@
  * Mathematical utilities and data structures.
  *
  * Arithmetic.h provides the `constexpr` and `noexcept` integer helpers
- * `GCD()` and `FloorMod()`. `FloorMod()` always returns a non-negative
- * remainder for a positive modulus and returns zero for a non-positive one.
+ * `GCD()`, `FloorMod()`, and `FloorDiv()`. For a positive divisor,
+ * `FloorMod()` returns a non-negative remainder and `FloorDiv()` rounds the
+ * quotient toward negative infinity. Both return zero for a non-positive
+ * divisor.
  */
 
 /**

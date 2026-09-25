@@ -4,6 +4,23 @@ This file records user-visible changes to Foundation. Release dates use the
 `YYYY-MM-DD` format. Foundation has not published a stable release yet; the
 scope below describes the planned first release.
 
+## [1.2.0] - 2026-09-25
+
+### Added
+
+- `Foundation::Math::FloorDiv(int32_t value, int32_t divisor)` in
+  `Foundation/Math/Arithmetic.h`: a `constexpr`, `noexcept` floored division
+  that rounds toward negative infinity for every `int32_t` dividend and
+  positive divisor. It pairs with `FloorMod` through
+  `FloorDiv(v, d) * d + FloorMod(v, d) == v`. A non-positive divisor returns
+  `0` without evaluating division by zero or `INT32_MIN / -1`.
+
+### Changed
+
+- Version metadata is now `1.2.0`. The CMake package keeps
+  `SameMajorVersion` compatibility, so consumers requesting
+  `find_package(Foundation 1.0)` accept this release.
+
 ## [1.1.0] - 2026-09-25
 
 ### Added

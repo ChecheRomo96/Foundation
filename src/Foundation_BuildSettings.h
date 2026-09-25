@@ -6,7 +6,7 @@
     //  Version
 
         #ifndef FOUNDATION_VERSION
-            #define FOUNDATION_VERSION "1.1.0"
+            #define FOUNDATION_VERSION "1.2.0"
         #endif
 
     //
@@ -24,7 +24,7 @@
         #endif
 
         #if !defined(DOXYGEN) && (FOUNDATION_CPLUSPLUS < 201703L)
-            #error "Foundation 1.1.0 requires C++17 or newer"
+            #error "Foundation 1.2.0 requires C++17 or newer"
         #endif
 
     //
