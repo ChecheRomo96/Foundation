@@ -104,7 +104,7 @@
  * - Frequency.
  * - Period.
  * - Duration.
- * - Tick.
+ * - Width-explicit Tick specializations.
  * - TimePoint.
  * - Clock.
  *
@@ -187,13 +187,17 @@
  *
  * @section Foundation_TargetPlatforms Target Platforms
  *
+ * All target platforms require a compiler with C++17 language support. The
+ * library avoids requiring the complete C++ standard library so that C++17
+ * language mode remains usable on constrained embedded toolchains.
+ *
  * Foundation is intended to support:
  *
  * - Desktop platforms.
  * - Arduino-style environments.
  * - PSoC Creator projects.
  * - STM32 projects.
- * - Other C++11-capable embedded targets.
+ * - Other C++17-capable embedded targets.
  *
  * @section Foundation_Style Coding Style
  *
@@ -201,11 +205,22 @@
  *
  * - PascalCase for class names.
  * - PascalCase for public function names.
+ * - Descriptive accessor nouns such as `Numerator()`, `Ticks()`,
+ *   `RowCount()`, `Size()`, and `Data()`; avoid unclear abbreviations.
+ * - `Get...()` for associated or configured objects when the direct noun would
+ *   collide with a public type name, as in `GetFrequency()` and `GetClock()`.
+ * - `Is...()` and `Has...()` for Boolean state queries.
+ * - Standard-compatible snake_case only in TypeTraits, where matching
+ *   `<type_traits>` is part of the public contract.
  * - Nested namespaces.
  * - Explicit module ownership.
  * - Small focused headers.
  * - Minimal hidden dependencies.
  * - Embedded-friendly implementations.
+ * - Keep short parameter lists on the same line as the function name.
+ * - Put a function's opening brace on the same line as its signature:
+ *   `ReturnType Function(parameters) {`.
+ * - Apply the same formatting to C++ snippets in Doxygen documentation.
  *
  * @section Foundation_Namespaces Namespaces
  *
@@ -239,7 +254,7 @@
  * Module-specific documentation should live in the corresponding module
  * documentation files.
  *
- * @section Foundation_Versioning Versioning
+ * @section Foundation_VERSIONing Versioning
  *
  * Foundation follows semantic versioning:
  *
@@ -256,6 +271,7 @@
  * Useful related documentation pages:
  *
  * - @ref FoundationTopLevelHeaders
- * - @ref FoundationBuildGuide
+ * - @ref Foundation_BuildGuide
+ * - @ref Foundation_Workflows
  * - @ref Foundation_Examples
  */

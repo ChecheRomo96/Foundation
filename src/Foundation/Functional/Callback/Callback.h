@@ -17,189 +17,145 @@ namespace Functional {
 
 /**
  * @class Callback
- * @brief Generic callback wrapper.
+ * @brief Allocation-free callback with a non-void return value.
+ * @ingroup Foundation_Callback
  *
- * Stores and invokes either:
- *
- * - A free/static function pointer.
- * - A non-static member function bound to an object instance.
+ * Stores either a free/static function pointer or a member function bound to
+ * an object instance. An empty `Args...` pack represents a callback without
+ * arguments, for example `Callback<int>`.
  *
  * @tparam R Return type.
- * @tparam Args Callback argument types.
+ * @tparam Args Callback argument types; the pack may be empty.
+ *
+ * @note A bound object instance is not owned. It must remain alive until the
+ * callback is rebound or unbound and no invocation is in progress.
+ * @note Binding a new target replaces the previous target.
  *
  * @code
- * void OnEvent(int value) {}
+ * int Add(int lhs, int rhs) {
+ *     return lhs + rhs;
+ * }
  *
- * Callback<void, int> callback;
- * callback.bind(OnEvent);
- * callback.invoke(10);
+ * Callback<int, int, int> callback;
+ * callback.Bind(Add);
+ * const int result = callback.Invoke(2, 3);
  * @endcode
  */
 template <typename R, typename... Args>
 class Callback {
 private:
 
-    /**
-     * @brief Internal context for bound member functions.
-     */
     struct CallbackContext {
-        void* instance;
-        R (*invoke)(void*, Args... args);
+        const void* instance;
+        R (*invoke)(const void*, Args...);
     };
 
 public:
 
-    /**
-     * @brief Free/static function pointer type.
-     */
+    /** @brief Free/static function pointer type accepted by Bind(). */
     using CallbackType = R (*)(Args...);
 
-    /**
-     * @brief Creates an empty callback.
-     */
-    Callback()
+    /** @brief Creates an empty callback. */
+    Callback() noexcept
         : _callback(nullptr),
           _context{nullptr, nullptr} {}
 
     /**
      * @brief Binds a free or static function.
-     *
-     * @param callback Function pointer to bind.
+     * @param callback Function pointer to bind; null leaves the callback empty.
      */
-    inline void bind(CallbackType callback) {
+    void Bind(CallbackType callback) noexcept {
         _callback = callback;
         _context = {nullptr, nullptr};
     }
 
     /**
-     * @brief Binds a non-static member function.
-     *
+     * @brief Binds a non-const member function.
      * @tparam T Class type.
      * @tparam Method Member function pointer.
-     *
      * @param instance Object instance used when invoking the callback.
+     * @warning `instance` is stored as a non-owning pointer and must remain
+     * valid for every invocation. Passing null leaves the callback empty.
      */
     template <typename T, R (T::*Method)(Args...)>
-    void bind(T* instance) {
+    void Bind(T* instance) noexcept {
+        if (instance == nullptr) {
+            Unbind();
+            return;
+        }
+
         _callback = nullptr;
-        _context.instance = static_cast<void*>(instance);
-        _context.invoke = [](void* obj, Args... args) -> R {
-            return (static_cast<T*>(obj)->*Method)(args...);
+        _context.instance = instance;
+        _context.invoke = [](const void* object, Args... args) -> R {
+            T* typedObject = const_cast<T*>(static_cast<const T*>(object));
+            return (typedObject->*Method)(static_cast<Args&&>(args)...);
         };
     }
 
     /**
-     * @brief Removes the current binding.
+     * @brief Binds a const member function.
+     * @tparam T Class type.
+     * @tparam Method Const member function pointer.
+     * @param instance Object instance used when invoking the callback.
+     * @warning `instance` is stored as a non-owning pointer and must remain
+     * valid for every invocation. Passing null leaves the callback empty.
      */
-    inline void unbind() {
+    template <typename T, R (T::*Method)(Args...) const>
+    void Bind(const T* instance) noexcept {
+        if (instance == nullptr) {
+            Unbind();
+            return;
+        }
+
+        _callback = nullptr;
+        _context.instance = instance;
+        _context.invoke = [](const void* object, Args... args) -> R {
+            return (static_cast<const T*>(object)->*Method)(
+                static_cast<Args&&>(args)...
+            );
+        };
+    }
+
+    /** @brief Removes the current binding. */
+    void Unbind() noexcept {
         _callback = nullptr;
         _context = {nullptr, nullptr};
     }
 
     /**
-     * @brief Checks whether the callback is bound.
-     *
-     * @return true if a function or member function is bound.
-     * @return false otherwise.
+     * @brief Checks whether the callback has an invocable target.
+     * @return true when a free or member function is bound; otherwise false.
      */
-    inline bool status() const {
-        return (_callback != nullptr) || (_context.invoke && _context.instance);
+    bool IsBound() const noexcept {
+        return (_callback != nullptr) ||
+            (_context.invoke != nullptr && _context.instance != nullptr);
     }
 
     /**
      * @brief Invokes the bound callback.
-     *
-     * @param args Arguments forwarded to the callback.
-     *
+     * @param args Arguments forwarded according to the callback signature.
      * @return Callback return value.
      *
-     * @note If FOUNDATION_EXCEPTIONS is enabled, an unbound callback throws
-     * std::runtime_error. Otherwise, a default-constructed return value is
-     * returned.
+     * @note If `FOUNDATION_EXCEPTIONS` is enabled, an empty callback throws
+     * `std::runtime_error`. Otherwise, it returns a default-constructed `R`.
      */
-    R invoke(Args... args) const {
-        if (_context.invoke && _context.instance) {
-            return _context.invoke(_context.instance, args...);
+    R Invoke(Args... args) const {
+        if (_context.invoke != nullptr && _context.instance != nullptr) {
+            return _context.invoke(
+                _context.instance,
+                static_cast<Args&&>(args)...
+            );
         }
 
-        if (_callback) {
-            return _callback(args...);
-        }
-
-#ifdef FOUNDATION_EXCEPTIONS
-        throw std::runtime_error("Callback is not bound");
-#endif
-
-        return R();
-    }
-
-private:
-
-    CallbackType _callback;
-    CallbackContext _context;
-};
-
-/// \cond INTERNAL
-
-/**
- * @brief Specialization for callbacks without arguments and non-void return.
- *
- * @tparam R Return type.
- */
-template <typename R>
-class Callback<R, void> {
-private:
-
-    struct CallbackContext {
-        void* instance;
-        R (*invoke)(void*);
-    };
-
-public:
-
-    using CallbackType = R (*)();
-
-    Callback()
-        : _callback(nullptr),
-          _context{nullptr, nullptr} {}
-
-    inline void bind(CallbackType callback) {
-        _callback = callback;
-        _context = {nullptr, nullptr};
-    }
-
-    template <typename T, R (T::*Method)()>
-    void bind(T* instance) {
-        _callback = nullptr;
-        _context.instance = static_cast<void*>(instance);
-        _context.invoke = [](void* obj) -> R {
-            return (static_cast<T*>(obj)->*Method)();
-        };
-    }
-
-    inline void unbind() {
-        _callback = nullptr;
-        _context = {nullptr, nullptr};
-    }
-
-    inline bool status() const {
-        return (_callback != nullptr) || (_context.invoke && _context.instance);
-    }
-
-    R invoke() const {
-        if (_context.invoke && _context.instance) {
-            return _context.invoke(_context.instance);
-        }
-
-        if (_callback) {
-            return _callback();
+        if (_callback != nullptr) {
+            return _callback(static_cast<Args&&>(args)...);
         }
 
 #ifdef FOUNDATION_EXCEPTIONS
         throw std::runtime_error("Callback is not bound");
+#else
+        return R{};
 #endif
-
-        return R();
     }
 
 private:
@@ -209,58 +165,122 @@ private:
 };
 
 /**
- * @brief Specialization for callbacks with void return.
+ * @brief Allocation-free callback with no return value.
+ * @ingroup Foundation_Callback
  *
- * @tparam Args Callback argument types.
+ * An empty `Args...` pack represents a callback with neither a return value nor
+ * arguments: `Callback<void>`.
+ *
+ * @tparam Args Callback argument types; the pack may be empty.
  */
 template <typename... Args>
 class Callback<void, Args...> {
 private:
 
     struct CallbackContext {
-        void* instance;
-        void (*invoke)(void*, Args...);
+        const void* instance;
+        void (*invoke)(const void*, Args...);
     };
 
 public:
 
+    /** @brief Free/static function pointer type accepted by Bind(). */
     using CallbackType = void (*)(Args...);
 
-    Callback()
+    /** @brief Creates an empty callback. */
+    Callback() noexcept
         : _callback(nullptr),
           _context{nullptr, nullptr} {}
 
-    inline void bind(CallbackType callback) {
+    /**
+     * @brief Binds a free or static function.
+     * @param callback Function pointer to bind; null leaves the callback empty.
+     */
+    void Bind(CallbackType callback) noexcept {
         _callback = callback;
         _context = {nullptr, nullptr};
     }
 
+    /**
+     * @brief Binds a non-const member function.
+     * @tparam T Class type.
+     * @tparam Method Member function pointer.
+     * @param instance Object instance used when invoking the callback.
+     * @warning `instance` is stored as a non-owning pointer and must remain
+     * valid for every invocation. Passing null leaves the callback empty.
+     */
     template <typename T, void (T::*Method)(Args...)>
-    void bind(T* instance) {
+    void Bind(T* instance) noexcept {
+        if (instance == nullptr) {
+            Unbind();
+            return;
+        }
+
         _callback = nullptr;
-        _context.instance = static_cast<void*>(instance);
-        _context.invoke = [](void* obj, Args... args) {
-            (static_cast<T*>(obj)->*Method)(args...);
+        _context.instance = instance;
+        _context.invoke = [](const void* object, Args... args) {
+            T* typedObject = const_cast<T*>(static_cast<const T*>(object));
+            (typedObject->*Method)(static_cast<Args&&>(args)...);
         };
     }
 
-    inline void unbind() {
+    /**
+     * @brief Binds a const member function.
+     * @tparam T Class type.
+     * @tparam Method Const member function pointer.
+     * @param instance Object instance used when invoking the callback.
+     * @warning `instance` is stored as a non-owning pointer and must remain
+     * valid for every invocation. Passing null leaves the callback empty.
+     */
+    template <typename T, void (T::*Method)(Args...) const>
+    void Bind(const T* instance) noexcept {
+        if (instance == nullptr) {
+            Unbind();
+            return;
+        }
+
+        _callback = nullptr;
+        _context.instance = instance;
+        _context.invoke = [](const void* object, Args... args) {
+            (static_cast<const T*>(object)->*Method)(
+                static_cast<Args&&>(args)...
+            );
+        };
+    }
+
+    /** @brief Removes the current binding. */
+    void Unbind() noexcept {
         _callback = nullptr;
         _context = {nullptr, nullptr};
     }
 
-    inline bool status() const {
-        return (_callback != nullptr) || (_context.invoke && _context.instance);
+    /**
+     * @brief Checks whether the callback has an invocable target.
+     * @return true when a free or member function is bound; otherwise false.
+     */
+    bool IsBound() const noexcept {
+        return (_callback != nullptr) ||
+            (_context.invoke != nullptr && _context.instance != nullptr);
     }
 
-    void invoke(Args... args) const {
-        if (_context.invoke && _context.instance) {
-            _context.invoke(_context.instance, args...);
+    /**
+     * @brief Invokes the bound callback.
+     * @param args Arguments forwarded according to the callback signature.
+     *
+     * @note If `FOUNDATION_EXCEPTIONS` is enabled, an empty callback throws
+     * `std::runtime_error`. Otherwise, invocation is a no-op.
+     */
+    void Invoke(Args... args) const {
+        if (_context.invoke != nullptr && _context.instance != nullptr) {
+            _context.invoke(
+                _context.instance,
+                static_cast<Args&&>(args)...
+            );
             return;
         }
 
-        if (_callback) {
-            _callback(args...);
+        if (_callback != nullptr) {
+            _callback(static_cast<Args&&>(args)...);
             return;
         }
 
@@ -274,73 +294,6 @@ private:
     CallbackType _callback;
     CallbackContext _context;
 };
-
-/**
- * @brief Specialization for callbacks without arguments and void return.
- */
-template <>
-class Callback<void, void> {
-private:
-
-    struct CallbackContext {
-        void* instance;
-        void (*invoke)(void*);
-    };
-
-public:
-
-    using CallbackType = void (*)();
-
-    Callback()
-        : _callback(nullptr),
-          _context{nullptr, nullptr} {}
-
-    inline void bind(CallbackType callback) {
-        _callback = callback;
-        _context = {nullptr, nullptr};
-    }
-
-    template <typename T, void (T::*Method)()>
-    void bind(T* instance) {
-        _callback = nullptr;
-        _context.instance = static_cast<void*>(instance);
-        _context.invoke = [](void* obj) {
-            (static_cast<T*>(obj)->*Method)();
-        };
-    }
-
-    inline void unbind() {
-        _callback = nullptr;
-        _context = {nullptr, nullptr};
-    }
-
-    inline bool status() const {
-        return (_callback != nullptr) || (_context.invoke && _context.instance);
-    }
-
-    void invoke() const {
-        if (_context.invoke && _context.instance) {
-            _context.invoke(_context.instance);
-            return;
-        }
-
-        if (_callback) {
-            _callback();
-            return;
-        }
-
-#ifdef FOUNDATION_EXCEPTIONS
-        throw std::runtime_error("Callback is not bound");
-#endif
-    }
-
-private:
-
-    CallbackType _callback;
-    CallbackContext _context;
-};
-
-/// \endcond
 
 } // namespace Functional
 } // namespace Foundation

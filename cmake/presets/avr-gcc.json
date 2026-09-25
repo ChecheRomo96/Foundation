@@ -1,0 +1,26 @@
+{
+  "version": 6,
+  "include": [
+    "base.json"
+  ],
+  "configurePresets": [
+    {
+      "name": "atmega328p_avrgcc_avr5",
+      "inherits": "base",
+      "generator": "Ninja Multi-Config",
+      "toolchainFile": "${sourceDir}/cmake/toolchains/avr-gcc/atmega328p.cmake",
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Debug;Release",
+        "FOUNDATION_PLATFORM": "atmega328p_avrgcc_avr5",
+        "FOUNDATION_EXPECTED_SYSTEM_PROCESSOR": "^avr5$"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "atmega328p_avrgcc_avr5",
+      "configurePreset": "atmega328p_avrgcc_avr5",
+      "configuration": "Debug"
+    }
+  ]
+}

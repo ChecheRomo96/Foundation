@@ -1,6 +1,0 @@
-/**
- * @defgroup FoundationBuildScripts Scripts
- * @ingroup FoundationBuildGuide
- *
- * Helper scripts used to automate common build tasks.
- */

@@ -14,17 +14,15 @@ function(foundation_add_test test_target)
 
     target_link_libraries(${test_target}
         PRIVATE
-            Foundation
-            gtest
-            gtest_main
+            Foundation::Foundation
+            GTest::gtest_main
     )
 
-    target_include_directories(${test_target}
-        PRIVATE
-            ${CMAKE_CURRENT_LIST_DIR}
+    gtest_discover_tests(${test_target}
+        TEST_PREFIX "${test_target}."
+        DISCOVERY_MODE PRE_TEST
+        PROPERTIES LABELS "Foundation"
     )
-
-    gtest_discover_tests(${test_target})
 
     set_property(TARGET Foundation APPEND PROPERTY FOUNDATION_TEST_TARGETS ${test_target})
 endfunction()

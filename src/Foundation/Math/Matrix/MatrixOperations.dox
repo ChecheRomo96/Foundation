@@ -1,11 +1,11 @@
 /**
  * @defgroup Foundation_MatrixOperations Matrix Operations
- * @ingroup Foundation_Math
+ * @ingroup Foundation_Matrix
  *
  * @brief Matrix arithmetic algorithms.
  *
  * This module provides algorithms operating on matrix types such as
- * FixedMatrix and DynamicMatrix.
+ * Fixed and Dynamic.
  *
  * Currently supported operations include:
  *
@@ -24,20 +24,16 @@
  * The number of columns in the left matrix must match the number of
  * rows in the right matrix.
  *
- * 
-::contentReference[oaicite:0]{index=0}
-
- *
  * @section FoundationMatrixOperationsFixed Fixed Matrices
  *
  * Fixed-size multiplication is resolved entirely at compile time.
  *
  * @code
- * FixedMatrix<float, 2, 3> A;
- * FixedMatrix<float, 3, 2> B;
- * FixedMatrix<float, 2, 2> C;
+ * Foundation::Math::Matrix::Fixed<float, 2, 3> A;
+ * Foundation::Math::Matrix::Fixed<float, 3, 2> B;
+ * Foundation::Math::Matrix::Fixed<float, 2, 2> C;
  *
- * Multiply(A, B, C);
+ * Foundation::Math::Matrix::Multiply(A, B, C);
  * @endcode
  *
  * Matrix dimensions are validated by the compiler through template
@@ -48,17 +44,23 @@
  * Dynamic matrices are checked at runtime.
  *
  * @code
- * DynamicMatrix<float> A;
- * DynamicMatrix<float> B;
- * DynamicMatrix<float> C;
+ * Foundation::Math::Matrix::Dynamic<float> A;
+ * Foundation::Math::Matrix::Dynamic<float> B;
+ * Foundation::Math::Matrix::Dynamic<float> C;
  *
- * if(Multiply(A, B, C))
- * {
+ * if (Foundation::Math::Matrix::Multiply(A, B, C)) {
  *     // Success
  * }
  * @endcode
  *
- * The result matrix is automatically resized when required.
+ * The result matrix is automatically resized when required. Compatible
+ * attached storage is reused, so an embedded application can provide the
+ * output buffer without allocating from the heap.
+ *
+ * `Multiply()` returns false without modifying the output when an input is
+ * invalid, dimensions are incompatible, allocation fails, or output storage
+ * overlaps either input. Pass a distinct result matrix; this includes matrices
+ * attached to different regions of the same overlapping buffer.
  *
  * @section FoundationMatrixOperationsMixed Mixed Matrices
  *
@@ -68,21 +70,21 @@
  * Fixed × Dynamic:
  *
  * @code
- * FixedMatrix<float, 3, 3> A;
- * DynamicMatrix<float> B;
- * DynamicMatrix<float> C;
+ * Foundation::Math::Matrix::Fixed<float, 3, 3> A;
+ * Foundation::Math::Matrix::Dynamic<float> B;
+ * Foundation::Math::Matrix::Dynamic<float> C;
  *
- * Multiply(A, B, C);
+ * Foundation::Math::Matrix::Multiply(A, B, C);
  * @endcode
  *
  * Dynamic × Fixed:
  *
  * @code
- * DynamicMatrix<float> A;
- * FixedMatrix<float, 3, 3> B;
- * DynamicMatrix<float> C;
+ * Foundation::Math::Matrix::Dynamic<float> A;
+ * Foundation::Math::Matrix::Fixed<float, 3, 3> B;
+ * Foundation::Math::Matrix::Dynamic<float> C;
  *
- * Multiply(A, B, C);
+ * Foundation::Math::Matrix::Multiply(A, B, C);
  * @endcode
  *
  * @section FoundationMatrixOperationsComplexity Computational Complexity
@@ -117,6 +119,6 @@
  * - Machine learning.
  * - Numerical linear algebra.
  *
- * @see Foundation::Math::FixedMatrix
- * @see Foundation::Math::DynamicMatrix
+ * @see Foundation::Math::Matrix::Fixed
+ * @see Foundation::Math::Matrix::Dynamic
  */

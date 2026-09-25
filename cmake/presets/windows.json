@@ -1,0 +1,70 @@
+{
+  "version": 6,
+  "include": [
+    "base.json"
+  ],
+  "configurePresets": [
+    {
+      "name": "windows_msvc_x64",
+      "inherits": "base",
+      "generator": "Visual Studio 18 2026",
+      "architecture": "x64",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      },
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Debug;Release",
+        "FOUNDATION_PLATFORM": "windows_msvc_x64"
+      }
+    },
+    {
+      "name": "windows_clang_x64",
+      "inherits": "base",
+      "generator": "Ninja Multi-Config",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      },
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Debug;Release",
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++",
+        "FOUNDATION_PLATFORM": "windows_clang_x64",
+        "FOUNDATION_EXPECTED_SYSTEM_PROCESSOR": "^(x86_64|AMD64|amd64)$"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "windows_msvc_x64",
+      "configurePreset": "windows_msvc_x64",
+      "configuration": "Debug"
+    },
+    {
+      "name": "windows_clang_x64",
+      "configurePreset": "windows_clang_x64",
+      "configuration": "Debug"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "windows_msvc_x64",
+      "configurePreset": "windows_msvc_x64",
+      "configuration": "Debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "windows_clang_x64",
+      "configurePreset": "windows_clang_x64",
+      "configuration": "Debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ]
+}

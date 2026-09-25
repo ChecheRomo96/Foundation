@@ -1,4 +1,115 @@
 /**
  * @defgroup Foundation_Scheduling Scheduling
+ * @ingroup Foundation
  * @brief Cooperative task scheduling primitives.
+ *
+ * Scheduling provides a small synchronous scheduler driven by a matching
+ * Foundation::Time::BasicClock. Tasks are checked and executed from the
+ * caller's `BasicTaskScheduler::Update()` call; the module creates no threads
+ * and performs no heap allocation. Every generic template defaults to
+ * `Tick32`, and the short public names use those defaults.
+ *
+ * @section FoundationSchedulingHeaders Public Headers
+ *
+ * | Need | Header |
+ * | ---- | ------ |
+ * | Entire Foundation library | `#include <Foundation.h>` |
+ * | Entire Scheduling module | `#include <Foundation_Scheduling.h>` |
+ * | Nested module umbrella | `#include <Foundation/Scheduling.h>` |
+ * | One scheduling type | `#include <Foundation/Scheduling/<Type>.h>` |
+ *
+ * @section FoundationSchedulingTypes Public Types
+ *
+ * | Type | Role |
+ * | ---- | ---- |
+ * | Foundation::Scheduling::BasicTask<TickType> | Generic polymorphic interface queried and executed by a scheduler. |
+ * | Foundation::Scheduling::BasicPeriodicTask<TickType> | Generic task that runs immediately, then whenever its tick period has elapsed. |
+ * | Foundation::Scheduling::BasicOneShotTask<TickType> | Generic task that runs once at or after its trigger TimePoint. |
+ * | Foundation::Scheduling::BasicTaskScheduler<TickType> | Generic non-owning task registry driven by a matching Clock. |
+ * | Foundation::Scheduling::Task, PeriodicTask, OneShotTask, TaskScheduler | Aliases that use the `Tick32` template default. |
+ *
+ * @section FoundationSchedulingTickTypes Tick-Type Consistency
+ *
+ * A scheduling family shares one TickType from source to execution. Its Clock,
+ * Duration, TimePoint, Task interface, concrete tasks, task-pointer storage,
+ * and scheduler must all use that same type. A mismatch is rejected at compile
+ * time rather than converted at runtime.
+ *
+ * @code{.cpp}
+ * using TickType = Foundation::Time::Tick16;
+ * using Clock = Foundation::Time::BasicClock<TickType>;
+ * using Duration = Foundation::Time::BasicDuration<TickType>;
+ * using TimePoint = Foundation::Time::BasicTimePoint<TickType>;
+ * using Task = Foundation::Scheduling::BasicTask<TickType>;
+ * using PeriodicTask = Foundation::Scheduling::BasicPeriodicTask<TickType>;
+ * using TaskScheduler = Foundation::Scheduling::BasicTaskScheduler<TickType>;
+ * @endcode
+ *
+ * @section FoundationSchedulingFlow Execution Flow
+ *
+ * Each `Update()` obtains one TimePoint from the configured clock, visits tasks
+ * in registration order, calls `ShouldRun(now)`, and calls `Run(now)` when the
+ * result is true. Callbacks run inline, so a long-running callback delays every
+ * task that follows it.
+ * `ShouldRun()` is a const query: deciding readiness must not mutate a task.
+ * Built-in tasks perform their state transition in `Run()` instead.
+ *
+ * @section FoundationSchedulingUsage Basic Usage
+ *
+ * @code{.cpp}
+ * void Increment(void* context) {
+ *     ++(*static_cast<unsigned int*>(context));
+ * }
+ *
+ * Foundation::Scheduling::Task* storage[2] = {};
+ * Foundation::Scheduling::TaskScheduler scheduler(storage, 2, &clock);
+ *
+ * unsigned int runs = 0;
+ * Foundation::Scheduling::PeriodicTask task(Increment, &runs, Foundation::Time::Duration(10));
+ * scheduler.AddTask(&task);
+ * scheduler.Update();
+ * @endcode
+ *
+ * @section FoundationSchedulingOwnership Ownership and Timing Contract
+ *
+ * - TaskScheduler does not own its storage array, Clock, or Task objects.
+ * - Clock is neither copyable nor movable. This keeps the object identity used
+ *   by TimePoint stable while tasks and the scheduler refer to it.
+ * - PeriodicTask and OneShotTask do not own their callback context pointers.
+ * - Every referenced object and storage array must outlive its consumer.
+ * - A null task-storage pointer is valid only with zero capacity. `IsValid()`
+ *   reports the storage invariant; invalid storage makes `AddTask()` fail and
+ *   `Update()` a no-op.
+ * - A null Clock is allowed and disables `Update()` without making task storage
+ *   invalid.
+ * - A null callback context is allowed and is forwarded unchanged when the
+ *   callback itself is non-null. The callback decides whether null is useful.
+ * - Periods and trigger times are expressed in clock ticks; compatible units
+ *   and clock identity are the caller's responsibility.
+ * - The short Scheduling aliases use Time's 32-bit Clock, Duration, and
+ *   TimePoint aliases. Generic `Basic...<TickType>` scheduling types use the
+ *   matching Time types. Their comparisons handle counter rollover when the
+ *   separation is less than the selected TickType half-range.
+ * - Call `Update()` often enough that the true separation from a stored run or
+ *   trigger point never reaches the half-range. Beyond that boundary, modular
+ *   counter ordering is inherently ambiguous.
+ * - An invalid elapsed Duration, including one produced from different Clock
+ *   identities, never satisfies a periodic task's due-time comparison.
+ * - `Clear()` forgets registered pointers but does not destroy tasks.
+ *
+ * @warning A raw pointer's true lifetime cannot be determined at runtime. The
+ * caller must keep the Clock, Task objects, contexts, and storage alive for
+ * every consumer that references them.
+ *
+ * @section FoundationSchedulingExample Runnable Example
+ *
+ * `Foundation_Scheduling_TaskScheduler` demonstrates a simulated clock,
+ * periodic and one-shot tasks, capacity, and repeated updates. See
+ * @ref Foundation_Examples "Examples" for build and launch instructions.
+ */
+
+/**
+ * @namespace Foundation::Scheduling
+ * @ingroup Foundation_Scheduling
+ * @brief Cooperative scheduling types driven by Foundation Time.
  */

@@ -1,8 +1,12 @@
-#ifndef FOUNDATION_CONTAINERS_H
-#define FOUNDATION_CONTAINERS_H
+#ifndef FOUNDATION_CONTAINERS_TOP_H
+#define FOUNDATION_CONTAINERS_TOP_H
 
-#include <Containers/CircularBuffer.h>
-#include <Containers/Queue.h>
-#include <Containers/Stack.h>
+    #if __has_include(<Foundation/Containers/Containers.h>)
+        #ifndef FOUNDATION_CONTAINERS
+            #define FOUNDATION_CONTAINERS
+        #endif
 
-#endif
+        #include <Foundation/Containers.h>
+    #endif
+
+#endif//FOUNDATION_CONTAINERS_TOP_H

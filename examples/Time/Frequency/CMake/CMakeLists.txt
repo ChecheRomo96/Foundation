@@ -1,2 +1,0 @@
-add_executable(Foundation_Time_Frequency Frequency.cpp)
-target_link_libraries(Foundation_Time_Frequency PRIVATE Foundation)

@@ -1,0 +1,47 @@
+/**
+ * @defgroup Foundation_Workflows_Clean Clean
+ * @ingroup Foundation_Workflows_Development
+ * @brief Remove known build and optional distribution directories safely.
+ *
+ * Cleanup always requires either an explicit preset or the explicit all flag.
+ * Distribution outputs are retained unless their separate flag is supplied.
+ * Clean does not modify source files, presets, toolchains, or files outside the
+ * repository's `build/` and `dist/` roots.
+ *
+ * @section FoundationWorkflowCleanBash Bash
+ *
+ * @code{bash}
+ * ./scripts/clean.sh <preset> [--dist]
+ * ./scripts/clean.sh --all [--dist]
+ *
+ * ./scripts/clean.sh macos_arm64
+ * ./scripts/clean.sh macos_arm64 --dist
+ * ./scripts/clean.sh --all --dist
+ * @endcode
+ *
+ * @section FoundationWorkflowCleanPowerShell PowerShell
+ *
+ * @code{powershell}
+ * ./scripts/clean.ps1 <preset> [-Dist]
+ * ./scripts/clean.ps1 -All [-Dist]
+ * @endcode
+ *
+ * Preset names are validated before they are used as paths. Cleanup is limited
+ * to the repository's fixed `build/` and `dist/` roots; path traversal and
+ * ambiguous no-argument cleanup are rejected.
+ *
+ * @section FoundationWorkflowCleanScope Scope
+ *
+ * | Command | Removes |
+ * | --- | --- |
+ * | `clean <preset>` | `build/<preset>` only |
+ * | `clean <preset> --dist` / `-Dist` | Build and distribution for one preset |
+ * | `clean --all` / `-All` | Entire `build/` tree only |
+ * | `clean --all --dist` / `-All -Dist` | Entire `build/` and `dist/` trees |
+ *
+ * Use per-preset cleanup during normal work. All-target cleanup discards every
+ * configured cache and can make multi-platform validation unnecessarily slow.
+ * Export already refreshes its default distribution directory, so cleaning dist
+ * first is useful for an explicit end-to-end test but is not required for every
+ * export.
+ */
