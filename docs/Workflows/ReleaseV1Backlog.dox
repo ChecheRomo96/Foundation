@@ -15,7 +15,7 @@
  * | Working branch | `main` (trunk-based development) |
  * | Overall status | `IN PROGRESS` |
  * | Current milestone | M1 - Release contract |
- * | Last reviewed | 2026-09-24 |
+ * | Last reviewed | 2026-09-25 |
  * | Release decision | Not ready |
  *
  * Allowed task states are:
@@ -101,9 +101,9 @@
  * | ID | Priority | State | Task | Acceptance criteria / evidence |
  * | -- | -------- | ----- | ---- | ------------------------------ |
  * | V1-001 | P0 | `DONE` | Define the support matrix | Every public preset is classified in @ref Foundation_BuildGuide_SupportMatrix; PIC is deferred and unvalidated candidates cannot be called supported. |
- * | V1-002 | P0 | `DONE` | Make version and language requirements consistent | CMake, `library.properties`, and source mode report 1.0.0; CMake rejects version drift; Debug and Release each pass 26 tests; direct source mode accepts C++17 and rejects C++14; Doxygen rebuild passes. |
+ * | V1-002 | P0 | `DONE` | Make version and language requirements consistent | CMake, `library.properties`, and source mode report 1.0.0; CMake rejects version drift; the current Debug and Release suites each pass 108 tests; direct source mode accepts C++17 and rejects C++14; Doxygen rebuild passes. |
  * | V1-003 | P0 | `BLOCKED` | Confirm the distribution license | Interim state is `All Rights Reserved / No License Granted`; README prohibits external use and identifies the project as proprietary. A qualified legal expert must review ownership, prior grants, contribution terms, and the final distribution model before release. |
- * | V1-004 | P0 | `IN PROGRESS` | Audit and freeze the public API | Inventory, dependency graph, evidence, and unresolved findings are recorded in @ref Foundation_Workflows_PublicApiAudit. The API is not frozen while blockers or breaking decisions remain. |
+ * | V1-004 | P0 | `DONE` | Audit and freeze the public API | All 16 findings have documented dispositions; 108 Debug and 108 Release tests pass on `macos_arm64`; the isolated exported-package consumer links out-of-line API through `Foundation::Foundation`. See @ref Foundation_Workflows_PublicApiAudit. |
  * | V1-005 | P1 | `TODO` | Add release history and limitations | `CHANGELOG.md` contains the 1.0.0 scope and the documentation lists known limitations. |
  *
  * M1 exits when the public contract no longer contradicts the build and every
@@ -137,7 +137,7 @@
  *
  * | ID | Priority | State | Task | Acceptance criteria / evidence |
  * | -- | -------- | ----- | ---- | ------------------------------ |
- * | PKG-001 | P0 | `TODO` | Add a repository-owned package consumer fixture | The fixture configures only from an exported prefix, includes public headers, calls a non-inline symbol, and links the imported target. |
+ * | PKG-001 | P0 | `DONE` | Add a repository-owned package consumer fixture | `tests/PackageConsumer` is isolated from the source tree, validates umbrella and selective includes, links out-of-line Time symbols through the imported target, and passed a fresh `macos_arm64` export on 2026-09-25. See @ref Foundation_Workflows_PackageConsumer. |
  * | PKG-002 | P0 | `TODO` | Validate the feature-option matrix | Default, full, each top-level module disabled, and core-only configurations either pass or fail at configure time with a precise dependency error. |
  * | PKG-003 | P1 | `TODO` | Harden clean and fresh-state behavior | Release validation cannot accidentally reuse stale tests, examples, metadata, or binaries from an earlier configuration. |
  * | PKG-004 | P0 | `TODO` | Verify artifact identity | Each package contains one Release archive, correct headers/metadata, no Debug import, and the expected compiler/architecture/ABI identity. |

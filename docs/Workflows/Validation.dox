@@ -152,7 +152,15 @@
  * an older package. Search the Release target file for
  * `IMPORTED_LOCATION_RELEASE`. A downstream Release CMake project should use
  * `find_package(Foundation CONFIG REQUIRED)` and `Foundation::Foundation`;
- * consumers should not hard-code archive names.
+ * consumers should not hard-code archive names. For native presets, run the
+ * repository-owned standalone check after export:
+ *
+ * @code{bash}
+ * ./scripts/test-package.sh <preset> --skip-export
+ * @endcode
+ *
+ * See @ref Foundation_Workflows_PackageConsumer for the equivalent PowerShell
+ * command, exact coverage, and cross-compilation boundary.
  *
  * @section FoundationValidationReport Result Record
  *

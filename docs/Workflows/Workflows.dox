@@ -59,11 +59,15 @@
  * ./scripts/configure.sh macos_arm64 --fresh
  * ./scripts/build.sh macos_arm64 --config Debug --parallel 8
  * ./scripts/test.sh macos_arm64 --config Debug --parallel 8
- * ./scripts/export.sh macos_arm64 --fresh --parallel 8
+ * ./scripts/test.sh macos_arm64 --config Release --parallel 8
+ * ./scripts/test-package.sh macos_arm64 --fresh --parallel 8
  * @endcode
  *
- * The test step must report and execute the registered suite; a zero-test result
- * is a release-gate failure. See @ref Foundation_Workflows_Test.
+ * The test steps must report and execute the registered suite; a zero-test
+ * result is a release-gate failure. The package-consumer step performs the
+ * Release export and proves that a standalone project can link it. See
+ * @ref Foundation_Workflows_Test and
+ * @ref Foundation_Workflows_PackageConsumer.
  *
  * The Windows equivalent uses the matching `.ps1` scripts. Cross-compiled
  * targets do not run host-side CTest executables; follow

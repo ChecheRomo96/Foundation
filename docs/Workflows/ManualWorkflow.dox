@@ -204,6 +204,25 @@
  * expected native Unix library is `libFoundation.a`; Windows produces
  * `Foundation.lib`. Optional examples are also Release artifacts.
  *
+ * @section FoundationManualWorkflowPackageConsumer Installed Package Consumer
+ *
+ * The release-package acceptance command exports Foundation, configures a
+ * standalone consumer from only that prefix, links the imported target, and
+ * runs the resulting program:
+ *
+ * @code{bash}
+ * ./scripts/test-package.sh macos_arm64 --fresh --parallel 8
+ * @endcode
+ *
+ * @code{powershell}
+ * ./scripts/test-package.ps1 windows_msvc_x64 -Fresh -Parallel 8
+ * @endcode
+ *
+ * If the package was just exported manually, use `--skip-export` in Bash or
+ * `-SkipExport` in PowerShell to validate it without rebuilding. See
+ * @ref Foundation_Workflows_PackageConsumer for the isolation guarantees,
+ * custom-package option, and native-execution boundary.
+ *
  * @section FoundationManualWorkflowVerify Verification Before Publication
  *
  * A successful command is necessary but not sufficient. Before publishing:
@@ -213,7 +232,8 @@
  * 3. inspect `FoundationBuildInfo.cmake` for the platform, compiler, architecture,
  *    feature set, and example selection;
  * 4. inspect archive architecture with the platform tool;
- * 5. compile a separate consumer through `find_package(Foundation CONFIG)`;
+ * 5. run the repository package-consumer workflow, which uses
+ *    `find_package(Foundation CONFIG)` from an isolated project;
  * 6. record the native or embedded validation result for that preset.
  *
  * On macOS, a minimal structural inspection is:

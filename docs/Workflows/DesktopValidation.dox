@@ -104,6 +104,7 @@
  * ./scripts/test.ps1 $Preset -Configuration Debug
  * ./scripts/test.ps1 $Preset -Configuration Release
  * ./scripts/export.ps1 $Preset -Fresh
+ * ./scripts/test-package.ps1 $Preset -SkipExport
  *
  * Test-Path "dist/$Preset/include"
  * Test-Path "dist/$Preset/lib/Foundation.lib"
@@ -161,6 +162,7 @@
  * ./scripts/test.sh "$PRESET" --config Debug
  * ./scripts/test.sh "$PRESET" --config Release
  * ./scripts/export.sh "$PRESET" --fresh
+ * ./scripts/test-package.sh "$PRESET" --skip-export
  *
  * test -d "dist/$PRESET/include"
  * test -f "dist/$PRESET/lib/libFoundation.a"

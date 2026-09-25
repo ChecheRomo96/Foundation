@@ -11,6 +11,7 @@ foundation_add_dox(
     "${CMAKE_CURRENT_LIST_DIR}/Install.dox"
     "${CMAKE_CURRENT_LIST_DIR}/Export.dox"
     "${CMAKE_CURRENT_LIST_DIR}/PrecompiledLibraries.dox"
+    "${CMAKE_CURRENT_LIST_DIR}/PackageConsumer.dox"
     "${CMAKE_CURRENT_LIST_DIR}/Documentation.dox"
     "${CMAKE_CURRENT_LIST_DIR}/Clean.dox"
     "${CMAKE_CURRENT_LIST_DIR}/Presets.dox"

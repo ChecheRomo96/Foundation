@@ -13,11 +13,11 @@
  *
  * | Field | Value |
  * | ----- | ----- |
- * | Audit state | `IN PROGRESS` |
+ * | Audit state | `COMPLETE` |
  * | Version under review | `1.0.0` |
- * | Public API frozen | No |
+ * | Public API frozen | Yes for the v1.0.0 release candidate |
  * | Inventory baseline | Default full-feature macOS Arm64 configuration |
- * | Last reviewed | 2026-09-23 |
+ * | Last reviewed | 2026-09-25 |
  *
  * @section FoundationPublicApiAuditMethod Method and Scope
  *
@@ -173,15 +173,23 @@
  *
  * `V1-004` can move to `DONE` only when:
  *
- * - [ ] every `BLOCKER` has a merged fix and regression evidence;
- * - [ ] every `BREAKING DECISION` has an approved, documented disposition;
- * - [ ] installed top-level and component headers match the documented surface;
- * - [ ] module dependencies cannot produce a known-invalid package;
- * - [ ] ownership, lifetime, invalid-state, allocation, and aliasing contracts
+ * - [x] every `BLOCKER` has a merged fix and regression evidence;
+ * - [x] every `BREAKING DECISION` has an approved, documented disposition;
+ * - [x] installed top-level and component headers match the documented surface;
+ * - [x] module dependencies cannot produce a known-invalid package;
+ * - [x] ownership, lifetime, invalid-state, allocation, and aliasing contracts
  *       are documented for affected types;
- * - [ ] Debug and Release tests pass after the selected changes;
- * - [ ] a separate consumer compiles the approved umbrella and selective-header
+ * - [x] Debug and Release tests pass after the selected changes;
+ * - [x] a separate consumer compiles the approved umbrella and selective-header
  *       include styles;
- * - [ ] the final public symbol/header inventory is recorded here;
- * - [ ] no unresolved public API breaking change remains for RC1.
+ * - [x] the final public symbol/header inventory is recorded here;
+ * - [x] no unresolved public API breaking change remains for RC1.
+ *
+ * Exit evidence recorded on 2026-09-25: the `macos_arm64` preset passed all
+ * 108 registered tests in both Debug and Release. The repository-owned
+ * `tests/PackageConsumer` fixture then configured exclusively from the fresh
+ * Release export, compiled separate umbrella/selective-header translation
+ * units, linked `Foundation::Foundation`, called the out-of-line Frequency and
+ * Period conversions, and passed its executable test. Platform-matrix
+ * validation remains tracked separately and does not reopen the API design.
  */
