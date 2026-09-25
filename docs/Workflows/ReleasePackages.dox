@@ -72,6 +72,15 @@
  * GitHub Actions artifacts are short-lived validation output; GitHub Release
  * assets are the supported downloadable distribution channel.
  *
+ * @section FoundationReleasePackagesEvidence Validation Evidence
+ *
+ * [GitHub Actions run 36192891708](https://github.com/ChecheRomo96/Foundation/actions/runs/36192891708)
+ * exercised the complete non-publishing workflow against the existing
+ * `v1.1.0` tag. All five native exports passed their standalone consumers,
+ * archive uploads completed, and the final job downloaded exactly five
+ * archives and verified all five SHA-256 files. The `publish` job was skipped
+ * as intended.
+ *
  * @section FoundationReleasePackagesReleaseProcedure Release Procedure
  *
  * Before creating a publishing tag:
