@@ -5,60 +5,114 @@
     #include <Foundation/Time/Frequency.h>
     #include <Foundation/Time/Period.h>
     #include <Foundation/Time/TimePoint.h>
-    #include <Foundation/Utils/Callback.h>
+    #include <Foundation/Functional/Callback.h>
 
     namespace Foundation {
         namespace Time {
 
-            class Clock {
+            /**
+             * @brief Callback-backed tick source with an associated Frequency.
+             * @ingroup Foundation_Time_Clock
+             * @tparam TickType Tick specialization returned by this clock.
+             *
+             * Clock does not own external state used by the tick callback.
+             * TimePoints returned by Now() and At() retain this Clock's address
+             * as their identity, so the Clock must outlive those TimePoints.
+             * Copy and move operations are disabled to keep that identity stable.
+             */
+            template <typename TickType = Tick32>
+            class BasicClock {
             public:
-                using Callback = Tick (*)();
+                using Representation = typename TickType::Representation;
+                using TimePointType = BasicTimePoint<TickType>;
+
+                /** @brief Free/static function returning the raw counter value. */
+                using Callback = Representation (*)();
 
             private:
-                Utils::Callback<Tick> _callback;
+                Functional::Callback<Representation> _callback;
                 Frequency _frequency;
 
             public:
 
-                Clock()
+                /** @brief Creates an unbound clock with a zero frequency. */
+                BasicClock() noexcept
                     : _frequency(0, 1) {}
 
-                Clock( Callback callback, const Frequency& frequency )
+                /**
+                 * @brief Creates a clock bound to a tick source.
+                 * @param callback Free/static function returning the current tick.
+                 * @param frequency Number of callback ticks per second.
+                 */
+                BasicClock(
+                    Callback callback,
+                    const Frequency& frequency
+                ) noexcept
                     : _frequency(frequency) {
-                    _callback.bind(callback);
+                    _callback.Bind(callback);
                 }
 
-                TimePoint Now() const {
-                    return TimePoint(
-                        _callback.status() ? _callback.invoke() : 0,
-                        this
-                    );
+                BasicClock(const BasicClock&) = delete;
+                BasicClock& operator=(const BasicClock&) = delete;
+                BasicClock(BasicClock&&) = delete;
+                BasicClock& operator=(BasicClock&&) = delete;
+
+                /**
+                 * @brief Samples the bound callback and associates the result with this Clock.
+                 * @return A TimePoint containing the sampled tick, or tick zero when unbound.
+                 * @note The returned point still references this Clock when unbound.
+                 */
+                TimePointType Now() const {
+                    return At(_callback.IsBound() ? _callback.Invoke() : 0);
                 }
 
-                bool IsBound() const {
-                    return _callback.status();
+                /**
+                 * @brief Associates an explicit raw counter value with this Clock.
+                 * @param ticks Raw counter value in this Clock's Tick representation.
+                 * @return A valid TimePoint carrying this Clock's identity.
+                 *
+                 * This factory supports deterministic deadlines and simulations
+                 * without exposing a public TimePoint identity constructor.
+                 */
+                constexpr TimePointType At(
+                    Representation ticks
+                ) const noexcept {
+                    return TimePointType(ticks, this);
                 }
 
-                void Bind(Callback callback) {
-                    _callback.bind(callback);
+                /** @brief Reports whether a tick callback is currently bound. */
+                bool IsBound() const noexcept {
+                    return _callback.IsBound();
                 }
 
-                void Unbind() {
-                    _callback.unbind();
+                /** @brief Binds or replaces the free/static tick callback. */
+                void Bind(Callback callback) noexcept {
+                    _callback.Bind(callback);
                 }
 
-                Frequency GetFrequency() const {
+                /** @brief Removes the tick callback without changing frequency. */
+                void Unbind() noexcept {
+                    _callback.Unbind();
+                }
+
+                /** @brief Returns the configured ticks-per-second value. */
+                Frequency GetFrequency() const noexcept {
                     return _frequency;
                 }
 
-                Period GetPeriod() const {
+                /** @brief Returns the reciprocal seconds-per-tick value. */
+                Period GetPeriod() const noexcept {
                     return _frequency.GetPeriod();
                 }
 
-                void SetFrequency(const Frequency& frequency) {
+                /** @brief Replaces the ticks-per-second value. */
+                void SetFrequency(const Frequency& frequency) noexcept {
                     _frequency = frequency;
                 }
             };
+
+            /** @brief Default 32-bit Clock specialization. */
+            using Clock = BasicClock<>;
         }
     }
 

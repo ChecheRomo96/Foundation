@@ -1,7 +1,7 @@
-#ifndef FOUNDATION_MATH_COMPLEX_TPP
+#ifndef FOUNDATION_MATH_COMPLEX_H
+    #error "Include <Foundation/Math/Complex/Complex.h> instead of Complex.tpp"
+#elif !defined(FOUNDATION_MATH_COMPLEX_TPP)
 #define FOUNDATION_MATH_COMPLEX_TPP
-
-    #include "Complex.h"
 
     namespace Foundation {
     namespace Math {
@@ -206,4 +206,4 @@
     } // namespace Math
     } // namespace Foundation
 
-#endif//FOUNDATION_MATH_COMPLEX_TPP
+#endif // FOUNDATION_MATH_COMPLEX_TPP

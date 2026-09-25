@@ -4,6 +4,11 @@
     set(FOUNDATION_SRC_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
 
     add_library(Foundation STATIC)
+    add_library(Foundation::Foundation ALIAS Foundation)
+
+    target_compile_features(Foundation PUBLIC
+        cxx_std_${FOUNDATION_REQUIRED_CXX_STANDARD}
+    )
 
     if(NOT FOUNDATION_PLATFORM)
         set(FOUNDATION_PLATFORM "desktop")
@@ -31,7 +36,7 @@
     )
 
     set(FOUNDATION_BUILD_INCLUDE_DIR
-        "${CMAKE_BINARY_DIR}/include/Foundation-${FOUNDATION_VERSION}"
+        "${CMAKE_BINARY_DIR}/include/Foundation-${PROJECT_VERSION}"
     )
 #
 ######################################################################################################
@@ -53,7 +58,7 @@
     list(APPEND FOUNDATION_SOURCES_LOCAL
         "${CMAKE_CURRENT_LIST_DIR}/Foundation.cpp"
     )
-    
+
     list(APPEND FOUNDATION_DOX_LOCAL
         "${CMAKE_CURRENT_LIST_DIR}/FoundationTop.dox"
     )
@@ -70,19 +75,43 @@
 #
 ######################################################################################################
 # add subdirectories
-    
+
     if(FOUNDATION_MATH)
         list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
             "${CMAKE_CURRENT_LIST_DIR}/Foundation_Math.h"
         )
     endif()
-    
+
+    if(FOUNDATION_TYPE_TRAITS)
+        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
+            "${CMAKE_CURRENT_LIST_DIR}/Foundation_TypeTraits.h"
+        )
+    endif()
+
+    if(FOUNDATION_CONTAINERS)
+        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
+            "${CMAKE_CURRENT_LIST_DIR}/Foundation_Containers.h"
+        )
+    endif()
+
+    if(FOUNDATION_FUNCTIONAL)
+        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
+            "${CMAKE_CURRENT_LIST_DIR}/Foundation_Functional.h"
+        )
+    endif()
+
+    if(FOUNDATION_SCHEDULING)
+        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
+            "${CMAKE_CURRENT_LIST_DIR}/Foundation_Scheduling.h"
+        )
+    endif()
+
     if(FOUNDATION_TIME)
         list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
             "${CMAKE_CURRENT_LIST_DIR}/Foundation_Time.h"
         )
     endif()
-    
+
     if(FOUNDATION_UTILS)
         list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
             "${CMAKE_CURRENT_LIST_DIR}/Foundation_Utils.h"
@@ -99,14 +128,14 @@
     else()
         message(WARNING "src/CMakeMacros.cmake not found! Impossible to add compiler macro definitions to targets.")
     endif()
-# 
+#
 ######################################################################################################
 # Include directories for build and install
 
     target_include_directories(Foundation
         PUBLIC
             "$<BUILD_INTERFACE:${FOUNDATION_BUILD_INCLUDE_DIR}>"
-            "$<INSTALL_INTERFACE:include/FOUNDATION-${PROJECT_VERSION}>"
+            "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
     )
 #
 ######################################################################################################
@@ -129,21 +158,23 @@
 
     install(TARGETS Foundation
         EXPORT FoundationTargets
-        ARCHIVE DESTINATION lib
-        LIBRARY DESTINATION lib
-        RUNTIME DESTINATION bin
-        INCLUDES DESTINATION include/Foundation-${FOUNDATION_VERSION}
+        CONFIGURATIONS Release
+        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+        INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
     )
 
     install(
-        DIRECTORY "${FOUNDATION_BUILD_INCLUDE_DIR}/"
-        DESTINATION "include/Foundation-${FOUNDATION_VERSION}"
+        FILES ${FOUNDATION_PUBLIC_HEADERS_LOCAL}
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
     )
 
     install(EXPORT FoundationTargets
         FILE FoundationTargets.cmake
         NAMESPACE Foundation::
-        DESTINATION lib/cmake/Foundation
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/Foundation"
+        CONFIGURATIONS Release
     )
 #
 ######################################################################################################

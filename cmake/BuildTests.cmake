@@ -1,36 +1,28 @@
 ######################################################################################################
-# Append Tests
+# Configure Native Unit Tests
 
     if(FOUNDATION_TESTING)
-        enable_testing()
-        cmake_policy(SET CMP0135 NEW)
-
-        # Force GoogleTest to use the same MSVC runtime as the rest of the project
-        if(MSVC)
-            set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-        endif()
-
-        # Disable GoogleTest installation
-        set(INSTALL_GTEST OFF CACHE BOOL "Disable installation of GoogleTest" FORCE)
-        set(INSTALL_GMOCK OFF CACHE BOOL "Disable installation of GoogleMock" FORCE)
-
-        # Include GoogleTest via FetchContent
+        include(CTest)
         include(FetchContent)
+
+        enable_testing()
+
+        # Keep the MSVC runtime selected by the parent project and prevent the
+        # test framework from becoming part of a Foundation installation.
+        set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+        set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
+        set(BUILD_GMOCK OFF CACHE BOOL "" FORCE)
 
         FetchContent_Declare(
             googletest
-            URL https://github.com/google/googletest/archive/f8d7d77c06936315286eb55f8de22cd23c188571.zip
+            URL
+                "https://github.com/google/googletest/archive/063de7e9578f82b369302001269680b4b1553359.zip"
+            URL_HASH
+                "SHA256=f933817755e14daf4afa36230b994c5e9ab5a0476dbd659b1d70163e876b4b91"
+            DOWNLOAD_EXTRACT_TIMESTAMP TRUE
         )
-
         FetchContent_MakeAvailable(googletest)
 
-        # Prevent GoogleTest targets from appearing in ALL_BUILD
-        set_target_properties(gtest gtest_main gmock gmock_main PROPERTIES
-            EXCLUDE_FROM_ALL TRUE
-        )
-        
-        # Include testing helpers
-        include(CTest)
         include(GoogleTest)
     endif()
 #

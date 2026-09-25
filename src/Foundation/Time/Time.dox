@@ -2,4 +2,151 @@
  * @defgroup Foundation_Time Time
  * @ingroup Foundation
  * @brief Clock abstractions and time utilities.
+ *
+ * Time models a monotonic wrapping counter and the values derived from it. A
+ * Clock binds a raw counter callback and a Frequency; `Now()` combines the
+ * current value with the identity of that Clock in a TimePoint. Duration stores
+ * a validated elapsed count, while Frequency and Period describe the scale of
+ * each tick. `FOUNDATION_TIME` enables this complete family. TypeTraits is a
+ * required module dependency because Tick representations are constrained at
+ * compile time.
+ *
+ * @section FoundationTimeHeaders Public Headers
+ *
+ * | Need | Header |
+ * | ---- | ------ |
+ * | Entire Foundation library | `#include <Foundation.h>` |
+ * | Entire Time module | `#include <Foundation_Time.h>` |
+ * | Nested module umbrella | `#include <Foundation/Time.h>` |
+ * | One time type | `#include <Foundation/Time/<Type>.h>` |
+ *
+ * @section FoundationTimeTypes Public Types
+ *
+ * | Type | Meaning |
+ * | ---- | ------- |
+ * | @ref Foundation_Time_Tick "Tick" | `Tick<T = uint32_t>` plus the explicit `Tick8`, `Tick16`, `Tick32`, and `Tick64` specializations. |
+ * | @ref Foundation_Time_Frequency "Frequency" | Ticks per second as a ratio. |
+ * | @ref Foundation_Time_Period "Period" | Seconds per tick as a ratio. |
+ * | @ref Foundation_Time_Duration "Duration" | `BasicDuration<TickType>` and its default 32-bit alias `Duration`. |
+ * | @ref Foundation_Time_TimePoint "TimePoint" | `BasicTimePoint<TickType>` and its default 32-bit alias `TimePoint`. |
+ * | @ref Foundation_Time_Clock "Clock" | `BasicClock<TickType>` and its default 32-bit alias `Clock`. |
+ *
+ * @section FoundationTimeUsage Basic Usage
+ *
+ * @code{.cpp}
+ * Foundation::Time::Tick32::Representation ReadTick();
+ *
+ * Foundation::Time::Clock clock(ReadTick, Foundation::Time::Frequency(1000, 1));
+ *
+ * const Foundation::Time::TimePoint start = clock.Now();
+ * // Work performed here...
+ * const Foundation::Time::TimePoint end = clock.Now();
+ * const Foundation::Time::Duration elapsed = end - start;
+ * if (elapsed.IsValid()) {
+ *     const float milliseconds = elapsed.Milliseconds(clock.GetPeriod());
+ * }
+ * @endcode
+ *
+ * @section FoundationTimeRepresentations Tick Representations
+ *
+ * `Tick<T>` is a strongly typed raw counter value. Its representation defaults
+ * to `uint32_t` and must satisfy `TypeTraits::is_unsigned_integer<T>`; signed
+ * integers, floating-point values, classes, and `bool` are rejected at compile
+ * time. The standard aliases are exact specializations:
+ *
+ * @code{.cpp}
+ * using Tick8  = Tick<uint8_t>;
+ * using Tick16 = Tick<uint16_t>;
+ * using Tick32 = Tick<uint32_t>;
+ * using Tick64 = Tick<uint64_t>;
+ * @endcode
+ *
+ * `Tick<>`, `Tick<uint32_t>`, and `Tick32` are the same type. Foundation does
+ * not add a separate non-template `Tick` alias. The short names `Duration`,
+ * `TimePoint`, and `Clock` use their `Tick32` template defaults; another width
+ * is selected through the corresponding generic type:
+ *
+ * @code{.cpp}
+ * using TimerClock = Foundation::Time::BasicClock<
+ *     Foundation::Time::Tick16
+ * >;
+ * using TimerDuration = Foundation::Time::BasicDuration<
+ *     Foundation::Time::Tick16
+ * >;
+ * @endcode
+ *
+ * Scheduling provides matching `Basic...<TickType>` templates, so a selected
+ * Tick width can flow from Clock through tasks and TaskScheduler without
+ * runtime conversion.
+ *
+ * @section FoundationTimeModel Modular Time and Validity
+ *
+ * - Every bit pattern is a valid raw Tick. Tick itself does not decide whether
+ *   two counter samples are chronologically comparable.
+ * - Duration is valid from zero through one less than the Tick half-range. For
+ *   `Tick32`, that is `0..2,147,483,647` ticks. Larger construction values,
+ *   arithmetic overflow, and subtraction underflow produce an invalid Duration.
+ * - `Duration::IsValid()` distinguishes invalid arithmetic from a real zero
+ *   duration. Conversion methods return zero for an invalid Duration.
+ * - A default TimePoint has no Clock and `IsValid()` returns false.
+ * - Raw counter samples enter the model through `Clock::Now()` or
+ *   `Clock::At(ticks)`. TimePoint arithmetic may derive new points while
+ *   preserving that identity. The raw identity constructor is not public, so
+ *   callers cannot attach a point to an unrelated Clock.
+ * - Compatible TimePoints are ordered using modular half-range arithmetic.
+ *   This correctly handles one counter rollover when the actual separation is
+ *   less than half the selected Tick range.
+ * - Subtracting a chronologically earlier compatible point from a later point
+ *   returns a valid Duration. Reverse subtraction, the exactly-half-range case,
+ *   invalid points, and different Clock identities return an invalid Duration.
+ * - Relational operators return false when points have different Clock
+ *   identities or their order is ambiguous.
+ * - TimePoint stores a non-owning Clock pointer. Clock is neither copyable nor
+ *   movable, which keeps its object identity stable; it must still outlive
+ *   every point, task, and scheduler that references it.
+ * - Frequency and Period are backed by Math::UnsignedRatio. Both numerator and
+ *   denominator must be non-zero; zero represents an invalid or unconfigured
+ *   value rather than a frequency or period with an undefined reciprocal.
+ * - Every valid Frequency has a valid reciprocal Period and vice versa.
+ *   Invalid numeric conversions return zero and reciprocal conversions return
+ *   an invalid value of the opposite type.
+ * - Duration conversion requires the Period belonging to the relevant Clock.
+ *
+ * @section FoundationTimeCompileTime Compile-Time and Exception Contract
+ *
+ * Construction, access, mutation, validation, scalar conversion, and
+ * arithmetic on Tick, Frequency, Period, Duration, and TimePoint are
+ * `constexpr` and `noexcept` where applicable. Reciprocal conversion between
+ * Frequency and Period is non-throwing. Clock configuration accessors are also
+ * non-throwing, but `Clock::Now()` intentionally has no `noexcept` guarantee
+ * because it invokes caller-provided code.
+ *
+ * @section FoundationTimeExamples Runnable Examples
+ *
+ * The examples `Foundation_Time_Frequency`, `Foundation_Time_Period`, and
+ * `Foundation_Time_ClockAndDuration` demonstrate construction, conversion,
+ * mutation, clock identity, arithmetic, and units. See
+ * @ref Foundation_Examples "Examples" for build and launch instructions.
  */
+
+/**
+ * @namespace Foundation::Time
+ * @ingroup Foundation_Time
+ * @brief Tick sources, time values, and unit conversions.
+ */
+
+/** @defgroup Foundation_Time_Tick Tick
+ * @ingroup Foundation_Time
+ * @brief Width-explicit unsigned wrapping counter representations. */
+
+/** @defgroup Foundation_Time_Duration Duration
+ * @ingroup Foundation_Time
+ * @brief Validated elapsed tick counts and unit conversion. */
+
+/** @defgroup Foundation_Time_TimePoint Time Point
+ * @ingroup Foundation_Time
+ * @brief Modular counter samples associated with a Clock identity. */
+
+/** @defgroup Foundation_Time_Clock Clock
+ * @ingroup Foundation_Time
+ * @brief Callback-backed tick source with a frequency. */

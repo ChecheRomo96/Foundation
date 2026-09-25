@@ -1,0 +1,8 @@
+/**
+ * @defgroup Foundation_Time_Frequency Frequency
+ * @ingroup Foundation_Time
+ * @brief Positive unsigned rational tick frequency and reciprocal conversion.
+ *
+ * Both ratio terms must be non-zero. Invalid values convert numerically to zero
+ * and produce an invalid Period instead of attempting division by zero.
+ */

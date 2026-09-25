@@ -15,6 +15,18 @@
         #include "Foundation_Time.h"
     #endif
 
+    #if __has_include("Foundation_Containers.h")
+        #include "Foundation_Containers.h"
+    #endif
+
+    #if __has_include("Foundation_Functional.h")
+        #include "Foundation_Functional.h"
+    #endif
+
+    #if __has_include("Foundation_Scheduling.h")
+        #include "Foundation_Scheduling.h"
+    #endif
+
     #if __has_include("Foundation_Utils.h")
         #include "Foundation_Utils.h"
     #endif

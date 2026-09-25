@@ -3,8 +3,8 @@
 
 
     #if __has_include(<Foundation/Math/Matrix/Matrix.h>)
-        #ifndef FOUNDATION_MATRIX
-            #define FOUNDATION_MATRIX
+        #ifndef FOUNDATION_MATH_MATRIX
+            #define FOUNDATION_MATH_MATRIX
         #endif
 
         #include <Foundation/Math/Matrix/Matrix.h>

@@ -1,2 +1,0 @@
-add_subdirectory(Frequency)
-add_subdirectory(Period)

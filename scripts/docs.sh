@@ -1,7 +1,20 @@
 #!/bin/sh
-set -e
+set -eu
 
-PRESET="${1:-documentation}"
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+. "$SCRIPT_DIR/common.sh"
 
-cmake --preset "$PRESET"
-cmake --build --preset "$PRESET" --target docs
+PRESET=documentation
+case "${1:-}" in
+    ""|--*)
+        ;;
+    *)
+        PRESET=$1
+        shift
+        ;;
+esac
+
+set -- "$SCRIPT_DIR/build.sh" "$PRESET" --target docs "$@"
+"$@"
+
+printf '%s\n' "Documentation: $FOUNDATION_BUILD_ROOT/$PRESET/docs/html/index.html"

@@ -12,6 +12,12 @@
     
     list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
         "${CMAKE_CURRENT_SOURCE_DIR}/Time.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Clock.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Duration.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Frequency.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Period.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Tick.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/TimePoint.h"
     )
     
     #list(APPEND FOUNDATION_SOURCES_LOCAL
@@ -23,45 +29,10 @@
     )
 #
 ######################################################################################################
-# Append headers for enabled submodules
+# Add implementation directories for the indivisible Time family
 
-    if(FOUNDATION_TIME_CLOCK)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_SOURCE_DIR}/Clock.h"
-        )
-    endif()
-
-    if(FOUNDATION_TIME_DURATION)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_SOURCE_DIR}/Duration.h"
-        )
-    endif()
-
-    if(FOUNDATION_TIME_FREQUENCY)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_SOURCE_DIR}/Frequency.h"
-        )
-        add_subdirectory(Frequency)
-    endif()
-
-    if(FOUNDATION_TIME_PERIOD)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_SOURCE_DIR}/Period.h"
-        )
-        add_subdirectory(Period)
-    endif()
-
-    if(FOUNDATION_TIME_TICK)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_SOURCE_DIR}/Tick.h"
-        )
-    endif()
-
-    if(FOUNDATION_TIME_TIME_POINT)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_SOURCE_DIR}/TimePoint.h"
-        )
-    endif()
+    add_subdirectory(Frequency)
+    add_subdirectory(Period)
 
 ######################################################################################################
 # Add sources to the FOUNDATION target
@@ -93,7 +64,7 @@
     # Install headers for this subdirectory
     install(
         FILES ${FOUNDATION_PUBLIC_HEADERS_LOCAL}
-        DESTINATION "include/Foundation-${FOUNDATION_VERSION}/Foundation/Time"
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/Foundation/Time"
     )
 #
 ######################################################################################################

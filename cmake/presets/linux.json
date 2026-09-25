@@ -1,0 +1,132 @@
+{
+  "version": 6,
+  "include": [
+    "base.json"
+  ],
+  "configurePresets": [
+    {
+      "name": "linux_gcc_x64",
+      "inherits": "base",
+      "generator": "Ninja Multi-Config",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Debug;Release",
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++",
+        "FOUNDATION_PLATFORM": "linux_gcc_x64",
+        "FOUNDATION_EXPECTED_SYSTEM_PROCESSOR": "^(x86_64|AMD64|amd64)$"
+      }
+    },
+    {
+      "name": "linux_clang_x64",
+      "inherits": "base",
+      "generator": "Ninja Multi-Config",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Debug;Release",
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++",
+        "FOUNDATION_PLATFORM": "linux_clang_x64",
+        "FOUNDATION_EXPECTED_SYSTEM_PROCESSOR": "^(x86_64|AMD64|amd64)$"
+      }
+    },
+    {
+      "name": "linux_gcc_arm64",
+      "inherits": "base",
+      "generator": "Ninja Multi-Config",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Debug;Release",
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++",
+        "FOUNDATION_PLATFORM": "linux_gcc_arm64",
+        "FOUNDATION_EXPECTED_SYSTEM_PROCESSOR": "^(aarch64|arm64)$"
+      }
+    },
+    {
+      "name": "linux_clang_arm64",
+      "inherits": "base",
+      "generator": "Ninja Multi-Config",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Debug;Release",
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++",
+        "FOUNDATION_PLATFORM": "linux_clang_arm64",
+        "FOUNDATION_EXPECTED_SYSTEM_PROCESSOR": "^(aarch64|arm64)$"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "linux_gcc_x64",
+      "configurePreset": "linux_gcc_x64",
+      "configuration": "Debug"
+    },
+    {
+      "name": "linux_clang_x64",
+      "configurePreset": "linux_clang_x64",
+      "configuration": "Debug"
+    },
+    {
+      "name": "linux_gcc_arm64",
+      "configurePreset": "linux_gcc_arm64",
+      "configuration": "Debug"
+    },
+    {
+      "name": "linux_clang_arm64",
+      "configurePreset": "linux_clang_arm64",
+      "configuration": "Debug"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "linux_gcc_x64",
+      "configurePreset": "linux_gcc_x64",
+      "configuration": "Debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "linux_clang_x64",
+      "configurePreset": "linux_clang_x64",
+      "configuration": "Debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "linux_gcc_arm64",
+      "configurePreset": "linux_gcc_arm64",
+      "configuration": "Debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "linux_clang_arm64",
+      "configurePreset": "linux_clang_arm64",
+      "configuration": "Debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ]
+}

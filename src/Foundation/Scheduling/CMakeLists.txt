@@ -10,11 +10,11 @@
 # Append Headers (local to this subdirectory)
 
     list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
+        "${CMAKE_CURRENT_SOURCE_DIR}/Scheduling.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/Task.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/PeriodicTask.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/OneShotTask.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/TaskScheduler.h"
-        "${CMAKE_CURRENT_SOURCE_DIR}/Scheduling.dox"
     )
     
     list(APPEND FOUNDATION_DOX_LOCAL
@@ -51,7 +51,7 @@
     # Install headers for this subdirectory
     install(
         FILES ${FOUNDATION_PUBLIC_HEADERS_LOCAL}
-        DESTINATION "include/Foundation-${FOUNDATION_VERSION}/Scheduling"
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/Foundation/Scheduling"
     )
 #
 ######################################################################################################
