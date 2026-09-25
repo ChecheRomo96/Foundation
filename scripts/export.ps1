@@ -28,7 +28,11 @@ if (-not $Keep -and $customOutput) {
 $configureParameters = @{
     Preset = $Preset
 }
-$effectiveCMakeArguments = @($CMakeArguments)
+$effectiveCMakeArguments = @(
+    $CMakeArguments | Where-Object {
+        -not [string]::IsNullOrWhiteSpace($_)
+    }
+)
 if ($ExamplesOn) {
     $effectiveCMakeArguments += "-DFOUNDATION_EXAMPLES=ON"
 }
