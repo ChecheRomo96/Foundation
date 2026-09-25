@@ -3,6 +3,7 @@ foundation_add_dox(
     "${CMAKE_CURRENT_LIST_DIR}/Arduino.dox"
     "${CMAKE_CURRENT_LIST_DIR}/AVR.dox"
     "${CMAKE_CURRENT_LIST_DIR}/Linux.dox"
+    "${CMAKE_CURRENT_LIST_DIR}/KnownLimitations.dox"
     "${CMAKE_CURRENT_LIST_DIR}/MacOS.dox"
     "${CMAKE_CURRENT_LIST_DIR}/Overview.dox"
     "${CMAKE_CURRENT_LIST_DIR}/PSoC.dox"

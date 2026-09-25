@@ -104,7 +104,7 @@
  * | V1-002 | P0 | `DONE` | Make version and language requirements consistent | CMake, `library.properties`, and source mode report 1.0.0; CMake rejects version drift; the current Debug and Release suites each pass 108 tests; direct source mode accepts C++17 and rejects C++14; Doxygen rebuild passes. |
  * | V1-003 | P0 | `BLOCKED` | Confirm the distribution license | Interim state is `All Rights Reserved / No License Granted`; README prohibits external use and identifies the project as proprietary. A qualified legal expert must review ownership, prior grants, contribution terms, and the final distribution model before release. |
  * | V1-004 | P0 | `DONE` | Audit and freeze the public API | All 16 findings have documented dispositions; 108 Debug and 108 Release tests pass on `macos_arm64`; the isolated exported-package consumer links out-of-line API through `Foundation::Foundation`. See @ref Foundation_Workflows_PublicApiAudit. |
- * | V1-005 | P1 | `TODO` | Add release history and limitations | `CHANGELOG.md` contains the 1.0.0 scope and the documentation lists known limitations. |
+ * | V1-005 | P1 | `DONE` | Add release history and limitations | `CHANGELOG.md` records the unreleased 1.0.0 scope and links the maintained support and limitation pages; @ref Foundation_BuildGuide_KnownLimitations documents legal, validation, platform, package, runtime, API, and quality boundaries. |
  *
  * M1 exits when the public contract no longer contradicts the build and every
  * advertised platform has an explicit support level.
