@@ -9,7 +9,7 @@
     #################################################################################################
     # Project Name, Version, and Language
 
-        project(Foundation VERSION 1.0.0 LANGUAGES C CXX)
+        project(Foundation VERSION 1.1.0 LANGUAGES C CXX)
 
         set(FOUNDATION_REQUIRED_CXX_STANDARD 17)
 

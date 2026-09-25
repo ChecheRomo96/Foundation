@@ -4,6 +4,22 @@ This file records user-visible changes to Foundation. Release dates use the
 `YYYY-MM-DD` format. Foundation has not published a stable release yet; the
 scope below describes the planned first release.
 
+## [1.1.0] - 2026-09-25
+
+### Added
+
+- `Foundation::Math::FloorMod(int32_t value, int32_t modulus)` in
+  `Foundation/Math/Arithmetic.h`: a `constexpr`, `noexcept` floored modulo
+  that returns a result in `[0, modulus - 1]` for every `int32_t` value,
+  including negative values, `INT32_MIN`, and `INT32_MAX`. A non-positive
+  modulus returns `0` instead of invoking undefined behavior.
+
+### Changed
+
+- Version metadata is now `1.1.0`. The CMake package keeps
+  `SameMajorVersion` compatibility, so consumers requesting
+  `find_package(Foundation 1.0)` accept this release.
+
 ## [1.0.0] - Unreleased
 
 ### Added
