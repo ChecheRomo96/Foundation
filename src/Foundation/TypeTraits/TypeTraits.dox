@@ -85,9 +85,10 @@
  * }
  * @endcode
  *
- * Every available `_v` name is a C++17 inline variable equivalent to reading the
- * corresponding trait's `::value`. The class form remains useful when a trait
- * type must be inherited from or passed to another metaprogram.
+ * Every available `_v` name is a C++17 inline variable equivalent to reading
+ * the corresponding trait's static Boolean constant. The class form remains
+ * useful when a trait type must be inherited from or passed to another
+ * metaprogram.
  *
  * @section FoundationTypeTraitsContract Current Contract
  *
