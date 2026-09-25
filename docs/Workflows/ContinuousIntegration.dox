@@ -82,8 +82,9 @@
  *
  * @section FoundationContinuousIntegrationAcceptance Acceptance and Evidence
  *
- * Adding the YAML is not sufficient to close `CI-001` or `CI-002`. Both tasks
- * remain in progress until all five jobs complete successfully on the same
- * commit. Record the GitHub Actions run URL in
- * @ref Foundation_Workflows_ReleaseV1 before changing their states to `DONE`.
+ * `CI-001` and `CI-002` were accepted by
+ * [GitHub Actions run 36169511592](https://github.com/ChecheRomo96/Foundation/actions/runs/36169511592)
+ * for commit `e171396`. All five jobs completed successfully on the same
+ * commit, including the Debug and Release suites and the fresh Release package
+ * consumer validation.
  */
