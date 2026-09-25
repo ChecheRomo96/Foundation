@@ -1,0 +1,117 @@
+/**
+ * @defgroup Foundation_Workflows_PackageConsumer Package Consumer Validation
+ * @ingroup Foundation_Workflows_Delivery
+ * @brief Prove that an exported Release package works from a separate CMake project.
+ *
+ * A successful Foundation build does not prove that its installed package is
+ * usable. Headers may be missing, the imported target may point to the wrong
+ * archive, or a header-only smoke program may accidentally pass without ever
+ * linking Foundation. The repository-owned fixture under
+ * `tests/PackageConsumer` closes that gap without depending on another product
+ * repository.
+ *
+ * MCC has independently consumed Foundation and remains valuable downstream
+ * integration evidence. It does not replace this fixture: Foundation must be
+ * able to validate its own package in CI even when MCC is unavailable or at a
+ * different revision.
+ *
+ * @section FoundationPackageConsumerCommand One-Command Validation
+ *
+ * Export and validate the preset's default Release package:
+ *
+ * @code{bash}
+ * ./scripts/test-package.sh macos_arm64 --fresh --parallel 8
+ * @endcode
+ *
+ * @code{powershell}
+ * ./scripts/test-package.ps1 windows_msvc_x64 -Fresh -Parallel 8
+ * @endcode
+ *
+ * The scripts perform these steps:
+ *
+ * 1. invoke the normal export workflow unless package reuse was requested;
+ * 2. obtain the generator, native compiler, and architecture from the selected
+ *    preset's configured build tree;
+ * 3. recreate `build/package-consumer/<preset>` so stale consumer objects
+ *    cannot hide a package defect;
+ * 4. configure `tests/PackageConsumer` with the exported prefix as its only
+ *    allowed Foundation search path;
+ * 5. build the consumer in Release through `Foundation::Foundation`;
+ * 6. execute its registered CTest and reject a zero-test result.
+ *
+ * The consumer is deliberately a standalone CMake project. It is not added by
+ * Foundation's root `add_subdirectory(tests)`, has no source-tree include path,
+ * and uses this package lookup:
+ *
+ * @code{cmake}
+ * find_package(Foundation 1.0 CONFIG REQUIRED
+ *     PATHS "${FOUNDATION_PACKAGE_PREFIX}"
+ *     NO_DEFAULT_PATH
+ * )
+ * target_link_libraries(FoundationPackageConsumer PRIVATE Foundation::Foundation)
+ * @endcode
+ *
+ * @section FoundationPackageConsumerCoverage What It Proves
+ *
+ * `main.cpp` includes the complete `Foundation.h` umbrella. A separate
+ * translation unit includes only `Foundation/Time/Frequency.h` and
+ * `Foundation/Time/Period.h`. Keeping the include styles in separate source
+ * files prevents one style from masking missing dependencies in the other.
+ *
+ * The selective unit calls `Frequency::GetPeriod()` and
+ * `Period::GetFrequency()`. Those functions are implemented outside the
+ * headers, so a successful executable link proves that the imported target
+ * supplied the Foundation Release archive. Merely compiling a template or
+ * `constexpr` API would not provide that evidence.
+ *
+ * This fixture currently requires the default package with Math and Time
+ * enabled. Feature-variant package validation belongs to `PKG-002` and must
+ * select assertions compatible with the exported feature set.
+ *
+ * @section FoundationPackageConsumerReuse Reusing an Existing Package
+ *
+ * Avoid a second export after manually producing the package:
+ *
+ * @code{bash}
+ * ./scripts/export.sh macos_arm64 --fresh
+ * ./scripts/test-package.sh macos_arm64 --skip-export
+ * @endcode
+ *
+ * @code{powershell}
+ * ./scripts/export.ps1 windows_msvc_x64 -Fresh
+ * ./scripts/test-package.ps1 windows_msvc_x64 -SkipExport
+ * @endcode
+ *
+ * To inspect a different existing prefix, combine package reuse with an
+ * explicit location:
+ *
+ * @code{bash}
+ * ./scripts/test-package.sh macos_arm64 \
+ *     --skip-export --package /absolute/path/to/Foundation
+ * @endcode
+ *
+ * @code{powershell}
+ * ./scripts/test-package.ps1 windows_msvc_x64 `
+ *     -SkipExport -Package C:\packages\Foundation
+ * @endcode
+ *
+ * The selected preset must already be configured because its build cache is
+ * the source of the consumer's generator, compiler, and architecture. The
+ * custom package is not modified.
+ *
+ * @section FoundationPackageConsumerLimits Native Execution Boundary
+ *
+ * This workflow executes the resulting program and therefore accepts only a
+ * native preset. `macos_x64` execution on Apple Silicon requires Rosetta or an
+ * Intel host. AVR, STM32, and other cross-compiled packages need a dedicated
+ * firmware consumer, compatible startup/runtime/linker configuration, and
+ * hardware or emulator execution. A host-side CTest must not be reported as
+ * embedded target evidence.
+ *
+ * @section FoundationPackageConsumerCI CI Contract
+ *
+ * Native GitHub Actions jobs should call the repository script after Debug and
+ * Release unit tests. CI YAML selects the runner and preset; it must not
+ * duplicate the export/find-package/build/test sequence. A passing job records
+ * both package creation and execution of a separately configured consumer.
+ */
