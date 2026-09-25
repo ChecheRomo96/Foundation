@@ -1,8 +1,9 @@
 name: Deploy Documentation
 
 env:
-  DOXYGEN_VERSION: "1.18.0"
-  DOXYGEN_LINUX_SHA256: "14fa81bdc34171edb5f1f02b1d60e74802f0439b77fa44e592565d517d72df90"
+  DOXYGEN_VERSION: "1.14.0"
+  DOXYGEN_RELEASE: "Release_1_14_0"
+  DOXYGEN_LINUX_SHA256: "e5d6ae24d0bf3f0cdc4d8f146726b89ca323922f19441af99b1872d503665ad6"
 
 on:
   push:
@@ -28,7 +29,7 @@ jobs:
 
           archive="$RUNNER_TEMP/doxygen-${DOXYGEN_VERSION}.linux.bin.tar.gz"
           curl --fail --location --silent --show-error \
-            "https://www.doxygen.nl/files/doxygen-${DOXYGEN_VERSION}.linux.bin.tar.gz" \
+            "https://github.com/doxygen/doxygen/releases/download/${DOXYGEN_RELEASE}/doxygen-${DOXYGEN_VERSION}.linux.bin.tar.gz" \
             --output "$archive"
           echo "${DOXYGEN_LINUX_SHA256}  ${archive}" | sha256sum --check
           tar --extract --gzip --file "$archive" --directory "$RUNNER_TEMP"
