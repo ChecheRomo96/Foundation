@@ -3,6 +3,15 @@
 Foundation is a lightweight C++ foundation library for embedded and desktop projects.
 It provides reusable low-level building blocks shared by projects such as MIDILAR and RoboFoundation.
 
+**Documentation:** [Foundation on GitHub Pages](https://checheromo96.github.io/Foundation/)
+· [Support matrix](https://checheromo96.github.io/Foundation/group__Foundation__BuildGuide__SupportMatrix.html)
+· [Known limitations](https://checheromo96.github.io/Foundation/group__Foundation__BuildGuide__KnownLimitations.html)
+· [Changelog](CHANGELOG.md)
+
+Version 1.0.0 is under release preparation and has not been published as a
+stable release. Platform rows remain release candidates or experimental until
+their documented validation gates pass.
+
 Foundation 1.0.0 requires a C++17-capable compiler in every integration mode,
 including CMake packages, direct source builds, and Arduino-style source builds.
 The language requirement does not imply a dependency on the complete C++
@@ -79,9 +88,12 @@ Every default export contains shared public headers, one Release static library,
 and CMake package files for `find_package(Foundation)`. Debug remains available
 from the source build for development and testing, but is not distributed.
 
-The full Doxygen workflow guide explains cache behavior, toolchains, package
-compatibility, troubleshooting, and the Windows/macOS/STM32/AVR validation
-matrix. Generate it with:
+The [published Doxygen documentation](https://checheromo96.github.io/Foundation/)
+is the primary guide for API usage, cache behavior, toolchains, package
+compatibility, troubleshooting, known limitations, and the
+Windows/macOS/Linux/STM32/AVR validation matrix.
+
+Generate the same documentation locally with:
 
 ```bash
 ./scripts/docs.sh --fresh

@@ -79,6 +79,8 @@
  * Build documentation:
  *
  * - @ref Foundation_BuildGuide
+ * - @ref Foundation_BuildGuide_SupportMatrix
+ * - @ref Foundation_BuildGuide_KnownLimitations
  * - @ref Foundation_Workflows
  *
  * The build system supports:
@@ -125,9 +127,9 @@
  * - Minimal dependency on the C++ standard library.
  * - Clear separation between public API and internal implementation.
  *
- * @section MainPage_Platforms Supported Platforms
+ * @section MainPage_Platforms Target Platforms and Support Status
  *
- * Foundation is intended to support:
+ * Foundation provides build or integration paths for:
  *
  * - Windows
  * - Linux
@@ -138,6 +140,11 @@
  * - STM32 projects
  * - Other C++17-capable embedded targets
  *
+ * Availability does not imply completed support validation. Consult
+ * @ref Foundation_BuildGuide_SupportMatrix for the evidence-backed level of
+ * each target and @ref Foundation_BuildGuide_KnownLimitations before selecting
+ * Foundation for a release.
+ *
  * @section MainPage_NextSteps Next Steps
  *
  * Recommended reading order:
@@ -145,6 +152,8 @@
  * - @ref Foundation
  * - @ref FoundationTopLevelHeaders
  * - @ref Foundation_BuildGuide
+ * - @ref Foundation_BuildGuide_SupportMatrix
+ * - @ref Foundation_BuildGuide_KnownLimitations
  * - @ref Foundation_Workflows
  * - @ref Foundation_Workflows_Validation
  * - @ref Foundation_Examples

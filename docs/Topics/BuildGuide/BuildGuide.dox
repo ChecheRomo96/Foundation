@@ -25,6 +25,12 @@
  */
 
 /**
+ * @defgroup Foundation_BuildGuide_KnownLimitations Known Limitations
+ * @ingroup Foundation_BuildGuide
+ * @brief Release, validation, package, platform, runtime, and API boundaries.
+ */
+
+/**
  * @defgroup Foundation_BuildGuide_Platforms Platforms
  * @ingroup Foundation_BuildGuide
  * @brief Platform-specific compiler, architecture, and integration guidance.
