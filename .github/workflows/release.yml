@@ -44,7 +44,7 @@ jobs:
 
     steps:
       - name: Checkout tagged source
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           ref: ${{ env.RELEASE_TAG }}
           fetch-depth: 0
@@ -149,7 +149,7 @@ jobs:
 
     steps:
       - name: Checkout tagged source
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           ref: ${{ needs.metadata.outputs.tag }}
 
@@ -216,7 +216,7 @@ jobs:
           }
 
       - name: Upload packaged Release
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: Foundation-${{ env.RELEASE_VERSION }}-${{ matrix.preset }}
           path: |
@@ -225,11 +225,53 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  verify:
+    name: Verify complete Release set
+    needs:
+      - metadata
+      - package
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      RELEASE_VERSION: ${{ needs.metadata.outputs.release_version }}
+
+    steps:
+      - name: Download validated packages
+        uses: actions/download-artifact@v8
+        with:
+          pattern: Foundation-${{ env.RELEASE_VERSION }}-*
+          path: release-assets
+          merge-multiple: true
+
+      - name: Verify package set and checksums
+        shell: bash
+        working-directory: release-assets
+        run: |
+          set -euo pipefail
+
+          archive_count=$(
+            find . -maxdepth 1 -type f \
+              \( -name '*.tar.gz' -o -name '*.zip' \) \
+              -print | wc -l | tr -d ' '
+          )
+          checksum_count=$(
+            find . -maxdepth 1 -type f -name '*.sha256' \
+              -print | wc -l | tr -d ' '
+          )
+
+          if [[ "$archive_count" != "5" || "$checksum_count" != "5" ]]; then
+            echo "Expected 5 archives and 5 checksums; found ${archive_count} and ${checksum_count}" >&2
+            find . -maxdepth 1 -type f -print | sort >&2
+            exit 1
+          fi
+
+          sha256sum --check *.sha256
+
   publish:
     name: Publish GitHub Release
     needs:
       - metadata
-      - package
+      - verify
     if: needs.metadata.outputs.publish == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
@@ -242,17 +284,12 @@ jobs:
       PRERELEASE: ${{ needs.metadata.outputs.prerelease }}
 
     steps:
-      - name: Download validated packages
-        uses: actions/download-artifact@v4
+      - name: Download verified packages
+        uses: actions/download-artifact@v8
         with:
           pattern: Foundation-${{ env.RELEASE_VERSION }}-*
           path: release-assets
           merge-multiple: true
-
-      - name: Verify package checksums
-        shell: bash
-        working-directory: release-assets
-        run: sha256sum --check *.sha256
 
       - name: Publish release and assets
         shell: bash

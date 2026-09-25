@@ -36,10 +36,13 @@
  * | `windows_clang_x64` | `windows-2025-vs2026` | `.zip` |
  *
  * Every matrix job performs a fresh Release export and executes the standalone
- * package consumer before creating its archive. Packages do not include Debug
- * libraries or examples. Every package includes `LICENSE`, `README.md`, and
- * `CHANGELOG.md`. Each archive contains one top-level directory named
- * `Foundation-<release>-<preset>` and is accompanied by a `.sha256` file.
+ * package consumer before creating its archive. A final verification job
+ * downloads the complete set, requires exactly five archives and five checksum
+ * files, and verifies every SHA-256 digest even when publication is disabled.
+ * Packages do not include Debug libraries or examples. Every package includes
+ * `LICENSE`, `README.md`, and `CHANGELOG.md`. Each archive contains one
+ * top-level directory named `Foundation-<release>-<preset>` and is accompanied
+ * by a `.sha256` file.
  *
  * A release-candidate asset uses the tag suffix in its filename even though
  * the CMake package reports the numeric project version. For example,
