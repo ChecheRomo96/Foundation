@@ -52,6 +52,37 @@
                 return (remainder < 0) ? (remainder + modulus) : remainder;
             }
 
+            /**
+             * @brief Computes the floored quotient of a signed 32-bit value.
+             * @ingroup Foundation_Math
+             * @param value Dividend. Every `int32_t` value, including
+             * `INT32_MIN` and `INT32_MAX`, is accepted.
+             * @param divisor Divisor. Must be positive for a meaningful result.
+             * @return For `divisor > 0`, the quotient rounded toward negative
+             * infinity, so `FloorDiv(-1, 12)` is `-1`, `FloorDiv(-12, 12)` is
+             * `-1`, and `FloorDiv(-13, 12)` is `-2`. Returns `0` when
+             * `divisor <= 0`.
+             *
+             * Unlike the built-in `/` operator, which truncates toward zero,
+             * this function rounds a non-integral negative quotient downward.
+             * Together with FloorMod(), it satisfies
+             * `FloorDiv(value, divisor) * divisor + FloorMod(value, divisor) == value`
+             * for every positive `divisor`. Widen intermediate arithmetic when
+             * checking that identity at the limits of `int32_t`. The function
+             * is `constexpr` and `noexcept`, never overflows, and has no
+             * undefined behavior for any input. Returning before division when
+             * `divisor <= 0` also covers division by zero and `INT32_MIN / -1`.
+             */
+            constexpr int32_t FloorDiv(int32_t value, int32_t divisor) noexcept {
+                if (divisor <= 0) {
+                    return 0;
+                }
+
+                const int32_t quotient = value / divisor;
+                const int32_t remainder = value % divisor;
+                return (remainder < 0) ? (quotient - 1) : quotient;
+            }
+
         }
     }
 
