@@ -169,7 +169,7 @@
  * | REL-001 | P0 | `TODO` | Freeze release documentation | README, Doxygen, changelog, support table, license, examples, and package instructions match the candidate. |
  * | REL-002 | P0 | `TODO` | Publish `v1.0.0-rc.1` | RC tag is created from a clean, green commit and no new features enter after the tag. |
  * | REL-003 | P0 | `TODO` | Re-run the complete release matrix | Required CI, local platform, package-consumer, and hardware evidence passes on the exact RC commit. |
- * | REL-004 | P0 | `TODO` | Publish `v1.0.0` | Main contains the approved candidate; annotated tag, release notes, target packages, and checksums are published and downloadable. |
+ * | REL-004 | P0 | `IN PROGRESS` | Publish `v1.0.0` | @ref Foundation_Workflows_ReleasePackages now builds, consumer-validates, archives, checksums, and publishes all five native packages from a matching version tag. The task remains open until the approved `v1.0.0` tag and its downloadable assets exist. |
  * | REL-005 | P0 | `TODO` | Prove downstream readiness | A clean external project consumes the released tag/package without repository-relative paths or unreleased files. |
  *
  * @section FoundationReleaseV1Gates Release Gates
