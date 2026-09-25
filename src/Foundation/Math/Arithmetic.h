@@ -6,6 +6,18 @@
     namespace Foundation {
         namespace Math {
 
+            /**
+             * @brief Computes the greatest common divisor of two unsigned values.
+             * @ingroup Foundation_Math
+             * @param a First value.
+             * @param b Second value.
+             * @return The largest value that divides both `a` and `b`. When one
+             * argument is `0`, the other argument is returned, and
+             * `GCD(0, 0)` is `0`.
+             *
+             * Uses the iterative Euclidean algorithm. The function is
+             * `constexpr` and `noexcept` and accepts the full `uint32_t` range.
+             */
             constexpr uint32_t GCD(uint32_t a, uint32_t b) noexcept {
                 while (b != 0) {
                     const uint32_t temp = b;
