@@ -50,13 +50,15 @@
  * |   |-- Build
  * |   |-- Test
  * |   |-- Validation
- * |   |   `-- Windows and macOS Checklist
+ * |   |   |-- Windows and macOS Checklist
+ * |   |   `-- Continuous Integration
  * |   |-- Documentation
  * |   `-- Clean
  * `-- Delivery
  *     |-- Install
  *     |-- Export
- *     `-- Precompiled Libraries
+ *     |-- Precompiled Libraries
+ *     `-- Package Consumer Validation
  * @endcode
  *
  * Define a page with `@defgroup`, attach it to exactly one subgroup with
