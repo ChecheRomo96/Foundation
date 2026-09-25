@@ -1,0 +1,90 @@
+/**
+ * @defgroup Foundation_Workflows_ReleasePackages Release Packages
+ * @ingroup Foundation_Workflows_Delivery
+ * @brief Build validated archives and publish immutable GitHub Release assets.
+ *
+ * `.github/workflows/release.yml` converts an existing version tag into the
+ * downloadable precompiled packages consumed through `find_package`. This is
+ * separate from the @ref Foundation_Workflows_ContinuousIntegration workflow.
+ * Native CI proves every main-branch change, while the release workflow
+ * rebuilds and publishes the exact tagged source.
+ *
+ * @section FoundationReleasePackagesTriggers Triggers and Publication
+ *
+ * Pushing a tag beginning with `v` starts the workflow and publishes the
+ * resulting GitHub Release automatically. The tag must match the version in
+ * `CMakeLists.txt`. Stable and release-candidate examples are:
+ *
+ * @code
+ * v1.0.0
+ * v1.0.0-rc.1
+ * @endcode
+ *
+ * `workflow_dispatch` requires an existing tag. By default it only creates
+ * temporary workflow artifacts for inspection. Selecting its `publish` input
+ * additionally creates the GitHub Release. This makes manual packaging safe to
+ * rehearse without publishing a release accidentally.
+ *
+ * @section FoundationReleasePackagesMatrix Package Matrix
+ *
+ * | Package identity | Runner | Archive |
+ * | ---------------- | ------ | ------- |
+ * | `macos_arm64` | `macos-15` | `.tar.gz` |
+ * | `linux_gcc_x64` | `ubuntu-24.04` | `.tar.gz` |
+ * | `linux_clang_x64` | `ubuntu-24.04` | `.tar.gz` |
+ * | `windows_msvc_x64` | `windows-2025-vs2026` | `.zip` |
+ * | `windows_clang_x64` | `windows-2025-vs2026` | `.zip` |
+ *
+ * Every matrix job performs a fresh Release export and executes the standalone
+ * package consumer before creating its archive. Packages do not include Debug
+ * libraries or examples. Every package includes `LICENSE`, `README.md`, and
+ * `CHANGELOG.md`. Each archive contains one top-level directory named
+ * `Foundation-<release>-<preset>` and is accompanied by a `.sha256` file.
+ *
+ * A release-candidate asset uses the tag suffix in its filename even though
+ * the CMake package reports the numeric project version. For example,
+ * `v1.0.0-rc.1` produces
+ * `Foundation-1.0.0-rc.1-macos_arm64.tar.gz`.
+ *
+ * @section FoundationReleasePackagesConsumption Consuming a Download
+ *
+ * Extract the archive, then add its top-level directory to CMake's prefix
+ * search path:
+ *
+ * @code{bash}
+ * cmake -S . -B build \
+ *   -DCMAKE_PREFIX_PATH=/path/to/Foundation-1.0.0-macos_arm64
+ * @endcode
+ *
+ * The consuming project uses only the exported CMake target:
+ *
+ * @code{cmake}
+ * find_package(Foundation 1.0 CONFIG REQUIRED)
+ * target_link_libraries(MyApplication PRIVATE Foundation::Foundation)
+ * @endcode
+ *
+ * `Foundation_DIR` may instead point directly to
+ * `<prefix>/lib/cmake/Foundation`. Consumers must select the package matching
+ * their operating system, architecture, compiler ABI, and Release policy.
+ * GitHub Actions artifacts are short-lived validation output; GitHub Release
+ * assets are the supported downloadable distribution channel.
+ *
+ * @section FoundationReleasePackagesReleaseProcedure Release Procedure
+ *
+ * Before creating a publishing tag:
+ *
+ * 1. complete the applicable gates in @ref Foundation_Workflows_ReleaseV1;
+ * 2. ensure native CI is green on the exact commit;
+ * 3. create and push an annotated tag;
+ * 4. wait for all package jobs and checksum verification to succeed;
+ * 5. inspect the published release and test a clean external download.
+ *
+ * @code{bash}
+ * git tag -a v1.0.0-rc.1 -m "Foundation v1.0.0-rc.1"
+ * git push origin v1.0.0-rc.1
+ * @endcode
+ *
+ * A failed package job prevents publication. A tag is a release decision, not
+ * merely a request to test an arbitrary branch, and should not be moved after
+ * packages have been published.
+ */

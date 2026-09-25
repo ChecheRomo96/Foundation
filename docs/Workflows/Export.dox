@@ -83,6 +83,9 @@
  *
  * @code
  * dist/<preset>/
+ * |-- LICENSE                               Distribution terms
+ * |-- README.md                             Package overview and documentation links
+ * |-- CHANGELOG.md                          Version history
  * |-- include/                              Public headers
  * |-- bin/examples/                         Optional Release API examples
  * |   |-- Foundation_Math_Ratio             Release example (macOS)
@@ -96,7 +99,9 @@
  *     `-- FoundationTargets-release.cmake
  * @endcode
  *
- * Windows uses `Foundation.lib` rather than the Unix archive name, appends
+ * The legal notice, package overview, and version history are installed at the
+ * package root so they remain adjacent to every redistributed binary. Windows
+ * uses `Foundation.lib` rather than the Unix archive name, appends
  * `.exe` to example executables, and installs the single
  * `FoundationExamples.cmd` menu launcher. Only Release examples are distribution
  * artifacts. Headers are configuration-independent and installed once.

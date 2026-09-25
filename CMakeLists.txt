@@ -199,5 +199,13 @@
         DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/Foundation"
         CONFIGURATIONS Release
     )
+
+    install(FILES
+        "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE"
+        "${CMAKE_CURRENT_SOURCE_DIR}/README.md"
+        "${CMAKE_CURRENT_SOURCE_DIR}/CHANGELOG.md"
+        DESTINATION "."
+        CONFIGURATIONS Release
+    )
 #
 ######################################################################################################
