@@ -1,0 +1,89 @@
+/**
+ * @defgroup Foundation_Workflows_ContinuousIntegration Continuous Integration
+ * @ingroup Foundation_Workflows_Validation
+ * @brief Native GitHub Actions matrix for source tests and exported packages.
+ *
+ * `.github/workflows/native-ci.yml` executes Foundation's repository scripts on
+ * native GitHub-hosted runners. The workflow YAML selects a runner and preset;
+ * it does not reproduce the configure, build, test, export, or consumer logic
+ * already owned by `scripts/`.
+ *
+ * @section FoundationContinuousIntegrationTriggers Triggers and Permissions
+ *
+ * Native CI runs for:
+ *
+ * - pull requests targeting `main`;
+ * - pushes to `main`;
+ * - explicit `workflow_dispatch` requests.
+ *
+ * It has read-only repository permission and uses no project secrets. A
+ * concurrency group cancels an older run for the same branch or pull request
+ * when a newer commit supersedes it. Matrix fail-fast is disabled so one
+ * compiler failure does not hide the state of the other platforms.
+ *
+ * @section FoundationContinuousIntegrationMatrix Native Matrix
+ *
+ * | Runner | Preset | Compiler / target |
+ * | ------ | ------ | ----------------- |
+ * | `macos-15` | `macos_arm64` | Apple Clang, Arm64 |
+ * | `ubuntu-24.04` | `linux_gcc_x64` | GNU GCC, x86-64 |
+ * | `ubuntu-24.04` | `linux_clang_x64` | Clang, x86-64 |
+ * | `windows-2025-vs2026` | `windows_msvc_x64` | MSVC, x86-64 |
+ * | `windows-2025-vs2026` | `windows_clang_x64` | Clang, x86-64 |
+ *
+ * Runner versions are pinned deliberately instead of using moving `latest`
+ * labels. Apple Clang is the native macOS toolchain. GNU GCC is validated on
+ * Linux; `/usr/bin/gcc` on macOS is an Apple Clang driver, while Homebrew GCC
+ * would be a separate compiler and ABI identity requiring its own preset and
+ * support promise.
+ *
+ * @section FoundationContinuousIntegrationSequence Job Sequence
+ *
+ * Every matrix entry performs the same acceptance sequence:
+ *
+ * 1. report CMake, Ninja, compiler, OS, and architecture information;
+ * 2. configure fresh, build, and run the registered suite in Debug;
+ * 3. build and run the same suite in Release from the multi-config tree;
+ * 4. perform a fresh Release export;
+ * 5. recreate the standalone package consumer, find only that exported prefix,
+ *    link `Foundation::Foundation`, and execute the consumer test.
+ *
+ * Debug and Release do not name separate test suites. The same tests execute
+ * against both library configurations. Debug remains a development artifact;
+ * the exported and consumer-tested package contains Release only.
+ *
+ * Bash runners invoke:
+ *
+ * @code{bash}
+ * ./scripts/test.sh <preset> --config Debug --fresh --parallel 4
+ * ./scripts/test.sh <preset> --config Release --parallel 4
+ * ./scripts/test-package.sh <preset> --fresh --parallel 4
+ * @endcode
+ *
+ * Windows runners invoke the equivalent `.ps1` commands. Both test scripts
+ * reject an empty CTest suite, and `test-package` forces a real archive link by
+ * calling out-of-line Time symbols. See @ref Foundation_Workflows_Test and
+ * @ref Foundation_Workflows_PackageConsumer.
+ *
+ * @section FoundationContinuousIntegrationBoundaries Boundaries
+ *
+ * This native matrix does not claim the following evidence:
+ *
+ * - `macos_x64`, which requires an Intel runner or Rosetta execution;
+ * - Linux Arm64 / Raspberry Pi execution;
+ * - AVR, STM32, Arduino, or PSoC compilation and hardware behavior;
+ * - Doxygen validation or deployment;
+ * - sanitizer, warning-policy, or coverage gates.
+ *
+ * Those concerns retain separate backlog tasks and workflows. In particular,
+ * `.github/workflows/deploy-docs.yml` remains the main-branch documentation
+ * publisher, and embedded jobs must never report host execution as target
+ * execution.
+ *
+ * @section FoundationContinuousIntegrationAcceptance Acceptance and Evidence
+ *
+ * Adding the YAML is not sufficient to close `CI-001` or `CI-002`. Both tasks
+ * remain in progress until all five jobs complete successfully on the same
+ * commit. Record the GitHub Actions run URL in
+ * @ref Foundation_Workflows_ReleaseV1 before changing their states to `DONE`.
+ */
