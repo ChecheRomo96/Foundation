@@ -6,6 +6,7 @@
 
 #include <Foundation/Math.h>
 
+using Foundation::Math::FloorDiv;
 using Foundation::Math::FloorMod;
 using Foundation::Math::GCD;
 
@@ -118,6 +119,118 @@ TEST(ArithmeticTest, FloorModMatchesReferenceExhaustively) {
                 << "value=" << value << " modulus=" << modulus;
             ASSERT_GE(actual, 0);
             ASSERT_LT(actual, modulus);
+        }
+    }
+}
+
+TEST(ArithmeticTest, FloorDivIsConstexprAndNoexcept) {
+    static_assert(FloorDiv(-1, 12) == -1, "FloorDiv must be constexpr");
+    static_assert(FloorDiv(-12, 12) == -1, "FloorDiv must be constexpr");
+    static_assert(FloorDiv(-13, 12) == -2, "FloorDiv must be constexpr");
+    static_assert(FloorDiv(7, 0) == 0, "FloorDiv must be constexpr");
+    static_assert(noexcept(FloorDiv(-1, 12)), "FloorDiv must not throw");
+    static_assert(
+        std::is_same<decltype(FloorDiv(0, 1)), std::int32_t>::value,
+        "FloorDiv must return int32_t"
+    );
+
+    constexpr std::int32_t octave = FloorDiv(-13, 12);
+    static_assert(octave == -2, "FloorDiv must be usable in constants");
+}
+
+TEST(ArithmeticTest, FloorDivHandlesPositiveNegativeAndZeroValues) {
+    EXPECT_EQ(FloorDiv(0, 12), 0);
+    EXPECT_EQ(FloorDiv(5, 12), 0);
+    EXPECT_EQ(FloorDiv(11, 12), 0);
+    EXPECT_EQ(FloorDiv(12, 12), 1);
+    EXPECT_EQ(FloorDiv(13, 12), 1);
+    EXPECT_EQ(FloorDiv(-1, 12), -1);
+    EXPECT_EQ(FloorDiv(-11, 12), -1);
+    EXPECT_EQ(FloorDiv(-12, 12), -1);
+    EXPECT_EQ(FloorDiv(-13, 12), -2);
+    EXPECT_EQ(FloorDiv(-7, 3), -3);
+}
+
+TEST(ArithmeticTest, FloorDivHandlesExactMultiples) {
+    EXPECT_EQ(FloorDiv(12, 12), 1);
+    EXPECT_EQ(FloorDiv(24, 12), 2);
+    EXPECT_EQ(FloorDiv(-12, 12), -1);
+    EXPECT_EQ(FloorDiv(-24, 12), -2);
+    EXPECT_EQ(FloorDiv(-36, 12), -3);
+}
+
+TEST(ArithmeticTest, FloorDivByOneReturnsTheDividend) {
+    constexpr std::int32_t minimum =
+        std::numeric_limits<std::int32_t>::min();
+    constexpr std::int32_t maximum =
+        std::numeric_limits<std::int32_t>::max();
+
+    static_assert(FloorDiv(minimum, 1) == minimum);
+    static_assert(FloorDiv(maximum, 1) == maximum);
+
+    EXPECT_EQ(FloorDiv(0, 1), 0);
+    EXPECT_EQ(FloorDiv(17, 1), 17);
+    EXPECT_EQ(FloorDiv(-17, 1), -17);
+    EXPECT_EQ(FloorDiv(minimum, 1), minimum);
+    EXPECT_EQ(FloorDiv(maximum, 1), maximum);
+}
+
+TEST(ArithmeticTest, FloorDivHandlesExtremeValuesWithoutOverflow) {
+    constexpr std::int32_t minimum =
+        std::numeric_limits<std::int32_t>::min();
+    constexpr std::int32_t maximum =
+        std::numeric_limits<std::int32_t>::max();
+
+    static_assert(FloorDiv(minimum, 12) == -178956971);
+    static_assert(FloorDiv(maximum, 12) == 178956970);
+
+    EXPECT_EQ(FloorDiv(minimum, 12), -178956971);
+    EXPECT_EQ(FloorDiv(maximum, 12), 178956970);
+    EXPECT_EQ(FloorDiv(minimum, 2), -1073741824);
+    EXPECT_EQ(FloorDiv(maximum, 2), 1073741823);
+    EXPECT_EQ(FloorDiv(minimum, maximum), -2);
+    EXPECT_EQ(FloorDiv(maximum, maximum), 1);
+    EXPECT_EQ(FloorDiv(minimum + 1, maximum), -1);
+    EXPECT_EQ(FloorDiv(-1, maximum), -1);
+}
+
+TEST(ArithmeticTest, FloorDivReturnsZeroForNonPositiveDivisor) {
+    constexpr std::int32_t minimum =
+        std::numeric_limits<std::int32_t>::min();
+    constexpr std::int32_t maximum =
+        std::numeric_limits<std::int32_t>::max();
+
+    static_assert(FloorDiv(minimum, -1) == 0);
+
+    EXPECT_EQ(FloorDiv(5, 0), 0);
+    EXPECT_EQ(FloorDiv(-5, 0), 0);
+    EXPECT_EQ(FloorDiv(5, -3), 0);
+    EXPECT_EQ(FloorDiv(-5, -3), 0);
+    EXPECT_EQ(FloorDiv(minimum, -1), 0);
+    EXPECT_EQ(FloorDiv(maximum, -1), 0);
+    EXPECT_EQ(FloorDiv(minimum, minimum), 0);
+    EXPECT_EQ(FloorDiv(maximum, minimum), 0);
+}
+
+TEST(ArithmeticTest, FloorDivMatchesReferenceAndFloorModInvariantExhaustively) {
+    for(std::int32_t divisor = 1; divisor <= 13; ++divisor) {
+        for(std::int32_t value = -200; value <= 200; ++value) {
+            const std::int64_t wideValue = value;
+            const std::int64_t wideDivisor = divisor;
+            std::int64_t expected = wideValue / wideDivisor;
+            if((wideValue % wideDivisor) < 0) {
+                --expected;
+            }
+
+            const std::int32_t actual = FloorDiv(value, divisor);
+            const std::int64_t reconstructed =
+                static_cast<std::int64_t>(actual) * wideDivisor +
+                FloorMod(value, divisor);
+
+            ASSERT_EQ(actual, expected)
+                << "value=" << value << " divisor=" << divisor;
+            ASSERT_EQ(reconstructed, wideValue)
+                << "value=" << value << " divisor=" << divisor;
         }
     }
 }

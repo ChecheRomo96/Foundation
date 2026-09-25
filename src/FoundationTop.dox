@@ -101,7 +101,7 @@
  *
  * These macros describe the Foundation version, active C++ language level,
  * and which modules or features are available in the current build.
- * `FOUNDATION_VERSION` reports `1.1.0`. `FOUNDATION_CPLUSPLUS` follows
+ * `FOUNDATION_VERSION` reports `1.2.0`. `FOUNDATION_CPLUSPLUS` follows
  * `_MSVC_LANG` on MSVC and `__cplusplus` elsewhere. Including the header from
  * a language mode older than C++17 produces a compile error.
  *

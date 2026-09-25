@@ -12,7 +12,7 @@ Version 1.0.0 is under release preparation and has not been published as a
 stable release. Platform rows remain release candidates or experimental until
 their documented validation gates pass.
 
-Foundation 1.1.0 requires a C++17-capable compiler in every integration mode,
+Foundation 1.2.0 requires a C++17-capable compiler in every integration mode,
 including CMake packages, direct source builds, and Arduino-style source builds.
 The language requirement does not imply a dependency on the complete C++
 standard library.
