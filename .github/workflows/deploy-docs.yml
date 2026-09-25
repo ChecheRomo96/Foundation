@@ -1,5 +1,9 @@
 name: Deploy Documentation
 
+env:
+  DOXYGEN_VERSION: "1.18.0"
+  DOXYGEN_LINUX_SHA256: "14fa81bdc34171edb5f1f02b1d60e74802f0439b77fa44e592565d517d72df90"
+
 on:
   push:
     branches:
@@ -15,12 +19,26 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y doxygen graphviz cmake
+          sudo apt-get install -y graphviz cmake
+
+          archive="$RUNNER_TEMP/doxygen-${DOXYGEN_VERSION}.linux.bin.tar.gz"
+          curl --fail --location --silent --show-error \
+            "https://www.doxygen.nl/files/doxygen-${DOXYGEN_VERSION}.linux.bin.tar.gz" \
+            --output "$archive"
+          echo "${DOXYGEN_LINUX_SHA256}  ${archive}" | sha256sum --check
+          tar --extract --gzip --file "$archive" --directory "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/doxygen-${DOXYGEN_VERSION}/bin" >> "$GITHUB_PATH"
+
+      - name: Verify documentation toolchain
+        run: |
+          doxygen --version
+          dot -V
+          cmake --version
 
       - name: Build documentation
         run: bash ./scripts/docs.sh
