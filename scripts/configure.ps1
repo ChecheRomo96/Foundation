@@ -14,8 +14,13 @@ $arguments = @("--preset", $Preset)
 if ($Fresh) {
     $arguments += "--fresh"
 }
-if ($CMakeArguments) {
-    $arguments += $CMakeArguments
+$effectiveCMakeArguments = @(
+    $CMakeArguments | Where-Object {
+        -not [string]::IsNullOrWhiteSpace($_)
+    }
+)
+if ($effectiveCMakeArguments.Count -gt 0) {
+    $arguments += $effectiveCMakeArguments
 }
 
 Invoke-FoundationCMake -Arguments $arguments
