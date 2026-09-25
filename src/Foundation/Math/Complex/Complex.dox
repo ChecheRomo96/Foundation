@@ -1,0 +1,18 @@
+/**
+ * @defgroup Foundation_Math_Complex Complex
+ * @ingroup Foundation_Math
+ *
+ * @brief Cartesian complex numbers for any arithmetic type.
+ *
+ * `Complex<T>` stores public `real` and `imag` parts and provides the usual
+ * arithmetic, comparison, conjugation, and squared-magnitude operations.
+ * The module is enabled by `FOUNDATION_MATH_COMPLEX` and does not depend on
+ * the C++ standard library or on floating-point support, so integer
+ * specializations remain usable on targets without an FPU.
+ *
+ * @code
+ * Foundation::Math::Complex<float> z(3.0f, 4.0f);
+ * Foundation::Math::Complex<float> product = z * z.Conjugate();
+ * // product.real == 25.0f, product.imag == 0.0f
+ * @endcode
+ */
