@@ -113,8 +113,8 @@
  *
  * | ID | Priority | State | Task | Acceptance criteria / evidence |
  * | -- | -------- | ----- | ---- | ------------------------------ |
- * | CI-001 | P0 | `TODO` | Add native build and test CI | GitHub-hosted Linux, macOS, and Windows jobs build and run non-zero Debug and Release test suites. Windows covers MSVC and Clang; Linux covers GCC and Clang. |
- * | CI-002 | P0 | `TODO` | Validate exported packages in CI | Every native job performs a fresh Release export and a separate `find_package` consumer links `Foundation::Foundation`. |
+ * | CI-001 | P0 | `IN PROGRESS` | Add native build and test CI | `.github/workflows/native-ci.yml` defines five native jobs across macOS/Apple Clang, Linux/GCC, Linux/Clang, Windows/MSVC, and Windows/Clang. It remains open until one commit passes the complete Debug and Release matrix. |
+ * | CI-002 | P0 | `IN PROGRESS` | Validate exported packages in CI | Every native matrix job invokes the repository package-consumer workflow after a fresh Release export. It remains open until all five jobs link and execute `Foundation::Foundation` successfully. |
  * | CI-003 | P1 | `TODO` | Validate documentation on pull requests | Doxygen builds before merge and fails on structural errors or unresolved references; deployment remains a main-branch operation. |
  * | CI-004 | P1 | `TODO` | Add embedded compile jobs | ARM and AVR jobs configure, build Debug/Release, export Release, and inspect archive identity without pretending to execute target code. |
  * | CI-005 | P1 | `TODO` | Preserve useful failure evidence | CI uploads logs, test reports, and selected package artifacts needed to reproduce a failure. |
