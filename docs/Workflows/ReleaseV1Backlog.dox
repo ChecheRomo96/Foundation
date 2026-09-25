@@ -12,10 +12,10 @@
  * | Field | Value |
  * | ----- | ----- |
  * | Target | `v1.0.0` |
- * | Working branch | `v1.0-release-prep` |
+ * | Working branch | `main` (trunk-based development) |
  * | Overall status | `IN PROGRESS` |
  * | Current milestone | M1 - Release contract |
- * | Last reviewed | 2026-09-21 |
+ * | Last reviewed | 2026-09-24 |
  * | Release decision | Not ready |
  *
  * Allowed task states are:
