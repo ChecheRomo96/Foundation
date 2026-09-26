@@ -220,3 +220,15 @@ jobs:
           name: coverage-report
           path: coverage/
           retention-days: 14
+
+  feature-matrix:
+    name: Feature matrix / Ubuntu 24.04 / GCC / x64
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Build and test every supported feature selection
+        run: cmake -DPRESET=linux_gcc_x64 -P tests/cmake/FeatureMatrix.cmake

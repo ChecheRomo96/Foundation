@@ -29,6 +29,9 @@ version 1.2.0 is the current release.
   UndefinedBehaviorSanitizer on Linux GCC/Clang and macOS.
 - A GCC coverage job that publishes an HTML gcovr report and fails below
   90% line coverage of the library sources.
+- A feature-matrix check that builds and tests default, full, core-only, and
+  every module-disabled selection, and verifies the configure-time error for
+  unsupported selections.
 - A license/ownership review packet with interim guardrails, counsel questions,
   evidence checklist, and objective exit criteria.
 
