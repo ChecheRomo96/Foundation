@@ -80,12 +80,33 @@
  * @section FoundationBuildAVRConsumer Consumer Validation
  *
  * Configure a separate AVR CMake project with the same ATmega328P toolchain,
- * point `CMAKE_PREFIX_PATH` at the export, call
- * `find_package(Foundation CONFIG REQUIRED)`, and link
- * `Foundation::Foundation`. The consumer must call a non-inline Foundation
- * function so the linker actually reads the archive. Inspect the resulting ELF
- * with `avr-size`, `avr-nm`, and `avr-objdump` before running it on hardware.
+ * call `find_package(Foundation CONFIG REQUIRED)`, and link
+ * `Foundation::Foundation`. The toolchain sets
+ * `CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY`, which re-roots package searches
+ * under the target root, so a host-side export is found only with
+ * `NO_CMAKE_FIND_ROOT_PATH` (or by adding the export to `CMAKE_FIND_ROOT_PATH`).
+ * The consumer must call a non-inline Foundation function so the linker
+ * actually reads the archive.
  *
- * Repository CTest is not an AVR execution environment. Behavioral tests require
- * an AVR emulator or board integration. See @ref Foundation_Workflows_Validation.
+ * `tests/AvrConsumer` is the repository's firmware consumer. It checks Math,
+ * Time (including the archive's `Frequency::GetPeriod()` and
+ * `Period::GetFrequency()`), Containers, Functional, Utils, and TypeTraits at
+ * runtime and reports over USART0 at 115200 baud:
+ *
+ * @code{bash}
+ * ./scripts/export.sh atmega328p_avrgcc_avr5 --fresh
+ * cmake -S tests/AvrConsumer -B build/avr-consumer -G Ninja \
+ *     -DCMAKE_BUILD_TYPE=Release \
+ *     --toolchain "$PWD/cmake/toolchains/avr-gcc/atmega328p.cmake" \
+ *     "-DFOUNDATION_PACKAGE_PREFIX=$PWD/dist/atmega328p_avrgcc_avr5"
+ * cmake --build build/avr-consumer
+ * avrdude -p atmega328p -c arduino -P <port> -b 115200 -D \
+ *     -U flash:w:build/avr-consumer/FoundationAvrConsumer.hex:i
+ * @endcode
+ *
+ * The build prints `avr-size`. On success the firmware prints
+ * `FOUNDATION AVR CONSUMER: PASSED` and lights the Uno LED. Repository CTest is
+ * not an AVR execution environment, and embedded CI does not yet execute this
+ * firmware in an emulator.
+ * See @ref Foundation_Workflows_Validation.
  */
