@@ -1,7 +1,7 @@
 /**
  * @defgroup Foundation_Workflows_ContinuousIntegration Continuous Integration
  * @ingroup Foundation_Workflows_Validation
- * @brief Native GitHub Actions matrix for source tests and exported packages.
+ * @brief Native, documentation, and embedded GitHub Actions validation.
  *
  * `.github/workflows/native-ci.yml` executes Foundation's repository scripts on
  * native GitHub-hosted runners. The workflow YAML selects a runner and preset;
@@ -28,6 +28,8 @@
  * | `macos-15` | `macos_arm64` | Apple Clang, Arm64 |
  * | `ubuntu-24.04` | `linux_gcc_x64` | GNU GCC, x86-64 |
  * | `ubuntu-24.04` | `linux_clang_x64` | Clang, x86-64 |
+ * | `ubuntu-24.04-arm` | `linux_gcc_arm64` | GNU GCC, Arm64 |
+ * | `ubuntu-24.04-arm` | `linux_clang_arm64` | Clang, Arm64 |
  * | `windows-2025-vs2026` | `windows_msvc_x64` | MSVC, x86-64 |
  * | `windows-2025-vs2026` | `windows_clang_x64` | Clang, x86-64 |
  *
@@ -65,26 +67,55 @@
  * calling out-of-line Time symbols. See @ref Foundation_Workflows_Test and
  * @ref Foundation_Workflows_PackageConsumer.
  *
+ * The native Arm64 runner is equivalent CPU/OS evidence for the Linux Arm64
+ * package identity. It is useful preparation for a Raspberry Pi consumer, but
+ * it does not prove Raspberry Pi board, kernel, peripheral, or deployment
+ * behavior.
+ *
+ * @section FoundationContinuousIntegrationEmbedded Embedded Matrix
+ *
+ * `.github/workflows/embedded-ci.yml` cross-compiles every public AVR and Arm
+ * preset on `ubuntu-24.04`. It installs the matching GNU toolchain, builds the
+ * Foundation target in Debug and Release, performs a fresh Release export,
+ * inspects every archive with target binutils, rejects Debug files in the
+ * package, verifies the Release import mapping and build metadata, and uploads
+ * the validated package for inspection.
+ *
+ * The matrix contains ATmega328P/AVR5; the four generic Cortex-M profiles;
+ * PSoC 5LP; and the STM32F103, STM32F407, and STM32H743 identities. These jobs
+ * are compile/package evidence only. They deliberately do not invoke CTest,
+ * execute target code on the x86-64 runner, or claim firmware/hardware proof.
+ *
  * @section FoundationContinuousIntegrationBoundaries Boundaries
  *
  * This native matrix does not claim the following evidence:
  *
  * - `macos_x64`, which requires an Intel runner or Rosetta execution;
- * - Linux Arm64 / Raspberry Pi execution;
- * - AVR, STM32, Arduino, or PSoC compilation and hardware behavior;
- * - Doxygen validation or deployment;
+ * - Raspberry Pi-specific integration and hardware behavior;
+ * - AVR, STM32, Arduino, or PSoC firmware linkage and hardware behavior;
  * - sanitizer, warning-policy, or coverage gates.
  *
- * Those concerns retain separate backlog tasks and workflows. In particular,
- * `.github/workflows/deploy-docs.yml` remains the main-branch documentation
- * publisher, and embedded jobs must never report host execution as target
- * execution.
+ * Those concerns retain separate backlog tasks. In particular, embedded jobs
+ * must never report cross-compilation as target execution.
+ *
+ * @section FoundationContinuousIntegrationDocumentation Documentation Validation
+ *
+ * `.github/workflows/deploy-docs.yml` validates Doxygen 1.14.0 on pull requests
+ * targeting `main`, pushes to `main` or `master`, and manual dispatches. The
+ * validation job has read-only repository permission, performs a fresh build,
+ * and uploads the generated HTML as a short-lived workflow artifact. A separate
+ * deployment job runs only for push events, consumes that validated artifact,
+ * and alone receives permission to update the `docs` branch. Doxygen uses
+ * `WARN_AS_ERROR = FAIL_ON_WARNINGS`, so structural and reference warnings fail
+ * validation before deployment.
  *
  * @section FoundationContinuousIntegrationAcceptance Acceptance and Evidence
  *
- * `CI-001` and `CI-002` were accepted by
- * [GitHub Actions run 36169511592](https://github.com/ChecheRomo96/Foundation/actions/runs/36169511592)
- * for commit `e171396`. All five jobs completed successfully on the same
- * commit, including the Debug and Release suites and the fresh Release package
- * consumer validation.
+ * `CI-001` and `CI-002` were accepted for Foundation 1.2.0 by
+ * [GitHub Actions run 36194411008](https://github.com/ChecheRomo96/Foundation/actions/runs/36194411008).
+ * Its five published native identities completed the Debug and Release suites
+ * plus fresh Release package-consumer validation. The two Arm64 Linux jobs,
+ * documentation pull-request gate, and embedded matrix are new after that tag;
+ * their first hosted run must be recorded before their backlog items become
+ * `DONE`.
  */

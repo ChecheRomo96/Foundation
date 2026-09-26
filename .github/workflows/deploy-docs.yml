@@ -1,4 +1,4 @@
-name: Deploy Documentation
+name: Validate and Deploy Documentation
 
 env:
   DOXYGEN_VERSION: "1.14.0"
@@ -6,17 +6,27 @@ env:
   DOXYGEN_LINUX_SHA256: "e5d6ae24d0bf3f0cdc4d8f146726b89ca323922f19441af99b1872d503665ad6"
 
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
       - master
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: documentation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  deploy-docs:
-    runs-on: ubuntu-latest
+  validate-docs:
+    name: Validate Doxygen
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
@@ -42,7 +52,31 @@ jobs:
           cmake --version
 
       - name: Build documentation
-        run: bash ./scripts/docs.sh
+        run: bash ./scripts/docs.sh --fresh
+
+      - name: Upload validated documentation
+        uses: actions/upload-artifact@v7
+        with:
+          name: foundation-documentation
+          path: build/documentation/docs/html
+          if-no-files-found: error
+          retention-days: 7
+
+  deploy-docs:
+    name: Deploy GitHub Pages
+    if: github.event_name == 'push'
+    needs: validate-docs
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download validated documentation
+        uses: actions/download-artifact@v7
+        with:
+          name: foundation-documentation
+          path: build/documentation/docs/html
 
       - name: Deploy to docs branch
         uses: peaceiris/actions-gh-pages@v4

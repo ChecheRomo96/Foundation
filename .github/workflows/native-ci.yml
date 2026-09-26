@@ -44,6 +44,18 @@ jobs:
             platform: unix
             compiler: clang++
 
+          - name: Ubuntu 24.04 / GCC / Arm64
+            runner: ubuntu-24.04-arm
+            preset: linux_gcc_arm64
+            platform: unix
+            compiler: g++
+
+          - name: Ubuntu 24.04 / Clang / Arm64
+            runner: ubuntu-24.04-arm
+            preset: linux_clang_arm64
+            platform: unix
+            compiler: clang++
+
           - name: Windows 2025 / MSVC / x64
             runner: windows-2025-vs2026
             preset: windows_msvc_x64

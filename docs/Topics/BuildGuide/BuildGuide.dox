@@ -21,7 +21,7 @@
 /**
  * @defgroup Foundation_BuildGuide_SupportMatrix Support Matrix
  * @ingroup Foundation_BuildGuide
- * @brief Evidence-based v1.0.0 support levels for every public target preset.
+ * @brief Evidence-based Foundation 1.x support levels for every public target preset.
  */
 
 /**
