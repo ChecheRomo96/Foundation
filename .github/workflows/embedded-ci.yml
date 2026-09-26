@@ -90,15 +90,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Install arduino-cli and AVR core
+      - name: Install arduino-cli
+        uses: arduino/setup-arduino-cli@v2
+
+      - name: Install Arduino AVR core
         shell: bash
         run: |
           set -euo pipefail
-          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh \
-            | BINDIR="$HOME/.local/bin" sh
-          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-          "$HOME/.local/bin/arduino-cli" core update-index
-          "$HOME/.local/bin/arduino-cli" core install arduino:avr@1.8.8
+          arduino-cli core update-index
+          arduino-cli core install arduino:avr@1.8.8
 
       - name: Report toolchain
         shell: bash
