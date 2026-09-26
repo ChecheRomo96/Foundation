@@ -196,8 +196,8 @@
  * | Preset | `macos_arm64` |
  * | Toolchain | CMake 4.1.1, Ninja 1.12.1, AppleClang 16.0.0 |
  * | Clean configure/build | Passed after `clean.sh macos_arm64` |
- * | Debug tests | 122/122 passed |
- * | Release tests | 122/122 passed |
+ * | Debug tests | 145/145 passed |
+ * | Release tests | 145/145 passed |
  * | Release export | Passed; `dist/macos_arm64` regenerated |
  * | Package consumer | 1/1 passed against Foundation 1.2.0 |
  * | Archive identity | Thin Arm64 `libFoundation.a` |
