@@ -221,6 +221,22 @@
  * | Option override | `-DFOUNDATION_SCHEDULING=OFF` export recorded `OFF` and omitted Scheduling headers; defaults were restored, re-validated, and the consumer passed |
  * | Not covered | Gatekeeper approval for a downloaded (quarantined) unsigned package |
  *
+ * @subsection FoundationValidationEvidenceMacOSx64 macOS x86-64 through Rosetta 2 — 2026-09-26
+ *
+ * | Field | Recorded value |
+ * | ----- | -------------- |
+ * | Commit | `9ad8b92` on a clean worktree |
+ * | Host and toolchain | Apple M2, macOS 15.3.2, AppleClang 16.0.0, CMake 4.1.1, Ninja 1.12.1 |
+ * | Execution environment | Rosetta 2; an x86-64 probe reported `sysctl.proc_translated=1`. No Intel hardware was used |
+ * | Clean configure/build | `CMAKE_OSX_ARCHITECTURES=x86_64`, `CMAKE_CONFIGURATION_TYPES` is `Debug;Release`; both archives are thin x86_64, warning-free |
+ * | Debug / Release tests | 162/162 and 162/162 passed; all 18 test executables are thin x86_64, so none could run natively |
+ * | Examples | All 12 built warning-free in Debug and Release; all 24 exited 0; output is identical across configurations and byte-identical to the Arm64 run |
+ * | Release export | Identity validator confirmed an x86_64 Mach-O archive; `bin/examples` holds only the 12 Release executables and `FoundationExamples.command`; no Debug artifact or import |
+ * | Package consumer | 1/1 passed; the consumer executable is thin x86_64 |
+ * | Launcher, scripted | Quit, single run, invalid/zero/out-of-range input, and all 12 examples in one session behaved as documented |
+ * | Option override | `-DFOUNDATION_SCHEDULING=OFF` export recorded `OFF`; defaults were restored, re-validated, and the consumer passed |
+ * | Not covered | Execution on Intel hardware; Gatekeeper approval for a downloaded unsigned package |
+ *
  * @subsection FoundationValidationEvidenceAVR AVR ATmega328P — 2026-09-25
  *
  * | Field | Recorded value |

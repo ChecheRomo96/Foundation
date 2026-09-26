@@ -135,7 +135,8 @@
  *
  * This native matrix does not claim the following evidence:
  *
- * - `macos_x64`, which requires an Intel runner or Rosetta execution;
+ * - `macos_x64`, which requires an Intel runner or Rosetta execution and is
+ *   validated locally through Rosetta 2 (VAL-002);
  * - Raspberry Pi-specific integration and hardware behavior;
  * - AVR, STM32, or PSoC firmware linkage and hardware behavior, and Arduino
  *   board execution (sketches are compiled, not run);
