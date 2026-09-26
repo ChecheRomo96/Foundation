@@ -126,8 +126,8 @@
  *
  * | ID | Priority | State | Task | Acceptance criteria / evidence |
  * | -- | -------- | ----- | ---- | ------------------------------ |
- * | TEST-001 | P0 | `DONE` | Inventory public API coverage | @ref Foundation_Workflows_PublicApiCoverage maps every public family to behavior, conformance, compile, configuration, consumer, or target evidence and explicitly assigns uncovered members to `TEST-002`, `TEST-003`, or `TEST-004`. |
- * | TEST-002 | P0 | `TODO` | Complete Math tests | Complex, fixed/dynamic matrices, matrix operations, arithmetic, trigonometry, Ratio, and numeric edge cases are covered. |
+ * | TEST-001 | P0 | `DONE` | Inventory public API coverage | @ref Foundation_Workflows_PublicApiCoverage maps every public family to behavior, conformance, compile, configuration, consumer, or target evidence. The original Math gaps assigned to `TEST-002` are closed; remaining gaps identify `TEST-003` or `TEST-004`. |
+ * | TEST-002 | P0 | `DONE` | Complete Math tests | 23 focused cases now cover Complex, fixed/dynamic matrix member APIs, arithmetic, trigonometry, Ratio mutators, and numeric edges. Clean macOS Arm64 Debug and Release runs each pass all 145/145 registered tests. Matrix multiplication already covers all four fixed/dynamic operand combinations plus incompatible, attached-output, and overlap paths. |
  * | TEST-003 | P0 | `TODO` | Complete remaining module tests | Containers, Functional, Time, Scheduling, TypeTraits, and Utils include empty, full, invalid, boundary, and lifecycle behavior where applicable. |
  * | TEST-004 | P1 | `TODO` | Add public-header self-containment checks | Each supported public header compiles in an otherwise minimal translation unit. |
  * | TEST-005 | P1 | `TODO` | Add warning and sanitizer jobs | Supported native compilers run an agreed warning set; AddressSanitizer and UndefinedBehaviorSanitizer pass where available. |
@@ -147,7 +147,7 @@
  *
  * | ID | Priority | State | Task | Acceptance criteria / evidence |
  * | -- | -------- | ----- | ---- | ------------------------------ |
- * | VAL-001 | P0 | `IN PROGRESS` | Validate macOS arm64 | On macOS 15.3.2 Arm64 with AppleClang 16.0.0, CMake 4.1.1, and Ninja 1.12.1, a clean tree passed 122/122 Debug and 122/122 Release tests plus the 1/1 isolated package consumer. `libFoundation.a` is Arm64, the export contains no Debug artifact, and only `IMPORTED_LOCATION_RELEASE` is present. Examples and launcher acceptance remain. |
+ * | VAL-001 | P0 | `IN PROGRESS` | Validate macOS arm64 | On macOS 15.3.2 Arm64 with AppleClang 16.0.0, CMake 4.1.1, and Ninja 1.12.1, clean runs passed 145/145 Debug and 145/145 Release tests plus the 1/1 isolated package consumer. `libFoundation.a` is Arm64, the export contains no Debug artifact, and only `IMPORTED_LOCATION_RELEASE` is present. Examples and launcher acceptance remain. |
  * | VAL-002 | P0 | `TODO` | Validate macOS x64 | Cross-build and inspect x86-64 artifacts; run tests/consumer through Rosetta or on Intel hardware. |
  * | VAL-003 | P0 | `IN PROGRESS` | Validate Windows MSVC x64 | The v1.2.0 hosted job passed non-zero Debug/Release tests, Release export, and the external package consumer. Archive inspection plus examples/launcher acceptance on Windows remain. |
  * | VAL-004 | P0 | `IN PROGRESS` | Validate Windows Clang x64 | The v1.2.0 hosted Clang job passed the same tests, export, and consumer. Archive inspection plus examples/launcher acceptance on Windows remain. |

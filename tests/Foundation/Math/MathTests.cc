@@ -291,6 +291,55 @@ TEST(RatioTest, ReducesInPlace) {
     EXPECT_EQ(ratio.Sign(), 1);
 }
 
+TEST(RatioTest, UpdatesNumeratorAndDenominatorIndependently) {
+    constexpr Ratio updated = [] {
+        Ratio ratio;
+        ratio.SetNumerator(-3);
+        ratio.SetDenominator(4);
+        return ratio;
+    }();
+    static_assert(updated.Numerator() == -3);
+    static_assert(updated.Denominator() == 4);
+    static_assert(updated.IsValid());
+
+    Ratio ratio(1, 2);
+    ratio.SetNumerator(5);
+    EXPECT_EQ(ratio.Numerator(), 5);
+    EXPECT_EQ(ratio.Denominator(), 2);
+
+    ratio.SetDenominator(0);
+    EXPECT_FALSE(ratio.IsValid());
+    EXPECT_FLOAT_EQ(ratio.ToFloat(), 0.0f);
+
+    ratio.SetDenominator(-10);
+    EXPECT_TRUE(ratio.IsValid());
+    EXPECT_EQ(ratio.Sign(), -1);
+    EXPECT_FLOAT_EQ(ratio.ToFloat(), -0.5f);
+}
+
+TEST(RatioTest, HandlesZeroAndExtremeTerms) {
+    constexpr std::int32_t minimum =
+        std::numeric_limits<std::int32_t>::min();
+    constexpr std::int32_t maximum =
+        std::numeric_limits<std::int32_t>::max();
+
+    const Ratio zero = Ratio(0, maximum).Reduced();
+    EXPECT_EQ(zero.Numerator(), 0);
+    EXPECT_EQ(zero.Denominator(), 1);
+    EXPECT_EQ(zero.Sign(), 0);
+
+    const Ratio equalMinimums = Ratio(minimum, minimum).Reduced();
+    EXPECT_EQ(equalMinimums.Numerator(), -1);
+    EXPECT_EQ(equalMinimums.Denominator(), -1);
+    EXPECT_EQ(equalMinimums.Sign(), 1);
+    EXPECT_FLOAT_EQ(equalMinimums.ToFloat(), 1.0f);
+
+    const Ratio coprimeLimits = Ratio(maximum, minimum).Reduced();
+    EXPECT_EQ(coprimeLimits.Numerator(), maximum);
+    EXPECT_EQ(coprimeLimits.Denominator(), minimum);
+    EXPECT_EQ(coprimeLimits.Sign(), -1);
+}
+
 TEST(RatioTest, ReducesMinimumSignedValuesWithoutOverflow) {
     constexpr std::int32_t minimum =
         std::numeric_limits<std::int32_t>::min();

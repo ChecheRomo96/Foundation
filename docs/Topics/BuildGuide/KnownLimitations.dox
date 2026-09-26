@@ -35,7 +35,7 @@
  * testing and isolated package-consumer validation. Native main-branch run
  * [36194411008](https://github.com/ChecheRomo96/Foundation/actions/runs/36194411008)
  * passed macOS Arm64, Linux GCC/Clang x64, and Windows MSVC/Clang x64.
- * A clean local macOS 15.3.2 Arm64 rebuild additionally passed 122/122 tests
+ * Clean local macOS 15.3.2 Arm64 runs additionally passed 145/145 tests
  * in both Debug and Release, followed by the isolated Release package consumer.
  *
  * The following evidence is still pending:

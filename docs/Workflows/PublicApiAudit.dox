@@ -185,8 +185,10 @@
  * - [x] the final public symbol/header inventory is recorded here;
  * - [x] no unresolved public API breaking change remains for RC1.
  *
- * Exit evidence recorded on 2026-09-25: the `macos_arm64` preset passed all
- * 122 registered tests in both Debug and Release. The repository-owned
+ * Exit evidence recorded on 2026-09-25: the `macos_arm64` preset passed the
+ * then-current 122 registered tests in both Debug and Release. After
+ * `TEST-002`, the same preset passes the expanded 145-test suite in both
+ * configurations. The repository-owned
  * `tests/PackageConsumer` fixture then configured exclusively from the fresh
  * Release export, compiled separate umbrella/selective-header translation
  * units, linked `Foundation::Foundation`, called the out-of-line Frequency and
