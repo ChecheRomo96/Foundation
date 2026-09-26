@@ -102,6 +102,29 @@
  * on Linux GCC and Clang x64 and on macOS Apple Clang Arm64. MSVC offers no
  * UndefinedBehaviorSanitizer and is not part of this job.
  *
+ * @section FoundationContinuousIntegrationCoverage Coverage
+ *
+ * The `coverage` job in `native-ci.yml` builds the Debug suite with GCC on
+ * Ubuntu x64 and `FOUNDATION_COVERAGE=ON`, then runs gcovr 8.6 over `src/` and
+ * the staged include tree (header-only code is compiled from the staged copies).
+ * Tests and GoogleTest are excluded. The job writes a line/function/branch
+ * summary to the workflow page, uploads a browsable HTML report as the
+ * `coverage-report` artifact, and fails when line coverage drops below 85%.
+ *
+ * To produce the same report locally with Apple Clang:
+ *
+ * @code{.sh}
+ * cmake --preset macos_arm64 -DFOUNDATION_TESTING=ON -DFOUNDATION_COVERAGE=ON --fresh
+ * cmake --build build/macos_arm64 --config Debug
+ * ctest --test-dir build/macos_arm64 -C Debug
+ * mkdir -p coverage
+ * gcovr --gcov-executable "xcrun llvm-cov gcov" -r . build/macos_arm64 \
+ *     --filter build/macos_arm64/include/ --filter src/ --html-details coverage/index.html
+ * @endcode
+ *
+ * The 1.2 baseline measured with Apple Clang is 88.8% lines (1184/1334),
+ * 99.0% functions, and 65.4% branches.
+ *
  * @section FoundationContinuousIntegrationBoundaries Boundaries
  *
  * This native matrix does not claim the following evidence:
@@ -109,7 +132,7 @@
  * - `macos_x64`, which requires an Intel runner or Rosetta execution;
  * - Raspberry Pi-specific integration and hardware behavior;
  * - AVR, STM32, Arduino, or PSoC firmware linkage and hardware behavior;
- * - coverage gates.
+ * - branch-coverage gates; only line coverage is enforced.
  *
  * Those concerns retain separate backlog tasks. In particular, embedded jobs
  * must never report cross-compilation as target execution.

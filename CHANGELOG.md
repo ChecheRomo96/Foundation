@@ -27,6 +27,8 @@ version 1.2.0 is the current release.
 - A warnings-as-errors policy for Foundation and its tests when testing is
   enabled, and a CI job running the suite under AddressSanitizer and
   UndefinedBehaviorSanitizer on Linux GCC/Clang and macOS.
+- A GCC coverage job that publishes an HTML gcovr report and fails below
+  85% line coverage of the library sources.
 - A license/ownership review packet with interim guardrails, counsel questions,
   evidence checklist, and objective exit criteria.
 
