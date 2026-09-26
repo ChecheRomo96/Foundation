@@ -68,7 +68,7 @@
  * | `FOUNDATION_DOCS` | `OFF` | Adds the Doxygen `docs` target. |
  * | `FOUNDATION_TESTING` | `OFF` | Enables CTest integration. |
  * | `FOUNDATION_EXAMPLES` | `OFF` | Builds repository examples. |
- * | `FOUNDATION_COVERAGE` | `OFF` | Adds host coverage flags. |
+ * | `FOUNDATION_COVERAGE` | `OFF` | Adds `--coverage` to GCC/Clang Debug builds; see @ref Foundation_Workflows_ContinuousIntegration for the report. |
  * | `FOUNDATION_MATH` | `ON` | Includes Math and its selected submodules. |
  * | `FOUNDATION_TYPE_TRAITS` | `ON` | Includes TypeTraits. |
  * | `FOUNDATION_CONTAINERS` | `ON` | Includes Containers. |
