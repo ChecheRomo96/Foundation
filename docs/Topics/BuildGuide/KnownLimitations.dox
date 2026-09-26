@@ -47,7 +47,6 @@
  *
  * The following evidence is still pending:
  *
- * - macOS x86-64 execution through Rosetta or Intel hardware;
  * - Raspberry Pi-specific consumer and hardware evidence;
  * - AVR consumer ELF linkage/size and AVR board or emulator execution;
  * - Arm/STM32 firmware linkage and target execution beyond hosted package
