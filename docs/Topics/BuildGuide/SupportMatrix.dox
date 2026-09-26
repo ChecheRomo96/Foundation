@@ -56,7 +56,7 @@
  *
  * | Platform | Preset / integration | Binary identity | 1.x level | Validation gate |
  * | -------- | -------------------- | --------------- | ---------- | --------------- |
- * | AVR | `atmega328p_avrgcc_avr5` | AVR-GCC, ATmega328P, AVR5 | `RELEASE CANDIDATE` | VAL-007 |
+ * | AVR | `atmega328p_avrgcc_avr5` | AVR-GCC, ATmega328P, AVR5 | `SUPPORTED` | VAL-007 |
  * | STM32F103 | `stm32f103_armgcc_cortex_m3_soft` | Arm GCC, Cortex-M3, soft float | `RELEASE CANDIDATE` | VAL-008 |
  * | STM32F407 | `stm32f407_armgcc_cortex_m4f_hard` | Arm GCC, Cortex-M4F, hard float | `RELEASE CANDIDATE` | VAL-008 |
  * | STM32H743 | `stm32h743_armgcc_cortex_m7f_hard` | Arm GCC, Cortex-M7F, hard float | `RELEASE CANDIDATE` | VAL-008 |

@@ -48,7 +48,6 @@
  * The following evidence is still pending:
  *
  * - Raspberry Pi-specific consumer and hardware evidence;
- * - AVR consumer ELF linkage/size and AVR board or emulator execution;
  * - Arm/STM32 firmware linkage and target execution beyond hosted package
  *   cross-compilation;
  * - representative PSoC product-toolchain integration.

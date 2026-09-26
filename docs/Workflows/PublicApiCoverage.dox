@@ -131,8 +131,9 @@
  * Native tests cannot execute an AVR or Cortex-M binary. Embedded CI therefore
  * has a narrower but truthful contract: compile Debug and Release with the
  * target toolchain, export the Release package, and inspect an object inside
- * `libFoundation.a` with the matching binutils. Hardware or emulator execution
- * remains part of `VAL-007`, `VAL-008`, and `VAL-009`.
+ * `libFoundation.a` with the matching binutils. AVR board execution was
+ * recorded by `VAL-007` with `tests/AvrConsumer`; hardware or emulator
+ * execution for Arm remains part of `VAL-008` and `VAL-009`.
  *
  * @section FoundationPublicApiCoverageNext Prioritized Test Work
  *
