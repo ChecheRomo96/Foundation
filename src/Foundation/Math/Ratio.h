@@ -66,9 +66,9 @@
                         return (value < 0)
                             ? 0u - static_cast<uint32_t>(value)
                             : static_cast<uint32_t>(value);
+                    } else {
+                        return static_cast<uint32_t>(value);
                     }
-
-                    return static_cast<uint32_t>(value);
                 }
 
             public:
@@ -122,9 +122,9 @@
                         return static_cast<int8_t>(
                             numeratorSign * denominatorSign
                         );
+                    } else {
+                        return (_num == 0 || _den == 0) ? 0 : 1;
                     }
-
-                    return (_num == 0 || _den == 0) ? 0 : 1;
                 }
 
                 /** @brief Reports whether the denominator is non-zero. */
