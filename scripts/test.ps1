@@ -5,6 +5,7 @@ param(
     [string]$Configuration = "",
     [int]$Parallel = 0,
     [string]$Filter = "",
+    [string]$JUnit = "",
     [switch]$Fresh,
     [switch]$AllowNoTests
 )
@@ -48,6 +49,12 @@ if ($Parallel -gt 0) {
 }
 if ($Filter) {
     $arguments += @("--tests-regex", $Filter)
+}
+if ($JUnit) {
+    $junitPath = Resolve-FoundationPath -Path $JUnit
+    $junitDirectory = Split-Path -Parent $junitPath
+    New-Item -ItemType Directory -Path $junitDirectory -Force | Out-Null
+    $arguments += @("--output-junit", $junitPath)
 }
 
 & ctest @arguments

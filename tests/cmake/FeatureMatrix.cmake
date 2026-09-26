@@ -70,8 +70,10 @@ function(expect_pass name)
     set(build_dir "${WORK_DIR}/${name}")
     run_or_fail(${name} "${CMAKE_COMMAND}" --build "${build_dir}"
         --config ${CONFIG} --parallel)
+    file(MAKE_DIRECTORY "${build_dir}/test-results")
     run_or_fail(${name} "${CMAKE_CTEST_COMMAND}" --test-dir "${build_dir}"
-        -C ${CONFIG} --output-on-failure --no-tests=error)
+        -C ${CONFIG} --output-on-failure --no-tests=error
+        --output-junit "${build_dir}/test-results/${name}.xml")
     file(REMOVE_RECURSE "${build_dir}")
     math(EXPR count "${PASSED} + 1")
     set(PASSED ${count} PARENT_SCOPE)

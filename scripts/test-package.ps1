@@ -5,7 +5,8 @@ param(
     [int]$Parallel = 0,
     [switch]$Fresh,
     [switch]$SkipExport,
-    [string]$Package = ""
+    [string]$Package = "",
+    [string]$JUnit = ""
 )
 
 . "$PSScriptRoot/common.ps1"
@@ -114,6 +115,12 @@ $testArguments = @(
     "--output-on-failure",
     "--no-tests=error"
 )
+if ($JUnit) {
+    $junitPath = Resolve-FoundationPath -Path $JUnit
+    $junitDirectory = Split-Path -Parent $junitPath
+    New-Item -ItemType Directory -Path $junitDirectory -Force | Out-Null
+    $testArguments += @("--output-junit", $junitPath)
+}
 & ctest @testArguments
 if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE

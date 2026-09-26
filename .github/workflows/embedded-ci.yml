@@ -96,6 +96,19 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
+      - name: Upload AVR failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: failure-avr-${{ github.run_attempt }}
+          path: |
+            archive-inspection.txt
+            build/atmega328p_avrgcc_avr5/CMakeCache.txt
+            build/atmega328p_avrgcc_avr5/CMakeFiles/CMakeConfigureLog.yaml
+            dist/atmega328p_avrgcc_avr5/
+          if-no-files-found: warn
+          retention-days: 14
+
   arm:
     name: Arm GCC / Cortex-M profiles
     runs-on: ubuntu-24.04
@@ -228,3 +241,20 @@ jobs:
             dist/stm32h743_*
           if-no-files-found: error
           retention-days: 7
+
+      - name: Upload Arm failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: failure-arm-${{ github.run_attempt }}
+          path: |
+            build/*-archive-inspection.txt
+            build/*/CMakeCache.txt
+            build/*/CMakeFiles/CMakeConfigureLog.yaml
+            dist/arm_none_eabi_*/
+            dist/psoc5lp_*/
+            dist/stm32f103_*/
+            dist/stm32f407_*/
+            dist/stm32h743_*/
+          if-no-files-found: warn
+          retention-days: 14

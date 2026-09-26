@@ -32,6 +32,9 @@ version 1.2.0 is the current release.
 - A feature-matrix check that builds and tests default, full, core-only, and
   every module-disabled selection, and verifies the configure-time error for
   unsupported selections.
+- Optional JUnit output in native and package-consumer test scripts, plus
+  failure-only CI artifacts containing available CTest, CMake, package,
+  inspection, coverage, and documentation diagnostics.
 - A license/ownership review packet with interim guardrails, counsel questions,
   evidence checklist, and objective exit criteria.
 

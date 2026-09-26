@@ -52,7 +52,24 @@ jobs:
           cmake --version
 
       - name: Build documentation
-        run: bash ./scripts/docs.sh --fresh
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p build/ci-logs
+          bash ./scripts/docs.sh --fresh 2>&1 | tee build/ci-logs/documentation.log
+
+      - name: Upload documentation failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: failure-documentation-${{ github.run_attempt }}
+          path: |
+            build/ci-logs/documentation.log
+            build/documentation/CMakeCache.txt
+            build/documentation/CMakeFiles/CMakeConfigureLog.yaml
+            build/documentation/docs/Doxyfile
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Upload validated documentation
         uses: actions/upload-artifact@v7
