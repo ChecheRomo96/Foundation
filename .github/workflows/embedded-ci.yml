@@ -1,0 +1,230 @@
+name: Embedded Build and Package
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: embedded-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  avr:
+    name: AVR-GCC / ATmega328P / AVR5
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install AVR toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install --yes gcc-avr binutils-avr avr-libc
+
+      - name: Report toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmake --version
+          ninja --version
+          avr-g++ --version
+          uname -a
+
+      - name: Build Debug and Release
+        shell: bash
+        run: |
+          set -euo pipefail
+          preset=atmega328p_avrgcc_avr5
+          ./scripts/build.sh "$preset" \
+            --config Debug --fresh --parallel 4 --target Foundation
+          ./scripts/build.sh "$preset" \
+            --config Release --parallel 4 --target Foundation
+
+      - name: Export and inspect Release package
+        shell: bash
+        run: |
+          set -euo pipefail
+          preset=atmega328p_avrgcc_avr5
+          package_root="dist/$preset"
+
+          ./scripts/export.sh "$preset" --fresh --parallel 4
+
+          archive="$package_root/lib/libFoundation.a"
+          targets="$package_root/lib/cmake/Foundation/FoundationTargets-release.cmake"
+          build_info="$package_root/lib/cmake/Foundation/FoundationBuildInfo.cmake"
+
+          test -f "$archive"
+          test -f "$targets"
+          test -f "$build_info"
+          avr-objdump -f "$archive" | tee archive-inspection.txt
+          grep -F 'file format elf32-avr' archive-inspection.txt
+          grep -F 'architecture: avr:5' archive-inspection.txt
+          grep -F 'IMPORTED_LOCATION_RELEASE' "$targets"
+
+          if find "$package_root" -type f \
+              \( -name '*_d.a' -o -name '*_d.lib' \
+                 -o -name 'FoundationTargets-debug.cmake' \) \
+              -print -quit | grep -q .; then
+            echo 'The AVR package contains a Debug artifact' >&2
+            exit 1
+          fi
+
+          grep -F 'set(Foundation_PLATFORM "atmega328p_avrgcc_avr5")' \
+            "$build_info"
+          grep -F 'set(Foundation_SYSTEM_NAME "Generic")' "$build_info"
+          grep -F 'set(Foundation_SYSTEM_PROCESSOR "avr5")' "$build_info"
+          grep -F 'set(Foundation_AVR_MCU "atmega328p")' "$build_info"
+          grep -F 'set(Foundation_AVR_ARCHITECTURE "avr5")' "$build_info"
+
+      - name: Upload validated AVR package
+        uses: actions/upload-artifact@v7
+        with:
+          name: Foundation-atmega328p_avrgcc_avr5
+          path: dist/atmega328p_avrgcc_avr5
+          if-no-files-found: error
+          retention-days: 7
+
+  arm:
+    name: Arm GCC / Cortex-M profiles
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install Arm toolchain and runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install --yes \
+            gcc-arm-none-eabi \
+            binutils-arm-none-eabi \
+            libnewlib-arm-none-eabi \
+            libstdc++-arm-none-eabi-newlib
+
+      - name: Report toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmake --version
+          ninja --version
+          arm-none-eabi-g++ --version
+          arm-none-eabi-g++ -print-sysroot
+          uname -a
+
+      - name: Build, export, and inspect every Arm profile
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          validate_profile() {
+            preset=$1
+            package_root="dist/$preset"
+
+            case "$preset" in
+              *cortex_m0plus_soft)
+                expected_cpu=cortex-m0plus
+                expected_float_abi=soft
+                expected_fpu=
+                ;;
+              *cortex_m3_soft)
+                expected_cpu=cortex-m3
+                expected_float_abi=soft
+                expected_fpu=
+                ;;
+              *cortex_m4f_hard)
+                expected_cpu=cortex-m4
+                expected_float_abi=hard
+                expected_fpu=fpv4-sp-d16
+                ;;
+              *cortex_m7f_hard)
+                expected_cpu=cortex-m7
+                expected_float_abi=hard
+                expected_fpu=fpv5-d16
+                ;;
+              *)
+                echo "Unknown Arm profile: $preset" >&2
+                exit 1
+                ;;
+            esac
+
+            ./scripts/build.sh "$preset" \
+              --config Debug --fresh --parallel 4 --target Foundation
+            ./scripts/build.sh "$preset" \
+              --config Release --parallel 4 --target Foundation
+            ./scripts/export.sh "$preset" --fresh --parallel 4
+
+            archive="$package_root/lib/libFoundation.a"
+            targets="$package_root/lib/cmake/Foundation/FoundationTargets-release.cmake"
+            build_info="$package_root/lib/cmake/Foundation/FoundationBuildInfo.cmake"
+            inspection="build/${preset}-archive-inspection.txt"
+
+            test -f "$archive"
+            test -f "$targets"
+            test -f "$build_info"
+            arm-none-eabi-objdump -f "$archive" | tee "$inspection"
+            grep -F 'file format elf32-littlearm' "$inspection"
+            grep -F 'architecture: arm' "$inspection"
+            grep -F 'IMPORTED_LOCATION_RELEASE' "$targets"
+
+            if find "$package_root" -type f \
+                \( -name '*_d.a' -o -name '*_d.lib' \
+                   -o -name 'FoundationTargets-debug.cmake' \) \
+                -print -quit | grep -q .; then
+              echo "The $preset package contains a Debug artifact" >&2
+              exit 1
+            fi
+
+            grep -F "set(Foundation_PLATFORM \"$preset\")" "$build_info"
+            grep -F 'set(Foundation_SYSTEM_NAME "Generic")' "$build_info"
+            grep -F \
+              "set(Foundation_SYSTEM_PROCESSOR \"$expected_cpu\")" \
+              "$build_info"
+            grep -F "set(Foundation_ARM_CPU \"$expected_cpu\")" \
+              "$build_info"
+            grep -F \
+              "set(Foundation_ARM_FLOAT_ABI \"$expected_float_abi\")" \
+              "$build_info"
+            grep -F "set(Foundation_ARM_FPU \"$expected_fpu\")" \
+              "$build_info"
+          }
+
+          for preset in \
+            arm_none_eabi_cortex_m0plus_soft \
+            arm_none_eabi_cortex_m3_soft \
+            arm_none_eabi_cortex_m4f_hard \
+            arm_none_eabi_cortex_m7f_hard \
+            psoc5lp_armgcc_cortex_m3_soft \
+            stm32f103_armgcc_cortex_m3_soft \
+            stm32f407_armgcc_cortex_m4f_hard \
+            stm32h743_armgcc_cortex_m7f_hard
+          do
+            validate_profile "$preset"
+          done
+
+      - name: Upload validated Arm packages
+        uses: actions/upload-artifact@v7
+        with:
+          name: Foundation-arm-none-eabi-packages
+          path: |
+            dist/arm_none_eabi_*
+            dist/psoc5lp_*
+            dist/stm32f103_*
+            dist/stm32f407_*
+            dist/stm32h743_*
+          if-no-files-found: error
+          retention-days: 7

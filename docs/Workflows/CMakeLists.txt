@@ -9,6 +9,8 @@ foundation_add_dox(
     "${CMAKE_CURRENT_LIST_DIR}/ContinuousIntegration.dox"
     "${CMAKE_CURRENT_LIST_DIR}/ReleaseV1Backlog.dox"
     "${CMAKE_CURRENT_LIST_DIR}/PublicApiAudit.dox"
+    "${CMAKE_CURRENT_LIST_DIR}/PublicApiCoverage.dox"
+    "${CMAKE_CURRENT_LIST_DIR}/LegalReview.dox"
     "${CMAKE_CURRENT_LIST_DIR}/Install.dox"
     "${CMAKE_CURRENT_LIST_DIR}/Export.dox"
     "${CMAKE_CURRENT_LIST_DIR}/ReleasePackages.dox"

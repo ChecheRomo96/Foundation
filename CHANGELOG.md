@@ -1,8 +1,50 @@
 # Changelog
 
 This file records user-visible changes to Foundation. Release dates use the
-`YYYY-MM-DD` format. Foundation has not published a stable release yet; the
-scope below describes the planned first release.
+`YYYY-MM-DD` format. Version 1.1.0 was the first published GitHub release;
+version 1.2.0 is the current release.
+
+## [Unreleased]
+
+### Added
+
+- Pull-request Doxygen validation with warning-as-error generation and a
+  deployment job that runs only after successful validation on a branch push.
+- Native Linux Arm64 GCC and Clang jobs using GitHub-hosted Arm64 runners.
+- AVR and Arm bare-metal CI that builds Debug and Release, exports Release-only
+  packages, and verifies object format, architecture, ABI metadata, and CMake
+  import policy without claiming target execution.
+- A public-API coverage map that separates existing evidence from explicit
+  `TEST-002`, `TEST-003`, and `TEST-004` gaps.
+- A license/ownership review packet with interim guardrails, counsel questions,
+  evidence checklist, and objective exit criteria.
+
+### Changed
+
+- Release, support-matrix, validation, package, README, and backlog
+  documentation now reflect the published Foundation 1.2.0 state.
+
+### Known limitations
+
+- External licensing remains blocked until the license and ownership model are
+  reviewed by qualified legal counsel. Published source and packages remain
+  proprietary and grant no external-use rights.
+- macOS Arm64 is the only target with a recorded clean local native test and
+  package-consumer run. The tagged workflow published packages for macOS
+  Arm64, Windows x64, and Linux x64; remaining local, Arm64 Linux, examples,
+  launcher, firmware, emulator, and hardware evidence stays explicitly open.
+- PSoC and generic Arm profiles are experimental. PIC remains deferred.
+- Exported packages are static, target-specific, and Release-only. Foundation
+  does not currently publish universal binaries, Debug packages, or a binary
+  package manager integration.
+- Sanitizer, warning-policy, coverage-threshold, public-header self-containment,
+  and the behavioral gaps recorded by the API coverage map remain open.
+
+See the
+[online Known Limitations page](https://checheromo96.github.io/Foundation/group__Foundation__BuildGuide__KnownLimitations.html)
+and
+[Support Matrix](https://checheromo96.github.io/Foundation/group__Foundation__BuildGuide__SupportMatrix.html)
+for the maintained release criteria and platform details.
 
 ## [1.2.0] - 2026-09-25
 
@@ -37,7 +79,10 @@ scope below describes the planned first release.
   `SameMajorVersion` compatibility, so consumers requesting
   `find_package(Foundation 1.0)` accept this release.
 
-## [1.0.0] - Unreleased
+## [1.0.0] - Superseded before publication
+
+The planned `v1.0.0` tag was never published. Its completed engineering scope
+became the baseline for the first published release, `v1.1.0`.
 
 ### Added
 
@@ -74,31 +119,3 @@ scope below describes the planned first release.
   packages to the Release library and matching metadata.
 - Established CMake presets and toolchain files as the source of truth for
   target architecture, compiler, ABI, and feature defaults.
-
-### Known limitations
-
-- The final 1.0.0 release is blocked until the license and ownership model are
-  reviewed by qualified legal counsel. The current repository remains
-  proprietary and grants no external-use rights.
-- Only the macOS Arm64 default configuration currently has recorded local
-  Debug, Release, and isolated package-consumer evidence. The complete native
-  CI and hardware validation matrix remains pending.
-- Windows, Linux, macOS x86-64, AVR, STM32, Arduino, and Raspberry Pi support
-  levels remain release candidates until their validation gates pass.
-- PSoC and generic Arm profiles are experimental. PIC is deferred beyond
-  version 1.0.0.
-- Exported packages are static, target-specific, and Release-only. Foundation
-  does not currently publish universal binaries, Debug packages, or a binary
-  package manager integration.
-- Sanitizer, warning-policy, coverage-threshold, public-header self-containment,
-  and complete public-API coverage gates are not yet finished.
-
-See the
-[online Known Limitations page](https://checheromo96.github.io/Foundation/group__Foundation__BuildGuide__KnownLimitations.html)
-and
-[Support Matrix](https://checheromo96.github.io/Foundation/group__Foundation__BuildGuide__SupportMatrix.html)
-for the maintained release criteria and platform details.
-
-This is the first formally tracked release. Earlier repository history is
-pre-release development and is not presented as a sequence of supported
-versions.

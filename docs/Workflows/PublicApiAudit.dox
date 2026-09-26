@@ -1,7 +1,7 @@
 /**
  * @defgroup Foundation_Workflows_PublicApiAudit Public API Audit
  * @ingroup Foundation_Workflows_ReleaseV1
- * @brief Inventory, findings, and freeze decisions for the Foundation 1.0 API.
+ * @brief Inventory, findings, and freeze decisions for the Foundation 1.x API.
  *
  * This page is the version-controlled evidence for backlog item `V1-004`.
  * The audit distinguishes the API that consumers are meant to use from files
@@ -14,8 +14,8 @@
  * | Field | Value |
  * | ----- | ----- |
  * | Audit state | `COMPLETE` |
- * | Version under review | `1.0.0` |
- * | Public API frozen | Yes for the v1.0.0 release candidate |
+ * | Version under review | Foundation 1.x, reviewed through `1.2.0` |
+ * | Public API frozen | Yes for backward-compatible 1.x evolution |
  * | Inventory baseline | Default full-feature macOS Arm64 configuration |
  * | Last reviewed | 2026-09-25 |
  *
@@ -23,7 +23,7 @@
  *
  * The audit reviewed:
  *
- * - the headers staged by CMake under `include/Foundation-1.0.0`;
+ * - the versioned headers staged by CMake under `include/Foundation-<version>`;
  * - top-level and module umbrella headers;
  * - public classes, aliases, free functions, constants, and macros;
  * - namespaces and naming conventions;
@@ -186,10 +186,12 @@
  * - [x] no unresolved public API breaking change remains for RC1.
  *
  * Exit evidence recorded on 2026-09-25: the `macos_arm64` preset passed all
- * 108 registered tests in both Debug and Release. The repository-owned
+ * 122 registered tests in both Debug and Release. The repository-owned
  * `tests/PackageConsumer` fixture then configured exclusively from the fresh
  * Release export, compiled separate umbrella/selective-header translation
  * units, linked `Foundation::Foundation`, called the out-of-line Frequency and
  * Period conversions, and passed its executable test. Platform-matrix
  * validation remains tracked separately and does not reopen the API design.
+ * Member-level traceability and known test gaps are recorded in
+ * @ref Foundation_Workflows_PublicApiCoverage.
  */

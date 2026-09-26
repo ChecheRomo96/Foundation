@@ -1,0 +1,146 @@
+/**
+ * @defgroup Foundation_Workflows_PublicApiCoverage Public API Coverage
+ * @ingroup Foundation_Workflows_ReleaseV1
+ * @brief Traceability from the Foundation 1.2 public API to automated evidence.
+ *
+ * This page is the version-controlled result of backlog item `TEST-001`. It
+ * records what the current test suite actually proves and makes uncovered
+ * behavior visible before more tests are added. An entry marked `GAP` is not
+ * accepted as tested; it is an explicit input to `TEST-002` or `TEST-003`.
+ *
+ * @section FoundationPublicApiCoverageStatus Status
+ *
+ * | Field | Value |
+ * | ----- | ----- |
+ * | Inventory state | `COMPLETE` |
+ * | API baseline | Foundation `1.2.0` |
+ * | Native baseline | 122 registered CTest cases total, including 10 CMake configuration checks |
+ * | Package baseline | One isolated installed-package consumer |
+ * | Last reviewed | 2026-09-25 |
+ *
+ * @section FoundationPublicApiCoverageLegend Evidence Types
+ *
+ * | Mark | Meaning |
+ * | ---- | ------- |
+ * | `BEHAVIOR` | A GoogleTest case exercises runtime or constant-evaluated behavior. |
+ * | `CONFORMANCE` | The result is compared with the C++17 standard contract, including the local fallback implementation. |
+ * | `COMPILE` | A dedicated translation unit or `static_assert` verifies the public shape. |
+ * | `CONFIGURATION` | CMake accepts or rejects an option combination as intended. |
+ * | `CONSUMER` | A project outside the Foundation build finds, links, and runs the installed package. |
+ * | `TARGET` | Cross-compilation proves the source and archive for a target ABI; it does not prove runtime behavior. |
+ * | `GAP` | No adequate direct evidence exists yet. The owning backlog item is named in the table. |
+ *
+ * CTest is the runner used by the repository scripts. GoogleTest remains the
+ * unit-test framework. A passing umbrella-header test proves that the symbol is
+ * reachable through that umbrella; it does not replace member-level behavior.
+ *
+ * @section FoundationPublicApiCoverageBuild Build and Include Contract
+ *
+ * | Public contract | Evidence | State |
+ * | --------------- | -------- | ----- |
+ * | `FOUNDATION_VERSION` and `FOUNDATION_CPLUSPLUS` | `TopLevelTypeTraitsTests.cc`; version consistency checks in the root CMake project | `COMPILE` + `CONFIGURATION` |
+ * | Public `FOUNDATION_*` feature macros | Ten dependency/configuration checks under `tests/cmake`; module tests compile only when the matching feature is enabled | `CONFIGURATION` |
+ * | `Foundation.h`, `Foundation_<Module>.h`, and nested module umbrellas | `FoundationUmbrellaTests.cc` and `TopLevel...Tests.cc` in every module | `COMPILE` |
+ * | Installed `Foundation::Foundation` target and versioned include tree | `tests/PackageConsumer` configured only against a fresh Release export | `CONSUMER` |
+ * | Every supported component header in isolation | One-time 1.2 API audit parsed all 57 installed `.h` files; repeatable CI is still missing | `GAP` (`TEST-004`) |
+ *
+ * @section FoundationPublicApiCoverageTypeTraits TypeTraits
+ *
+ * | Public API family | Evidence | State |
+ * | ----------------- | -------- | ----- |
+ * | `integral_constant`, `bool_constant`, `true_type`, `false_type` and their standard-shaped members | `TypeTraitsConformanceTest.ProvidesStandardShapedResultsAndAliases` | `CONFORMANCE` |
+ * | Primary categories and `_v` constants | `TypeTraitsTest.ClassifiesPrimaryAndCompositeTypes`; `MatchesPrimaryAndCompositeCxx17Traits`; `MatchesEverySupportedUnaryPredicate` | `CONFORMANCE` |
+ * | Composite categories, `is_unsigned_integer`, and `_v` constants | Same primary/composite and unary-predicate cases, including `bool`, cv-qualified, arithmetic, scalar, object, reference, and compound types | `CONFORMANCE` |
+ * | `remove_const`, `remove_volatile`, `remove_cv` and `_t` aliases; `is_const`, `is_volatile`, `is_unsigned` and `_v` constants | `ProvidesStandardShapedResultsAndAliases`; unary-predicate comparison | `CONFORMANCE` |
+ * | `is_same`, `is_base_of`, `is_convertible`, `is_invocable`, `is_nothrow_invocable`, `is_nothrow_convertible` and `_v` constants | `IdentifiesTypeRelationships`; `MatchesRelationshipsAndConversions`; `SupportsTheCxx17InvokeModel`; result-shape case | `CONFORMANCE` |
+ * | Automatic `<type_traits>` backend and forced local fallback | `FoundationTypeTraitsTests` and `FoundationTypeTraitsFallbackTests` execute the same conformance source | `CONFORMANCE` |
+ *
+ * @section FoundationPublicApiCoverageMath Math
+ *
+ * | Public API family | Evidence | State |
+ * | ----------------- | -------- | ----- |
+ * | `GCD` | `ArithmeticTest.CalculatesGreatestCommonDivisor`, including `constexpr` and `noexcept` | `BEHAVIOR` |
+ * | `FloorMod` | Dedicated positive, negative, zero, exact, divisor-one, limit, invalid-divisor, exhaustive-reference, and `constexpr` cases | `BEHAVIOR` |
+ * | `FloorDiv` | Dedicated positive, negative, zero, exact, divisor-one, limit, invalid-divisor, exhaustive-reference, invariant, and `constexpr` cases | `BEHAVIOR` |
+ * | `Pi`, `DegToRad`, `RadToDeg` | Reachable through the Math umbrellas only | `GAP` (`TEST-002`) |
+ * | `BasicRatio<T>`, `Ratio`, `UnsignedRatio`: construction, aliases, access, validity, conversion, sign, reduction, limits | Six `RatioTest` cases in `MathTests.cc` | `BEHAVIOR` |
+ * | Ratio mutators `SetNumerator` and `SetDenominator` independently | No direct assertions exist; `Set` is exercised before in-place reduction | `GAP` (`TEST-002`) |
+ * | `Complex<T>` constructors, assignment, arithmetic, compound arithmetic, comparisons, conjugate, and magnitude | Reachable through the Math umbrella; no direct behavior case | `GAP` (`TEST-002`) |
+ * | `Matrix::Fixed`: array construction and `At`; fixed/fixed multiplication | `MatrixTest.MultipliesFixedMatrices` | `BEHAVIOR` |
+ * | `Matrix::Fixed`: default/fill/copy/assignment, dimensions, data and row access, element/scalar arithmetic, comparison, fill/zero, transpose, factories | No direct behavior cases | `GAP` (`TEST-002`) |
+ * | `Matrix::Dynamic`: allocation, attachment, validity, ownership, dimensions, size, data, `At`, clear, copy, move, allocation failure, dimension overflow | Allocation, attachment, copy/move, failure, and preservation cases in `MatrixTests.cc` | `BEHAVIOR` |
+ * | `Matrix::Dynamic`: element/scalar arithmetic, comparisons, row access, fill/zero, value-returning `Transposed()` | No direct behavior cases | `GAP` (`TEST-002`) |
+ * | `Matrix::Dynamic::TransposeTo` | Attached-output and overlap-rejection cases | `BEHAVIOR` |
+ * | All four `Matrix::Multiply` fixed/dynamic operand combinations | Four multiplication cases plus incompatible-dimension, attached-result, and overlap paths | `BEHAVIOR` |
+ *
+ * @section FoundationPublicApiCoverageContainers Containers
+ *
+ * | Public API family | Evidence | State |
+ * | ----------------- | -------- | ----- |
+ * | `CircularBuffer<T>` construction, FIFO wraparound, full/empty behavior, pop, counters, capacity, validity, reset, null storage | Eight container cases in `ContainersTests.cc` | `BEHAVIOR` |
+ * | `CircularBuffer<T>::Push(const T&)` copy semantics with a non-trivial type | Existing cases select the rvalue overload with integer literals | `GAP` (`TEST-003`) |
+ * | `Queue<T>` alias contract | `QueueTest.ExposesCircularBufferFifoBehavior` | `BEHAVIOR` |
+ * | `Stack<T>` construction, LIFO order, capacity, validity, full/empty behavior, pop, reset, null storage | Stack cases in `ContainersTests.cc` | `BEHAVIOR` |
+ * | `Stack<T>::Push(const T&)` copy semantics with a non-trivial type | Existing cases select the rvalue overload with integer literals | `GAP` (`TEST-003`) |
+ *
+ * @section FoundationPublicApiCoverageFunctional Functional
+ *
+ * | Public API family | Evidence | State |
+ * | ----------------- | -------- | ----- |
+ * | `Callback<R, Args...>`, `Callback<R>`, `Callback<void, Args...>`, `Callback<void>` canonical forms | Six `CallbackTest` cases plus umbrella-order compilation cases | `BEHAVIOR` + `COMPILE` |
+ * | Free/static binding, non-const member binding, const member binding, `IsBound`, `Invoke`, and `Unbind` | `BindsAndUnbindsAFreeFunction`, member, const-member, void, and no-argument cases | `BEHAVIOR` |
+ * | Null non-const member instance | `CallbackTest.RejectsNullMemberInstances` | `BEHAVIOR` |
+ * | Null free function, null const member instance, and invocation while unbound with exceptions enabled and disabled | Contract is documented but modes are not directly exercised | `GAP` (`TEST-003`) |
+ *
+ * @section FoundationPublicApiCoverageTime Time
+ *
+ * | Public API family | Evidence | State |
+ * | ----------------- | -------- | ----- |
+ * | `Tick<T>` construction, aliases/default, `Value`, `MaximumValue`, `HalfRange` | `TickTest.ProvidesExplicitUnsignedWidths` and scheduling's Tick8 wrap case | `BEHAVIOR` + `COMPILE` |
+ * | `Tick::SetValue`, equality, and inequality | API compiles, but no direct assertions exist | `GAP` (`TEST-003`) |
+ * | `BasicDuration`/`Duration`: construction, invalid state, limits, ticks, zero, conversions, arithmetic, comparisons | Duration and constant-evaluation cases in `TimeTests.cc` | `BEHAVIOR` |
+ * | `Duration::SetTicks`; all equality and ordering operators individually | Main paths are exercised indirectly; direct boundary assertions are incomplete | `GAP` (`TEST-003`) |
+ * | `Frequency`: construction, unsigned range, access, validity, unit conversions, ratio, reciprocal | Frequency and constant-evaluation cases | `BEHAVIOR` |
+ * | `Frequency` mutators independently | Shared Ratio-backed implementation is exercised indirectly, not as the public Frequency contract | `GAP` (`TEST-003`) |
+ * | `Period`: construction, access, validity, unit conversions, ratio, reciprocal | Period and constant-evaluation cases | `BEHAVIOR` |
+ * | `Period` mutators independently and `Microseconds()` on a valid value | No direct assertions | `GAP` (`TEST-003`) |
+ * | `BasicClock`/`Clock`: construction, non-copyability, identity, `Now`, `At`, binding state, unbind, frequency access | Clock identity/binding cases and compile-time assertions | `BEHAVIOR` + `COMPILE` |
+ * | `Clock::Bind`, `SetFrequency`, and `GetPeriod` after mutation | No direct assertions | `GAP` (`TEST-003`) |
+ * | `BasicTimePoint`/`TimePoint`: validity, ticks, clock, same-clock rules, subtraction, duration addition, comparison, counter wrap | TimePoint comparison and wrap cases | `BEHAVIOR` |
+ * | TimePoint duration subtraction and every comparison operator at half-range boundaries | No complete direct boundary matrix | `GAP` (`TEST-003`) |
+ *
+ * @section FoundationPublicApiCoverageScheduling Scheduling
+ *
+ * | Public API family | Evidence | State |
+ * | ----------------- | -------- | ----- |
+ * | `BasicTask`/`Task` interface and const `ShouldRun` signature | `SchedulingTypeTest.DefaultAliasesUseTick32` plus concrete task execution | `COMPILE` + `BEHAVIOR` |
+ * | `BasicPeriodicTask`/`PeriodicTask`: initial run, period, wrap, foreign clock, context, null callback | Periodic cases in `SchedulingTests.cc` | `BEHAVIOR` |
+ * | `BasicOneShotTask`/`OneShotTask`: trigger, one-run lifecycle, wrap, `HasRun`, context, null callback | One-shot and context cases | `BEHAVIOR` |
+ * | `BasicTaskScheduler`/`TaskScheduler`: registration order path, capacity/count, update, clear, null task/storage/clock, Tick8 family | Scheduler and generic Tick8 cases | `BEHAVIOR` |
+ * | Multiple due tasks execute in stable registration order and a task cannot be added after full capacity | Full-capacity rejection is indirect; stable multi-task order is not asserted | `GAP` (`TEST-003`) |
+ *
+ * @section FoundationPublicApiCoverageUtils Utils
+ *
+ * | Public API family | Evidence | State |
+ * | ----------------- | -------- | ----- |
+ * | `Move` | `MoveTest.TransfersAValueToANewObject`, plus use by Containers and Matrix | `BEHAVIOR` |
+ * | `Swap` | `SwapTest.ExchangesTwoValues` | `BEHAVIOR` |
+ * | Move-only and throwing user-defined types | Public templates compile for the tested helper type, but the edge contracts are not isolated | `GAP` (`TEST-003`) |
+ *
+ * @section FoundationPublicApiCoverageTarget Target-only Evidence
+ *
+ * Native tests cannot execute an AVR or Cortex-M binary. Embedded CI therefore
+ * has a narrower but truthful contract: compile Debug and Release with the
+ * target toolchain, export the Release package, and inspect an object inside
+ * `libFoundation.a` with the matching binutils. Hardware or emulator execution
+ * remains part of `VAL-007`, `VAL-008`, and `VAL-009`.
+ *
+ * @section FoundationPublicApiCoverageNext Prioritized Test Work
+ *
+ * `TEST-002` should close the Math gaps in this order: Complex, Trigonometry,
+ * Fixed matrix operations, then remaining Dynamic operations. `TEST-003`
+ * should next cover Callback empty-mode behavior, explicit lvalue container
+ * copies, Time mutators/boundaries, scheduler order, and Utils edge types.
+ * `TEST-004` should convert the one-time header audit into a generated,
+ * repeatable CI target.
+ */
