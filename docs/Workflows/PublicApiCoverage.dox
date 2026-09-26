@@ -14,9 +14,9 @@
  * | ----- | ----- |
  * | Inventory state | `COMPLETE` |
  * | API baseline | Foundation `1.2.0` |
- * | Native baseline | 161 registered CTest cases total, including 10 CMake configuration checks |
+ * | Native baseline | 162 registered CTest cases total, including 10 CMake configuration checks and one generated public-header check |
  * | Package baseline | One isolated installed-package consumer |
- * | Last reviewed | 2026-09-25 |
+ * | Last reviewed | 2026-09-26 |
  *
  * @section FoundationPublicApiCoverageLegend Evidence Types
  *

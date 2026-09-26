@@ -156,8 +156,12 @@
  * `CI-001` and `CI-002` were accepted for Foundation 1.2.0 by
  * [GitHub Actions run 36194411008](https://github.com/ChecheRomo96/Foundation/actions/runs/36194411008).
  * Its five published native identities completed the Debug and Release suites
- * plus fresh Release package-consumer validation. The two Arm64 Linux jobs,
- * documentation pull-request gate, and embedded matrix are new after that tag;
- * their first hosted run must be recorded before their backlog items become
- * `DONE`.
+ * plus fresh Release package-consumer validation. Main-branch run
+ * [36227959990](https://github.com/ChecheRomo96/Foundation/actions/runs/36227959990)
+ * subsequently passed all seven native identities, sanitizers, coverage, and
+ * the feature matrix. Run
+ * [36227959994](https://github.com/ChecheRomo96/Foundation/actions/runs/36227959994)
+ * validated and deployed Doxygen, while run
+ * [36227959989](https://github.com/ChecheRomo96/Foundation/actions/runs/36227959989)
+ * built, exported, and inspected AVR and every declared Arm profile.
  */
