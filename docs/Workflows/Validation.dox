@@ -202,7 +202,24 @@
  * | Package consumer | 1/1 passed against Foundation 1.2.0 |
  * | Archive identity | Thin Arm64 `libFoundation.a` |
  * | Package policy | No Debug artifact; only `IMPORTED_LOCATION_RELEASE` |
- * | Remaining VAL-001 evidence | Examples and interactive launcher acceptance |
+ * | Remaining VAL-001 evidence | Closed by the 2026-09-26 re-run below |
+ *
+ * @subsection FoundationValidationEvidenceMacOSArm64Examples macOS Arm64 examples and launcher — 2026-09-26
+ *
+ * | Field | Recorded value |
+ * | ----- | -------------- |
+ * | Commit | `7272fd6` on a clean worktree |
+ * | Host and toolchain | macOS 15.3.2 Arm64, AppleClang 16.0.0, CMake 4.1.1, Ninja 1.12.1 |
+ * | Clean configure/build | `CMAKE_CONFIGURATION_TYPES` is `Debug;Release`; both archives are thin Arm64 |
+ * | Debug / Release tests | 162/162 and 162/162 passed |
+ * | Examples build | All 12 examples built warning-free in Debug (`_d`) and Release |
+ * | Examples executed | All 24 executables exited 0; Debug and Release output is byte-identical; none prints a test verdict |
+ * | Examples export | `bin/examples` holds only the 12 Release executables and `FoundationExamples.command`, each Arm64; exported output matches the build tree |
+ * | Package | Identity validator passed; no Debug artifact or import; consumer 1/1 passed |
+ * | Launcher, scripted | `q`/`Q`/end of input exit 0; each run reports its exit code; Enter/`y` returns to the menu and `n`/`N`/`q` exits; invalid, zero, out-of-range, and empty selections re-prompt; an invalid continue answer re-prompts; all 12 examples ran in one session; works from another directory and a path containing spaces; an empty directory exits 1 with a message |
+ * | Launcher, opened | `open FoundationExamples.command` started it in Terminal through LaunchServices, as a Finder double-click does |
+ * | Option override | `-DFOUNDATION_SCHEDULING=OFF` export recorded `OFF` and omitted Scheduling headers; defaults were restored, re-validated, and the consumer passed |
+ * | Not covered | Gatekeeper approval for a downloaded (quarantined) unsigned package |
  *
  * @subsection FoundationValidationEvidenceAVR AVR ATmega328P — 2026-09-25
  *
