@@ -18,7 +18,7 @@ enum State {
     Active
 };
 
-int Transform(int value) {
+[[maybe_unused]] int Transform(int value) {
     return value + 1;
 }
 

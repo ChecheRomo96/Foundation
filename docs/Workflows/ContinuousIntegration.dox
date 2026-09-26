@@ -86,6 +86,22 @@
  * are compile/package evidence only. They deliberately do not invoke CTest,
  * execute target code on the x86-64 runner, or claim firmware/hardware proof.
  *
+ * @section FoundationContinuousIntegrationQuality Warnings and Sanitizers
+ *
+ * When `FOUNDATION_TESTING` is on, `foundation_enable_warnings` compiles the
+ * Foundation library, every test executable, and the header self-containment
+ * target with warnings as errors: `/W4 /permissive-` on MSVC and
+ * `-Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion
+ * -Wold-style-cast -Wnon-virtual-dtor -Woverloaded-virtual` elsewhere. Every
+ * native job therefore enforces the warning set. Consumer and embedded builds,
+ * which do not enable testing, keep their own flags. Locally, pass
+ * `--compile-no-warning-as-error` to CMake to downgrade the errors.
+ *
+ * The `sanitizers` job in `native-ci.yml` runs the Debug suite with
+ * AddressSanitizer and UndefinedBehaviorSanitizer (`-fno-sanitize-recover=all`)
+ * on Linux GCC and Clang x64 and on macOS Apple Clang Arm64. MSVC offers no
+ * UndefinedBehaviorSanitizer and is not part of this job.
+ *
  * @section FoundationContinuousIntegrationBoundaries Boundaries
  *
  * This native matrix does not claim the following evidence:
@@ -93,7 +109,7 @@
  * - `macos_x64`, which requires an Intel runner or Rosetta execution;
  * - Raspberry Pi-specific integration and hardware behavior;
  * - AVR, STM32, Arduino, or PSoC firmware linkage and hardware behavior;
- * - sanitizer, warning-policy, or coverage gates.
+ * - coverage gates.
  *
  * Those concerns retain separate backlog tasks. In particular, embedded jobs
  * must never report cross-compilation as target execution.

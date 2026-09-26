@@ -113,6 +113,8 @@ endforeach()
 
 add_library(FoundationHeaderSelfContainment OBJECT ${FOUNDATION_HEADER_CHECK_SOURCES})
 target_link_libraries(FoundationHeaderSelfContainment PRIVATE Foundation::Foundation)
+foundation_enable_warnings(FoundationHeaderSelfContainment)
+foundation_enable_warnings(Foundation)
 
 add_test(
     NAME FoundationHeaders.SelfContained

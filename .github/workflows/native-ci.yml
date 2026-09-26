@@ -142,3 +142,38 @@ jobs:
         run: >-
           ./scripts/test-package.ps1 "${{ matrix.preset }}"
           -Fresh -Parallel 4
+
+  sanitizers:
+    name: Sanitizers / ${{ matrix.name }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Ubuntu 24.04 / GCC / x64
+            runner: ubuntu-24.04
+            preset: linux_gcc_x64
+
+          - name: Ubuntu 24.04 / Clang / x64
+            runner: ubuntu-24.04
+            preset: linux_clang_x64
+
+          - name: macOS 15 / Apple Clang / Arm64
+            runner: macos-15
+            preset: macos_arm64
+
+    env:
+      CXXFLAGS: -fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer
+      LDFLAGS: -fsanitize=address,undefined
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Test Debug with AddressSanitizer and UndefinedBehaviorSanitizer
+        shell: bash
+        run: >-
+          ./scripts/test.sh "${{ matrix.preset }}"
+          --config Debug --fresh --parallel 4
