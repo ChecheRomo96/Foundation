@@ -35,12 +35,15 @@
  * | `windows_msvc_x64` | `windows-2025-vs2026` | `.zip` |
  * | `windows_clang_x64` | `windows-2025-vs2026` | `.zip` |
  *
- * Every matrix job performs a fresh Release export and executes the standalone
- * package consumer before creating its archive. A final verification job
+ * Every matrix job performs a fresh Release export, validates the package's
+ * exact files and compiler/architecture/ABI identity, and executes the
+ * standalone package consumer before creating its archive. A final verification job
  * downloads the complete set, requires exactly five archives and five checksum
  * files, and verifies every SHA-256 digest even when publication is disabled.
- * Packages do not include Debug libraries or examples. Every package includes
- * `LICENSE`, `README.md`, and `CHANGELOG.md`. Each archive contains one
+ * The identity gate requires exactly one Release library, the configured public
+ * headers, the exact CMake metadata set, and no Debug library or import.
+ * Packages do not include examples. Every package includes `LICENSE`,
+ * `README.md`, and `CHANGELOG.md`. Each archive contains one
  * top-level directory named `Foundation-<release>-<preset>` and is accompanied
  * by a `.sha256` file.
  *

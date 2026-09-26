@@ -123,10 +123,11 @@
  * enabled; they are not CTest tests or replacements for the executable artifacts.
  *
  * `FoundationBuildInfo.cmake` records the exported version, platform, system,
- * processor, macOS architecture, compiler, C++ standard, package configuration,
- * ARM CPU/ABI/FPU, and AVR MCU/architecture values, whether executable examples
- * were included, plus the enabled top-level modules. Consumers can load the
- * target with:
+ * processor, macOS architecture, compiler identity/version/frontend/target,
+ * detected compiler architecture and ABI, pointer size, byte order, C++
+ * standard, package configuration, ARM CPU/ABI/FPU, and AVR MCU/architecture
+ * values, whether executable examples were included, plus the enabled top-level
+ * modules. Consumers can load the target with:
  *
  * @code{cmake}
  * find_package(Foundation 1.0 CONFIG REQUIRED)
@@ -168,9 +169,22 @@
  *
  * @section FoundationWorkflowExportVerify Verification
  *
- * Before publishing, verify file presence, inspect object architecture with the
- * target tool (`lipo`, `dumpbin`, `llvm-readobj`, `arm-none-eabi-objdump`, or
- * `avr-objdump`), inspect `FoundationBuildInfo.cmake`, and compile an external
- * `find_package` consumer. See @ref Foundation_Workflows_Validation for the
- * complete target matrix.
+ * Validate an existing export without rebuilding it:
+ *
+ * @code{bash}
+ * ./scripts/validate-package.sh <preset>
+ * @endcode
+ *
+ * @code{powershell}
+ * ./scripts/validate-package.ps1 <preset>
+ * @endcode
+ *
+ * The validator requires exactly one Release static archive, the exact staged
+ * public-header set, the five expected CMake metadata files, matching configured
+ * and installed build identity, and no Debug binary or import. It also inspects
+ * the real archive with `lipo`, the configured `objdump`/`readelf`, or `dumpbin`
+ * to verify the target object format, architecture, and embedded float ABI where
+ * applicable. `test-package.sh` and `test-package.ps1` run this gate before
+ * configuring the external `find_package` consumer. See
+ * @ref Foundation_Workflows_Validation for the complete target matrix.
  */

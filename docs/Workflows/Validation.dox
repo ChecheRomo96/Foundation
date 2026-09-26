@@ -91,11 +91,7 @@
  * ./scripts/build.sh stm32f407_armgcc_cortex_m4f_hard \
  *   --config Release --target Foundation
  * ./scripts/export.sh stm32f407_armgcc_cortex_m4f_hard --fresh
- *
- * arm-none-eabi-objdump -f \
- *   dist/stm32f407_armgcc_cortex_m4f_hard/lib/libFoundation.a
- * grep -E "Foundation_(PLATFORM|SYSTEM|PROCESSOR|ARM)" \
- *   dist/stm32f407_armgcc_cortex_m4f_hard/lib/cmake/Foundation/FoundationBuildInfo.cmake
+ * ./scripts/validate-package.sh stm32f407_armgcc_cortex_m4f_hard
  * @endcode
  *
  * Compile and link the exported package in the actual STM32 firmware with the
@@ -123,11 +119,7 @@
  * ./scripts/build.sh atmega328p_avrgcc_avr5 \
  *   --config Release --target Foundation
  * ./scripts/export.sh atmega328p_avrgcc_avr5 --fresh
- *
- * avr-objdump -f \
- *   dist/atmega328p_avrgcc_avr5/lib/libFoundation.a
- * grep -E "Foundation_(PLATFORM|SYSTEM|PROCESSOR|AVR)" \
- *   dist/atmega328p_avrgcc_avr5/lib/cmake/Foundation/FoundationBuildInfo.cmake
+ * ./scripts/validate-package.sh atmega328p_avrgcc_avr5
  * @endcode
  *
  * The Release archive must contain `elf32-avr` objects with architecture `avr:5`.
@@ -148,12 +140,20 @@
  * dist/<preset>/lib/cmake/Foundation/FoundationTargets-release.cmake
  * @endcode
  *
- * Confirm that no Debug archive or `FoundationTargets-debug.cmake` remains from
- * an older package. Search the Release target file for
- * `IMPORTED_LOCATION_RELEASE`. A downstream Release CMake project should use
- * `find_package(Foundation CONFIG REQUIRED)` and `Foundation::Foundation`;
- * consumers should not hard-code archive names. For native presets, run the
- * repository-owned standalone check after export:
+ * Run the identity validator for every native or cross-compiled package:
+ *
+ * @code{bash}
+ * ./scripts/validate-package.sh <preset>
+ * @endcode
+ *
+ * It compares installed headers and `FoundationBuildInfo.cmake` with the
+ * configured build, requires exactly one Release archive and the exact metadata
+ * set, rejects Debug artifacts/imports, and inspects the real binary format,
+ * architecture, and applicable floating-point ABI. A downstream Release CMake
+ * project should use `find_package(Foundation CONFIG REQUIRED)` and
+ * `Foundation::Foundation`; consumers should not hard-code archive names. For
+ * native presets, also run the repository-owned standalone consumer after
+ * export:
  *
  * @code{bash}
  * ./scripts/test-package.sh <preset> --skip-export

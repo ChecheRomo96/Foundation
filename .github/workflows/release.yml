@@ -153,7 +153,7 @@ jobs:
         with:
           ref: ${{ needs.metadata.outputs.tag }}
 
-      - name: Export and validate Release package
+      - name: Export, verify identity, and validate Release package
         if: matrix.platform == 'unix'
         shell: bash
         run: >-
@@ -161,7 +161,7 @@ jobs:
           --fresh --parallel 4
           --junit "build/${{ matrix.preset }}/test-results/PackageConsumer.xml"
 
-      - name: Export and validate Release package
+      - name: Export, verify identity, and validate Release package
         if: matrix.platform == 'windows'
         shell: pwsh
         run: >-
