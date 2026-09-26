@@ -187,8 +187,9 @@
  *
  * Exit evidence recorded on 2026-09-25: the `macos_arm64` preset passed the
  * then-current 122 registered tests in both Debug and Release. After
- * `TEST-002`, the same preset passes the expanded 145-test suite in both
- * configurations. The repository-owned
+ * `TEST-002`, the same preset passed the expanded 145-test suite in both
+ * configurations. `TEST-003` further expands the current suite to 161 passing
+ * tests in both configurations. The repository-owned
  * `tests/PackageConsumer` fixture then configured exclusively from the fresh
  * Release export, compiled separate umbrella/selective-header translation
  * units, linked `Foundation::Foundation`, called the out-of-line Frequency and

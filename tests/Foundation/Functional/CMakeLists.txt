@@ -16,4 +16,14 @@ if(FOUNDATION_FUNCTIONAL_CALLBACK)
         FoundationFunctionalTests
         ${FOUNDATION_FUNCTIONAL_TEST_SOURCES}
     )
+
+    foundation_add_test(
+        FoundationFunctionalExceptionTests
+        FunctionalExceptionTests.cc
+    )
+
+    target_compile_definitions(
+        FoundationFunctionalExceptionTests
+        PRIVATE FOUNDATION_EXCEPTIONS=1
+    )
 endif()

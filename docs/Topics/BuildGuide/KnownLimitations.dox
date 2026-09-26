@@ -35,7 +35,7 @@
  * testing and isolated package-consumer validation. Native main-branch run
  * [36194411008](https://github.com/ChecheRomo96/Foundation/actions/runs/36194411008)
  * passed macOS Arm64, Linux GCC/Clang x64, and Windows MSVC/Clang x64.
- * Clean local macOS 15.3.2 Arm64 runs additionally passed 145/145 tests
+ * Clean local macOS 15.3.2 Arm64 runs additionally passed 161/161 tests
  * in both Debug and Release, followed by the isolated Release package consumer.
  *
  * The following evidence is still pending:
@@ -105,12 +105,11 @@
  * @section FoundationKnownLimitationsQuality Quality Gates Still Open
  *
  * The current suite is meaningful but is not the final quality ceiling.
- * The public-API coverage map is complete and intentionally exposes behavioral
- * gaps in Complex, Trigonometry, matrices, and smaller member-level contracts.
- * Closing those gaps, standalone compilation of every public header, agreed
- * compiler-warning policies, sanitizers, and a coverage baseline with an
- * explicit threshold remain open release tasks. Examples demonstrate API use
- * and are never counted as tests.
+ * The inventoried Math and remaining-module behavior gaps are closed.
+ * Standalone compilation of every public header, agreed compiler-warning
+ * policies, sanitizers, and a coverage baseline with an explicit threshold
+ * remain open release tasks. Examples demonstrate API use and are never
+ * counted as tests.
  *
  * The maintained release scope is summarized in the repository
  * `CHANGELOG.md`. Update this page, the changelog, support matrix, and release

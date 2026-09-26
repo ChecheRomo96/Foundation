@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <stdexcept>
+
 #include <Foundation/Utils.h>
 
 namespace {
@@ -27,6 +29,41 @@ public:
     int value;
 };
 
+class ThrowingMove {
+public:
+    static bool ThrowOnMove;
+
+    explicit ThrowingMove(int value)
+        : value(value) {
+    }
+
+    ThrowingMove(const ThrowingMove&) = delete;
+    ThrowingMove& operator=(const ThrowingMove&) = delete;
+
+    ThrowingMove(ThrowingMove&& other) {
+        if(ThrowOnMove) {
+            throw std::runtime_error("move construction failed");
+        }
+
+        value = other.value;
+        other.value = 0;
+    }
+
+    ThrowingMove& operator=(ThrowingMove&& other) {
+        if(ThrowOnMove) {
+            throw std::runtime_error("move assignment failed");
+        }
+
+        value = other.value;
+        other.value = 0;
+        return *this;
+    }
+
+    int value;
+};
+
+bool ThrowingMove::ThrowOnMove = false;
+
 } // namespace
 
 TEST(MoveTest, TransfersAValueToANewObject) {
@@ -49,4 +86,31 @@ TEST(SwapTest, ExchangesTwoValues) {
 
     EXPECT_EQ(first, 9);
     EXPECT_EQ(second, 3);
+}
+
+TEST(SwapTest, ExchangesMoveOnlyValues) {
+    MoveOnly first(3);
+    MoveOnly second(9);
+
+    Foundation::Utils::Swap(first, second);
+
+    EXPECT_EQ(first.value, 9);
+    EXPECT_EQ(second.value, 3);
+}
+
+TEST(UtilsTest, MoveIsOnlyACastAndSwapPropagatesElementFailures) {
+    ThrowingMove source(42);
+    static_assert(noexcept(Foundation::Utils::Move(source)));
+
+    ThrowingMove::ThrowOnMove = true;
+    EXPECT_NO_THROW(Foundation::Utils::Move(source));
+
+    ThrowingMove other(17);
+    EXPECT_THROW(
+        Foundation::Utils::Swap(source, other),
+        std::runtime_error
+    );
+    EXPECT_EQ(source.value, 42);
+    EXPECT_EQ(other.value, 17);
+    ThrowingMove::ThrowOnMove = false;
 }

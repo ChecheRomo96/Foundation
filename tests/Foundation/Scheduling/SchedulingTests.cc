@@ -9,6 +9,12 @@ Foundation::Time::Tick32::Representation CurrentTick = 0;
 Foundation::Time::Tick8::Representation CurrentTick8 = 0;
 bool NullContextWasForwarded = false;
 
+struct OrderedRunContext {
+    int Id;
+    int* Log;
+    int* Count;
+};
+
 Foundation::Time::Tick32::Representation ReadTick() {
     return CurrentTick;
 }
@@ -23,6 +29,11 @@ void Increment(void* context) {
 
 void ObserveNullContext(void* context) {
     NullContextWasForwarded = context == nullptr;
+}
+
+void RecordOrder(void* context) {
+    OrderedRunContext* ordered = static_cast<OrderedRunContext*>(context);
+    ordered->Log[(*ordered->Count)++] = ordered->Id;
 }
 
 } // namespace
@@ -187,6 +198,31 @@ TEST(TaskSchedulerTest, ExecutesDueTasksUsingItsClock) {
 
     scheduler.Clear();
     EXPECT_EQ(scheduler.GetTaskCount(), 0u);
+}
+
+TEST(TaskSchedulerTest, PreservesRegistrationOrderAndRejectsOverflow) {
+    Clock clock(ReadTick, Frequency(1000, 1));
+    int order[2] = {};
+    int count = 0;
+    OrderedRunContext firstContext{1, order, &count};
+    OrderedRunContext secondContext{2, order, &count};
+    OrderedRunContext overflowContext{3, order, &count};
+    OneShotTask first(RecordOrder, &firstContext, clock.At(10));
+    OneShotTask second(RecordOrder, &secondContext, clock.At(10));
+    OneShotTask overflow(RecordOrder, &overflowContext, clock.At(10));
+    Task* storage[2] = {};
+    TaskScheduler scheduler(storage, 2, &clock);
+
+    ASSERT_TRUE(scheduler.AddTask(&first));
+    ASSERT_TRUE(scheduler.AddTask(&second));
+    EXPECT_FALSE(scheduler.AddTask(&overflow));
+    EXPECT_EQ(scheduler.GetTaskCount(), 2u);
+
+    CurrentTick = 10;
+    scheduler.Update();
+    ASSERT_EQ(count, 2);
+    EXPECT_EQ(order[0], 1);
+    EXPECT_EQ(order[1], 2);
 }
 
 TEST(TaskSchedulerTest, RejectsNullStorageWithNonzeroCapacity) {
