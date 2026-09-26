@@ -108,6 +108,22 @@
  * architecture, or ABI merely to reuse a preset name. Add a new preset/profile
  * when the produced binary has a different compatibility identity.
  *
+ * @subsection FoundationWorkflowConfigureMatrix Feature Matrix
+ *
+ * `tests/cmake/FeatureMatrix.cmake` configures, builds, and runs CTest for
+ * each supported selection: the default, `FOUNDATION_FULL_BUILD=ON`, core-only
+ * (every top-level module `OFF`), each top-level module and optional submodule
+ * disabled together with the modules that require it, and seven selections
+ * that must be rejected at configure time with the dependency message above.
+ * The `feature-matrix` job in `native-ci.yml` runs it with GCC on Ubuntu x64.
+ * Each case uses a fresh build directory; `ONLY` limits the run to matching
+ * case names.
+ *
+ * @code{.sh}
+ * cmake -DPRESET=macos_arm64 -P tests/cmake/FeatureMatrix.cmake
+ * cmake -DPRESET=macos_arm64 -DONLY=CoreOnly -P tests/cmake/FeatureMatrix.cmake
+ * @endcode
+ *
  * @section FoundationWorkflowConfigureInspect Inspecting the Result
  *
  * Review the configure summary for system, processor, C/C++ compiler, compiler
