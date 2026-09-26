@@ -64,11 +64,11 @@ struct ExplicitConversion {
     }
 };
 
-int ThrowingFunction(int input) {
+[[maybe_unused]] int ThrowingFunction(int input) {
     return input;
 }
 
-int NoThrowFunction(int input) noexcept {
+[[maybe_unused]] int NoThrowFunction(int input) noexcept {
     return input;
 }
 
