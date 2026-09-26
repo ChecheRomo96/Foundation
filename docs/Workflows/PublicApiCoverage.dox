@@ -42,7 +42,7 @@
  * | Public `FOUNDATION_*` feature macros | Ten dependency/configuration checks under `tests/cmake`; module tests compile only when the matching feature is enabled | `CONFIGURATION` |
  * | `Foundation.h`, `Foundation_<Module>.h`, and nested module umbrellas | `FoundationUmbrellaTests.cc` and `TopLevel...Tests.cc` in every module | `COMPILE` |
  * | Installed `Foundation::Foundation` target and versioned include tree | `tests/PackageConsumer` configured only against a fresh Release export | `CONSUMER` |
- * | Every supported component header in isolation | One-time 1.2 API audit parsed all 57 installed `.h` files; repeatable CI is still missing | `GAP` (`TEST-004`) |
+ * | Every supported component header in isolation | `FoundationHeaders.SelfContained` compiles each staged `.h` of the enabled features alone, twice, in a generated translation unit | `COMPILE` |
  *
  * @section FoundationPublicApiCoverageTypeTraits TypeTraits
  *
@@ -138,6 +138,6 @@
  *
  * `TEST-002` and `TEST-003` are complete. TypeTraits required no additional
  * cases because its standard-library and forced-fallback targets already run
- * the same complete conformance suite. `TEST-004` should next convert the
- * one-time header audit into a generated, repeatable CI target.
+ * the same complete conformance suite. `TEST-004` replaced the one-time header
+ * audit with the generated `FoundationHeaders.SelfContained` check.
  */

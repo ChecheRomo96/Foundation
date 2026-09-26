@@ -126,10 +126,10 @@
  *
  * | ID | Priority | State | Task | Acceptance criteria / evidence |
  * | -- | -------- | ----- | ---- | ------------------------------ |
- * | TEST-001 | P0 | `DONE` | Inventory public API coverage | @ref Foundation_Workflows_PublicApiCoverage maps every public family to behavior, conformance, compile, configuration, consumer, or target evidence. The behavior gaps assigned to `TEST-002` and `TEST-003` are closed; the remaining direct gap is assigned to `TEST-004`. |
+ * | TEST-001 | P0 | `DONE` | Inventory public API coverage | @ref Foundation_Workflows_PublicApiCoverage maps every public family to behavior, conformance, compile, configuration, consumer, or target evidence. The behavior gaps assigned to `TEST-002` and `TEST-003` and the header gap assigned to `TEST-004` are closed. |
  * | TEST-002 | P0 | `DONE` | Complete Math tests | 23 focused cases now cover Complex, fixed/dynamic matrix member APIs, arithmetic, trigonometry, Ratio mutators, and numeric edges. Clean macOS Arm64 Debug and Release runs each pass all 145/145 registered tests. Matrix multiplication already covers all four fixed/dynamic operand combinations plus incompatible, attached-output, and overlap paths. |
  * | TEST-003 | P0 | `DONE` | Complete remaining module tests | Sixteen focused cases close every inventoried Containers, Functional, Time, Scheduling, and Utils behavior gap; TypeTraits was already complete through its shared standard/fallback conformance suite. Clean macOS Arm64 Debug and Release runs each pass all 161/161 registered tests. |
- * | TEST-004 | P1 | `TODO` | Add public-header self-containment checks | Each supported public header compiles in an otherwise minimal translation unit. |
+ * | TEST-004 | P1 | `DONE` | Add public-header self-containment checks | `tests/CMakeLists.txt` generates one translation unit per staged `.h` (each included twice to also check its guard) into `FoundationHeaderSelfContainment`, exposed as the `FoundationHeaders.SelfContained` CTest case. Only headers of enabled features are checked. The default macOS Arm64 build checks all 57 headers; Debug and Release each pass 162/162 tests. |
  * | TEST-005 | P1 | `TODO` | Add warning and sanitizer jobs | Supported native compilers run an agreed warning set; AddressSanitizer and UndefinedBehaviorSanitizer pass where available. |
  * | TEST-006 | P1 | `TODO` | Finish the coverage workflow | Coverage uses a supported compiler, produces a readable report, records a baseline, and has an agreed 1.x quality threshold; otherwise the public option is removed. |
  *

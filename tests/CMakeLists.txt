@@ -95,4 +95,36 @@ foundation_add_invalid_dependency_test(
     FOUNDATION_TIME
 )
 
+# Every staged public header must compile alone in an otherwise empty
+# translation unit. Including it twice also checks the include guard.
+# Template implementation files (.tpp) are reachable only through their .h.
+get_property(FOUNDATION_STAGED_HEADERS GLOBAL PROPERTY FOUNDATION_STAGED_HEADERS)
+list(FILTER FOUNDATION_STAGED_HEADERS INCLUDE REGEX "\\.h$")
+set(FOUNDATION_HEADER_CHECK_SOURCES "")
+foreach(header IN LISTS FOUNDATION_STAGED_HEADERS)
+    string(REPLACE "/" "-" header_id "${header}")
+    set(source "${CMAKE_CURRENT_BINARY_DIR}/HeaderSelfContainment/${header_id}.cc")
+    file(CONFIGURE
+        OUTPUT "${source}"
+        CONTENT "#include <${header}>\n#include <${header}>\n"
+    )
+    list(APPEND FOUNDATION_HEADER_CHECK_SOURCES "${source}")
+endforeach()
+
+add_library(FoundationHeaderSelfContainment OBJECT ${FOUNDATION_HEADER_CHECK_SOURCES})
+target_link_libraries(FoundationHeaderSelfContainment PRIVATE Foundation::Foundation)
+
+add_test(
+    NAME FoundationHeaders.SelfContained
+    COMMAND
+        ${CMAKE_COMMAND}
+        --build "${CMAKE_BINARY_DIR}"
+        --config $<CONFIG>
+        --target FoundationHeaderSelfContainment
+)
+set_tests_properties(
+    FoundationHeaders.SelfContained
+    PROPERTIES LABELS "Foundation;Headers"
+)
+
 add_subdirectory(Foundation)
