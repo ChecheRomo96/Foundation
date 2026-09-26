@@ -38,5 +38,6 @@ function(foundation_stage_headers)
             "${FOUNDATION_BUILD_INCLUDE_DIR}/${REL_HEADER}"
             COPYONLY
         )
+        set_property(GLOBAL APPEND PROPERTY FOUNDATION_STAGED_HEADERS "${REL_HEADER}")
     endforeach()
 endfunction()

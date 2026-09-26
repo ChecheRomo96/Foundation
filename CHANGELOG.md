@@ -22,6 +22,8 @@ version 1.2.0 is the current release.
   Callback null and empty modes, Time mutators and boundaries, scheduler
   ordering/capacity, and move-only or throwing utility types. Callback exception
   behavior is compiled separately from the default no-exception contract.
+- A `FoundationHeaders.SelfContained` test that compiles every enabled public
+  `.h` header alone in a generated translation unit, closing `TEST-004`.
 - A license/ownership review packet with interim guardrails, counsel questions,
   evidence checklist, and objective exit criteria.
 
