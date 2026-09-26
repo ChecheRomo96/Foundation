@@ -12,17 +12,17 @@
             imag(0) {}
 
         template <typename T>
-        Complex<T>::Complex(T real)
-            : real(real),
+        Complex<T>::Complex(T realPart)
+            : real(realPart),
             imag(0) {}
 
         template <typename T>
         Complex<T>::Complex(
-            T real,
-            T imag
+            T realPart,
+            T imagPart
         )
-            : real(real),
-            imag(imag) {}
+            : real(realPart),
+            imag(imagPart) {}
 
         template <typename T>
         Complex<T>::Complex(

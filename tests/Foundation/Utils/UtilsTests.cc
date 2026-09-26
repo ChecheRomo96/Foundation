@@ -8,8 +8,8 @@ namespace {
 
 class MoveOnly {
 public:
-    explicit MoveOnly(int value)
-        : value(value) {
+    explicit MoveOnly(int initial)
+        : value(initial) {
     }
 
     MoveOnly(const MoveOnly&) = delete;
@@ -33,8 +33,8 @@ class ThrowingMove {
 public:
     static bool ThrowOnMove;
 
-    explicit ThrowingMove(int value)
-        : value(value) {
+    explicit ThrowingMove(int initial)
+        : value(initial) {
     }
 
     ThrowingMove(const ThrowingMove&) = delete;
