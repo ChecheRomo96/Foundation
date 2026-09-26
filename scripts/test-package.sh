@@ -78,6 +78,8 @@ if [ -n "$JUNIT" ]; then
 fi
 
 foundation_require_configured "$PRESET"
+"$SCRIPT_DIR/validate-package.sh" "$PRESET" --package "$PACKAGE_PREFIX"
+
 FOUNDATION_BUILD_DIR=$(foundation_build_dir "$PRESET")
 FOUNDATION_CACHE="$FOUNDATION_BUILD_DIR/CMakeCache.txt"
 CONSUMER_SOURCE_DIR="$FOUNDATION_ROOT/tests/PackageConsumer"

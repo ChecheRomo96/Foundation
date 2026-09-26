@@ -227,22 +227,19 @@
  *
  * A successful command is necessary but not sufficient. Before publishing:
  *
- * 1. confirm the Release archive exists and no Debug archive was packaged;
- * 2. confirm `include/` and `lib/cmake/Foundation/` exist;
- * 3. inspect `FoundationBuildInfo.cmake` for the platform, compiler, architecture,
- *    feature set, and example selection;
- * 4. inspect archive architecture with the platform tool;
- * 5. run the repository package-consumer workflow, which uses
+ * 1. run `validate-package.sh <preset>` or
+ *    `validate-package.ps1 <preset>` to confirm the exact Release archive,
+ *    headers, metadata, compiler/ABI identity, and real architecture;
+ * 2. inspect `FoundationBuildInfo.cmake` for the feature set and example
+ *    selection when reviewing a custom export;
+ * 3. run the repository package-consumer workflow, which uses
  *    `find_package(Foundation CONFIG)` from an isolated project;
- * 6. record the native or embedded validation result for that preset.
+ * 4. record the native or embedded validation result for that preset.
  *
  * On macOS, a minimal structural inspection is:
  *
  * @code{bash}
- * test -f dist/macos_arm64/lib/libFoundation.a
- * test ! -e dist/macos_arm64/lib/libFoundation_d.a
- * test -f dist/macos_arm64/lib/cmake/Foundation/FoundationConfig.cmake
- * lipo -archs dist/macos_arm64/lib/libFoundation.a
+ * ./scripts/validate-package.sh macos_arm64
  * @endcode
  *
  * Use @ref Foundation_Workflows_Validation for target-specific checks and the

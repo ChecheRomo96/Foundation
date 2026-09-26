@@ -188,7 +188,7 @@ jobs:
           cmake "-DPRESET=${{ matrix.preset }}" "-DMODE=SEED_DIST"
           -P tests/cmake/FreshState.cmake
 
-      - name: Export and validate Release package
+      - name: Export, verify identity, and validate Release package
         if: matrix.platform == 'unix'
         shell: bash
         run: >-
@@ -196,7 +196,7 @@ jobs:
           --fresh --parallel 4
           --junit "build/${{ matrix.preset }}/test-results/PackageConsumer.xml"
 
-      - name: Export and validate Release package
+      - name: Export, verify identity, and validate Release package
         if: matrix.platform == 'windows'
         shell: pwsh
         run: >-
@@ -208,6 +208,11 @@ jobs:
         run: >-
           cmake "-DPRESET=${{ matrix.preset }}" "-DMODE=VERIFY"
           -P tests/cmake/FreshState.cmake
+
+      - name: Reject invalid package identities
+        run: >-
+          cmake "-DPRESET=${{ matrix.preset }}"
+          -P tests/cmake/PackageIdentityNegative.cmake
 
       - name: Upload native failure evidence
         if: failure()
@@ -222,6 +227,7 @@ jobs:
             build/package-consumer/${{ matrix.preset }}/CMakeCache.txt
             build/package-consumer/${{ matrix.preset }}/CMakeFiles/CMakeConfigureLog.yaml
             build/package-consumer/${{ matrix.preset }}/Testing/Temporary/
+            build/package-identity-negative/${{ matrix.preset }}/
             dist/${{ matrix.preset }}/
           if-no-files-found: warn
           retention-days: 14

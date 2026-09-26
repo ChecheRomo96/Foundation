@@ -46,9 +46,12 @@
  * 1. report CMake, Ninja, compiler, OS, and architecture information;
  * 2. configure fresh, build, and run the registered suite in Debug;
  * 3. build and run the same suite in Release from the multi-config tree;
- * 4. perform a fresh Release export;
+ * 4. perform a fresh Release export and verify its exact contents, metadata,
+ *    compiler/ABI identity, and real archive architecture;
  * 5. recreate the standalone package consumer, find only that exported prefix,
- *    link `Foundation::Foundation`, and execute the consumer test.
+ *    link `Foundation::Foundation`, and execute the consumer test;
+ * 6. prove the identity gate rejects an added Debug archive, a missing public
+ *    header, and modified build-identity metadata.
  *
  * Debug and Release do not name separate test suites. The same tests execute
  * against both library configurations. Debug remains a development artifact;
@@ -158,8 +161,8 @@
  * retains the available JUnit files, CTest `Testing/Temporary` logs, CMake
  * cache/configure logs, and any partially exported package for 14 days.
  * Feature-matrix failures retain the failing case's build tree. Embedded jobs
- * retain archive-inspection output, CMake diagnostics, and any package prefixes
- * produced before the failure. Documentation failures retain the complete
+ * retain CMake diagnostics and any package prefixes produced before an identity
+ * failure. Documentation failures retain the complete
  * captured build log and generated Doxyfile. Release packaging and complete-set
  * verification use the same failure-only retention policy.
  *
