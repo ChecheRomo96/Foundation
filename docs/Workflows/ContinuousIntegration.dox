@@ -109,7 +109,7 @@
  * the staged include tree (header-only code is compiled from the staged copies).
  * Tests and GoogleTest are excluded. The job writes a line/function/branch
  * summary to the workflow page, uploads a browsable HTML report as the
- * `coverage-report` artifact, and fails when line coverage drops below 85%.
+ * `coverage-report` artifact, and fails when line coverage drops below 90%, the agreed 1.x threshold.
  *
  * To produce the same report locally with Apple Clang:
  *
