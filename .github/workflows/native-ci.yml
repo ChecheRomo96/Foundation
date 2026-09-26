@@ -210,7 +210,7 @@ jobs:
             --filter 'build/linux_gcc_x64/include/' --filter 'src/' \
             --txt-summary --markdown-summary coverage/summary.md \
             --html-details coverage/index.html \
-            --fail-under-line 85
+            --fail-under-line 90
           cat coverage/summary.md >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload coverage report
