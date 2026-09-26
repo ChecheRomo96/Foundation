@@ -33,8 +33,8 @@
  *
  * | Platform | Preset | Compiler / architecture | 1.x level | Validation gate |
  * | -------- | ------ | ----------------------- | ---------- | --------------- |
- * | macOS | `macos_arm64` | Apple Clang, arm64 | `PUBLISHED` | VAL-001 |
- * | macOS | `macos_x64` | Apple Clang, x86-64 | `RELEASE CANDIDATE` | VAL-002 |
+ * | macOS | `macos_arm64` | Apple Clang, arm64 | `SUPPORTED` | VAL-001 |
+ * | macOS | `macos_x64` | Apple Clang, x86-64 | `SUPPORTED` | VAL-002 |
  * | Windows | `windows_msvc_x64` | MSVC, x86-64 | `PUBLISHED` | VAL-003 |
  * | Windows | `windows_clang_x64` | Clang, x86-64 | `PUBLISHED` | VAL-004 |
  * | Linux | `linux_gcc_x64` | GCC, x86-64 | `PUBLISHED` | VAL-005 |
@@ -43,7 +43,7 @@
  * | Linux | `linux_clang_arm64` | Clang, AArch64 | `RELEASE CANDIDATE` | VAL-006 |
  *
  * `macos_x64` may be cross-built on Apple Silicon, but execution still requires
- * Rosetta or Intel hardware. Linux Arm64 requires a native Arm64 runner or
+ * Rosetta or Intel hardware; VAL-002 executed it through Rosetta 2. Linux Arm64 requires a native Arm64 runner or
  * Raspberry Pi-class host; an x86-64 container is not equivalent evidence.
  *
  * @section FoundationSupportMatrixEmbedded Named Embedded Targets
