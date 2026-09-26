@@ -151,6 +151,23 @@
  * `WARN_AS_ERROR = FAIL_ON_WARNINGS`, so structural and reference warnings fail
  * validation before deployment.
  *
+ * @section FoundationContinuousIntegrationFailureEvidence Failure Evidence
+ *
+ * Native Debug, Release, sanitizer, coverage, and package-consumer tests write
+ * JUnit XML through the repository scripts. If a job fails, GitHub Actions
+ * retains the available JUnit files, CTest `Testing/Temporary` logs, CMake
+ * cache/configure logs, and any partially exported package for 14 days.
+ * Feature-matrix failures retain the failing case's build tree. Embedded jobs
+ * retain archive-inspection output, CMake diagnostics, and any package prefixes
+ * produced before the failure. Documentation failures retain the complete
+ * captured build log and generated Doxyfile. Release packaging and complete-set
+ * verification use the same failure-only retention policy.
+ *
+ * Failure artifacts are diagnostic evidence, not distributable packages. They
+ * are uploaded only when the owning job fails and may be incomplete by design;
+ * successful validated packages keep their existing shorter-lived artifact
+ * names and policies.
+ *
  * @section FoundationContinuousIntegrationAcceptance Acceptance and Evidence
  *
  * `CI-001` and `CI-002` were accepted for Foundation 1.2.0 by

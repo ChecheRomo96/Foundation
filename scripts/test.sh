@@ -5,13 +5,14 @@ SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 . "$SCRIPT_DIR/common.sh"
 
 usage() {
-    printf '%s\n' "Usage: $0 <preset> [--config <name>] [--parallel <jobs>] [--filter <regex>] [--fresh] [--allow-no-tests]"
+    printf '%s\n' "Usage: $0 <preset> [--config <name>] [--parallel <jobs>] [--filter <regex>] [--junit <path>] [--fresh] [--allow-no-tests]"
 }
 
 PRESET=""
 CONFIGURATION=""
 PARALLEL=""
 FILTER=""
+JUNIT=""
 FRESH=0
 ALLOW_NO_TESTS=0
 
@@ -30,6 +31,11 @@ while [ "$#" -gt 0 ]; do
         --filter)
             foundation_require_value "$1" "${2:-}"
             FILTER=$2
+            shift 2
+            ;;
+        --junit)
+            foundation_require_value "$1" "${2:-}"
+            JUNIT=$2
             shift 2
             ;;
         --fresh)
@@ -61,6 +67,11 @@ BUILD_DIR=$(foundation_build_dir "$PRESET")
 CONFIGURATION=$(foundation_configuration "$PRESET" "$CONFIGURATION" "Debug")
 foundation_require_configuration "$CONFIGURATION"
 
+if [ -n "$JUNIT" ]; then
+    JUNIT=$(foundation_absolute_path "$JUNIT")
+    cmake -E make_directory "$(dirname -- "$JUNIT")"
+fi
+
 if [ "$FRESH" -eq 1 ]; then
     "$SCRIPT_DIR/configure.sh" "$PRESET" --fresh -- \
         -DFOUNDATION_TESTING=ON
@@ -78,4 +89,5 @@ set -- ctest --test-dir "$BUILD_DIR" --output-on-failure
 set -- "$@" --build-config "$CONFIGURATION"
 [ -z "$PARALLEL" ] || set -- "$@" --parallel "$PARALLEL"
 [ -z "$FILTER" ] || set -- "$@" --tests-regex "$FILTER"
+[ -z "$JUNIT" ] || set -- "$@" --output-junit "$JUNIT"
 "$@"

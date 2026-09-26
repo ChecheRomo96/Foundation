@@ -26,6 +26,11 @@
  * @code{powershell}
  * ./scripts/test-package.ps1 windows_msvc_x64 -Fresh -Parallel 8
  * @endcode
+
+ * Both script variants accept an optional JUnit destination for the consumer
+ * CTest result: `--junit <path>` in Bash or `-JUnit <path>` in PowerShell.
+ * CI uses this report together with CMake and CTest diagnostics when a package
+ * validation job fails.
  *
  * The scripts perform these steps:
  *

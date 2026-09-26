@@ -18,7 +18,8 @@
  *
  * @code{bash}
  * ./scripts/test.sh <preset> [--config <name>] \
- *     [--parallel <jobs>] [--filter <regex>] [--fresh] [--allow-no-tests]
+ *     [--parallel <jobs>] [--filter <regex>] [--junit <path>] \
+ *     [--fresh] [--allow-no-tests]
  *
  * ./scripts/test.sh macos_arm64 --config Debug --parallel 8
  * ./scripts/test.sh macos_arm64 --filter TimePoint
@@ -28,14 +29,17 @@
  *
  * Test defaults to `Debug`. The filter is forwarded as CTest's regular
  * expression, parallel controls both compilation and CTest workers, and fresh
- * recreates the cache before enabling testing. Test failures propagate as a
- * nonzero script exit status.
+ * recreates the cache before enabling testing. `--junit` asks CTest to write a
+ * machine-readable report at the selected repository-relative or absolute
+ * path. Its parent directory is created automatically. Test failures propagate
+ * as a nonzero script exit status.
  *
  * @section FoundationWorkflowTestPowerShell PowerShell
  *
  * @code{powershell}
  * ./scripts/test.ps1 <preset> [-Configuration <name>] `
- *     [-Parallel <jobs>] [-Filter <regex>] [-Fresh] [-AllowNoTests]
+ *     [-Parallel <jobs>] [-Filter <regex>] [-JUnit <path>] `
+ *     [-Fresh] [-AllowNoTests]
  * @endcode
  *
  * Test output is always displayed on failure. An empty CTest suite is an error

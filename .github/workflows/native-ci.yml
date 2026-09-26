@@ -107,6 +107,7 @@ jobs:
         run: >-
           ./scripts/test.sh "${{ matrix.preset }}"
           --config Debug --fresh --parallel 4
+          --junit "build/${{ matrix.preset }}/test-results/Debug.xml"
 
       - name: Test Debug
         if: matrix.platform == 'windows'
@@ -114,6 +115,7 @@ jobs:
         run: >-
           ./scripts/test.ps1 "${{ matrix.preset }}"
           -Configuration Debug -Fresh -Parallel 4
+          -JUnit "build/${{ matrix.preset }}/test-results/Debug.xml"
 
       - name: Test Release
         if: matrix.platform == 'unix'
@@ -121,6 +123,7 @@ jobs:
         run: >-
           ./scripts/test.sh "${{ matrix.preset }}"
           --config Release --parallel 4
+          --junit "build/${{ matrix.preset }}/test-results/Release.xml"
 
       - name: Test Release
         if: matrix.platform == 'windows'
@@ -128,6 +131,7 @@ jobs:
         run: >-
           ./scripts/test.ps1 "${{ matrix.preset }}"
           -Configuration Release -Parallel 4
+          -JUnit "build/${{ matrix.preset }}/test-results/Release.xml"
 
       - name: Export and validate Release package
         if: matrix.platform == 'unix'
@@ -135,6 +139,7 @@ jobs:
         run: >-
           ./scripts/test-package.sh "${{ matrix.preset }}"
           --fresh --parallel 4
+          --junit "build/${{ matrix.preset }}/test-results/PackageConsumer.xml"
 
       - name: Export and validate Release package
         if: matrix.platform == 'windows'
@@ -142,6 +147,24 @@ jobs:
         run: >-
           ./scripts/test-package.ps1 "${{ matrix.preset }}"
           -Fresh -Parallel 4
+          -JUnit "build/${{ matrix.preset }}/test-results/PackageConsumer.xml"
+
+      - name: Upload native failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: failure-native-${{ matrix.preset }}-${{ github.run_attempt }}
+          path: |
+            build/${{ matrix.preset }}/CMakeCache.txt
+            build/${{ matrix.preset }}/CMakeFiles/CMakeConfigureLog.yaml
+            build/${{ matrix.preset }}/Testing/Temporary/
+            build/${{ matrix.preset }}/test-results/
+            build/package-consumer/${{ matrix.preset }}/CMakeCache.txt
+            build/package-consumer/${{ matrix.preset }}/CMakeFiles/CMakeConfigureLog.yaml
+            build/package-consumer/${{ matrix.preset }}/Testing/Temporary/
+            dist/${{ matrix.preset }}/
+          if-no-files-found: warn
+          retention-days: 14
 
   sanitizers:
     name: Sanitizers / ${{ matrix.name }}
@@ -177,6 +200,20 @@ jobs:
         run: >-
           ./scripts/test.sh "${{ matrix.preset }}"
           --config Debug --fresh --parallel 4
+          --junit "build/${{ matrix.preset }}/test-results/Sanitizers.xml"
+
+      - name: Upload sanitizer failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: failure-sanitizers-${{ matrix.preset }}-${{ github.run_attempt }}
+          path: |
+            build/${{ matrix.preset }}/CMakeCache.txt
+            build/${{ matrix.preset }}/CMakeFiles/CMakeConfigureLog.yaml
+            build/${{ matrix.preset }}/Testing/Temporary/
+            build/${{ matrix.preset }}/test-results/
+          if-no-files-found: warn
+          retention-days: 14
 
   coverage:
     name: Coverage / Ubuntu 24.04 / GCC / x64
@@ -198,7 +235,9 @@ jobs:
           cmake --preset linux_gcc_x64 --fresh \
             -DFOUNDATION_TESTING=ON -DFOUNDATION_COVERAGE=ON
           cmake --build build/linux_gcc_x64 --config Debug --parallel 4
-          ctest --test-dir build/linux_gcc_x64 -C Debug --output-on-failure
+          cmake -E make_directory build/linux_gcc_x64/test-results
+          ctest --test-dir build/linux_gcc_x64 -C Debug --output-on-failure \
+            --output-junit build/linux_gcc_x64/test-results/Coverage.xml
 
       # Header-only code is compiled from the staged include tree, so both it
       # and src/ are measured. Tests and third-party code are excluded.
@@ -221,6 +260,20 @@ jobs:
           path: coverage/
           retention-days: 14
 
+      - name: Upload coverage failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: failure-coverage-${{ github.run_attempt }}
+          path: |
+            build/linux_gcc_x64/CMakeCache.txt
+            build/linux_gcc_x64/CMakeFiles/CMakeConfigureLog.yaml
+            build/linux_gcc_x64/Testing/Temporary/
+            build/linux_gcc_x64/test-results/
+            coverage/
+          if-no-files-found: warn
+          retention-days: 14
+
   feature-matrix:
     name: Feature matrix / Ubuntu 24.04 / GCC / x64
     runs-on: ubuntu-24.04
@@ -232,3 +285,12 @@ jobs:
 
       - name: Build and test every supported feature selection
         run: cmake -DPRESET=linux_gcc_x64 -P tests/cmake/FeatureMatrix.cmake
+
+      - name: Upload feature-matrix failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: failure-feature-matrix-${{ github.run_attempt }}
+          path: build/feature-matrix/
+          if-no-files-found: warn
+          retention-days: 14
