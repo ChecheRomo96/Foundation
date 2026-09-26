@@ -13,14 +13,19 @@ param(
 
 . "$PSScriptRoot/common.ps1"
 
-$configureArguments = @("--preset", $Preset)
+$configureParameters = @{
+    Preset = $Preset
+}
 if ($Fresh) {
-    $configureArguments += "--fresh"
+    $configureParameters.Fresh = $true
 }
 if ($ExamplesOn) {
-    $configureArguments += "-DFOUNDATION_EXAMPLES=ON"
+    $configureParameters.CMakeArguments = @("-DFOUNDATION_EXAMPLES=ON")
 }
-Invoke-FoundationCMake -Arguments $configureArguments
+& "$PSScriptRoot/configure.ps1" @configureParameters
+if ($LASTEXITCODE -ne 0) {
+    exit $LASTEXITCODE
+}
 
 $buildDirectory = Get-FoundationBuildDirectory -Preset $Preset
 $configurationName = Get-FoundationConfiguration `

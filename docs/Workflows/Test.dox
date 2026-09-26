@@ -29,7 +29,8 @@
  *
  * Test defaults to `Debug`. The filter is forwarded as CTest's regular
  * expression, parallel controls both compilation and CTest workers, and fresh
- * recreates the cache before enabling testing. `--junit` asks CTest to write a
+ * recreates the complete selected build tree before enabling testing. `--junit`
+ * asks CTest to write a
  * machine-readable report at the selected repository-relative or absolute
  * path. Its parent directory is created automatically. Test failures propagate
  * as a nonzero script exit status.

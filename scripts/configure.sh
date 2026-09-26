@@ -39,8 +39,8 @@ done
 foundation_require_preset "$PRESET"
 
 if [ "$FRESH" -eq 1 ]; then
-    cmake --preset "$PRESET" --fresh "$@"
-else
-    cmake --preset "$PRESET" "$@"
+    BUILD_DIR=$(foundation_build_dir "$PRESET")
+    cmake -E remove_directory "$BUILD_DIR"
 fi
 
+cmake --preset "$PRESET" "$@"
