@@ -35,15 +35,23 @@
  * testing and isolated package-consumer validation. Native main-branch run
  * [36194411008](https://github.com/ChecheRomo96/Foundation/actions/runs/36194411008)
  * passed macOS Arm64, Linux GCC/Clang x64, and Windows MSVC/Clang x64.
- * Clean local macOS 15.3.2 Arm64 runs additionally passed 161/161 tests
+ * Clean local macOS 15.3.2 Arm64 runs additionally passed 162/162 tests
  * in both Debug and Release, followed by the isolated Release package consumer.
+ * Main-branch run
+ * [36227959990](https://github.com/ChecheRomo96/Foundation/actions/runs/36227959990)
+ * also passed the full native matrix, including Linux Arm64 GCC and Clang,
+ * warnings as errors, sanitizers, coverage, and the feature-option matrix.
+ * Embedded run
+ * [36227959989](https://github.com/ChecheRomo96/Foundation/actions/runs/36227959989)
+ * built, exported, and inspected AVR and every declared Arm profile.
  *
  * The following evidence is still pending:
  *
  * - macOS x86-64 execution through Rosetta or Intel hardware;
- * - the first hosted Linux Arm64 CI result and Raspberry Pi-specific evidence;
+ * - Raspberry Pi-specific consumer and hardware evidence;
  * - AVR consumer ELF linkage/size and AVR board or emulator execution;
- * - Arm/STM32 hosted cross-compilation, firmware linkage, and target execution;
+ * - Arm/STM32 firmware linkage and target execution beyond hosted package
+ *   cross-compilation;
  * - Arduino Uno source-mode sketch compilation;
  * - representative PSoC product-toolchain integration.
  *
