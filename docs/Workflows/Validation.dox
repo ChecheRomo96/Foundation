@@ -184,4 +184,47 @@
  *
  * A smoke test that used `AllowNoTests` must be recorded as “compiled, no tests
  * executed,” never as “tests passed.”
+ *
+ * @section FoundationValidationEvidence Recorded Evidence
+ *
+ * @subsection FoundationValidationEvidenceMacOSArm64 macOS Arm64 — 2026-09-25
+ *
+ * | Field | Recorded value |
+ * | ----- | -------------- |
+ * | Operator | José Manuel Romo |
+ * | Host | macOS 15.3.2, Arm64 |
+ * | Preset | `macos_arm64` |
+ * | Toolchain | CMake 4.1.1, Ninja 1.12.1, AppleClang 16.0.0 |
+ * | Clean configure/build | Passed after `clean.sh macos_arm64` |
+ * | Debug tests | 122/122 passed |
+ * | Release tests | 122/122 passed |
+ * | Release export | Passed; `dist/macos_arm64` regenerated |
+ * | Package consumer | 1/1 passed against Foundation 1.2.0 |
+ * | Archive identity | Thin Arm64 `libFoundation.a` |
+ * | Package policy | No Debug artifact; only `IMPORTED_LOCATION_RELEASE` |
+ * | Remaining VAL-001 evidence | Examples and interactive launcher acceptance |
+ *
+ * @subsection FoundationValidationEvidenceAVR AVR ATmega328P — 2026-09-25
+ *
+ * | Field | Recorded value |
+ * | ----- | -------------- |
+ * | Operator | José Manuel Romo |
+ * | Host | macOS 15.3.2, Arm64 |
+ * | Preset | `atmega328p_avrgcc_avr5` |
+ * | Toolchain | Homebrew AVR-GCC 9.4.0, Ninja Multi-Config |
+ * | Clean configure/build | Debug and Release `Foundation` targets passed after removing build and dist output |
+ * | Release export | Passed; `dist/atmega328p_avrgcc_avr5` regenerated |
+ * | Archive identity | Every inspected member is `elf32-avr`, architecture `avr:5` |
+ * | Package policy | No Debug artifact; `IMPORTED_LOCATION_RELEASE` selects `libFoundation.a` |
+ * | Not yet proven | Separate consumer ELF link/size, emulator or board execution, Arduino sketch build |
+ *
+ * @subsection FoundationValidationEvidenceArmLocal Arm bare-metal local preflight — 2026-09-25
+ *
+ * The installed Homebrew `arm-none-eabi-g++` 14.2.0 executable was detected,
+ * but its installation has no target C library/sysroot. Compilation therefore
+ * stops at the compiler wrapper's `include_next <stdint.h>`. This is recorded
+ * as a missing local runtime, not as a Foundation source failure and not as a
+ * successful Arm validation. The Ubuntu embedded CI installs
+ * `libnewlib-arm-none-eabi` and `libstdc++-arm-none-eabi-newlib` explicitly;
+ * its first hosted result will provide the next Arm compile/package evidence.
  */

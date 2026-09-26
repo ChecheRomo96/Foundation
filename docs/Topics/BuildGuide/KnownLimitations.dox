@@ -2,8 +2,8 @@
  * @addtogroup Foundation_BuildGuide_KnownLimitations
  * @{
  *
- * This page records limitations that affect Foundation 1.0.0 consumers or its
- * release decision. It complements the
+ * This page records limitations that affect Foundation 1.x consumers and
+ * future release decisions. It complements the
  * @ref Foundation_BuildGuide_SupportMatrix "Support Matrix": the matrix
  * classifies targets, while this page explains boundaries that apply across
  * targets and workflows.
@@ -13,31 +13,37 @@
  *
  * @section FoundationKnownLimitationsRelease Release and License Status
  *
- * - Version 1.0.0 is still unreleased. Public API design is frozen for its
- *   release candidate, but the complete release matrix has not passed.
+ * - Foundation 1.2.0 is the current published release. Version 1.1.0 was the
+ *   first published release; the planned 1.0.0 tag was superseded.
  * - Foundation is currently proprietary and grants no permission for external
  *   use, compilation, modification, integration, or redistribution without a
  *   separate written authorization.
  * - The final license, ownership, contribution, and distribution model require
- *   review by qualified legal counsel. This is a release blocker, not a
- *   documentation disclaimer that can be waived by a build option.
+ *   review by qualified legal counsel. This blocks any external-use grant; it
+ *   is not a documentation disclaimer that can be waived by a build option.
  * - The source repository, examples, generated documentation, and exported
  *   artifacts all remain subject to the current `LICENSE` notice.
+ * - The preparation checklist and unresolved ownership/licensing questions are
+ *   tracked in @ref Foundation_Workflows_LegalReview. That record is not legal
+ *   advice and does not replace review by qualified counsel.
  *
  * @section FoundationKnownLimitationsValidation Validation Coverage
  *
- * As of 2026-09-25, `macos_arm64` has passed 108 registered tests in Debug and
- * Release and a fresh, isolated Release package-consumer test. This is useful
- * local evidence, but the complete `VAL-001` checklist still includes examples,
- * launcher behavior, artifact inspection, and final release-candidate reruns.
+ * On 2026-09-25, tagged run
+ * [36194693563](https://github.com/ChecheRomo96/Foundation/actions/runs/36194693563)
+ * built and published Foundation 1.2.0 packages after native Debug and Release
+ * testing and isolated package-consumer validation. Native main-branch run
+ * [36194411008](https://github.com/ChecheRomo96/Foundation/actions/runs/36194411008)
+ * passed macOS Arm64, Linux GCC/Clang x64, and Windows MSVC/Clang x64.
+ * A clean local macOS 15.3.2 Arm64 rebuild additionally passed 122/122 tests
+ * in both Debug and Release, followed by the isolated Release package consumer.
  *
  * The following evidence is still pending:
  *
- * - native Windows MSVC and Clang execution;
- * - native Linux GCC and Clang execution;
  * - macOS x86-64 execution through Rosetta or Intel hardware;
- * - Linux Arm64 / Raspberry Pi execution;
- * - AVR and STM32 firmware linkage and target execution;
+ * - the first hosted Linux Arm64 CI result and Raspberry Pi-specific evidence;
+ * - AVR consumer ELF linkage/size and AVR board or emulator execution;
+ * - Arm/STM32 hosted cross-compilation, firmware linkage, and target execution;
  * - Arduino Uno source-mode sketch compilation;
  * - representative PSoC product-toolchain integration.
  *
@@ -48,10 +54,9 @@
  *
  * @section FoundationKnownLimitationsPlatforms Platform Scope
  *
- * Rows marked `RELEASE CANDIDATE` in the support matrix are intended for
- * version 1.0.0 but are not `SUPPORTED` until their acceptance evidence passes
- * on the release commit. PSoC 5LP and generic Arm profiles are experimental.
- * PIC is explicitly deferred and has no version 1.0.0 preset, package, or
+ * Rows marked `RELEASE CANDIDATE` or `PUBLISHED` in the support matrix are not
+ * `SUPPORTED` until their full acceptance evidence passes. PSoC 5LP and
+ * generic Arm profiles are experimental. PIC is explicitly deferred and has no current preset, package, or
  * compatibility promise.
  *
  * Cross-compiled archives do not provide a complete firmware environment.
@@ -66,14 +71,14 @@
  * - Exported packages contain one target-specific Release static library.
  *   Debug libraries remain source-build artifacts and are not distributed.
  * - There is no universal/fat package, runtime architecture dispatch, shared
- *   library, system installer, or package-manager publication in version 1.0.0.
+ *   library, system installer, or package-manager publication in version 1.x.
  * - Packages with different compilers, standard-library ABIs, CPU flags, or
  *   feature selections are not interchangeable and must not be merged.
  * - The repository package-consumer fixture currently validates the default
  *   feature set, including Math and Time. The complete feature-option package
  *   matrix remains tracked as `PKG-002`.
  * - Direct source inclusion is available for Arduino-style and internal use,
- *   but the exported CMake package is the primary version 1.0.0 desktop
+ *   but the exported CMake package is the primary Foundation 1.x desktop
  *   consumer contract.
  *
  * @section FoundationKnownLimitationsLanguage Runtime and API Boundaries
@@ -100,10 +105,12 @@
  * @section FoundationKnownLimitationsQuality Quality Gates Still Open
  *
  * The current suite is meaningful but is not the final quality ceiling.
- * Complete public-API coverage mapping, standalone compilation of every public
- * header, agreed compiler-warning policies, sanitizers, and a coverage baseline
- * with an explicit threshold remain open release tasks. Examples demonstrate
- * API use and are never counted as tests.
+ * The public-API coverage map is complete and intentionally exposes behavioral
+ * gaps in Complex, Trigonometry, matrices, and smaller member-level contracts.
+ * Closing those gaps, standalone compilation of every public header, agreed
+ * compiler-warning policies, sanitizers, and a coverage baseline with an
+ * explicit threshold remain open release tasks. Examples demonstrate API use
+ * and are never counted as tests.
  *
  * The maintained release scope is summarized in the repository
  * `CHANGELOG.md`. Update this page, the changelog, support matrix, and release

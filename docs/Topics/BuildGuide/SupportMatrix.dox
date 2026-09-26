@@ -1,7 +1,8 @@
 /**
  * @addtogroup Foundation_BuildGuide_SupportMatrix
  *
- * This page defines the support promise for Foundation v1.0.0. A preset being
+ * This page defines the support evidence for the Foundation 1.x release line.
+ * Foundation 1.2.0 is the current published release. A preset being
  * present in `CMakePresets.json` proves that a build identity is described; it
  * does not by itself prove that its compiler, package, consumer, or target
  * execution has been validated.
@@ -10,16 +11,19 @@
  *
  * | Level | Meaning |
  * | ----- | ------- |
- * | `RELEASE CANDIDATE` | Intended to become supported in v1.0.0. Its required validation blocks the final release. |
+ * | `PUBLISHED` | A package for this exact target identity was produced from a version tag and passed native tests plus the standalone package consumer. |
+ * | `RELEASE CANDIDATE` | Intended to become supported in the 1.x line, but its required validation remains incomplete. |
  * | `SUPPORTED` | All applicable release gates passed on the released commit and Foundation commits to maintaining that target for the 1.x line. |
- * | `EXPERIMENTAL` | Preset or integration is available for evaluation, but its failure does not block v1.0.0 and compatibility is best effort. |
- * | `DEFERRED` | Explicitly outside the v1.0.0 scope. No release package or compatibility promise is made. |
+ * | `EXPERIMENTAL` | Preset or integration is available for evaluation, but compatibility is best effort. |
+ * | `DEFERRED` | Explicitly outside the current 1.x scope. No release package or compatibility promise is made. |
  * | `INTERNAL` | Repository workflow infrastructure, not a consumer platform or distributed binary identity. |
  *
- * A `RELEASE CANDIDATE` row becomes `SUPPORTED` only when its validation task
+ * `PUBLISHED` records verifiable package delivery; it does not grant license
+ * rights or claim hardware validation. A `RELEASE CANDIDATE` or `PUBLISHED` row
+ * becomes `SUPPORTED` only when its validation task
  * in @ref Foundation_Workflows_ReleaseV1 is `DONE`. If that evidence cannot be
- * completed before the release, the row must be changed to `EXPERIMENTAL` or
- * `DEFERRED`; it must not silently remain an unverified support claim.
+ * completed, the row remains explicitly limited; it must not silently become a
+ * broader support claim.
  *
  * @section FoundationSupportMatrixDesktop Native Desktop Targets
  *
@@ -27,14 +31,14 @@
  * and Release, export a Release-only package, run applicable examples, and link
  * a separate package consumer.
  *
- * | Platform | Preset | Compiler / architecture | v1.0 level | Validation gate |
+ * | Platform | Preset | Compiler / architecture | 1.x level | Validation gate |
  * | -------- | ------ | ----------------------- | ---------- | --------------- |
- * | macOS | `macos_arm64` | Apple Clang, arm64 | `RELEASE CANDIDATE` | VAL-001 |
+ * | macOS | `macos_arm64` | Apple Clang, arm64 | `PUBLISHED` | VAL-001 |
  * | macOS | `macos_x64` | Apple Clang, x86-64 | `RELEASE CANDIDATE` | VAL-002 |
- * | Windows | `windows_msvc_x64` | MSVC, x86-64 | `RELEASE CANDIDATE` | VAL-003 |
- * | Windows | `windows_clang_x64` | Clang, x86-64 | `RELEASE CANDIDATE` | VAL-004 |
- * | Linux | `linux_gcc_x64` | GCC, x86-64 | `RELEASE CANDIDATE` | VAL-005 |
- * | Linux | `linux_clang_x64` | Clang, x86-64 | `RELEASE CANDIDATE` | VAL-005 |
+ * | Windows | `windows_msvc_x64` | MSVC, x86-64 | `PUBLISHED` | VAL-003 |
+ * | Windows | `windows_clang_x64` | Clang, x86-64 | `PUBLISHED` | VAL-004 |
+ * | Linux | `linux_gcc_x64` | GCC, x86-64 | `PUBLISHED` | VAL-005 |
+ * | Linux | `linux_clang_x64` | Clang, x86-64 | `PUBLISHED` | VAL-005 |
  * | Linux | `linux_gcc_arm64` | GCC, AArch64 | `RELEASE CANDIDATE` | VAL-006 |
  * | Linux | `linux_clang_arm64` | Clang, AArch64 | `RELEASE CANDIDATE` | VAL-006 |
  *
@@ -50,7 +54,7 @@
  * FPU settings. Representative hardware or an appropriate emulator provides
  * the behavioral evidence.
  *
- * | Platform | Preset / integration | Binary identity | v1.0 level | Validation gate |
+ * | Platform | Preset / integration | Binary identity | 1.x level | Validation gate |
  * | -------- | -------------------- | --------------- | ---------- | --------------- |
  * | AVR | `atmega328p_avrgcc_avr5` | AVR-GCC, ATmega328P, AVR5 | `RELEASE CANDIDATE` | VAL-007 |
  * | STM32F103 | `stm32f103_armgcc_cortex_m3_soft` | Arm GCC, Cortex-M3, soft float | `RELEASE CANDIDATE` | VAL-008 |
@@ -66,10 +70,10 @@
  * @section FoundationSupportMatrixProfiles Generic Arm Profiles
  *
  * The following presets are reusable toolchain/ABI building blocks. They are
- * experimental standalone packages in v1.0.0 because a CPU core alone does not
+ * experimental standalone packages in the 1.x line because a CPU core alone does not
  * define a complete board, runtime, device, or firmware integration:
  *
- * | Preset | Profile | v1.0 level |
+ * | Preset | Profile | 1.x level |
  * | ------ | ------- | ---------- |
  * | `arm_none_eabi_cortex_m0plus_soft` | Cortex-M0+, soft float | `EXPERIMENTAL` |
  * | `arm_none_eabi_cortex_m3_soft` | Cortex-M3, soft float | `EXPERIMENTAL` |
@@ -81,16 +85,16 @@
  *
  * @section FoundationSupportMatrixSourceMode Source-Mode Integrations
  *
- * | Integration | v1.0 level | Scope |
+ * | Integration | 1.x level | Scope |
  * | ----------- | ---------- | ----- |
  * | Arduino Uno / ATmega328P source mode | `RELEASE CANDIDATE` | The documented sketches must compile with the declared Arduino AVR core. |
  * | Other Arduino cores | `EXPERIMENTAL` | Source-compatible by design, but not validated as a group. Each architecture needs explicit evidence. |
  * | Direct source inclusion in a higher-level CMake project | `EXPERIMENTAL` | The supported v1 consumer path is the exported package; source inclusion still requires a dedicated consumer contract. |
- * | PIC | `DEFERRED` | No v1.0.0 preset, toolchain, package, or compatibility promise. |
+ * | PIC | `DEFERRED` | No current preset, toolchain, package, or compatibility promise. |
  *
  * @section FoundationSupportMatrixWorkflowPresets Workflow-Only Presets
  *
- * | Preset | v1.0 level | Purpose |
+ * | Preset | 1.x level | Purpose |
  * | ------ | ---------- | ------- |
  * | `documentation` | `INTERNAL` | Builds Doxygen output; it is not a Foundation binary package. |
  *
@@ -99,10 +103,9 @@
  *
  * @section FoundationSupportMatrixReleaseRule Release Rule
  *
- * The support table shipped with `v1.0.0` must contain only evidence-backed
- * `SUPPORTED` rows, intentional `EXPERIMENTAL` rows, and explicit `DEFERRED`
- * scope. The release tag freezes that table. Adding a new compiler,
- * architecture, ABI, MCU, or board after v1.0.0 requires its own validation and
- * a later compatible release; similarity to an existing preset is not proof of
- * support.
+ * Each release tag freezes its support evidence. A published package may be
+ * described as `PUBLISHED` only when the tagged workflow produced that exact
+ * identity. Adding a compiler, architecture, ABI, MCU, or board requires its
+ * own validation and a later compatible release; similarity to an existing
+ * preset is not proof of support.
  */

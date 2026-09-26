@@ -8,9 +8,10 @@ It provides reusable low-level building blocks shared by projects such as MIDILA
 · [Known limitations](https://checheromo96.github.io/Foundation/group__Foundation__BuildGuide__KnownLimitations.html)
 · [Changelog](CHANGELOG.md)
 
-Version 1.0.0 is under release preparation and has not been published as a
-stable release. Platform rows remain release candidates or experimental until
-their documented validation gates pass.
+Foundation 1.2.0 is the current published release. Its five native GitHub
+Release packages passed the tagged build, test, export, checksum, and standalone
+package-consumer workflow. Other presets remain candidates or experimental
+until their documented validation gates pass.
 
 Foundation 1.2.0 requires a C++17-capable compiler in every integration mode,
 including CMake packages, direct source builds, and Arduino-style source builds.
@@ -119,6 +120,7 @@ permission is granted for external use, compilation, modification,
 redistribution, integration, or commercial use without prior written
 authorization. See [LICENSE](LICENSE) for the complete notice.
 
-The long-term licensing and distribution model must be reviewed with qualified
-legal counsel before the public `v1.0.0` release. Until the license is replaced
-in writing, the all-rights-reserved notice applies.
+The long-term licensing and distribution model still requires review by
+qualified legal counsel. Publishing source, documentation, or binary artifacts
+does not grant permission to use them. Until the license is replaced in
+writing, the all-rights-reserved notice applies.

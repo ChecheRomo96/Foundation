@@ -1,9 +1,9 @@
 /**
- * @defgroup Foundation_Workflows_ReleaseV1 Foundation v1.0.0 Backlog
+ * @defgroup Foundation_Workflows_ReleaseV1 Foundation 1.x Stabilization Backlog
  * @ingroup Foundation_Workflows_Validation
- * @brief Version-controlled plan and release gates for Foundation v1.0.0.
+ * @brief Version-controlled plan and quality gates for the Foundation 1.x line.
  *
- * This page is the source of truth for Foundation v1.0.0 readiness. Update it
+ * This page is the source of truth for Foundation 1.x stabilization. Update it
  * in the same commit that changes a task's status or acceptance evidence. Do
  * not maintain a separate progress copy in chat, a spreadsheet, or a Gantt.
  *
@@ -11,12 +11,12 @@
  *
  * | Field | Value |
  * | ----- | ----- |
- * | Target | `v1.0.0` |
+ * | Current release | `v1.2.0` |
  * | Working branch | `main` (trunk-based development) |
  * | Overall status | `IN PROGRESS` |
- * | Current milestone | M1 - Release contract |
+ * | Current milestone | M3 - Test depth and code quality |
  * | Last reviewed | 2026-09-25 |
- * | Release decision | Not ready |
+ * | Release state | `v1.2.0` published; stabilization continues |
  *
  * Allowed task states are:
  *
@@ -27,7 +27,7 @@
  * | `IN PROGRESS` | Work exists locally or on a branch but is not accepted. |
  * | `BLOCKED` | Cannot continue until the recorded dependency is resolved. |
  * | `DONE` | Acceptance criteria passed and evidence is recorded. |
- * | `DEFERRED` | Explicitly removed from the v1.0.0 scope. |
+ * | `DEFERRED` | Explicitly removed from the current 1.x scope. |
  *
  * @section FoundationReleaseV1Rules Update Rules
  *
@@ -74,7 +74,7 @@
  *     M3 [label="M3\nTest depth and code quality", fillcolor="#fcf3cf"];
  *     M4 [label="M4\nPackage and workflow hardening", fillcolor="#fcf3cf"];
  *     M5 [label="M5\nPlatform and hardware validation", fillcolor="#fadbd8"];
- *     M6 [label="M6\nRelease candidate and v1.0.0", fillcolor="#d5f5e3"];
+ *     M6 [label="M6\nSustained 1.x releases", fillcolor="#d5f5e3"];
  *
  *     M1 -> M2;
  *     M2 -> M3;
@@ -101,10 +101,10 @@
  * | ID | Priority | State | Task | Acceptance criteria / evidence |
  * | -- | -------- | ----- | ---- | ------------------------------ |
  * | V1-001 | P0 | `DONE` | Define the support matrix | Every public preset is classified in @ref Foundation_BuildGuide_SupportMatrix; PIC is deferred and unvalidated candidates cannot be called supported. |
- * | V1-002 | P0 | `DONE` | Make version and language requirements consistent | CMake, `library.properties`, and source mode report 1.0.0; CMake rejects version drift; the current Debug and Release suites each pass 108 tests; direct source mode accepts C++17 and rejects C++14; Doxygen rebuild passes. |
- * | V1-003 | P0 | `BLOCKED` | Confirm the distribution license | Interim state is `All Rights Reserved / No License Granted`; README prohibits external use and identifies the project as proprietary. A qualified legal expert must review ownership, prior grants, contribution terms, and the final distribution model before release. |
- * | V1-004 | P0 | `DONE` | Audit and freeze the public API | All 16 findings have documented dispositions; 108 Debug and 108 Release tests pass on `macos_arm64`; the isolated exported-package consumer links out-of-line API through `Foundation::Foundation`. See @ref Foundation_Workflows_PublicApiAudit. |
- * | V1-005 | P1 | `DONE` | Add release history and limitations | `CHANGELOG.md` records the unreleased 1.0.0 scope and links the maintained support and limitation pages; @ref Foundation_BuildGuide_KnownLimitations documents legal, validation, platform, package, runtime, API, and quality boundaries. |
+ * | V1-002 | P0 | `DONE` | Make version and language requirements consistent | CMake, `library.properties`, source mode, README, and Doxygen report 1.2.0 and C++17; CMake rejects version drift; direct source mode rejects C++14; clean macOS Arm64 Debug and Release runs each pass 122 tests. |
+ * | V1-003 | P0 | `BLOCKED` | Confirm the distribution license | Interim state is `All Rights Reserved / No License Granted`; publishing artifacts grants no external-use rights. @ref Foundation_Workflows_LegalReview records current guardrails, known repository facts, counsel questions, the evidence-packet checklist, and objective exit criteria. Only qualified legal review can close the task. |
+ * | V1-004 | P0 | `DONE` | Audit and freeze the public API | All 16 findings have documented dispositions; native CI and the isolated exported-package consumer validate `Foundation::Foundation`. See @ref Foundation_Workflows_PublicApiAudit. |
+ * | V1-005 | P1 | `DONE` | Maintain release history and limitations | `CHANGELOG.md` records 1.1.0 as the first published release, 1.2.0 as current, and 1.0.0 as superseded; @ref Foundation_BuildGuide_KnownLimitations records remaining boundaries. |
  *
  * M1 exits when the public contract no longer contradicts the build and every
  * advertised platform has an explicit support level.
@@ -113,10 +113,10 @@
  *
  * | ID | Priority | State | Task | Acceptance criteria / evidence |
  * | -- | -------- | ----- | ---- | ------------------------------ |
- * | CI-001 | P0 | `DONE` | Add native build and test CI | [Run 36169511592](https://github.com/ChecheRomo96/Foundation/actions/runs/36169511592) passed the complete Debug and Release suite on macOS/Apple Clang, Linux/GCC, Linux/Clang, Windows/MSVC, and Windows/Clang for commit `e171396`. |
- * | CI-002 | P0 | `DONE` | Validate exported packages in CI | The same run completed a fresh Release export and successfully linked and executed the standalone `Foundation::Foundation` consumer in all five native jobs. |
- * | CI-003 | P1 | `TODO` | Validate documentation on pull requests | Doxygen builds before merge and fails on structural errors or unresolved references; deployment remains a main-branch operation. |
- * | CI-004 | P1 | `TODO` | Add embedded compile jobs | ARM and AVR jobs configure, build Debug/Release, export Release, and inspect archive identity without pretending to execute target code. |
+ * | CI-001 | P0 | `DONE` | Add native build and test CI | [Run 36194411008](https://github.com/ChecheRomo96/Foundation/actions/runs/36194411008) passed the current Debug and Release suite on macOS/Apple Clang, Linux/GCC, Linux/Clang, Windows/MSVC, and Windows/Clang for `v1.2.0`. |
+ * | CI-002 | P0 | `DONE` | Validate exported packages in CI | The same run completed fresh Release exports and successfully linked and executed the standalone `Foundation::Foundation` consumer in all five native jobs. |
+ * | CI-003 | P1 | `IN PROGRESS` | Validate documentation on pull requests | `.github/workflows/deploy-docs.yml` now performs a fresh warning-as-error Doxygen build on pull requests with read-only permission and keeps deployment in a separate push-only job. Local YAML parsing and Doxygen generation pass; the first hosted run remains to be recorded. |
+ * | CI-004 | P1 | `IN PROGRESS` | Add embedded compile jobs | `.github/workflows/embedded-ci.yml` builds Debug/Release, exports Release, verifies target object identity and package policy, and uploads all AVR, generic Arm, PSoC, and STM32 packages without pretending to execute target code. AVR passed the equivalent local sequence. The local Arm compiler lacks Newlib; CI installs it explicitly. The first hosted run remains to be recorded. |
  * | CI-005 | P1 | `TODO` | Preserve useful failure evidence | CI uploads logs, test reports, and selected package artifacts needed to reproduce a failure. |
  *
  * Docker may support Linux and cross-compiler jobs. It does not replace native
@@ -126,12 +126,12 @@
  *
  * | ID | Priority | State | Task | Acceptance criteria / evidence |
  * | -- | -------- | ----- | ---- | ------------------------------ |
- * | TEST-001 | P0 | `TODO` | Inventory public API coverage | Every public type/function maps to a test, compile check, documented exception, or target-only validation. |
+ * | TEST-001 | P0 | `DONE` | Inventory public API coverage | @ref Foundation_Workflows_PublicApiCoverage maps every public family to behavior, conformance, compile, configuration, consumer, or target evidence and explicitly assigns uncovered members to `TEST-002`, `TEST-003`, or `TEST-004`. |
  * | TEST-002 | P0 | `TODO` | Complete Math tests | Complex, fixed/dynamic matrices, matrix operations, arithmetic, trigonometry, Ratio, and numeric edge cases are covered. |
  * | TEST-003 | P0 | `TODO` | Complete remaining module tests | Containers, Functional, Time, Scheduling, TypeTraits, and Utils include empty, full, invalid, boundary, and lifecycle behavior where applicable. |
  * | TEST-004 | P1 | `TODO` | Add public-header self-containment checks | Each supported public header compiles in an otherwise minimal translation unit. |
  * | TEST-005 | P1 | `TODO` | Add warning and sanitizer jobs | Supported native compilers run an agreed warning set; AddressSanitizer and UndefinedBehaviorSanitizer pass where available. |
- * | TEST-006 | P1 | `TODO` | Finish the coverage workflow | Coverage uses a supported compiler, produces a readable report, records a baseline, and has an agreed release threshold; otherwise the public option is removed from v1.0.0. |
+ * | TEST-006 | P1 | `TODO` | Finish the coverage workflow | Coverage uses a supported compiler, produces a readable report, records a baseline, and has an agreed 1.x quality threshold; otherwise the public option is removed. |
  *
  * @section FoundationReleaseV1M4 M4 - Package and Workflow Hardening
  *
@@ -147,34 +147,35 @@
  *
  * | ID | Priority | State | Task | Acceptance criteria / evidence |
  * | -- | -------- | ----- | ---- | ------------------------------ |
- * | VAL-001 | P0 | `TODO` | Validate macOS arm64 | Complete Debug, Release, tests, examples, export, architecture inspection, launcher, and external consumer checklist. |
+ * | VAL-001 | P0 | `IN PROGRESS` | Validate macOS arm64 | On macOS 15.3.2 Arm64 with AppleClang 16.0.0, CMake 4.1.1, and Ninja 1.12.1, a clean tree passed 122/122 Debug and 122/122 Release tests plus the 1/1 isolated package consumer. `libFoundation.a` is Arm64, the export contains no Debug artifact, and only `IMPORTED_LOCATION_RELEASE` is present. Examples and launcher acceptance remain. |
  * | VAL-002 | P0 | `TODO` | Validate macOS x64 | Cross-build and inspect x86-64 artifacts; run tests/consumer through Rosetta or on Intel hardware. |
- * | VAL-003 | P0 | `TODO` | Validate Windows MSVC x64 | Complete both configurations, non-zero tests, Release export, launcher, archive inspection, and external consumer. |
- * | VAL-004 | P0 | `TODO` | Validate Windows Clang x64 | Complete the same evidence using the Clang preset and toolchain. |
- * | VAL-005 | P0 | `TODO` | Validate Linux x64 | GCC and Clang CI jobs complete both configurations, package checks, and consumers. |
- * | VAL-006 | P1 | `TODO` | Validate Linux arm64 / Raspberry Pi | Native GCC/Clang build, tests, export, and consumer pass on an Arm64 Linux environment. |
- * | VAL-007 | P0 | `TODO` | Validate AVR ATmega328P | Debug/Release compile, Release package, consumer ELF, size/architecture inspection, and board or emulator smoke result are recorded. |
+ * | VAL-003 | P0 | `IN PROGRESS` | Validate Windows MSVC x64 | The v1.2.0 hosted job passed non-zero Debug/Release tests, Release export, and the external package consumer. Archive inspection plus examples/launcher acceptance on Windows remain. |
+ * | VAL-004 | P0 | `IN PROGRESS` | Validate Windows Clang x64 | The v1.2.0 hosted Clang job passed the same tests, export, and consumer. Archive inspection plus examples/launcher acceptance on Windows remain. |
+ * | VAL-005 | P0 | `IN PROGRESS` | Validate Linux x64 | GCC and Clang CI jobs completed both configurations, package checks, and consumers for v1.2.0. Local examples/launcher acceptance and a durable evidence record remain. |
+ * | VAL-006 | P1 | `IN PROGRESS` | Validate Linux arm64 / Raspberry Pi | Native `ubuntu-24.04-arm` GCC and Clang jobs now run both configurations, export, and package consumers. A green hosted run is required; Raspberry Pi-specific consumer/hardware evidence remains separate. |
+ * | VAL-007 | P0 | `IN PROGRESS` | Validate AVR ATmega328P | A clean local AVR-GCC 9.4.0 run built Debug and Release, regenerated the Release-only package, and confirmed `elf32-avr` / `avr:5` members plus `IMPORTED_LOCATION_RELEASE`. Consumer ELF link/size and board or emulator execution remain. |
  * | VAL-008 | P0 | `TODO` | Validate STM32 | All advertised profiles compile and package; at least one real firmware consumer links and executes on representative hardware. |
- * | VAL-009 | P1 | `TODO` | Decide PSoC 5LP status | Exact PSoC toolchain/consumer evidence promotes it to supported; otherwise v1.0.0 explicitly marks it experimental. |
+ * | VAL-009 | P1 | `TODO` | Decide PSoC 5LP status | Exact PSoC toolchain/consumer evidence promotes it to supported; until then it remains experimental. |
  *
  * Store each platform's command log using the record format in
  * @ref FoundationValidationReport. The checklist in
  * @ref Foundation_Workflows_DesktopValidation remains the detailed procedure;
  * this backlog records release status rather than duplicating its commands.
  *
- * @section FoundationReleaseV1M6 M6 - Release Candidate and Final Release
+ * @section FoundationReleaseV1M6 M6 - Sustained 1.x Releases
  *
  * | ID | Priority | State | Task | Acceptance criteria / evidence |
  * | -- | -------- | ----- | ---- | ------------------------------ |
- * | REL-001 | P0 | `TODO` | Freeze release documentation | README, Doxygen, changelog, support table, license, examples, and package instructions match the candidate. |
- * | REL-002 | P0 | `TODO` | Publish `v1.0.0-rc.1` | RC tag is created from a clean, green commit and no new features enter after the tag. |
- * | REL-003 | P0 | `TODO` | Re-run the complete release matrix | Required CI, local platform, package-consumer, and hardware evidence passes on the exact RC commit. |
- * | REL-004 | P0 | `IN PROGRESS` | Publish `v1.0.0` | @ref Foundation_Workflows_ReleasePackages now builds, consumer-validates, archives, checksums, and publishes all five native packages from a matching version tag. [Run 36192891708](https://github.com/ChecheRomo96/Foundation/actions/runs/36192891708) passed the complete non-publishing rehearsal against `v1.1.0`; the task remains open until the approved final tag and its downloadable Release assets exist. |
+ * | REL-001 | P0 | `IN PROGRESS` | Keep release documentation synchronized | README, Doxygen, changelog, support table, license, examples, and package instructions must match the current release and collected evidence. |
+ * | REL-002 | P0 | `DEFERRED` | Adopt a release-candidate phase | Versions 1.1.0 and 1.2.0 were published directly from green tagged commits. Use an RC for a future release when compatibility or platform risk justifies it. |
+ * | REL-003 | P0 | `DONE` | Run the native release matrix | Native CI and package-consumer validation passed on the exact `v1.2.0` commit in runs 36194411008 and 36194693563. Embedded and hardware evidence remains tracked separately. |
+ * | REL-004 | P0 | `DONE` | Publish the current release | @ref Foundation_Workflows_ReleasePackages published five native `v1.2.0` archives and five verified SHA-256 files in [run 36194693563](https://github.com/ChecheRomo96/Foundation/actions/runs/36194693563). |
  * | REL-005 | P0 | `TODO` | Prove downstream readiness | A clean external project consumes the released tag/package without repository-relative paths or unreleased files. |
  *
  * @section FoundationReleaseV1Gates Release Gates
  *
- * Every item below must be checked before `v1.0.0`:
+ * Use the gates below before declaring a target `SUPPORTED`, granting external
+ * use, or publishing a release whose scope depends on that evidence:
  *
  * - [ ] All P0 tasks are `DONE`; remaining P1 tasks are either `DONE` or
  *       explicitly `DEFERRED` with a documented limitation.

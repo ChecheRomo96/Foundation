@@ -1,0 +1,139 @@
+/**
+ * @defgroup Foundation_Workflows_LegalReview License and Ownership Review
+ * @ingroup Foundation_Workflows_ReleaseV1
+ * @brief Interim restrictions and the evidence packet required for legal review.
+ *
+ * @warning This page is a project-management record, not legal advice. Only a
+ * qualified legal professional reviewing the applicable facts and agreements
+ * can approve the final license and distribution model.
+ *
+ * @section FoundationLegalReviewCurrent Current Position
+ *
+ * | Field | Current state |
+ * | ----- | ------------- |
+ * | Repository visibility | Public on GitHub |
+ * | Source and documentation | Visible, but proprietary |
+ * | External permission | None granted without a separate signed agreement |
+ * | Published binaries | Five native Foundation 1.2.0 packages |
+ * | Current notice | `LICENSE`: All Rights Reserved / No License Granted |
+ * | Final license decision | `BLOCKED` pending qualified legal review |
+ *
+ * Public visibility, a GitHub release, a downloadable archive, generated
+ * documentation, and a CMake package do not by themselves grant permission to
+ * use Foundation. The current `LICENSE` applies to source, headers, examples,
+ * documentation, build files, and binaries. GitHub-hosting rights that may be
+ * required by GitHub's terms are not treated here as a general software
+ * license.
+ *
+ * @section FoundationLegalReviewGuardrails Interim Guardrails
+ *
+ * Until the review is complete:
+ *
+ * - do not describe Foundation as open source, freeware, public domain, or
+ *   generally available for use;
+ * - do not grant an external-use exception in README, package metadata,
+ *   release notes, email, or chat unless it is a deliberate written agreement;
+ * - keep `LICENSE`, README, generated documentation, and release-package text
+ *   consistent;
+ * - do not accept third-party code contributions until ownership and
+ *   contribution terms have been selected;
+ * - keep third-party test/build dependencies out of Foundation release
+ *   packages unless their notices and redistribution terms are reviewed;
+ * - record every source or binary distribution already made, including its
+ *   date, recipient, version, and accompanying terms.
+ *
+ * These guardrails reduce ambiguity; they do not cure an ownership or prior
+ * licensing problem.
+ *
+ * @section FoundationLegalReviewFacts Repository Facts Collected
+ *
+ * The following facts are reproducible from the repository and should be
+ * included in the review packet:
+ *
+ * - the Git history currently contains two author identities:
+ *   `ChecheRomo96 <josemanuel.romo.96@gmail.com>` and
+ *   `José Manuel Romo <79122732+ChecheRomo96@users.noreply.github.com>`;
+ * - the repository notice names José Manuel Romo as the 2026 copyright holder;
+ * - GoogleTest 1.18.0 is fetched from a pinned commit only when repository
+ *   testing is enabled, and GoogleTest installation is disabled;
+ * - release packages contain Foundation headers, the Release library, CMake
+ *   package metadata, `LICENSE`, README, and CHANGELOG; examples are optional
+ *   export artifacts rather than test dependencies;
+ * - the published Foundation 1.2.0 release contains five native packages and
+ *   their checksums;
+ * - GitHub Actions uses external actions to check out source, transfer
+ *   artifacts, and deploy documentation; those tools are workflow
+ *   dependencies, not Foundation library contents.
+ *
+ * These observations are not a complete provenance audit. In particular, Git
+ * authorship and a copyright notice do not independently prove ownership.
+ *
+ * @section FoundationLegalReviewCounsel Questions for Counsel
+ *
+ * Counsel should resolve and document at least the following:
+ *
+ * 1. **Ownership and employment obligations.** Confirm whether any invention
+ *    assignment, employment, contractor, university, client, or confidentiality
+ *    agreement could cover the project. Record when, where, on whose equipment,
+ *    and within which role the relevant code was created.
+ * 2. **Code provenance.** Identify code copied, adapted, generated, or
+ *    reimplemented from older personal projects, employers, clients, books,
+ *    forums, libraries, or generated output. Preserve the source and license of
+ *    every permitted third-party portion.
+ * 3. **Contributors.** Confirm whether anyone other than the named owner
+ *    contributed code, design, documentation, examples, or assets and whether
+ *    written assignments or contribution terms exist.
+ * 4. **Prior grants and distributions.** Review private shares, published Git
+ *    history, package downloads, forks, messages, and earlier license files for
+ *    permissions that may already have been granted.
+ * 5. **Dependency and notice obligations.** Review build, test, documentation,
+ *    and CI dependencies and determine which notices, source offers, or other
+ *    obligations apply to distributed artifacts or generated documentation.
+ * 6. **Names and marks.** Confirm that `Foundation` and any future repository
+ *    or product branding do not create an unacceptable trademark or
+ *    source-identification risk.
+ * 7. **Intended business model.** Choose whether Foundation will remain
+ *    proprietary, become source-available, use a recognized open-source
+ *    license, or use a dual/commercial model. Define permitted evaluation,
+ *    internal, educational, embedded-product, and redistribution scenarios.
+ * 8. **Warranty, liability, export, and jurisdiction terms.** Select provisions
+ *    appropriate to the intended users and distribution countries rather than
+ *    assuming the interim disclaimer is sufficient everywhere.
+ *
+ * @section FoundationLegalReviewPacket Evidence Packet Checklist
+ *
+ * Before the consultation, collect:
+ *
+ * - [ ] applicable employment, invention-assignment, contractor, NDA, and
+ *       school agreements covering the development period;
+ * - [ ] a dated development history identifying personal versus third-party
+ *       equipment, accounts, time, and repositories;
+ * - [ ] a list of imported or rewritten code and its original location;
+ * - [ ] the complete contributor/author list and any written assignments;
+ * - [ ] all historical `LICENSE`, README, package, and release texts;
+ * - [ ] the dependency inventory with versions, purposes, licenses, and whether
+ *       each dependency is shipped;
+ * - [ ] a list of prior recipients, downloads, private distributions, and
+ *       permissions communicated outside the repository;
+ * - [ ] the desired use cases and restrictions for Foundation, downstream
+ *       libraries, firmware products, precompiled libraries, and source
+ *       distributions;
+ * - [ ] the countries and entity/person that will own and distribute releases.
+ *
+ * @section FoundationLegalReviewExit Exit Criteria
+ *
+ * `V1-003` remains `BLOCKED` until all of these are available:
+ *
+ * - [ ] written confirmation of ownership and authority to license the complete
+ *       repository;
+ * - [ ] a completed third-party provenance and notice review;
+ * - [ ] an approved license text and distribution model;
+ * - [ ] approved contribution terms or a documented no-contributions policy;
+ * - [ ] consistent license metadata in the repository, documentation, package
+ *       contents, and release process;
+ * - [ ] a recorded effective version/date and migration plan for already
+ *       published material.
+ *
+ * Replacing the interim notice is a deliberate future change. CI, test, and
+ * package success cannot close this legal gate.
+ */
