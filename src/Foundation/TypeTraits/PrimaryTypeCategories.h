@@ -6,7 +6,7 @@
 #include "HelperClasses.h"
 #include "TypeProperties.h"
 
-namespace Foundation::TypeTraits {
+namespace Foundation { namespace TypeTraits {
 
     /** @cond FOUNDATION_INTERNAL */
     namespace Detail {
@@ -246,75 +246,101 @@ namespace Foundation::TypeTraits {
     struct is_void
         : bool_constant<Detail::is_void_backend<remove_cv_t<T>>::value> {};
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_array<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Primary */
     template <typename T>
     inline constexpr bool is_array_v = is_array<T>::value;
+    #endif
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_class<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Primary */
     template <typename T>
     inline constexpr bool is_class_v = is_class<T>::value;
+    #endif
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_enum<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Primary */
     template <typename T>
     inline constexpr bool is_enum_v = is_enum<T>::value;
+    #endif
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_floating_point<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Primary */
     template <typename T>
     inline constexpr bool is_floating_point_v = is_floating_point<T>::value;
+    #endif
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_function<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Primary */
     template <typename T>
     inline constexpr bool is_function_v = is_function<T>::value;
+    #endif
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_integral<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Primary */
     template <typename T>
     inline constexpr bool is_integral_v = is_integral<T>::value;
+    #endif
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_lvalue_reference<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Primary */
     template <typename T>
     inline constexpr bool is_lvalue_reference_v =
         is_lvalue_reference<T>::value;
+    #endif
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_member_function_pointer<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Primary */
     template <typename T>
     inline constexpr bool is_member_function_pointer_v =
         is_member_function_pointer<T>::value;
+    #endif
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_member_object_pointer<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Primary */
     template <typename T>
     inline constexpr bool is_member_object_pointer_v =
         is_member_object_pointer<T>::value;
+    #endif
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_pointer<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Primary */
     template <typename T>
     inline constexpr bool is_pointer_v = is_pointer<T>::value;
+    #endif
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_rvalue_reference<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Primary */
     template <typename T>
     inline constexpr bool is_rvalue_reference_v =
         is_rvalue_reference<T>::value;
+    #endif
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_union<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Primary */
     template <typename T>
     inline constexpr bool is_union_v = is_union<T>::value;
+    #endif
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_void<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Primary */
     template <typename T>
     inline constexpr bool is_void_v = is_void<T>::value;
+    #endif
 
-}
+}}
 
 #endif // FOUNDATION_TYPE_TRAITS_PRIMARY_TYPE_CATEGORIES_H

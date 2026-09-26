@@ -1,7 +1,7 @@
 #ifndef FOUNDATION_UTILS_MOVE_H
 #define FOUNDATION_UTILS_MOVE_H
 
-    namespace Foundation::Utils {
+    namespace Foundation { namespace Utils {
 
         /// @cond INTERNAL
         namespace Detail {
@@ -40,6 +40,6 @@
         Move(T&& value) noexcept {
             return static_cast<typename Detail::RemoveReference<T>::Type&&>(value);
         }
-    }
+    }}
 
 #endif

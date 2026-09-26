@@ -1,3 +1,4 @@
+#include <Foundation.h>
 #include "Shared.h"
 
 namespace {

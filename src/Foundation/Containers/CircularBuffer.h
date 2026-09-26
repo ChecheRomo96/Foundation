@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include "../Utils/Move.h"
 
-namespace Foundation::Containers {
+namespace Foundation { namespace Containers {
 
     /**
      * @brief Fixed-capacity FIFO with circular storage reuse.
@@ -107,6 +107,6 @@ namespace Foundation::Containers {
             _available--;
         }
     };
-}
+}}
 
 #endif

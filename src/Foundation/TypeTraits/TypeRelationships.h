@@ -6,7 +6,7 @@
 #include "TypeProperties.h"
 #include "PrimaryTypeCategories.h"
 
-namespace Foundation::TypeTraits {
+namespace Foundation { namespace TypeTraits {
 
     /** @cond FOUNDATION_INTERNAL */
     namespace Detail {
@@ -46,10 +46,12 @@ namespace Foundation::TypeTraits {
     struct is_same
         : bool_constant<Detail::is_same_backend<T, U>::value> {};
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_same<T, U>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Relationships */
     template <class T, class U>
     inline constexpr bool is_same_v = is_same<T, U>::value;
+    #endif
 
     /**
      * @brief Reports whether `Base` is a base class of `Derived`.
@@ -64,10 +66,12 @@ namespace Foundation::TypeTraits {
     struct is_base_of
         : bool_constant<Detail::is_base_of_backend<Base, Derived>::value> {};
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_base_of<Base, Derived>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Relationships */
     template <class Base, class Derived>
     inline constexpr bool is_base_of_v = is_base_of<Base, Derived>::value;
+    #endif
 
     /** @cond FOUNDATION_INTERNAL */
     namespace Detail {
@@ -390,10 +394,12 @@ namespace Foundation::TypeTraits {
     struct is_convertible
         : bool_constant<Detail::is_convertible_backend<From, To>::value> {};
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_convertible<From, To>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Relationships */
     template <class From, class To>
     inline constexpr bool is_convertible_v = is_convertible<From, To>::value;
+    #endif
 
     /**
      * @brief Reports whether a callable can be invoked with the supplied arguments.
@@ -409,10 +415,12 @@ namespace Foundation::TypeTraits {
     struct is_invocable
         : bool_constant<Detail::is_invocable_backend<Fn, Args...>::value> {};
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_invocable<Fn, Args...>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Relationships */
     template <class Fn, class... Args>
     inline constexpr bool is_invocable_v = is_invocable<Fn, Args...>::value;
+    #endif
 
     /**
      * @brief Reports whether an invocation is valid and non-throwing.
@@ -426,11 +434,13 @@ namespace Foundation::TypeTraits {
             Detail::is_nothrow_invocable_backend<Fn, Args...>::value
         > {};
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_nothrow_invocable<Fn, Args...>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Relationships */
     template <class Fn, class... Args>
     inline constexpr bool is_nothrow_invocable_v =
         is_nothrow_invocable<Fn, Args...>::value;
+    #endif
 
     /**
      * @brief Reports whether an implicit conversion is non-throwing.
@@ -449,12 +459,14 @@ namespace Foundation::TypeTraits {
             is_void<From>::value && is_void<To>::value
         > {};
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_nothrow_convertible<From, To>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Relationships */
     template <class From, class To>
     inline constexpr bool is_nothrow_convertible_v =
         is_nothrow_convertible<From, To>::value;
+    #endif
 
-}
+}}
 
 #endif // FOUNDATION_TYPE_TRAITS_TYPE_RELATIONSHIPS_H

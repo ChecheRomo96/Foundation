@@ -92,8 +92,9 @@
  *
  * @section FoundationTypeTraitsContract Current Contract
  *
- * - The project language baseline is C++17, so the documented `_v` forms are
- *   available on supported builds.
+ * - The `_v` forms require C++17 inline variables. They are available in every
+ *   CMake and direct-source build, and absent from Arduino source builds
+ *   compiled below C++17; use the class form's `::value` there.
  * - Traits are evaluated at compile time and do not allocate memory.
  * - Foundation automatically uses the C++ standard `<type_traits>` backend
  *   when the header and the required C++17 invocation traits are available.

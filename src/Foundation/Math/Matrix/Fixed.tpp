@@ -3,7 +3,7 @@
 #elif !defined(FOUNDATION_MATH_MATRIX_FIXED_TPP)
 #define FOUNDATION_MATH_MATRIX_FIXED_TPP
 
-namespace Foundation::Math::Matrix {
+namespace Foundation { namespace Math { namespace Matrix {
 
 template <typename T, unsigned int Rows, unsigned int Cols>
 Fixed<T, Rows, Cols>::Fixed() {
@@ -275,6 +275,6 @@ Fixed<T, Rows, Cols> operator*(
     return matrix * scalar;
 }
 
-} // namespace Foundation::Math::Matrix
+}}} // namespace Foundation::Math::Matrix
 
 #endif // FOUNDATION_MATH_MATRIX_FIXED_TPP

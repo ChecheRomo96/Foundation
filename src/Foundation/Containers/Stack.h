@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include "../Utils/Move.h"
 
-namespace Foundation::Containers {
+namespace Foundation { namespace Containers {
 
     /**
      * @brief Fixed-capacity LIFO stack backed by caller-provided storage.
@@ -76,6 +76,6 @@ namespace Foundation::Containers {
         /** @brief Clears logical contents without destroying array elements. */
         void Reset() { _count = 0; }
     };
-}
+}}
 
 #endif

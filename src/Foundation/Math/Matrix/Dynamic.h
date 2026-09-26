@@ -1,7 +1,7 @@
 #ifndef FOUNDATION_MATH_MATRIX_DYNAMIC_H
 #define FOUNDATION_MATH_MATRIX_DYNAMIC_H
 
-namespace Foundation::Math::Matrix {
+namespace Foundation { namespace Math { namespace Matrix {
 
 /**
  * @class Dynamic
@@ -193,7 +193,7 @@ namespace Detail {
 template <typename T>
 Dynamic<T> operator*(T scalar, const Dynamic<T>& matrix);
 
-} // namespace Foundation::Math::Matrix
+}}} // namespace Foundation::Math::Matrix
 
 #include <Foundation/Math/Matrix/Dynamic.tpp>
 

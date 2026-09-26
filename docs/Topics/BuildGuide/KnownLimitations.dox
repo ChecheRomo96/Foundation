@@ -52,7 +52,6 @@
  * - AVR consumer ELF linkage/size and AVR board or emulator execution;
  * - Arm/STM32 firmware linkage and target execution beyond hosted package
  *   cross-compilation;
- * - Arduino Uno source-mode sketch compilation;
  * - representative PSoC product-toolchain integration.
  *
  * Docker may reproduce Linux and some cross-compilation environments. It does
@@ -91,9 +90,11 @@
  *
  * @section FoundationKnownLimitationsLanguage Runtime and API Boundaries
  *
- * - Every integration mode requires a C++17-capable compiler. Foundation avoids
- *   requiring the complete C++ standard library, but C++14 and older are not
- *   supported.
+ * - CMake package and direct-source builds require a C++17-capable compiler;
+ *   C++14 and older are rejected. Arduino source builds accept C++11, where
+ *   relaxed-`constexpr` mutators are ordinary inline functions and the `_v`
+ *   TypeTraits variables are unavailable. Foundation avoids requiring the
+ *   complete C++ standard library.
  * - TypeTraits intentionally implements the subset used and documented by
  *   Foundation; it is not a complete replacement for `<type_traits>`.
  * - Containers and TaskScheduler use caller-owned, fixed-capacity storage.
