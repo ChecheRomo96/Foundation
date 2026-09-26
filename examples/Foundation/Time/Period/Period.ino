@@ -1,3 +1,4 @@
+#include <Foundation.h>
 #include "Shared.h"
 
 namespace {
@@ -5,7 +6,7 @@ namespace {
     void PrintRatio(
         const char* name,
         const char* code,
-        const Foundation::Math::Ratio& ratio
+        const Foundation::Math::UnsignedRatio& ratio
     ) {
         Serial.println(name);
         Serial.println("------------------------------------------------------------");

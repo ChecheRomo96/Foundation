@@ -13,10 +13,11 @@ Release packages passed the tagged build, test, export, checksum, and standalone
 package-consumer workflow. Other presets remain candidates or experimental
 until their documented validation gates pass.
 
-Foundation 1.2.0 requires a C++17-capable compiler in every integration mode,
-including CMake packages, direct source builds, and Arduino-style source builds.
-The language requirement does not imply a dependency on the complete C++
-standard library.
+Foundation 1.2.0 requires a C++17-capable compiler for CMake packages and direct
+source builds. Arduino source builds (`ARDUINO` defined) accept C++11 so stock
+Arduino cores work unmodified; the C++17-only `_v` TypeTraits variables are
+unavailable there. The language requirement does not imply a dependency on the
+complete C++ standard library.
 
 ## Modules
 
@@ -110,6 +111,12 @@ Copy this folder into your Arduino `libraries` folder and include:
 ```cpp
 #include <Foundation.h>
 ```
+
+Include `<Foundation.h>` (or a root `Foundation_<Module>.h`) in the sketch
+before any nested `<Foundation/...>` header so the Arduino builder finds the
+library. The stock Arduino AVR core works as installed; no compiler overrides
+are needed. `./scripts/test-arduino.sh` compiles every example sketch for the
+Arduino Uno with the unmodified core.
 
 ## License
 

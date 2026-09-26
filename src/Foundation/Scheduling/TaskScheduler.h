@@ -5,7 +5,7 @@
 #include "Task.h"
 #include "../Time/Clock.h"
 
-namespace Foundation::Scheduling {
+namespace Foundation { namespace Scheduling {
 
     /**
      * @brief Fixed-capacity cooperative scheduler driven by a Clock.
@@ -88,6 +88,6 @@ namespace Foundation::Scheduling {
 
     /** @brief Default 32-bit cooperative scheduler specialization. */
     using TaskScheduler = BasicTaskScheduler<>;
-}
+}}
 
 #endif

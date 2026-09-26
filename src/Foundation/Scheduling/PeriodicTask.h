@@ -3,7 +3,7 @@
 
 #include "Task.h"
 
-namespace Foundation::Scheduling {
+namespace Foundation { namespace Scheduling {
 
     /**
      * @brief Task that runs immediately and then at a fixed tick interval.
@@ -69,6 +69,6 @@ namespace Foundation::Scheduling {
 
     /** @brief Default 32-bit periodic task specialization. */
     using PeriodicTask = BasicPeriodicTask<>;
-}
+}}
 
 #endif

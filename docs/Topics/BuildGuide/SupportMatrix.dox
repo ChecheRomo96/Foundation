@@ -87,7 +87,7 @@
  *
  * | Integration | 1.x level | Scope |
  * | ----------- | ---------- | ----- |
- * | Arduino Uno / ATmega328P source mode | `RELEASE CANDIDATE` | The documented sketches must compile with the declared Arduino AVR core. |
+ * | Arduino Uno / ATmega328P source mode | `RELEASE CANDIDATE` | Every example sketch must compile warning-free with the unmodified Arduino AVR core (`arduino:avr:uno`, C++11) through `scripts/test-arduino.sh`. |
  * | Other Arduino cores | `EXPERIMENTAL` | Source-compatible by design, but not validated as a group. Each architecture needs explicit evidence. |
  * | Direct source inclusion in a higher-level CMake project | `EXPERIMENTAL` | The supported v1 consumer path is the exported package; source inclusion still requires a dedicated consumer contract. |
  * | PIC | `DEFERRED` | No current preset, toolchain, package, or compatibility promise. |

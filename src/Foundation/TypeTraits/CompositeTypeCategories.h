@@ -7,7 +7,7 @@
 #include "PrimaryTypeCategories.h"
 #include "TypeRelationships.h"
 
-namespace Foundation::TypeTraits {
+namespace Foundation { namespace TypeTraits {
 
     /** @cond FOUNDATION_INTERNAL */
     namespace Detail {
@@ -170,47 +170,63 @@ namespace Foundation::TypeTraits {
             !is_same<remove_cv_t<T>, bool>::value
         > {};
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_arithmetic<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Composite */
     template <typename T>
     inline constexpr bool is_arithmetic_v = is_arithmetic<T>::value;
+    #endif
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_fundamental<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Composite */
     template <typename T>
     inline constexpr bool is_fundamental_v = is_fundamental<T>::value;
+    #endif
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_member_pointer<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Composite */
     template <typename T>
     inline constexpr bool is_member_pointer_v = is_member_pointer<T>::value;
+    #endif
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_object<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Composite */
     template <typename T>
     inline constexpr bool is_object_v = is_object<T>::value;
+    #endif
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_reference<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Composite */
     template <typename T>
     inline constexpr bool is_reference_v = is_reference<T>::value;
+    #endif
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_scalar<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Composite */
     template <typename T>
     inline constexpr bool is_scalar_v = is_scalar<T>::value;
+    #endif
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_compound<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Composite */
     template <typename T>
     inline constexpr bool is_compound_v = is_compound<T>::value;
+    #endif
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_unsigned_integer<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Composite */
     template <typename T>
     inline constexpr bool is_unsigned_integer_v =
         is_unsigned_integer<T>::value;
+    #endif
 
-}
+}}
 
 #endif // FOUNDATION_TYPE_TRAITS_COMPOSITE_TYPE_CATEGORIES_H

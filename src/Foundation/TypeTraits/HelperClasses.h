@@ -27,7 +27,7 @@
         #define FOUNDATION_DETAIL_HAS_STD_TYPE_TRAITS 0
     #endif
 
-    namespace Foundation::TypeTraits {
+    namespace Foundation { namespace TypeTraits {
 
             /**
              * @brief Wraps a typed compile-time constant.
@@ -67,6 +67,6 @@
              * @ingroup Foundation_TypeTraits_Helpers
              */
             using false_type = integral_constant<bool, false>;
-    }
+    }}
 
 #endif//FOUNDATION_TYPE_TRAITS_HELPER_CLASSES_H

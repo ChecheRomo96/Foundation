@@ -15,16 +15,11 @@
              * argument is `0`, the other argument is returned, and
              * `GCD(0, 0)` is `0`.
              *
-             * Uses the iterative Euclidean algorithm. The function is
+             * Uses the tail-recursive Euclidean algorithm. The function is
              * `constexpr` and `noexcept` and accepts the full `uint32_t` range.
              */
             constexpr uint32_t GCD(uint32_t a, uint32_t b) noexcept {
-                while (b != 0) {
-                    const uint32_t temp = b;
-                    b = a % b;
-                    a = temp;
-                }
-                return a;
+                return (b == 0) ? a : GCD(b, a % b);
             }
 
             /**
@@ -44,12 +39,11 @@
              * behavior for any input, including `INT32_MIN % -1`.
              */
             constexpr int32_t FloorMod(int32_t value, int32_t modulus) noexcept {
-                if (modulus <= 0) {
-                    return 0;
-                }
-
-                const int32_t remainder = value % modulus;
-                return (remainder < 0) ? (remainder + modulus) : remainder;
+                return (modulus <= 0)
+                    ? 0
+                    : ((value % modulus) < 0)
+                        ? (value % modulus) + modulus
+                        : (value % modulus);
             }
 
             /**
@@ -74,13 +68,11 @@
              * `divisor <= 0` also covers division by zero and `INT32_MIN / -1`.
              */
             constexpr int32_t FloorDiv(int32_t value, int32_t divisor) noexcept {
-                if (divisor <= 0) {
-                    return 0;
-                }
-
-                const int32_t quotient = value / divisor;
-                const int32_t remainder = value % divisor;
-                return (remainder < 0) ? (quotient - 1) : quotient;
+                return (divisor <= 0)
+                    ? 0
+                    : ((value % divisor) < 0)
+                        ? (value / divisor) - 1
+                        : (value / divisor);
             }
 
         }

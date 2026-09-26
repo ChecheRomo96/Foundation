@@ -6,7 +6,7 @@
 #ifndef FOUNDATION_MATH_MATRIX_FIXED_H
 #define FOUNDATION_MATH_MATRIX_FIXED_H
 
-namespace Foundation::Math::Matrix {
+namespace Foundation { namespace Math { namespace Matrix {
 
     /**
      * @class Fixed
@@ -205,7 +205,7 @@ namespace Foundation::Math::Matrix {
         const Fixed<T, Rows, Cols>& matrix
     );
 
-} // namespace Foundation::Math::Matrix
+}}} // namespace Foundation::Math::Matrix
 
 #include <Foundation/Math/Matrix/Fixed.tpp>
 

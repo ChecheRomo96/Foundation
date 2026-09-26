@@ -18,7 +18,7 @@
     #define FOUNDATION_DETAIL_MATRIX_HAS_NOTHROW_NEW 0
 #endif
 
-namespace Foundation::Math::Matrix {
+namespace Foundation { namespace Math { namespace Matrix {
 
 namespace Detail {
 
@@ -545,7 +545,7 @@ Dynamic<T> operator*(T scalar, const Dynamic<T>& matrix) {
     return matrix * scalar;
 }
 
-} // namespace Foundation::Math::Matrix
+}}} // namespace Foundation::Math::Matrix
 
 #undef FOUNDATION_DETAIL_MATRIX_HAS_NOTHROW_NEW
 

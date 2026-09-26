@@ -18,20 +18,40 @@
  * @section FoundationBuildArduinoSource Source Mode
  *
  * Arduino should normally use Foundation in source mode.
- * The selected board core and compiler must enable C++17 or newer. Source mode
- * does not relax Foundation's language requirement.
  *
- * Example:
+ * @subsection FoundationBuildArduinoLanguage Language Level
+ *
+ * Stock Arduino cores compile sketches as C++11 (Arduino AVR Boards 1.8.x uses
+ * avr-gcc 7.3.0 with `-std=gnu++11`), and a library cannot change that flag.
+ * When `ARDUINO` is defined, Foundation therefore accepts C++11 instead of its
+ * usual C++17 minimum, so the IDE works without editing the core. Below C++14,
+ * mutators such as `Ratio::SetNumerator()` are ordinary inline functions rather
+ * than `constexpr`; below C++17, the `_v` TypeTraits variables are not declared
+ * (use `::value`). A core that already compiles as C++17 gets the full API.
+ *
+ * @subsection FoundationBuildArduinoIncludes Includes
+ *
+ * The Arduino builder discovers a library only through a header in its `src/`
+ * root. Include `<Foundation.h>` (or a root module header such as
+ * `<Foundation_Math.h>`) in the sketch before any nested header:
  *
  * @code{cpp}
  * #include <Foundation.h>
- * @endcode
- *
- * or:
- *
- * @code{cpp}
  * #include <Foundation/Math/Ratio.h>
  * @endcode
+ *
+ * A sketch that includes only `<Foundation/Math/Ratio.h>` fails with
+ * `No such file or directory` because Foundation is never added to the include
+ * path.
+ *
+ * @subsection FoundationBuildArduinoValidation Validation
+ *
+ * `scripts/test-arduino.sh` compiles every sketch under `examples/Foundation`
+ * for `arduino:avr:uno` from the repository's source layout with the
+ * unmodified core flags, and fails on any warning in Foundation or its
+ * examples because the core's `-fpermissive` otherwise hides type errors. It
+ * is the Arduino source-mode gate; other boards and cores are not validated by
+ * it.
  *
  * @section FoundationBuildArduinoMacros Macros
  *
