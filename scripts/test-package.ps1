@@ -41,6 +41,13 @@ if (-not (Test-Path -LiteralPath $packagePrefix -PathType Container)) {
 }
 
 Assert-FoundationConfigured -Preset $Preset
+& "$PSScriptRoot/validate-package.ps1" `
+    -Preset $Preset `
+    -Package $packagePrefix
+if ($LASTEXITCODE -ne 0) {
+    exit $LASTEXITCODE
+}
+
 $foundationBuildDirectory = Get-FoundationBuildDirectory -Preset $Preset
 $foundationCache = Join-Path $foundationBuildDirectory "CMakeCache.txt"
 $consumerSourceDirectory = Join-Path $script:FoundationRoot "tests/PackageConsumer"

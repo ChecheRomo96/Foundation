@@ -52,41 +52,14 @@ jobs:
           ./scripts/build.sh "$preset" \
             --config Release --parallel 4 --target Foundation
 
-      - name: Export and inspect Release package
+      - name: Export and verify Release package identity
         shell: bash
         run: |
           set -euo pipefail
           preset=atmega328p_avrgcc_avr5
-          package_root="dist/$preset"
 
           ./scripts/export.sh "$preset" --fresh --parallel 4
-
-          archive="$package_root/lib/libFoundation.a"
-          targets="$package_root/lib/cmake/Foundation/FoundationTargets-release.cmake"
-          build_info="$package_root/lib/cmake/Foundation/FoundationBuildInfo.cmake"
-
-          test -f "$archive"
-          test -f "$targets"
-          test -f "$build_info"
-          avr-objdump -f "$archive" | tee archive-inspection.txt
-          grep -F 'file format elf32-avr' archive-inspection.txt
-          grep -F 'architecture: avr:5' archive-inspection.txt
-          grep -F 'IMPORTED_LOCATION_RELEASE' "$targets"
-
-          if find "$package_root" -type f \
-              \( -name '*_d.a' -o -name '*_d.lib' \
-                 -o -name 'FoundationTargets-debug.cmake' \) \
-              -print -quit | grep -q .; then
-            echo 'The AVR package contains a Debug artifact' >&2
-            exit 1
-          fi
-
-          grep -F 'set(Foundation_PLATFORM "atmega328p_avrgcc_avr5")' \
-            "$build_info"
-          grep -F 'set(Foundation_SYSTEM_NAME "Generic")' "$build_info"
-          grep -F 'set(Foundation_SYSTEM_PROCESSOR "avr5")' "$build_info"
-          grep -F 'set(Foundation_AVR_MCU "atmega328p")' "$build_info"
-          grep -F 'set(Foundation_AVR_ARCHITECTURE "avr5")' "$build_info"
+          ./scripts/validate-package.sh "$preset"
 
       - name: Upload validated AVR package
         uses: actions/upload-artifact@v7
@@ -102,7 +75,6 @@ jobs:
         with:
           name: failure-avr-${{ github.run_attempt }}
           path: |
-            archive-inspection.txt
             build/atmega328p_avrgcc_avr5/CMakeCache.txt
             build/atmega328p_avrgcc_avr5/CMakeFiles/CMakeConfigureLog.yaml
             dist/atmega328p_avrgcc_avr5/
@@ -139,81 +111,20 @@ jobs:
           arm-none-eabi-g++ -print-sysroot
           uname -a
 
-      - name: Build, export, and inspect every Arm profile
+      - name: Build, export, and verify every Arm package identity
         shell: bash
         run: |
           set -euo pipefail
 
           validate_profile() {
             preset=$1
-            package_root="dist/$preset"
-
-            case "$preset" in
-              *cortex_m0plus_soft)
-                expected_cpu=cortex-m0plus
-                expected_float_abi=soft
-                expected_fpu=
-                ;;
-              *cortex_m3_soft)
-                expected_cpu=cortex-m3
-                expected_float_abi=soft
-                expected_fpu=
-                ;;
-              *cortex_m4f_hard)
-                expected_cpu=cortex-m4
-                expected_float_abi=hard
-                expected_fpu=fpv4-sp-d16
-                ;;
-              *cortex_m7f_hard)
-                expected_cpu=cortex-m7
-                expected_float_abi=hard
-                expected_fpu=fpv5-d16
-                ;;
-              *)
-                echo "Unknown Arm profile: $preset" >&2
-                exit 1
-                ;;
-            esac
 
             ./scripts/build.sh "$preset" \
               --config Debug --fresh --parallel 4 --target Foundation
             ./scripts/build.sh "$preset" \
               --config Release --parallel 4 --target Foundation
             ./scripts/export.sh "$preset" --fresh --parallel 4
-
-            archive="$package_root/lib/libFoundation.a"
-            targets="$package_root/lib/cmake/Foundation/FoundationTargets-release.cmake"
-            build_info="$package_root/lib/cmake/Foundation/FoundationBuildInfo.cmake"
-            inspection="build/${preset}-archive-inspection.txt"
-
-            test -f "$archive"
-            test -f "$targets"
-            test -f "$build_info"
-            arm-none-eabi-objdump -f "$archive" | tee "$inspection"
-            grep -F 'file format elf32-littlearm' "$inspection"
-            grep -F 'architecture: arm' "$inspection"
-            grep -F 'IMPORTED_LOCATION_RELEASE' "$targets"
-
-            if find "$package_root" -type f \
-                \( -name '*_d.a' -o -name '*_d.lib' \
-                   -o -name 'FoundationTargets-debug.cmake' \) \
-                -print -quit | grep -q .; then
-              echo "The $preset package contains a Debug artifact" >&2
-              exit 1
-            fi
-
-            grep -F "set(Foundation_PLATFORM \"$preset\")" "$build_info"
-            grep -F 'set(Foundation_SYSTEM_NAME "Generic")' "$build_info"
-            grep -F \
-              "set(Foundation_SYSTEM_PROCESSOR \"$expected_cpu\")" \
-              "$build_info"
-            grep -F "set(Foundation_ARM_CPU \"$expected_cpu\")" \
-              "$build_info"
-            grep -F \
-              "set(Foundation_ARM_FLOAT_ABI \"$expected_float_abi\")" \
-              "$build_info"
-            grep -F "set(Foundation_ARM_FPU \"$expected_fpu\")" \
-              "$build_info"
+            ./scripts/validate-package.sh "$preset"
           }
 
           for preset in \
@@ -248,7 +159,6 @@ jobs:
         with:
           name: failure-arm-${{ github.run_attempt }}
           path: |
-            build/*-archive-inspection.txt
             build/*/CMakeCache.txt
             build/*/CMakeFiles/CMakeConfigureLog.yaml
             dist/arm_none_eabi_*/

@@ -35,14 +35,17 @@
  * The scripts perform these steps:
  *
  * 1. invoke the normal export workflow unless package reuse was requested;
- * 2. obtain the generator, native compiler, and architecture from the selected
+ * 2. run the package-identity validator against the configured build and actual
+ *    archive, rejecting missing/extra headers, metadata, archives, Debug files,
+ *    or an incompatible architecture/ABI;
+ * 3. obtain the generator, native compiler, and architecture from the selected
  *    preset's configured build tree;
- * 3. recreate `build/package-consumer/<preset>` so stale consumer objects
+ * 4. recreate `build/package-consumer/<preset>` so stale consumer objects
  *    cannot hide a package defect;
- * 4. configure `tests/PackageConsumer` with the exported prefix as its only
+ * 5. configure `tests/PackageConsumer` with the exported prefix as its only
  *    allowed Foundation search path;
- * 5. build the consumer in Release through `Foundation::Foundation`;
- * 6. execute its registered CTest and reject a zero-test result.
+ * 6. build the consumer in Release through `Foundation::Foundation`;
+ * 7. execute its registered CTest and reject a zero-test result.
  *
  * The consumer is deliberately a standalone CMake project. It is not added by
  * Foundation's root `add_subdirectory(tests)`, has no source-tree include path,

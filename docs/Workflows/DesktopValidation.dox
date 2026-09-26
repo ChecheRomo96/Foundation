@@ -64,8 +64,9 @@
  * - [ ] Build the `Foundation` target in Release without reconfiguring.
  * - [ ] Confirm the two archives have distinct names and the expected architecture.
  * - [ ] Run one export command; export has no configuration override.
- * - [ ] Confirm that export installed Release and did not install Debug.
- * - [ ] Confirm public headers and all CMake package metadata were installed.
+ * - [ ] Run the package-identity validator; it must confirm exactly one Release
+ *       archive, exact headers/metadata, the expected architecture/ABI, and no
+ *       Debug artifact or import.
  * - [ ] If examples are enabled, confirm only Release executables and launchers
  *       exist in `bin/examples`; record them as examples, never as tests.
  * - [ ] Confirm only the Release imported location exists in the package.
@@ -104,6 +105,7 @@
  * ./scripts/test.ps1 $Preset -Configuration Debug
  * ./scripts/test.ps1 $Preset -Configuration Release
  * ./scripts/export.ps1 $Preset -Fresh
+ * ./scripts/validate-package.ps1 $Preset
  * ./scripts/test-package.ps1 $Preset -SkipExport
  *
  * Test-Path "dist/$Preset/include"
@@ -162,6 +164,7 @@
  * ./scripts/test.sh "$PRESET" --config Debug
  * ./scripts/test.sh "$PRESET" --config Release
  * ./scripts/export.sh "$PRESET" --fresh
+ * ./scripts/validate-package.sh "$PRESET"
  * ./scripts/test-package.sh "$PRESET" --skip-export
  *
  * test -d "dist/$PRESET/include"

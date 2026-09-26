@@ -37,6 +37,10 @@ version 1.2.0 is the current release.
   inspection, coverage, and documentation diagnostics.
 - Strong fresh-state semantics that remove the complete selected build tree,
   with native CI regression checks against stale build and package artifacts.
+- Cross-platform package-identity validation that requires one Release archive,
+  an exact configured header and metadata set, no Debug imports or binaries,
+  matching compiler/ABI metadata, and the expected Mach-O, ELF, AVR, Arm, or
+  COFF architecture before a package consumer or release archive can pass.
 - A license/ownership review packet with interim guardrails, counsel questions,
   evidence checklist, and objective exit criteria.
 
@@ -58,8 +62,8 @@ version 1.2.0 is the current release.
 - Exported packages are static, target-specific, and Release-only. Foundation
   does not currently publish universal binaries, Debug packages, or a binary
   package manager integration.
-- Failure-evidence retention, stale-state hardening, and complete package
-  identity verification remain open.
+- Arduino source-mode validation and physical embedded-target execution remain
+  open; cross-compilation and archive inspection do not replace those gates.
 
 See the
 [online Known Limitations page](https://checheromo96.github.io/Foundation/group__Foundation__BuildGuide__KnownLimitations.html)
