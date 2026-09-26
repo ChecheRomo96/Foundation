@@ -25,6 +25,13 @@ if (-not $Keep -and $customOutput) {
     throw "Custom export paths require -Keep; remove custom destinations explicitly"
 }
 
+if (-not $Keep) {
+    Assert-FoundationDistChild -Path $Output
+    if (Test-Path -LiteralPath $Output) {
+        Remove-Item -LiteralPath $Output -Recurse -Force
+    }
+}
+
 $configureParameters = @{
     Preset = $Preset
 }
@@ -60,13 +67,6 @@ if ($Parallel -gt 0) {
     $buildArguments += @("--parallel", $Parallel.ToString())
 }
 Invoke-FoundationCMake -Arguments $buildArguments
-
-if (-not $Keep) {
-    Assert-FoundationDistChild -Path $Output
-    if (Test-Path -LiteralPath $Output) {
-        Remove-Item -LiteralPath $Output -Recurse -Force
-    }
-}
 
 $installParameters = @{
     Preset = $Preset

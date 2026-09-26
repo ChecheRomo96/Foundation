@@ -101,6 +101,56 @@ jobs:
                   -property installationVersion
           }
 
+      - name: Seed clean-scope state
+        run: >-
+          cmake "-DPRESET=${{ matrix.preset }}" "-DMODE=SEED_BUILD"
+          -P tests/cmake/FreshState.cmake
+
+      - name: Seed clean-scope package state
+        run: >-
+          cmake "-DPRESET=${{ matrix.preset }}" "-DMODE=SEED_DIST"
+          -P tests/cmake/FreshState.cmake
+
+      - name: Clean build tree only
+        if: matrix.platform == 'unix'
+        shell: bash
+        run: ./scripts/clean.sh "${{ matrix.preset }}"
+
+      - name: Clean build tree only
+        if: matrix.platform == 'windows'
+        shell: pwsh
+        run: ./scripts/clean.ps1 "${{ matrix.preset }}"
+
+      - name: Verify build-only clean scope
+        run: >-
+          cmake "-DPRESET=${{ matrix.preset }}" "-DMODE=VERIFY_CLEAN_BUILD"
+          -P tests/cmake/FreshState.cmake
+
+      - name: Reseed clean-scope build state
+        run: >-
+          cmake "-DPRESET=${{ matrix.preset }}" "-DMODE=SEED_BUILD"
+          -P tests/cmake/FreshState.cmake
+
+      - name: Clean build and package trees
+        if: matrix.platform == 'unix'
+        shell: bash
+        run: ./scripts/clean.sh "${{ matrix.preset }}" --dist
+
+      - name: Clean build and package trees
+        if: matrix.platform == 'windows'
+        shell: pwsh
+        run: ./scripts/clean.ps1 "${{ matrix.preset }}" -Dist
+
+      - name: Verify build-and-package clean scope
+        run: >-
+          cmake "-DPRESET=${{ matrix.preset }}" "-DMODE=VERIFY_CLEAN_ALL"
+          -P tests/cmake/FreshState.cmake
+
+      - name: Seed stale build state
+        run: >-
+          cmake "-DPRESET=${{ matrix.preset }}" "-DMODE=SEED_BUILD"
+          -P tests/cmake/FreshState.cmake
+
       - name: Test Debug
         if: matrix.platform == 'unix'
         shell: bash
@@ -133,6 +183,11 @@ jobs:
           -Configuration Release -Parallel 4
           -JUnit "build/${{ matrix.preset }}/test-results/Release.xml"
 
+      - name: Seed stale package state
+        run: >-
+          cmake "-DPRESET=${{ matrix.preset }}" "-DMODE=SEED_DIST"
+          -P tests/cmake/FreshState.cmake
+
       - name: Export and validate Release package
         if: matrix.platform == 'unix'
         shell: bash
@@ -148,6 +203,11 @@ jobs:
           ./scripts/test-package.ps1 "${{ matrix.preset }}"
           -Fresh -Parallel 4
           -JUnit "build/${{ matrix.preset }}/test-results/PackageConsumer.xml"
+
+      - name: Verify fresh build and package state
+        run: >-
+          cmake "-DPRESET=${{ matrix.preset }}" "-DMODE=VERIFY"
+          -P tests/cmake/FreshState.cmake
 
       - name: Upload native failure evidence
         if: failure()

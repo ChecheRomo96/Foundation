@@ -10,10 +10,14 @@ param(
 
 . "$PSScriptRoot/common.ps1"
 
-$arguments = @("--preset", $Preset)
 if ($Fresh) {
-    $arguments += "--fresh"
+    $buildDirectory = Get-FoundationBuildDirectory -Preset $Preset
+    if (Test-Path -LiteralPath $buildDirectory) {
+        Remove-Item -LiteralPath $buildDirectory -Recurse -Force
+    }
 }
+
+$arguments = @("--preset", $Preset)
 $effectiveCMakeArguments = @(
     $CMakeArguments | Where-Object {
         -not [string]::IsNullOrWhiteSpace($_)

@@ -35,6 +35,8 @@ version 1.2.0 is the current release.
 - Optional JUnit output in native and package-consumer test scripts, plus
   failure-only CI artifacts containing available CTest, CMake, package,
   inspection, coverage, and documentation diagnostics.
+- Strong fresh-state semantics that remove the complete selected build tree,
+  with native CI regression checks against stale build and package artifacts.
 - A license/ownership review packet with interim guardrails, counsel questions,
   evidence checklist, and objective exit criteria.
 

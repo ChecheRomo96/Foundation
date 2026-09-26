@@ -75,6 +75,11 @@ if [ "$KEEP" -eq 0 ] && [ "$CUSTOM_OUTPUT" -eq 1 ]; then
     foundation_die "custom export paths require --keep; use clean.sh to remove them explicitly"
 fi
 
+if [ "$KEEP" -eq 0 ]; then
+    foundation_require_safe_dist_child "$OUTPUT"
+    cmake -E remove_directory "$OUTPUT"
+fi
+
 if [ "$FRESH" -eq 1 ]; then
     "$SCRIPT_DIR/configure.sh" "$PRESET" --fresh -- "$@"
 else
@@ -85,11 +90,6 @@ BUILD_DIR=$(foundation_build_dir "$PRESET")
 set -- cmake --build "$BUILD_DIR" --config Release --target FoundationExportArtifacts
 [ -z "$PARALLEL" ] || set -- "$@" --parallel "$PARALLEL"
 "$@"
-
-if [ "$KEEP" -eq 0 ]; then
-    foundation_require_safe_dist_child "$OUTPUT"
-    cmake -E remove_directory "$OUTPUT"
-fi
 
 "$SCRIPT_DIR/install.sh" "$PRESET" --prefix "$OUTPUT"
 
