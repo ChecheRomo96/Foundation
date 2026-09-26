@@ -137,7 +137,8 @@
  *
  * - `macos_x64`, which requires an Intel runner or Rosetta execution;
  * - Raspberry Pi-specific integration and hardware behavior;
- * - AVR, STM32, Arduino, or PSoC firmware linkage and hardware behavior;
+ * - AVR, STM32, or PSoC firmware linkage and hardware behavior, and Arduino
+ *   board execution (sketches are compiled, not run);
  * - branch-coverage gates; only line coverage is enforced.
  *
  * Those concerns retain separate backlog tasks. In particular, embedded jobs
@@ -201,4 +202,9 @@
  * AVR and all eight declared Arm packages passed the same content/metadata gate
  * plus target-binutils architecture and float-ABI inspection in
  * [run 36267813048](https://github.com/ChecheRomo96/Foundation/actions/runs/36267813048).
+ *
+ * `PKG-005` added the `arduino` job. It compiles every example sketch for
+ * `arduino:avr:uno` with the unmodified Arduino AVR core (C++11) and fails on
+ * any Foundation warning. All 12 sketches passed in
+ * [run 36270755264](https://github.com/ChecheRomo96/Foundation/actions/runs/36270755264).
  */
