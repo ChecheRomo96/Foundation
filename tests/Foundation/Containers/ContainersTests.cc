@@ -6,6 +6,47 @@ using Foundation::Containers::CircularBuffer;
 using Foundation::Containers::Queue;
 using Foundation::Containers::Stack;
 
+namespace {
+
+class TrackedValue {
+public:
+    static int CopyAssignments;
+    static int MoveAssignments;
+
+    explicit TrackedValue(int value = 0)
+        : Value(value) {
+    }
+
+    TrackedValue(const TrackedValue& other)
+        : Value(other.Value) {
+    }
+
+    TrackedValue& operator=(const TrackedValue& other) {
+        Value = other.Value;
+        ++CopyAssignments;
+        return *this;
+    }
+
+    TrackedValue& operator=(TrackedValue&& other) noexcept {
+        Value = other.Value;
+        other.Value = 0;
+        ++MoveAssignments;
+        return *this;
+    }
+
+    static void ResetCounts() {
+        CopyAssignments = 0;
+        MoveAssignments = 0;
+    }
+
+    int Value;
+};
+
+int TrackedValue::CopyAssignments = 0;
+int TrackedValue::MoveAssignments = 0;
+
+} // namespace
+
 TEST(CircularBufferTest, PreservesFifoOrderAcrossWraparound) {
     int storage[3] = {};
     CircularBuffer<int> buffer(storage, 3);
@@ -44,6 +85,23 @@ TEST(CircularBufferTest, ResetsItsState) {
     EXPECT_EQ(buffer.GetFreeSpace(), 2u);
 }
 
+TEST(CircularBufferTest, CopiesAnExplicitLvalue) {
+    TrackedValue::ResetCounts();
+    TrackedValue storage[1];
+    CircularBuffer<TrackedValue> buffer(storage, 1);
+    const TrackedValue source(42);
+
+    ASSERT_TRUE(buffer.Push(source));
+    EXPECT_EQ(TrackedValue::CopyAssignments, 1);
+    EXPECT_EQ(TrackedValue::MoveAssignments, 0);
+
+    TrackedValue result;
+    ASSERT_TRUE(buffer.Pop(result));
+    EXPECT_EQ(result.Value, 42);
+    EXPECT_EQ(source.Value, 42);
+    EXPECT_EQ(TrackedValue::MoveAssignments, 1);
+}
+
 TEST(QueueTest, ExposesCircularBufferFifoBehavior) {
     int storage[2] = {};
     Queue<int> queue(storage, 2);
@@ -69,6 +127,23 @@ TEST(StackTest, PreservesLifoOrderAndCapacity) {
     ASSERT_TRUE(stack.Pop(value));
     EXPECT_EQ(value, 10);
     EXPECT_TRUE(stack.IsEmpty());
+}
+
+TEST(StackTest, CopiesAnExplicitLvalue) {
+    TrackedValue::ResetCounts();
+    TrackedValue storage[1];
+    Stack<TrackedValue> stack(storage, 1);
+    const TrackedValue source(27);
+
+    ASSERT_TRUE(stack.Push(source));
+    EXPECT_EQ(TrackedValue::CopyAssignments, 1);
+    EXPECT_EQ(TrackedValue::MoveAssignments, 0);
+
+    TrackedValue result;
+    ASSERT_TRUE(stack.Pop(result));
+    EXPECT_EQ(result.Value, 27);
+    EXPECT_EQ(source.Value, 27);
+    EXPECT_EQ(TrackedValue::MoveAssignments, 1);
 }
 
 TEST(CircularBufferTest, SafelyRejectsNullStorageWithNonzeroCapacity) {
