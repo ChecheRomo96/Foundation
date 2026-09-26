@@ -122,8 +122,11 @@
  *     --filter build/macos_arm64/include/ --filter src/ --html-details coverage/index.html
  * @endcode
  *
- * The 1.2 baseline measured with Apple Clang is 88.8% lines (1184/1334),
- * 99.0% functions, and 65.4% branches.
+ * Baselines after `TEST-004`/`TEST-005`: GCC in CI measured 93.0% lines
+ * (1347/1448), 98.9% functions, and 72.2% branches in
+ * [GitHub Actions run 36227132453](https://github.com/ChecheRomo96/Foundation/actions/runs/36227132453);
+ * Apple Clang locally measured 88.8% lines (1184/1334), 99.0% functions, and
+ * 65.4% branches. The compilers count template and inline lines differently.
  *
  * @section FoundationContinuousIntegrationBoundaries Boundaries
  *
