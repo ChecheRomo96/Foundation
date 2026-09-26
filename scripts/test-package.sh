@@ -5,7 +5,7 @@ SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 . "$SCRIPT_DIR/common.sh"
 
 usage() {
-    printf '%s\n' "Usage: $0 <preset> [--parallel <jobs>] [--fresh] [--skip-export] [--package <prefix>]"
+    printf '%s\n' "Usage: $0 <preset> [--parallel <jobs>] [--junit <path>] [--fresh] [--skip-export] [--package <prefix>]"
 }
 
 PRESET=""
@@ -13,6 +13,7 @@ PARALLEL=""
 FRESH=0
 SKIP_EXPORT=0
 PACKAGE_PREFIX=""
+JUNIT=""
 
 while [ "$#" -gt 0 ]; do
     case "$1" in
@@ -32,6 +33,11 @@ while [ "$#" -gt 0 ]; do
         --package)
             foundation_require_value "$1" "${2:-}"
             PACKAGE_PREFIX=$2
+            shift 2
+            ;;
+        --junit)
+            foundation_require_value "$1" "${2:-}"
+            JUNIT=$2
             shift 2
             ;;
         -h|--help)
@@ -65,6 +71,11 @@ fi
 [ -n "$PACKAGE_PREFIX" ] || PACKAGE_PREFIX="$FOUNDATION_DIST_ROOT/$PRESET"
 PACKAGE_PREFIX=$(foundation_absolute_path "$PACKAGE_PREFIX")
 [ -d "$PACKAGE_PREFIX" ] || foundation_die "package prefix not found: $PACKAGE_PREFIX"
+
+if [ -n "$JUNIT" ]; then
+    JUNIT=$(foundation_absolute_path "$JUNIT")
+    cmake -E make_directory "$(dirname -- "$JUNIT")"
+fi
 
 foundation_require_configured "$PRESET"
 FOUNDATION_BUILD_DIR=$(foundation_build_dir "$PRESET")
@@ -122,6 +133,7 @@ set -- ctest \
     --build-config Release \
     --output-on-failure \
     --no-tests=error
+[ -z "$JUNIT" ] || set -- "$@" --output-junit "$JUNIT"
 "$@"
 
 printf '%s\n' "Validated exported Foundation package at $PACKAGE_PREFIX"
