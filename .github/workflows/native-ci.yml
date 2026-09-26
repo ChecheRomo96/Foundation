@@ -177,3 +177,44 @@ jobs:
         run: >-
           ./scripts/test.sh "${{ matrix.preset }}"
           --config Debug --fresh --parallel 4
+
+  coverage:
+    name: Coverage / Ubuntu 24.04 / GCC / x64
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Install gcovr
+        run: pipx install gcovr==8.6
+
+      - name: Configure with coverage
+        run: >-
+          ./scripts/configure.sh linux_gcc_x64 --fresh --
+          -DFOUNDATION_TESTING=ON -DFOUNDATION_COVERAGE=ON
+
+      - name: Test Debug
+        run: ./scripts/test.sh linux_gcc_x64 --config Debug --parallel 4
+
+      # Header-only code is compiled from the staged include tree, so both it
+      # and src/ are measured. Tests and third-party code are excluded.
+      - name: Report and enforce line coverage
+        run: |
+          set -eu
+          mkdir -p coverage
+          gcovr -r . build/linux_gcc_x64 \
+            --filter 'build/linux_gcc_x64/include/' --filter 'src/' \
+            --txt-summary --markdown-summary coverage/summary.md \
+            --html-details coverage/index.html \
+            --fail-under-line 85
+          cat coverage/summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 14
