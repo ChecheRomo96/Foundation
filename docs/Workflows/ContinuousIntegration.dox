@@ -193,4 +193,12 @@
  * validated and deployed Doxygen, while run
  * [36227959989](https://github.com/ChecheRomo96/Foundation/actions/runs/36227959989)
  * built, exported, and inspected AVR and every declared Arm profile.
+ *
+ * `PKG-004` added exact package-content and binary-identity gates. All seven
+ * native packages, their isolated consumers, and all three deliberate invalid
+ * package mutations passed in
+ * [run 36267812890](https://github.com/ChecheRomo96/Foundation/actions/runs/36267812890).
+ * AVR and all eight declared Arm packages passed the same content/metadata gate
+ * plus target-binutils architecture and float-ABI inspection in
+ * [run 36267813048](https://github.com/ChecheRomo96/Foundation/actions/runs/36267813048).
  */
