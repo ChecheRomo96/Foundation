@@ -190,13 +190,15 @@ jobs:
       - name: Install gcovr
         run: pipx install gcovr==8.6
 
-      - name: Configure with coverage
-        run: >-
-          ./scripts/configure.sh linux_gcc_x64 --fresh --
-          -DFOUNDATION_TESTING=ON -DFOUNDATION_COVERAGE=ON
-
-      - name: Test Debug
-        run: ./scripts/test.sh linux_gcc_x64 --config Debug --parallel 4
+      # Direct CMake calls: the scripts re-apply the preset, which resets
+      # FOUNDATION_COVERAGE to OFF.
+      - name: Build and test Debug with coverage
+        run: |
+          set -eu
+          cmake --preset linux_gcc_x64 --fresh \
+            -DFOUNDATION_TESTING=ON -DFOUNDATION_COVERAGE=ON
+          cmake --build build/linux_gcc_x64 --config Debug --parallel 4
+          ctest --test-dir build/linux_gcc_x64 -C Debug --output-on-failure
 
       # Header-only code is compiled from the staged include tree, so both it
       # and src/ are measured. Tests and third-party code are excluded.
