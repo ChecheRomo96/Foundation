@@ -230,4 +230,16 @@
  * [36227959989](https://github.com/ChecheRomo96/Foundation/actions/runs/36227959989)
  * subsequently built, exported, and inspected all declared Arm profiles. Local
  * firmware linkage and target execution remain separate validation gates.
+ *
+ * @subsection FoundationValidationEvidencePackageIdentity Package identity — 2026-09-26
+ *
+ * The repository-owned identity gate passed on all seven hosted native package
+ * identities in
+ * [run 36267812890](https://github.com/ChecheRomo96/Foundation/actions/runs/36267812890)
+ * and on AVR plus all eight declared Arm profiles in
+ * [run 36267813048](https://github.com/ChecheRomo96/Foundation/actions/runs/36267813048).
+ * The native matrix also proved that the validator rejects an added Debug
+ * archive, a missing public header, and altered build-identity metadata. This
+ * closes package structure and binary identity; firmware linkage, emulator, and
+ * hardware execution remain separate evidence.
  */
