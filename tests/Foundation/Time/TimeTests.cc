@@ -62,6 +62,21 @@ TEST(TickTest, ProvidesExplicitUnsignedWidths) {
     EXPECT_EQ(Tick16::HalfRange(), 32768u);
 }
 
+TEST(TickTest, MutatesAndComparesRawValues) {
+    Tick16 tick(10);
+    const Tick16 equal(10);
+    const Tick16 different(11);
+
+    EXPECT_TRUE(tick == equal);
+    EXPECT_FALSE(tick != equal);
+    EXPECT_TRUE(tick != different);
+    EXPECT_FALSE(tick == different);
+
+    tick.SetValue(Tick16::MaximumValue());
+    EXPECT_EQ(tick.Value(), Tick16::MaximumValue());
+    EXPECT_EQ(tick, Tick16(Tick16::MaximumValue()));
+}
+
 TEST(TimeValueTest, SupportsConstantEvaluationWithoutExceptions) {
     constexpr Frequency frequency(1000, 1);
     constexpr Period period(1, 1000);
@@ -119,6 +134,27 @@ TEST(FrequencyTest, RejectsZeroTermsAndPreservesUnsignedValues) {
     EXPECT_FALSE(zeroDenominator.GetPeriod().IsValid());
 }
 
+TEST(FrequencyTest, MutatesEachRatioTermAndItsReciprocal) {
+    Frequency frequency(1000, 1);
+
+    frequency.SetNumerator(0);
+    EXPECT_FALSE(frequency.IsValid());
+    frequency.SetNumerator(2000);
+    EXPECT_TRUE(frequency.IsValid());
+    EXPECT_FLOAT_EQ(frequency.Hertz(), 2000.0f);
+
+    frequency.SetDenominator(0);
+    EXPECT_FALSE(frequency.IsValid());
+    frequency.SetDenominator(2);
+    EXPECT_TRUE(frequency.IsValid());
+    EXPECT_FLOAT_EQ(frequency.Hertz(), 1000.0f);
+
+    frequency.Set(48000, 1);
+    EXPECT_EQ(frequency.Numerator(), 48000u);
+    EXPECT_EQ(frequency.Denominator(), 1u);
+    EXPECT_NEAR(frequency.GetPeriod().Microseconds(), 20.833334f, 0.00001f);
+}
+
 TEST(PeriodTest, RoundTripsThroughFrequency) {
     const Period period = Frequency(1000, 1).GetPeriod();
 
@@ -142,6 +178,26 @@ TEST(PeriodTest, RejectsZeroTermsAndInvalidReciprocals) {
     EXPECT_FALSE(zeroDenominator.GetFrequency().IsValid());
 }
 
+TEST(PeriodTest, MutatesEachRatioTermAndConvertsMicroseconds) {
+    Period period(1, 1000);
+
+    period.SetNumerator(0);
+    EXPECT_FALSE(period.IsValid());
+    period.SetNumerator(1);
+    EXPECT_TRUE(period.IsValid());
+
+    period.SetDenominator(0);
+    EXPECT_FALSE(period.IsValid());
+    period.SetDenominator(2000);
+    EXPECT_TRUE(period.IsValid());
+    EXPECT_FLOAT_EQ(period.Microseconds(), 500.0f);
+
+    period.Set(1, 48000);
+    EXPECT_EQ(period.Numerator(), 1u);
+    EXPECT_EQ(period.Denominator(), 48000u);
+    EXPECT_NEAR(period.Microseconds(), 20.833334f, 0.00001f);
+}
+
 TEST(DurationTest, SupportsConversionsArithmeticAndComparison) {
     const Period period(1, 1000);
     const Duration duration(5);
@@ -161,6 +217,33 @@ TEST(DurationTest, RejectsUnderflowOverflowAndOutOfRangeValues) {
     EXPECT_FALSE(Duration(Tick32::HalfRange()).IsValid());
     EXPECT_TRUE(Duration(0).IsValid());
     EXPECT_TRUE(Duration(0).IsZero());
+}
+
+TEST(DurationTest, MutatesAndExercisesEveryComparisonOperator) {
+    Duration duration(4);
+    duration.SetTicks(5);
+    EXPECT_EQ(duration.Ticks(), 5u);
+
+    const Duration equal(5);
+    const Duration lower(4);
+    const Duration higher(6);
+    EXPECT_TRUE(duration == equal);
+    EXPECT_FALSE(duration != equal);
+    EXPECT_TRUE(duration != lower);
+    EXPECT_TRUE(lower < duration);
+    EXPECT_TRUE(duration > lower);
+    EXPECT_TRUE(lower <= duration);
+    EXPECT_TRUE(duration <= equal);
+    EXPECT_TRUE(duration >= lower);
+    EXPECT_TRUE(duration >= equal);
+    EXPECT_TRUE(higher > duration);
+
+    duration.SetTicks(Tick32::HalfRange());
+    EXPECT_FALSE(duration.IsValid());
+    EXPECT_FALSE(duration < lower);
+    EXPECT_FALSE(duration > lower);
+    EXPECT_FALSE(duration <= lower);
+    EXPECT_FALSE(duration >= lower);
 }
 
 TEST(ClockTest, ProducesTimePointsAndCanBeUnbound) {
@@ -200,6 +283,24 @@ TEST(ClockTest, KeepsObjectIdentityStable) {
     EXPECT_EQ(point.GetClock(), &clock);
 }
 
+TEST(ClockTest, BindsAndMutatesItsFrequencyAndPeriod) {
+    Clock clock;
+    EXPECT_FALSE(clock.IsBound());
+
+    CurrentTick = 64;
+    clock.Bind(ReadTick);
+    EXPECT_TRUE(clock.IsBound());
+    EXPECT_EQ(clock.Now().Ticks(), 64u);
+
+    clock.SetFrequency(Frequency(2000, 1));
+    EXPECT_EQ(clock.GetFrequency().Numerator(), 2000u);
+    EXPECT_EQ(clock.GetFrequency().Denominator(), 1u);
+    EXPECT_FLOAT_EQ(clock.GetPeriod().Milliseconds(), 0.5f);
+
+    clock.Bind(nullptr);
+    EXPECT_FALSE(clock.IsBound());
+}
+
 TEST(TimePointTest, ComparesOnlyPointsFromTheSameClock) {
     Clock clock(ReadTick, Frequency(1000, 1));
     const TimePoint now = clock.At(125);
@@ -234,4 +335,41 @@ TEST(TimePointTest, HandlesCounterWrapWithinTheHalfRange) {
     EXPECT_GT(afterWrap, beforeWrap);
     EXPECT_LT(beforeWrap, afterWrap);
     EXPECT_FALSE((beforeWrap - afterWrap).IsValid());
+}
+
+TEST(TimePointTest, SubtractsDurationsAndRejectsInvalidDurations) {
+    Clock clock(ReadTick, Frequency(1000, 1));
+    const TimePoint point = clock.At(10);
+
+    const TimePoint earlier = point - Duration(3);
+    EXPECT_TRUE(earlier.IsValid());
+    EXPECT_EQ(earlier.Ticks(), 7u);
+    EXPECT_EQ(earlier.GetClock(), &clock);
+
+    const TimePoint invalid = point - Duration::Invalid();
+    EXPECT_FALSE(invalid.IsValid());
+}
+
+TEST(TimePointTest, TreatsTheExactHalfRangeAsAmbiguous) {
+    using Clock8 = Foundation::Time::BasicClock<Tick8>;
+    using TimePoint8 = Foundation::Time::BasicTimePoint<Tick8>;
+
+    Clock8 clock(ReadTick8, Frequency(1000, 1));
+    const TimePoint8 first = clock.At(0);
+    const TimePoint8 same = clock.At(0);
+    const TimePoint8 halfRange = clock.At(Tick8::HalfRange());
+
+    EXPECT_TRUE(first == same);
+    EXPECT_FALSE(first != same);
+    EXPECT_TRUE(first <= same);
+    EXPECT_TRUE(first >= same);
+
+    EXPECT_FALSE(first == halfRange);
+    EXPECT_TRUE(first != halfRange);
+    EXPECT_FALSE(first < halfRange);
+    EXPECT_FALSE(first > halfRange);
+    EXPECT_FALSE(first <= halfRange);
+    EXPECT_FALSE(first >= halfRange);
+    EXPECT_FALSE((halfRange - first).IsValid());
+    EXPECT_FALSE((first - halfRange).IsValid());
 }

@@ -15,9 +15,13 @@ version 1.2.0 is the current release.
   packages, and verifies object format, architecture, ABI metadata, and CMake
   import policy without claiming target execution.
 - A public-API coverage map that separates verified evidence from the remaining
-  `TEST-003` and `TEST-004` gaps and records the closure of `TEST-002`.
+  `TEST-004` gap and records the closure of `TEST-002` and `TEST-003`.
 - Twenty-three focused Math behavior cases for Complex, trigonometry, Ratio
   mutators and numeric limits, and fixed/dynamic matrix member APIs.
+- Sixteen focused behavior cases for explicit container-copy semantics,
+  Callback null and empty modes, Time mutators and boundaries, scheduler
+  ordering/capacity, and move-only or throwing utility types. Callback exception
+  behavior is compiled separately from the default no-exception contract.
 - A license/ownership review packet with interim guardrails, counsel questions,
   evidence checklist, and objective exit criteria.
 
@@ -39,9 +43,8 @@ version 1.2.0 is the current release.
 - Exported packages are static, target-specific, and Release-only. Foundation
   does not currently publish universal binaries, Debug packages, or a binary
   package manager integration.
-- Sanitizer, warning-policy, coverage-threshold, public-header self-containment,
-  and the remaining non-Math behavioral gaps recorded by the API coverage map
-  remain open.
+- Sanitizer, warning-policy, coverage-threshold, and public-header
+  self-containment work remain open.
 
 See the
 [online Known Limitations page](https://checheromo96.github.io/Foundation/group__Foundation__BuildGuide__KnownLimitations.html)

@@ -105,3 +105,26 @@ TEST(CallbackTest, RejectsNullMemberInstances) {
 
     EXPECT_FALSE(callback.IsBound());
 }
+
+TEST(CallbackTest, RejectsNullFreeAndConstMemberTargets) {
+    Callback<int, int> freeCallback;
+    freeCallback.Bind(
+        static_cast<Callback<int, int>::CallbackType>(nullptr)
+    );
+    EXPECT_FALSE(freeCallback.IsBound());
+
+    const Accumulator* instance = nullptr;
+    Callback<int> constMemberCallback;
+    constMemberCallback.Bind<Accumulator, &Accumulator::Read>(instance);
+    EXPECT_FALSE(constMemberCallback.IsBound());
+}
+
+TEST(CallbackTest, EmptyInvocationUsesNoExceptionFallbacks) {
+    Callback<int, int> valueCallback;
+    EXPECT_EQ(valueCallback.Invoke(42), 0);
+
+    LastValue = 17;
+    Callback<void, int> voidCallback;
+    voidCallback.Invoke(42);
+    EXPECT_EQ(LastValue, 17);
+}

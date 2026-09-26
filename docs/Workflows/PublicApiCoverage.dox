@@ -14,7 +14,7 @@
  * | ----- | ----- |
  * | Inventory state | `COMPLETE` |
  * | API baseline | Foundation `1.2.0` |
- * | Native baseline | 145 registered CTest cases total, including 10 CMake configuration checks |
+ * | Native baseline | 161 registered CTest cases total, including 10 CMake configuration checks |
  * | Package baseline | One isolated installed-package consumer |
  * | Last reviewed | 2026-09-25 |
  *
@@ -77,10 +77,10 @@
  * | Public API family | Evidence | State |
  * | ----------------- | -------- | ----- |
  * | `CircularBuffer<T>` construction, FIFO wraparound, full/empty behavior, pop, counters, capacity, validity, reset, null storage | Eight container cases in `ContainersTests.cc` | `BEHAVIOR` |
- * | `CircularBuffer<T>::Push(const T&)` copy semantics with a non-trivial type | Existing cases select the rvalue overload with integer literals | `GAP` (`TEST-003`) |
+ * | `CircularBuffer<T>::Push(const T&)` copy semantics with a non-trivial type | `CircularBufferTest.CopiesAnExplicitLvalue` verifies copy assignment, source preservation, and subsequent pop behavior | `BEHAVIOR` |
  * | `Queue<T>` alias contract | `QueueTest.ExposesCircularBufferFifoBehavior` | `BEHAVIOR` |
  * | `Stack<T>` construction, LIFO order, capacity, validity, full/empty behavior, pop, reset, null storage | Stack cases in `ContainersTests.cc` | `BEHAVIOR` |
- * | `Stack<T>::Push(const T&)` copy semantics with a non-trivial type | Existing cases select the rvalue overload with integer literals | `GAP` (`TEST-003`) |
+ * | `Stack<T>::Push(const T&)` copy semantics with a non-trivial type | `StackTest.CopiesAnExplicitLvalue` verifies copy assignment, source preservation, and subsequent pop behavior | `BEHAVIOR` |
  *
  * @section FoundationPublicApiCoverageFunctional Functional
  *
@@ -89,24 +89,24 @@
  * | `Callback<R, Args...>`, `Callback<R>`, `Callback<void, Args...>`, `Callback<void>` canonical forms | Six `CallbackTest` cases plus umbrella-order compilation cases | `BEHAVIOR` + `COMPILE` |
  * | Free/static binding, non-const member binding, const member binding, `IsBound`, `Invoke`, and `Unbind` | `BindsAndUnbindsAFreeFunction`, member, const-member, void, and no-argument cases | `BEHAVIOR` |
  * | Null non-const member instance | `CallbackTest.RejectsNullMemberInstances` | `BEHAVIOR` |
- * | Null free function, null const member instance, and invocation while unbound with exceptions enabled and disabled | Contract is documented but modes are not directly exercised | `GAP` (`TEST-003`) |
+ * | Null free function, null const member instance, and invocation while unbound with exceptions enabled and disabled | `RejectsNullFreeAndConstMemberTargets` and `EmptyInvocationUsesNoExceptionFallbacks`; the separately compiled `FoundationFunctionalExceptionTests` target verifies both throwing forms with `FOUNDATION_EXCEPTIONS=1` | `BEHAVIOR` + `CONFIGURATION` |
  *
  * @section FoundationPublicApiCoverageTime Time
  *
  * | Public API family | Evidence | State |
  * | ----------------- | -------- | ----- |
  * | `Tick<T>` construction, aliases/default, `Value`, `MaximumValue`, `HalfRange` | `TickTest.ProvidesExplicitUnsignedWidths` and scheduling's Tick8 wrap case | `BEHAVIOR` + `COMPILE` |
- * | `Tick::SetValue`, equality, and inequality | API compiles, but no direct assertions exist | `GAP` (`TEST-003`) |
+ * | `Tick::SetValue`, equality, and inequality | `TickTest.MutatesAndComparesRawValues` | `BEHAVIOR` |
  * | `BasicDuration`/`Duration`: construction, invalid state, limits, ticks, zero, conversions, arithmetic, comparisons | Duration and constant-evaluation cases in `TimeTests.cc` | `BEHAVIOR` |
- * | `Duration::SetTicks`; all equality and ordering operators individually | Main paths are exercised indirectly; direct boundary assertions are incomplete | `GAP` (`TEST-003`) |
+ * | `Duration::SetTicks`; all equality and ordering operators individually | `DurationTest.MutatesAndExercisesEveryComparisonOperator`, including invalid half-range behavior | `BEHAVIOR` |
  * | `Frequency`: construction, unsigned range, access, validity, unit conversions, ratio, reciprocal | Frequency and constant-evaluation cases | `BEHAVIOR` |
- * | `Frequency` mutators independently | Shared Ratio-backed implementation is exercised indirectly, not as the public Frequency contract | `GAP` (`TEST-003`) |
+ * | `Frequency` mutators independently | `FrequencyTest.MutatesEachRatioTermAndItsReciprocal` covers invalid intermediate states, `Set`, Hertz, and reciprocal Period conversion | `BEHAVIOR` |
  * | `Period`: construction, access, validity, unit conversions, ratio, reciprocal | Period and constant-evaluation cases | `BEHAVIOR` |
- * | `Period` mutators independently and `Microseconds()` on a valid value | No direct assertions | `GAP` (`TEST-003`) |
+ * | `Period` mutators independently and `Microseconds()` on a valid value | `PeriodTest.MutatesEachRatioTermAndConvertsMicroseconds` | `BEHAVIOR` |
  * | `BasicClock`/`Clock`: construction, non-copyability, identity, `Now`, `At`, binding state, unbind, frequency access | Clock identity/binding cases and compile-time assertions | `BEHAVIOR` + `COMPILE` |
- * | `Clock::Bind`, `SetFrequency`, and `GetPeriod` after mutation | No direct assertions | `GAP` (`TEST-003`) |
+ * | `Clock::Bind`, `SetFrequency`, and `GetPeriod` after mutation | `ClockTest.BindsAndMutatesItsFrequencyAndPeriod` | `BEHAVIOR` |
  * | `BasicTimePoint`/`TimePoint`: validity, ticks, clock, same-clock rules, subtraction, duration addition, comparison, counter wrap | TimePoint comparison and wrap cases | `BEHAVIOR` |
- * | TimePoint duration subtraction and every comparison operator at half-range boundaries | No complete direct boundary matrix | `GAP` (`TEST-003`) |
+ * | TimePoint duration subtraction and every comparison operator at half-range boundaries | `SubtractsDurationsAndRejectsInvalidDurations` and `TreatsTheExactHalfRangeAsAmbiguous` | `BEHAVIOR` |
  *
  * @section FoundationPublicApiCoverageScheduling Scheduling
  *
@@ -116,7 +116,7 @@
  * | `BasicPeriodicTask`/`PeriodicTask`: initial run, period, wrap, foreign clock, context, null callback | Periodic cases in `SchedulingTests.cc` | `BEHAVIOR` |
  * | `BasicOneShotTask`/`OneShotTask`: trigger, one-run lifecycle, wrap, `HasRun`, context, null callback | One-shot and context cases | `BEHAVIOR` |
  * | `BasicTaskScheduler`/`TaskScheduler`: registration order path, capacity/count, update, clear, null task/storage/clock, Tick8 family | Scheduler and generic Tick8 cases | `BEHAVIOR` |
- * | Multiple due tasks execute in stable registration order and a task cannot be added after full capacity | Full-capacity rejection is indirect; stable multi-task order is not asserted | `GAP` (`TEST-003`) |
+ * | Multiple due tasks execute in stable registration order and a task cannot be added after full capacity | `TaskSchedulerTest.PreservesRegistrationOrderAndRejectsOverflow` | `BEHAVIOR` |
  *
  * @section FoundationPublicApiCoverageUtils Utils
  *
@@ -124,7 +124,7 @@
  * | ----------------- | -------- | ----- |
  * | `Move` | `MoveTest.TransfersAValueToANewObject`, plus use by Containers and Matrix | `BEHAVIOR` |
  * | `Swap` | `SwapTest.ExchangesTwoValues` | `BEHAVIOR` |
- * | Move-only and throwing user-defined types | Public templates compile for the tested helper type, but the edge contracts are not isolated | `GAP` (`TEST-003`) |
+ * | Move-only and throwing user-defined types | `SwapTest.ExchangesMoveOnlyValues` and `UtilsTest.MoveIsOnlyACastAndSwapPropagatesElementFailures` | `BEHAVIOR` |
  *
  * @section FoundationPublicApiCoverageTarget Target-only Evidence
  *
@@ -136,8 +136,8 @@
  *
  * @section FoundationPublicApiCoverageNext Prioritized Test Work
  *
- * `TEST-002` is complete. `TEST-003` should next cover Callback empty-mode
- * behavior, explicit lvalue container copies, Time mutators/boundaries,
- * scheduler order, and Utils edge types. `TEST-004` should convert the
+ * `TEST-002` and `TEST-003` are complete. TypeTraits required no additional
+ * cases because its standard-library and forced-fallback targets already run
+ * the same complete conformance suite. `TEST-004` should next convert the
  * one-time header audit into a generated, repeatable CI target.
  */
