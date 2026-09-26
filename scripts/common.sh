@@ -22,7 +22,14 @@ foundation_require_value() {
 foundation_require_preset() {
     [ -n "${1:-}" ] || foundation_die "a CMake configure preset is required"
     case "$1" in
-        *..*|*/*|*\\*)
+        [A-Za-z0-9]*)
+            ;;
+        *)
+            foundation_die "invalid preset name: $1"
+            ;;
+    esac
+    case "$1" in
+        *..*|*[!A-Za-z0-9_.-]*)
             foundation_die "invalid preset name: $1"
             ;;
     esac

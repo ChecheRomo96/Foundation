@@ -3,16 +3,18 @@
  * @ingroup Foundation_Workflows_Delivery
  * @brief Build and install a clean, target-specific distribution package.
  *
- * Export configures the target preset once, builds the installable Release
- * artifacts, removes the default `dist/<preset>` destination, and installs one
- * fresh Release package. The library is always included. Executable API examples
- * are opt-in through `--examples-on` in Bash or `-ExamplesOn` in PowerShell.
+ * Export removes the default `dist/<preset>` destination, configures the target
+ * preset once, builds the installable Release artifacts, and installs one fresh
+ * Release package. Removing the previous package first prevents a failed build
+ * from leaving an older distribution that appears current. The library is
+ * always included. Executable API examples are opt-in through `--examples-on`
+ * in Bash or `-ExamplesOn` in PowerShell.
  *
  * The exact default sequence is:
  *
- * 1. configure or refresh `build/<preset>`;
- * 2. build `FoundationExportArtifacts` for Release, including optional examples;
- * 3. safely remove the repository-owned `dist/<preset>` directory;
+ * 1. safely remove the repository-owned `dist/<preset>` directory;
+ * 2. configure or refresh `build/<preset>`;
+ * 3. build `FoundationExportArtifacts` for Release, including optional examples;
  * 4. install Release into that directory.
  *
  * Debug remains available through the build and test workflows but is not part
@@ -48,7 +50,7 @@
  * | configuration | Release | Fixed distribution configuration. |
  * | output | `dist/<preset>` | Installation prefix for the package. |
  * | parallel | CMake default | Worker count for each build. |
- * | fresh | off | Clears CMake cache state before the single configure. |
+ * | fresh | off | Deletes and reconfigures the selected build tree before exporting. |
  * | keep | off | Preserves and overlays the destination. |
  * | examples | off | Builds and installs Release API examples. |
  * | CMake arguments | none | Cache overrides applied to the Release build. |
@@ -63,6 +65,9 @@
  *
  * Export has no configuration selector: distribution artifacts are always
  * Release. CMake arguments customize the single configure/build operation.
+ * A fresh export therefore starts from an empty build tree and the default
+ * export destination is replaced before installation; stale tests, examples,
+ * metadata, libraries, and headers cannot survive either side of that workflow.
  *
  * `--examples-on` and `-ExamplesOn` set `FOUNDATION_EXAMPLES=ON` for that
  * configure operation. Without the switch, the preset default remains `OFF`,

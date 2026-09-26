@@ -69,7 +69,6 @@ foundation_require_configuration "$CONFIGURATION"
 
 if [ -n "$JUNIT" ]; then
     JUNIT=$(foundation_absolute_path "$JUNIT")
-    cmake -E make_directory "$(dirname -- "$JUNIT")"
 fi
 
 if [ "$FRESH" -eq 1 ]; then
@@ -79,6 +78,8 @@ else
     "$SCRIPT_DIR/configure.sh" "$PRESET" -- \
         -DFOUNDATION_TESTING=ON
 fi
+
+[ -z "$JUNIT" ] || cmake -E make_directory "$(dirname -- "$JUNIT")"
 
 set -- cmake --build "$BUILD_DIR" --config "$CONFIGURATION"
 [ -z "$PARALLEL" ] || set -- "$@" --parallel "$PARALLEL"

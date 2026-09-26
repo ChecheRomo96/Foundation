@@ -168,6 +168,15 @@
  * successful validated packages keep their existing shorter-lived artifact
  * names and policies.
  *
+ * Before each native matrix run, CI seeds representative stale build and
+ * distribution files. It first verifies that normal clean removes only the
+ * selected build tree, then that clean with the distribution flag removes both
+ * repository-owned trees. It reseeds stale state so the Debug test's fresh
+ * configure and the package consumer's fresh export must also remove it. The
+ * final verification requires a newly configured cache, public umbrella
+ * header, package config, and generated build metadata, so deletion alone
+ * cannot produce a false pass.
+ *
  * @section FoundationContinuousIntegrationAcceptance Acceptance and Evidence
  *
  * `CI-001` and `CI-002` were accepted for Foundation 1.2.0 by

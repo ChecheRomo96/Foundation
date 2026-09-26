@@ -36,7 +36,7 @@
  * | target | generator default | Builds one named CMake target when supplied. |
  * | parallel | CMake default | Forwards the requested worker count. |
  * | clean first | off | Cleans the selected configuration before compiling. |
- * | fresh | off | Reconfigures with a fresh CMake cache before building. |
+ * | fresh | off | Deletes and reconfigures the selected build tree before building. |
  * | examples | off | Enables repository example targets for this build. |
  *
  * `--target Foundation` is recommended when validating or exporting the library
