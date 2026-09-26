@@ -1,0 +1,8 @@
+<map id="Workflows" name="Workflows">
+<area shape="rect" id="Node000002" href="$group__Foundation__BuildGuide.html" title="Build, integration, export, and distribution guide for Foundation." alt="" coords="5,80,103,105"/>
+<area shape="rect" id="Node000001" title="Repeatable configure, build, test, install, export, and maintenance workflows." alt="" coords="151,80,240,105"/>
+<area shape="rect" id="Node000004" href="$group__Foundation__Workflows__Configuration.html" title="Select a preset and configure its native or cross&#45;compilation environment." alt="" coords="301,5,410,31"/>
+<area shape="rect" id="Node000006" href="$group__Foundation__Workflows__Delivery.html" title="Install, package, and consume target&#45;specific Foundation libraries." alt="" coords="317,55,394,80"/>
+<area shape="rect" id="Node000005" href="$group__Foundation__Workflows__Development.html" title="Compile, test, document, and clean the project during development." alt="" coords="300,104,411,129"/>
+<area shape="rect" id="Node000003" href="$group__Foundation__Workflows__Manual.html" title="Run the complete local development and release&#45;candidate sequence." alt="" coords="288,153,423,179"/>
+</map>

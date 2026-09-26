@@ -1,0 +1,4 @@
+<map id="Manual Workflow" name="Manual Workflow">
+<area shape="rect" id="Node000002" href="$group__Foundation__Workflows.html" title="Repeatable configure, build, test, install, export, and maintenance workflows." alt="" coords="5,5,95,31"/>
+<area shape="rect" id="Node000001" title="Run the complete local development and release&#45;candidate sequence." alt="" coords="143,5,277,31"/>
+</map>

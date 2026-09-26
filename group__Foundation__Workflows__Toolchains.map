@@ -1,0 +1,4 @@
+<map id="Toolchains" name="Toolchains">
+<area shape="rect" id="Node000002" href="$group__Foundation__Workflows__Configuration.html" title="Select a preset and configure its native or cross&#45;compilation environment." alt="" coords="5,5,115,31"/>
+<area shape="rect" id="Node000001" title="CMake cross&#45;compilation configuration and adding new targets." alt="" coords="163,5,253,31"/>
+</map>

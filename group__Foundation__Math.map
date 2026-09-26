@@ -1,0 +1,7 @@
+<map id="Math" name="Math">
+<area shape="rect" id="Node000002" href="$group__Foundation.html" title="Core documentation topic for the Foundation framework." alt="" coords="5,55,100,80"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="148,55,203,80"/>
+<area shape="rect" id="Node000003" href="$group__Foundation__Math__Complex.html" title="Cartesian complex numbers for any arithmetic type." alt="" coords="251,5,331,31"/>
+<area shape="rect" id="Node000005" href="$group__Foundation__Math__Ratio.html" title="Signed and unsigned exact 32&#45;bit rational values." alt="" coords="263,55,319,80"/>
+<area shape="rect" id="Node000004" href="$group__Foundation__Matrix.html" title="Matrix types and algorithms." alt="" coords="259,104,323,129"/>
+</map>

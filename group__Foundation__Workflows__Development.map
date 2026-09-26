@@ -1,0 +1,9 @@
+<map id="Development" name="Development">
+<area shape="rect" id="Node000002" href="$group__Foundation__Workflows.html" title="Repeatable configure, build, test, install, export, and maintenance workflows." alt="" coords="5,104,95,129"/>
+<area shape="rect" id="Node000001" title="Compile, test, document, and clean the project during development." alt="" coords="143,104,253,129"/>
+<area shape="rect" id="Node000003" href="$group__Foundation__Workflows__Build.html" title="Configure a preset and compile one or more targets." alt="" coords="335,5,390,31"/>
+<area shape="rect" id="Node000007" href="$group__Foundation__Workflows__Clean.html" title="Remove known build and optional distribution directories safely." alt="" coords="333,55,392,80"/>
+<area shape="rect" id="Node000006" href="$group__Foundation__Workflows__Documentation.html" title="Generate the Doxygen HTML site through the normal build workflow." alt="" coords="301,104,424,129"/>
+<area shape="rect" id="Node000004" href="$group__Foundation__Workflows__Test.html" title="Build a testing preset and execute its CTest suite." alt="" coords="339,153,387,179"/>
+<area shape="rect" id="Node000005" href="$group__Foundation__Workflows__Validation.html" title="Repeatable acceptance matrix for native and cross&#45;compiled targets." alt="" coords="319,203,406,228"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="Build Guide" name="Build Guide">
+<area shape="rect" id="Node000001" title="Build, integration, export, and distribution guide for Foundation." alt="" coords="5,104,103,129"/>
+<area shape="rect" id="Node000004" href="$group__Foundation__BuildGuide__KnownLimitations.html" title="Release, validation, package, platform, runtime, and API boundaries." alt="" coords="151,5,293,31"/>
+<area shape="rect" id="Node000002" href="$group__Foundation__BuildGuide__Overview.html" title="Choose between source, full precompiled, and target&#45;specific builds." alt="" coords="180,55,264,80"/>
+<area shape="rect" id="Node000005" href="$group__Foundation__BuildGuide__Platforms.html" title="Platform&#45;specific compiler, architecture, and integration guidance." alt="" coords="179,104,265,129"/>
+<area shape="rect" id="Node000003" href="$group__Foundation__BuildGuide__SupportMatrix.html" title="Evidence&#45;based Foundation 1.x support levels for every public target preset." alt="" coords="163,153,281,179"/>
+<area shape="rect" id="Node000006" href="$group__Foundation__Workflows.html" title="Repeatable configure, build, test, install, export, and maintenance workflows." alt="" coords="177,203,267,228"/>
+</map>

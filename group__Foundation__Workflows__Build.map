@@ -1,0 +1,4 @@
+<map id="Build" name="Build">
+<area shape="rect" id="Node000001" title="Configure a preset and compile one or more targets." alt="" coords="164,5,219,31"/>
+<area shape="rect" id="Node000002" href="$group__Foundation__Workflows__Development.html" title="Compile, test, document, and clean the project during development." alt="" coords="5,5,116,31"/>
+</map>

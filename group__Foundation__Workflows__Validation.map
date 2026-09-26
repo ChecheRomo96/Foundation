@@ -1,0 +1,7 @@
+<map id="Validation" name="Validation">
+<area shape="rect" id="Node000004" href="$group__Foundation__Workflows__ContinuousIntegration.html" title="Native, documentation, and embedded GitHub Actions validation." alt="" coords="325,5,495,31"/>
+<area shape="rect" id="Node000003" href="$group__Foundation__Workflows__DesktopValidation.html" title="Manual acceptance checklist for every native desktop preset and configuration." alt="" coords="299,55,521,80"/>
+<area shape="rect" id="Node000002" href="$group__Foundation__Workflows__Development.html" title="Compile, test, document, and clean the project during development." alt="" coords="5,55,116,80"/>
+<area shape="rect" id="Node000001" title="Repeatable acceptance matrix for native and cross&#45;compiled targets." alt="" coords="164,55,251,80"/>
+<area shape="rect" id="Node000005" href="$group__Foundation__Workflows__ReleaseV1.html" title="Version&#45;controlled plan and quality gates for the Foundation 1.x line." alt="" coords="309,105,511,145"/>
+</map>

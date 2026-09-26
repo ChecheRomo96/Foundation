@@ -1,0 +1,4 @@
+<map id="Configure" name="Configure">
+<area shape="rect" id="Node000002" href="$group__Foundation__Workflows__Configuration.html" title="Select a preset and configure its native or cross&#45;compilation environment." alt="" coords="5,5,115,31"/>
+<area shape="rect" id="Node000001" title="Create or update the CMake cache for a preset." alt="" coords="163,5,247,31"/>
+</map>

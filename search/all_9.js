@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['gates_0',['Release Gates',['../group__Foundation__Workflows__ReleaseV1.html#FoundationReleaseV1Gates',1,'']]],
+  ['gates_20still_20open_1',['Quality Gates Still Open',['../group__Foundation__BuildGuide__KnownLimitations.html#FoundationKnownLimitationsQuality',1,'']]],
+  ['gcc_2',['AVR-GCC',['../group__Foundation__Workflows__Toolchains.html#FoundationWorkflowAVRToolchain',1,'']]],
+  ['gcd_3',['GCD',['../group__Foundation__Math.html#gac30411417effe68343a4213668fdc4f9',1,'Foundation::Math']]],
+  ['general_20rule_4',['General Rule',['../group__Foundation__BuildGuide__Overview.html#FoundationBuildRule',1,'']]],
+  ['generic_20arm_20profiles_5',['Generic Arm Profiles',['../group__Foundation__BuildGuide__SupportMatrix.html#FoundationSupportMatrixProfiles',1,'']]],
+  ['getavailable_6',['GetAvailable',['../classFoundation_1_1Containers_1_1CircularBuffer.html#ace7340e9e9eb17b610e9c318e7f279eb',1,'Foundation::Containers::CircularBuffer']]],
+  ['getcapacity_7',['GetCapacity',['../classFoundation_1_1Containers_1_1Stack.html#acbf9b87a5a371c02be56601d37c383ff',1,'Foundation::Containers::Stack::GetCapacity()'],['../classFoundation_1_1Scheduling_1_1BasicTaskScheduler.html#add5fb1cba1a8690a6c413d7c90f882d0',1,'Foundation::Scheduling::BasicTaskScheduler::GetCapacity()']]],
+  ['getclock_8',['GetClock',['../classFoundation_1_1Time_1_1BasicTimePoint.html#a0d0aca21ab02e3c9966d4e8f81095bf4',1,'Foundation::Time::BasicTimePoint']]],
+  ['getcount_9',['GetCount',['../classFoundation_1_1Containers_1_1Stack.html#af5b3ed4b38be308746cb075b0c700e00',1,'Foundation::Containers::Stack']]],
+  ['getfreespace_10',['GetFreeSpace',['../classFoundation_1_1Containers_1_1CircularBuffer.html#ab9241671c76affb49f378e5a9def2f96',1,'Foundation::Containers::CircularBuffer']]],
+  ['getfrequency_11',['GetFrequency',['../classFoundation_1_1Time_1_1Period.html#a8b63ce2994ca39b71f652856f95d15cb',1,'Foundation::Time::Period::GetFrequency()'],['../classFoundation_1_1Time_1_1BasicClock.html#a6556348ce0ab874cb338708d9c78d89c',1,'Foundation::Time::BasicClock::GetFrequency()']]],
+  ['getperiod_12',['GetPeriod',['../classFoundation_1_1Time_1_1Frequency.html#a7c4fe3aa773f732fbeaff7e00b58f3ca',1,'Foundation::Time::Frequency::GetPeriod()'],['../classFoundation_1_1Time_1_1BasicClock.html#a0fd08a15529ae5716a4da0e581dc23a3',1,'Foundation::Time::BasicClock::GetPeriod()']]],
+  ['getratio_13',['GetRatio',['../classFoundation_1_1Time_1_1Frequency.html#ad69704530dfb53b09f9f30a6232e2b32',1,'Foundation::Time::Frequency::GetRatio()'],['../classFoundation_1_1Time_1_1Period.html#a71e3b9b99ad41399fed0c0d9d8c59ec3',1,'Foundation::Time::Period::GetRatio()']]],
+  ['getsize_14',['GetSize',['../classFoundation_1_1Containers_1_1CircularBuffer.html#ac5ac88f6ed5d35cc4dbb32ab3278766f',1,'Foundation::Containers::CircularBuffer']]],
+  ['gettaskcount_15',['GetTaskCount',['../classFoundation_1_1Scheduling_1_1BasicTaskScheduler.html#a5d81c2228c01913b4c7c7022c6ce8ba1',1,'Foundation::Scheduling::BasicTaskScheduler']]],
+  ['getting_20started_16',['Getting Started',['../index.html#MainPage_GettingStarted',1,'']]],
+  ['gnu_20arm_20embedded_17',['GNU Arm Embedded',['../group__Foundation__Workflows__Toolchains.html#FoundationWorkflowArmToolchain',1,'']]],
+  ['goals_18',['Goals',['../group__Foundation.html#Foundation_DesignGoals',1,'Design Goals'],['../index.html#MainPage_DesignGoals',1,'Design Goals']]],
+  ['googletest_20dependency_19',['GoogleTest Dependency',['../group__Foundation__Workflows__Test.html#FoundationWorkflowTestDependency',1,'']]],
+  ['group_20structure_20',['Group Structure',['../group__Foundation__Workflows__Documentation.html#FoundationWorkflowDocsStructure',1,'']]],
+  ['guardrails_21',['Interim Guardrails',['../group__Foundation__Workflows__LegalReview.html#FoundationLegalReviewGuardrails',1,'']]],
+  ['guide_22',['Build Guide',['../group__Foundation__BuildGuide.html',1,'']]]
+];

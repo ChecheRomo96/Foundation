@@ -1,0 +1,7 @@
+<map id="Configuration" name="Configuration">
+<area shape="rect" id="Node000002" href="$group__Foundation__Workflows.html" title="Repeatable configure, build, test, install, export, and maintenance workflows." alt="" coords="5,55,95,80"/>
+<area shape="rect" id="Node000001" title="Select a preset and configure its native or cross&#45;compilation environment." alt="" coords="143,55,252,80"/>
+<area shape="rect" id="Node000003" href="$group__Foundation__Workflows__Configure.html" title="Create or update the CMake cache for a preset." alt="" coords="303,5,387,31"/>
+<area shape="rect" id="Node000004" href="$group__Foundation__Workflows__Presets.html" title="Target naming, supported families, and preset extension rules." alt="" coords="310,55,381,80"/>
+<area shape="rect" id="Node000005" href="$group__Foundation__Workflows__Toolchains.html" title="CMake cross&#45;compilation configuration and adding new targets." alt="" coords="300,104,391,129"/>
+</map>

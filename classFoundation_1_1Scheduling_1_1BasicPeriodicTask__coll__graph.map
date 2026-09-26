@@ -1,0 +1,5 @@
+<map id="Foundation::Scheduling::BasicPeriodicTask&lt; TickType &gt;" name="Foundation::Scheduling::BasicPeriodicTask&lt; TickType &gt;">
+<area shape="rect" id="Node000001" title="Task that runs immediately and then at a fixed tick interval." alt="" coords="5,108,239,148"/>
+<area shape="rect" id="Node000002" href="$classFoundation_1_1Scheduling_1_1BasicTask.html" title=" " alt="" coords="31,5,213,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,74,125,108,119,108,119,74"/>
+</map>

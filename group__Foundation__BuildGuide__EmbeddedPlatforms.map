@@ -1,0 +1,8 @@
+<map id="Embedded" name="Embedded">
+<area shape="rect" id="Node000006" href="$group__Foundation__BuildGuide__AVR.html" title="AVR&#45;GCC builds for explicitly named 8&#45;bit AVR devices." alt="" coords="289,5,337,31"/>
+<area shape="rect" id="Node000003" href="$group__Foundation__BuildGuide__Arduino.html" title="Source&#45;first Arduino integration and architecture&#45;specific exports." alt="" coords="277,55,349,80"/>
+<area shape="rect" id="Node000001" title="Arduino, AVR, PSoC, STM32, and related cross&#45;compiled targets." alt="" coords="139,80,229,105"/>
+<area shape="rect" id="Node000004" href="$group__Foundation__BuildGuide__PSoC.html" title="PSoC 5LP Cortex&#45;M3 soft&#45;float builds." alt="" coords="286,104,341,129"/>
+<area shape="rect" id="Node000005" href="$group__Foundation__BuildGuide__STM32.html" title="STM32 Cortex&#45;M3, M4F, and M7F target families." alt="" coords="280,153,347,179"/>
+<area shape="rect" id="Node000002" href="$group__Foundation__BuildGuide__Platforms.html" title="Platform&#45;specific compiler, architecture, and integration guidance." alt="" coords="5,80,91,105"/>
+</map>
