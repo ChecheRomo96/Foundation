@@ -81,6 +81,36 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
+  arduino:
+    name: Arduino AVR / Uno source mode
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install arduino-cli and AVR core
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh \
+            | BINDIR="$HOME/.local/bin" sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          "$HOME/.local/bin/arduino-cli" core update-index
+          "$HOME/.local/bin/arduino-cli" core install arduino:avr@1.8.8
+
+      - name: Report toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          arduino-cli version
+          arduino-cli core list
+
+      - name: Compile every example sketch for Arduino Uno
+        shell: bash
+        run: ./scripts/test-arduino.sh
+
   arm:
     name: Arm GCC / Cortex-M profiles
     runs-on: ubuntu-24.04

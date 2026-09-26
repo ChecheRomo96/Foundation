@@ -3,7 +3,7 @@
 
     #include <Foundation/Utils/Move.h>
 
-    namespace Foundation::Utils {
+    namespace Foundation { namespace Utils {
 
         /**
          * @brief Exchanges two values using move construction and assignment.
@@ -19,6 +19,6 @@
             b = Foundation::Utils::Move(temp);
         }
 
-    }
+    }}
 
 #endif

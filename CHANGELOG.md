@@ -6,7 +6,26 @@ version 1.2.0 is the current release.
 
 ## [Unreleased]
 
+### Changed
+
+- Arduino source builds (`ARDUINO` defined) now accept C++11, so the stock
+  Arduino IDE and AVR core compile Foundation without editing the core. Other
+  integration modes still require C++17. C++14 relaxed-`constexpr` mutators use
+  the new `FOUNDATION_CONSTEXPR14` macro, nested namespace definitions were
+  split, and the `_v` TypeTraits variables are declared only from C++17.
+- Every example sketch includes `<Foundation.h>` first so the Arduino builder
+  discovers the library.
+
+### Fixed
+
+- The Time Period and Frequency sketches passed a signed `Ratio` printer where
+  an `UnsignedRatio` printer was required; the stock core's `-fpermissive`
+  had accepted the mismatch.
+
 ### Added
+
+- `scripts/test-arduino.sh` and an `arduino` CI job that compile every example
+  sketch for the Arduino Uno with the unmodified AVR core.
 
 - Pull-request Doxygen validation with warning-as-error generation and a
   deployment job that runs only after successful validation on a branch push.

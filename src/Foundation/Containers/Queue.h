@@ -3,7 +3,7 @@
 
 #include "CircularBuffer.h"
 
-namespace Foundation::Containers {
+namespace Foundation { namespace Containers {
 
     /**
      * @brief FIFO spelling of CircularBuffer.
@@ -15,6 +15,6 @@ namespace Foundation::Containers {
      */
     template <typename T>
     using Queue = CircularBuffer<T>;
-}
+}}
 
 #endif

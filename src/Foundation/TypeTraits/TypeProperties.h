@@ -4,7 +4,7 @@
 #include <Foundation_BuildSettings.h>
 #include "HelperClasses.h"
 
-namespace Foundation::TypeTraits {
+namespace Foundation { namespace TypeTraits {
 
     /** @cond FOUNDATION_INTERNAL */
     namespace Detail {
@@ -181,21 +181,27 @@ namespace Foundation::TypeTraits {
             Detail::is_unsigned_backend<remove_cv_t<T>>::value
         > {};
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_const<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Properties */
     template <typename T>
     inline constexpr bool is_const_v = is_const<T>::value;
+    #endif
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_volatile<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Properties */
     template <typename T>
     inline constexpr bool is_volatile_v = is_volatile<T>::value;
+    #endif
 
+    #if FOUNDATION_HAS_CPP17_VARIABLE_TRAITS
     /** @brief `is_unsigned<T>::value` convenience variable.
      * @ingroup Foundation_TypeTraits_Properties */
     template <typename T>
     inline constexpr bool is_unsigned_v = is_unsigned<T>::value;
+    #endif
 
-}
+}}
 
 #endif // FOUNDATION_TYPE_TRAITS_TYPE_PROPERTIES_H

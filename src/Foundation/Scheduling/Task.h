@@ -3,7 +3,7 @@
 
 #include "../Time/Clock.h"
 
-namespace Foundation::Scheduling {
+namespace Foundation { namespace Scheduling {
 
     /**
      * @brief Interface implemented by cooperatively scheduled tasks.
@@ -39,6 +39,6 @@ namespace Foundation::Scheduling {
 
     /** @brief Default 32-bit scheduling task interface. */
     using Task = BasicTask<>;
-}
+}}
 
 #endif

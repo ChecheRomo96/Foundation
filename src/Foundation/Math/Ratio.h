@@ -2,6 +2,7 @@
 #define FOUNDATION_MATH_RATIO_H
 
     #include <stdint.h>
+    #include <Foundation_BuildSettings.h>
     #include <Foundation/Math/Arithmetic.h>
 
     namespace Foundation {
@@ -20,12 +21,33 @@
                 struct RatioRepresentationTraits<int32_t> {
                     static constexpr bool IsSupported = true;
                     static constexpr bool IsSigned = true;
+
+                    static constexpr uint32_t Magnitude(int32_t value) noexcept {
+                        return (value < 0)
+                            ? 0u - static_cast<uint32_t>(value)
+                            : static_cast<uint32_t>(value);
+                    }
+
+                    static constexpr int8_t Sign(int32_t num, int32_t den) noexcept {
+                        return static_cast<int8_t>(
+                            ((num > 0) ? 1 : (num < 0) ? -1 : 0) *
+                            ((den > 0) ? 1 : (den < 0) ? -1 : 0)
+                        );
+                    }
                 };
 
                 template <>
                 struct RatioRepresentationTraits<uint32_t> {
                     static constexpr bool IsSupported = true;
                     static constexpr bool IsSigned = false;
+
+                    static constexpr uint32_t Magnitude(uint32_t value) noexcept {
+                        return value;
+                    }
+
+                    static constexpr int8_t Sign(uint32_t num, uint32_t den) noexcept {
+                        return (num == 0 || den == 0) ? 0 : 1;
+                    }
                 };
 
             }
@@ -60,15 +82,18 @@
                 static constexpr uint32_t AbsoluteMagnitude(
                     Representation value
                 ) noexcept {
-                    if constexpr (
-                        Detail::RatioRepresentationTraits<T>::IsSigned
-                    ) {
-                        return (value < 0)
-                            ? 0u - static_cast<uint32_t>(value)
-                            : static_cast<uint32_t>(value);
-                    } else {
-                        return static_cast<uint32_t>(value);
-                    }
+                    return Detail::RatioRepresentationTraits<T>::Magnitude(value);
+                }
+
+                constexpr BasicRatio ReducedBy(uint32_t gcd) const noexcept {
+                    return BasicRatio(
+                        static_cast<Representation>(
+                            static_cast<int64_t>(_num) / gcd
+                        ),
+                        static_cast<Representation>(
+                            static_cast<int64_t>(_den) / gcd
+                        )
+                    );
                 }
 
             public:
@@ -92,17 +117,17 @@
                 }
 
                 /** @brief Replaces the numerator without reducing the ratio. */
-                constexpr void SetNumerator(Representation num) noexcept {
+                FOUNDATION_CONSTEXPR14 void SetNumerator(Representation num) noexcept {
                     _num = num;
                 }
 
                 /** @brief Replaces the denominator without reducing the ratio. */
-                constexpr void SetDenominator(Representation den) noexcept {
+                FOUNDATION_CONSTEXPR14 void SetDenominator(Representation den) noexcept {
                     _den = den;
                 }
 
                 /** @brief Replaces both terms without reducing the ratio. */
-                constexpr void Set(
+                FOUNDATION_CONSTEXPR14 void Set(
                     Representation num,
                     Representation den
                 ) noexcept {
@@ -112,19 +137,7 @@
 
                 /** @brief Returns `-1`, `0`, or `1` according to the ratio sign. */
                 constexpr int8_t Sign() const noexcept {
-                    if constexpr (
-                        Detail::RatioRepresentationTraits<T>::IsSigned
-                    ) {
-                        const int numeratorSign =
-                            (_num > 0) ? 1 : (_num < 0) ? -1 : 0;
-                        const int denominatorSign =
-                            (_den > 0) ? 1 : (_den < 0) ? -1 : 0;
-                        return static_cast<int8_t>(
-                            numeratorSign * denominatorSign
-                        );
-                    } else {
-                        return (_num == 0 || _den == 0) ? 0 : 1;
-                    }
+                    return Detail::RatioRepresentationTraits<T>::Sign(_num, _den);
                 }
 
                 /** @brief Reports whether the denominator is non-zero. */
@@ -145,46 +158,22 @@
                  * @return `0 / 1` when this ratio is invalid.
                  */
                 constexpr BasicRatio Reduced() const noexcept {
-                    if (!IsValid()) {
-                        return BasicRatio(0, 1);
-                    }
-
-                    const uint32_t gcd = Math::GCD(
-                        AbsoluteMagnitude(_num),
-                        AbsoluteMagnitude(_den)
-                    );
-
-                    return BasicRatio(
-                        static_cast<Representation>(
-                            static_cast<int64_t>(_num) / gcd
-                        ),
-                        static_cast<Representation>(
-                            static_cast<int64_t>(_den) / gcd
+                    return IsValid()
+                        ? ReducedBy(
+                            Math::GCD(
+                                AbsoluteMagnitude(_num),
+                                AbsoluteMagnitude(_den)
+                            )
                         )
-                    );
+                        : BasicRatio(0, 1);
                 }
 
                 /**
                  * @brief Reduces this ratio in place.
                  * @post An invalid ratio becomes the canonical `0 / 1` value.
                  */
-                constexpr void Reduce() noexcept {
-                    if (!IsValid()) {
-                        _num = 0;
-                        _den = 1;
-                        return;
-                    }
-
-                    const uint32_t gcd = Math::GCD(
-                        AbsoluteMagnitude(_num),
-                        AbsoluteMagnitude(_den)
-                    );
-                    _num = static_cast<Representation>(
-                        static_cast<int64_t>(_num) / gcd
-                    );
-                    _den = static_cast<Representation>(
-                        static_cast<int64_t>(_den) / gcd
-                    );
+                FOUNDATION_CONSTEXPR14 void Reduce() noexcept {
+                    *this = Reduced();
                 }
             };
 

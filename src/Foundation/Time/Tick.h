@@ -44,7 +44,7 @@ namespace Foundation {
             }
 
             /** @brief Replaces the raw counter value. */
-            constexpr void SetValue(Representation value) noexcept {
+            FOUNDATION_CONSTEXPR14 void SetValue(Representation value) noexcept {
                 _value = value;
             }
 

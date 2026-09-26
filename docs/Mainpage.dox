@@ -162,6 +162,7 @@
  * @section MainPage_Requirements Requirements
  *
  * Foundation 1.2.0 requires C++17 or newer in CMake package, direct-source,
- * Arduino-style, desktop, and embedded builds. Requiring the C++17 language
- * does not mean every target must provide the complete C++ standard library.
+ * desktop, and embedded builds. Arduino source builds accept C++11 so stock
+ * Arduino cores work unmodified. Requiring a language level does not mean every
+ * target must provide the complete C++ standard library.
  */

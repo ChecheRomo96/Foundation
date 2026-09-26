@@ -3,6 +3,7 @@
 #ifndef FOUNDATION_TIME_FREQUENCY_H
 #define FOUNDATION_TIME_FREQUENCY_H
 
+    #include <Foundation_BuildSettings.h>
     #include <Foundation/Math/Ratio.h>
 
     namespace Foundation {
@@ -47,13 +48,13 @@
                 constexpr uint32_t Denominator() const noexcept;
 
                 /** @brief Replaces the numerator; zero makes the frequency invalid. */
-                constexpr void SetNumerator(uint32_t num) noexcept;
+                FOUNDATION_CONSTEXPR14 void SetNumerator(uint32_t num) noexcept;
 
                 /** @brief Replaces the denominator; zero makes the ratio invalid. */
-                constexpr void SetDenominator(uint32_t den) noexcept;
+                FOUNDATION_CONSTEXPR14 void SetDenominator(uint32_t den) noexcept;
 
                 /** @brief Replaces both ratio terms. */
-                constexpr void Set(
+                FOUNDATION_CONSTEXPR14 void Set(
                     uint32_t num,
                     uint32_t den
                 ) noexcept;
@@ -109,15 +110,15 @@
                 return _ratio.Denominator();
             }
 
-            constexpr void Frequency::SetNumerator(uint32_t num) noexcept {
+            FOUNDATION_CONSTEXPR14 void Frequency::SetNumerator(uint32_t num) noexcept {
                 _ratio.SetNumerator(num);
             }
 
-            constexpr void Frequency::SetDenominator(uint32_t den) noexcept {
+            FOUNDATION_CONSTEXPR14 void Frequency::SetDenominator(uint32_t den) noexcept {
                 _ratio.SetDenominator(den);
             }
 
-            constexpr void Frequency::Set(
+            FOUNDATION_CONSTEXPR14 void Frequency::Set(
                 uint32_t num,
                 uint32_t den
             ) noexcept {

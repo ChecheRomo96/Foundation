@@ -9,7 +9,7 @@
 #include <Foundation/Math/Matrix/Fixed.h>
 #include <Foundation/Math/Matrix/Dynamic.h>
 
-namespace Foundation::Math::Matrix {
+namespace Foundation { namespace Math { namespace Matrix {
 
     /**
      * @ingroup Foundation_MatrixOperations
@@ -218,6 +218,6 @@ namespace Foundation::Math::Matrix {
         return true;
     }
 
-} // namespace Foundation::Math::Matrix
+}}} // namespace Foundation::Math::Matrix
 
 #endif // FOUNDATION_MATH_MATRIX_OPERATIONS_H

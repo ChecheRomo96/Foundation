@@ -187,9 +187,10 @@
  *
  * @section Foundation_TargetPlatforms Target Platforms
  *
- * All target platforms require a compiler with C++17 language support. The
- * library avoids requiring the complete C++ standard library so that C++17
- * language mode remains usable on constrained embedded toolchains.
+ * All target platforms require a compiler with C++17 language support, except
+ * Arduino source builds, which accept the C++11 of stock Arduino cores. The
+ * library avoids requiring the complete C++ standard library so that it remains
+ * usable on constrained embedded toolchains.
  *
  * Foundation is intended to support:
  *

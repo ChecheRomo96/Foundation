@@ -78,34 +78,27 @@
                 constexpr DurationType operator-(
                     const BasicTimePoint& rhs
                 ) const noexcept {
-                    if (!IsComparable(rhs)) {
-                        return DurationType::Invalid();
-                    }
-
-                    const Representation difference =
-                        static_cast<Representation>(_ticks - rhs._ticks);
-
-                    if (difference >= TickType::HalfRange()) {
-                        return DurationType::Invalid();
-                    }
-
-                    return DurationType(difference);
+                    return (!IsComparable(rhs) ||
+                            static_cast<Representation>(_ticks - rhs._ticks) >=
+                                TickType::HalfRange())
+                        ? DurationType::Invalid()
+                        : DurationType(
+                            static_cast<Representation>(_ticks - rhs._ticks)
+                        );
                 }
 
                 /** @brief Adds a valid Duration while preserving Clock identity. */
                 constexpr BasicTimePoint operator+(
                     const DurationType& duration
                 ) const noexcept {
-                    if (!IsValid() || !duration.IsValid()) {
-                        return BasicTimePoint();
-                    }
-
-                    return BasicTimePoint(
-                        static_cast<Representation>(
-                            _ticks + duration.Ticks()
-                        ),
-                        _clock
-                    );
+                    return (!IsValid() || !duration.IsValid())
+                        ? BasicTimePoint()
+                        : BasicTimePoint(
+                            static_cast<Representation>(
+                                _ticks + duration.Ticks()
+                            ),
+                            _clock
+                        );
                 }
 
                 /**
@@ -114,16 +107,14 @@
                 constexpr BasicTimePoint operator-(
                     const DurationType& duration
                 ) const noexcept {
-                    if (!IsValid() || !duration.IsValid()) {
-                        return BasicTimePoint();
-                    }
-
-                    return BasicTimePoint(
-                        static_cast<Representation>(
-                            _ticks - duration.Ticks()
-                        ),
-                        _clock
-                    );
+                    return (!IsValid() || !duration.IsValid())
+                        ? BasicTimePoint()
+                        : BasicTimePoint(
+                            static_cast<Representation>(
+                                _ticks - duration.Ticks()
+                            ),
+                            _clock
+                        );
                 }
 
                 /** @brief Reports whether two points store the same Clock pointer. */
@@ -152,13 +143,10 @@
                 constexpr bool operator<(
                     const BasicTimePoint& rhs
                 ) const noexcept {
-                    if (!IsComparable(rhs)) {
-                        return false;
-                    }
-
-                    const Representation forward =
-                        static_cast<Representation>(rhs._ticks - _ticks);
-                    return forward != 0 && forward < TickType::HalfRange();
+                    return IsComparable(rhs) &&
+                        static_cast<Representation>(rhs._ticks - _ticks) != 0 &&
+                        static_cast<Representation>(rhs._ticks - _ticks) <
+                            TickType::HalfRange();
                 }
 
                 /** @brief Orders compatible points within the modular half-range. */

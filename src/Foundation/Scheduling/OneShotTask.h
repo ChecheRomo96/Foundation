@@ -3,7 +3,7 @@
 
 #include "Task.h"
 
-namespace Foundation::Scheduling {
+namespace Foundation { namespace Scheduling {
 
     /**
      * @brief Task that becomes due once at or after a trigger TimePoint.
@@ -68,6 +68,6 @@ namespace Foundation::Scheduling {
 
     /** @brief Default 32-bit one-shot task specialization. */
     using OneShotTask = BasicOneShotTask<>;
-}
+}}
 
 #endif

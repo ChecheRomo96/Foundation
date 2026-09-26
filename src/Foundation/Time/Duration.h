@@ -1,6 +1,7 @@
 #ifndef FOUNDATION_TIME_DURATION_H
 #define FOUNDATION_TIME_DURATION_H
 
+#include <Foundation_BuildSettings.h>
 #include <Foundation/Time/Tick.h>
 #include <Foundation/Time/Period.h>
 
@@ -65,7 +66,7 @@ namespace Foundation {
             }
 
             /** @brief Replaces the stored tick count. */
-            constexpr void SetTicks(Representation ticks) noexcept {
+            FOUNDATION_CONSTEXPR14 void SetTicks(Representation ticks) noexcept {
                 _ticks = Normalize(ticks);
             }
 
@@ -99,17 +100,12 @@ namespace Foundation {
             constexpr BasicDuration operator+(
                 const BasicDuration& rhs
             ) const noexcept {
-                if (!IsValid() || !rhs.IsValid()) {
-                    return Invalid();
-                }
-
-                if (rhs._ticks > MaximumTicks() - _ticks) {
-                    return Invalid();
-                }
-
-                return BasicDuration(
-                    static_cast<Representation>(_ticks + rhs._ticks)
-                );
+                return (!IsValid() || !rhs.IsValid() ||
+                        rhs._ticks > MaximumTicks() - _ticks)
+                    ? Invalid()
+                    : BasicDuration(
+                        static_cast<Representation>(_ticks + rhs._ticks)
+                    );
             }
 
             /**
@@ -118,13 +114,11 @@ namespace Foundation {
             constexpr BasicDuration operator-(
                 const BasicDuration& rhs
             ) const noexcept {
-                if (!IsValid() || !rhs.IsValid() || rhs._ticks > _ticks) {
-                    return Invalid();
-                }
-
-                return BasicDuration(
-                    static_cast<Representation>(_ticks - rhs._ticks)
-                );
+                return (!IsValid() || !rhs.IsValid() || rhs._ticks > _ticks)
+                    ? Invalid()
+                    : BasicDuration(
+                        static_cast<Representation>(_ticks - rhs._ticks)
+                    );
             }
 
             /** @brief Compares states and tick counts for equality. */
