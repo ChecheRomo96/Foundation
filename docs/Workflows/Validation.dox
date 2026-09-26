@@ -249,7 +249,19 @@
  * | Release export | Passed; `dist/atmega328p_avrgcc_avr5` regenerated |
  * | Archive identity | Every inspected member is `elf32-avr`, architecture `avr:5` |
  * | Package policy | No Debug artifact; `IMPORTED_LOCATION_RELEASE` selects `libFoundation.a` |
- * | Not yet proven | Separate consumer ELF link/size, emulator or board execution, Arduino sketch build |
+ * | Not yet proven | Closed: sketch build by `PKG-005`; consumer link, size, and board execution by the 2026-09-26 record below |
+ *
+ * @subsection FoundationValidationEvidenceAVRBoard AVR firmware consumer on an Arduino Uno — 2026-09-26
+ *
+ * | Field | Recorded value |
+ * | ----- | -------------- |
+ * | Package | Fresh `atmega328p_avrgcc_avr5` export from Homebrew AVR-GCC 9.4.0; identity validator passed |
+ * | Consumer | `tests/AvrConsumer`, found through `find_package` and linked to `Foundation::Foundation` with `-Os -Wall -Wextra -Werror` |
+ * | Archive linkage | The ELF contains `Frequency::GetPeriod()` and `Period::GetFrequency()` from `libFoundation.a` |
+ * | Size | 3718 bytes program (11.3%), 484 bytes data (23.6%) |
+ * | Flash | avrdude from Arduino IDE on Windows, `arduino` programmer at 115200 baud on COM7; 3718 bytes written and verified |
+ * | Board execution | Arduino Uno (ATmega328P, 16 MHz) printed `FOUNDATION AVR CONSUMER: PASSED 14/14` over USART0, covering Ratio, GCD, FloorDiv/FloorMod, Frequency/Period, CircularBuffer, Queue, Stack, Callback, and Swap |
+ * | Emulator | Not yet run; a local simavr build loaded the ELF but produced no UART output before a 60-second timeout, so CI emulation remains follow-up work |
  *
  * @subsection FoundationValidationEvidenceArmLocal Arm bare-metal local preflight — 2026-09-25
  *
