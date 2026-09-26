@@ -6,7 +6,7 @@
  * This page is the version-controlled result of backlog item `TEST-001`. It
  * records what the current test suite actually proves and makes uncovered
  * behavior visible before more tests are added. An entry marked `GAP` is not
- * accepted as tested; it is an explicit input to `TEST-002` or `TEST-003`.
+ * accepted as tested; any remaining entry names its owning backlog item.
  *
  * @section FoundationPublicApiCoverageStatus Status
  *
@@ -14,7 +14,7 @@
  * | ----- | ----- |
  * | Inventory state | `COMPLETE` |
  * | API baseline | Foundation `1.2.0` |
- * | Native baseline | 122 registered CTest cases total, including 10 CMake configuration checks |
+ * | Native baseline | 145 registered CTest cases total, including 10 CMake configuration checks |
  * | Package baseline | One isolated installed-package consumer |
  * | Last reviewed | 2026-09-25 |
  *
@@ -62,14 +62,13 @@
  * | `GCD` | `ArithmeticTest.CalculatesGreatestCommonDivisor`, including `constexpr` and `noexcept` | `BEHAVIOR` |
  * | `FloorMod` | Dedicated positive, negative, zero, exact, divisor-one, limit, invalid-divisor, exhaustive-reference, and `constexpr` cases | `BEHAVIOR` |
  * | `FloorDiv` | Dedicated positive, negative, zero, exact, divisor-one, limit, invalid-divisor, exhaustive-reference, invariant, and `constexpr` cases | `BEHAVIOR` |
- * | `Pi`, `DegToRad`, `RadToDeg` | Reachable through the Math umbrellas only | `GAP` (`TEST-002`) |
- * | `BasicRatio<T>`, `Ratio`, `UnsignedRatio`: construction, aliases, access, validity, conversion, sign, reduction, limits | Six `RatioTest` cases in `MathTests.cc` | `BEHAVIOR` |
- * | Ratio mutators `SetNumerator` and `SetDenominator` independently | No direct assertions exist; `Set` is exercised before in-place reduction | `GAP` (`TEST-002`) |
- * | `Complex<T>` constructors, assignment, arithmetic, compound arithmetic, comparisons, conjugate, and magnitude | Reachable through the Math umbrella; no direct behavior case | `GAP` (`TEST-002`) |
+ * | `Pi`, `DegToRad`, `RadToDeg` | Three `TrigonometryTest` cases cover constant evaluation, positive/negative/unwrapped conversion, and representative round trips | `BEHAVIOR` |
+ * | `BasicRatio<T>`, `Ratio`, `UnsignedRatio`: construction, aliases, access, validity, conversion, sign, reduction, mutators, and limits | Eight `RatioTest` cases in `MathTests.cc`, including independent mutators, zero, `INT32_MIN`, and `INT32_MAX` | `BEHAVIOR` |
+ * | `Complex<T>` constructors, assignment, arithmetic, compound arithmetic, comparisons, conjugate, and magnitude | Six `ComplexTest` cases exercise integer and floating-point behavior | `BEHAVIOR` |
  * | `Matrix::Fixed`: array construction and `At`; fixed/fixed multiplication | `MatrixTest.MultipliesFixedMatrices` | `BEHAVIOR` |
- * | `Matrix::Fixed`: default/fill/copy/assignment, dimensions, data and row access, element/scalar arithmetic, comparison, fill/zero, transpose, factories | No direct behavior cases | `GAP` (`TEST-002`) |
+ * | `Matrix::Fixed`: default/fill/copy/assignment, dimensions, data and row access, element/scalar arithmetic, comparison, fill/zero, transpose, factories | Six `FixedMatrixTest` cases in `MatrixBehaviorTests.cc` | `BEHAVIOR` |
  * | `Matrix::Dynamic`: allocation, attachment, validity, ownership, dimensions, size, data, `At`, clear, copy, move, allocation failure, dimension overflow | Allocation, attachment, copy/move, failure, and preservation cases in `MatrixTests.cc` | `BEHAVIOR` |
- * | `Matrix::Dynamic`: element/scalar arithmetic, comparisons, row access, fill/zero, value-returning `Transposed()` | No direct behavior cases | `GAP` (`TEST-002`) |
+ * | `Matrix::Dynamic`: element/scalar arithmetic, comparisons, row access, fill/zero, value-returning `Transposed()` | Six `DynamicMatrixTest` cases cover successful and incompatible operations, empty values, and owning transpose results | `BEHAVIOR` |
  * | `Matrix::Dynamic::TransposeTo` | Attached-output and overlap-rejection cases | `BEHAVIOR` |
  * | All four `Matrix::Multiply` fixed/dynamic operand combinations | Four multiplication cases plus incompatible-dimension, attached-result, and overlap paths | `BEHAVIOR` |
  *
@@ -137,10 +136,8 @@
  *
  * @section FoundationPublicApiCoverageNext Prioritized Test Work
  *
- * `TEST-002` should close the Math gaps in this order: Complex, Trigonometry,
- * Fixed matrix operations, then remaining Dynamic operations. `TEST-003`
- * should next cover Callback empty-mode behavior, explicit lvalue container
- * copies, Time mutators/boundaries, scheduler order, and Utils edge types.
- * `TEST-004` should convert the one-time header audit into a generated,
- * repeatable CI target.
+ * `TEST-002` is complete. `TEST-003` should next cover Callback empty-mode
+ * behavior, explicit lvalue container copies, Time mutators/boundaries,
+ * scheduler order, and Utils edge types. `TEST-004` should convert the
+ * one-time header audit into a generated, repeatable CI target.
  */

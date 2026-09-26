@@ -14,8 +14,10 @@ version 1.2.0 is the current release.
 - AVR and Arm bare-metal CI that builds Debug and Release, exports Release-only
   packages, and verifies object format, architecture, ABI metadata, and CMake
   import policy without claiming target execution.
-- A public-API coverage map that separates existing evidence from explicit
-  `TEST-002`, `TEST-003`, and `TEST-004` gaps.
+- A public-API coverage map that separates verified evidence from the remaining
+  `TEST-003` and `TEST-004` gaps and records the closure of `TEST-002`.
+- Twenty-three focused Math behavior cases for Complex, trigonometry, Ratio
+  mutators and numeric limits, and fixed/dynamic matrix member APIs.
 - A license/ownership review packet with interim guardrails, counsel questions,
   evidence checklist, and objective exit criteria.
 
@@ -38,7 +40,8 @@ version 1.2.0 is the current release.
   does not currently publish universal binaries, Debug packages, or a binary
   package manager integration.
 - Sanitizer, warning-policy, coverage-threshold, public-header self-containment,
-  and the behavioral gaps recorded by the API coverage map remain open.
+  and the remaining non-Math behavioral gaps recorded by the API coverage map
+  remain open.
 
 See the
 [online Known Limitations page](https://checheromo96.github.io/Foundation/group__Foundation__BuildGuide__KnownLimitations.html)
