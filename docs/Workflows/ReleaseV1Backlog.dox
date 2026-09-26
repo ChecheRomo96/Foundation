@@ -14,8 +14,8 @@
  * | Current release | `v1.2.0` |
  * | Working branch | `main` (trunk-based development) |
  * | Overall status | `IN PROGRESS` |
- * | Current milestone | M3 - Test depth and code quality |
- * | Last reviewed | 2026-09-25 |
+ * | Current milestone | M4 - Package and workflow hardening |
+ * | Last reviewed | 2026-09-26 |
  * | Release state | `v1.2.0` published; stabilization continues |
  *
  * Allowed task states are:
@@ -115,8 +115,8 @@
  * | -- | -------- | ----- | ---- | ------------------------------ |
  * | CI-001 | P0 | `DONE` | Add native build and test CI | [Run 36194411008](https://github.com/ChecheRomo96/Foundation/actions/runs/36194411008) passed the current Debug and Release suite on macOS/Apple Clang, Linux/GCC, Linux/Clang, Windows/MSVC, and Windows/Clang for `v1.2.0`. |
  * | CI-002 | P0 | `DONE` | Validate exported packages in CI | The same run completed fresh Release exports and successfully linked and executed the standalone `Foundation::Foundation` consumer in all five native jobs. |
- * | CI-003 | P1 | `IN PROGRESS` | Validate documentation on pull requests | `.github/workflows/deploy-docs.yml` now performs a fresh warning-as-error Doxygen build on pull requests with read-only permission and keeps deployment in a separate push-only job. Local YAML parsing and Doxygen generation pass; the first hosted run remains to be recorded. |
- * | CI-004 | P1 | `IN PROGRESS` | Add embedded compile jobs | `.github/workflows/embedded-ci.yml` builds Debug/Release, exports Release, verifies target object identity and package policy, and uploads all AVR, generic Arm, PSoC, and STM32 packages without pretending to execute target code. AVR passed the equivalent local sequence. The local Arm compiler lacks Newlib; CI installs it explicitly. The first hosted run remains to be recorded. |
+ * | CI-003 | P1 | `DONE` | Validate documentation on pull requests | `.github/workflows/deploy-docs.yml` performs a fresh warning-as-error Doxygen build on pull requests with read-only permission and keeps deployment in a separate push-only job. [Run 36227959994](https://github.com/ChecheRomo96/Foundation/actions/runs/36227959994) validated and deployed the exact current `main` commit. |
+ * | CI-004 | P1 | `DONE` | Add embedded compile jobs | `.github/workflows/embedded-ci.yml` builds Debug/Release, exports Release, verifies target object identity and package policy, and uploads AVR and every generic Arm, PSoC, and STM32 package without pretending to execute target code. [Run 36227959989](https://github.com/ChecheRomo96/Foundation/actions/runs/36227959989) passed on the exact current `main` commit. |
  * | CI-005 | P1 | `TODO` | Preserve useful failure evidence | CI uploads logs, test reports, and selected package artifacts needed to reproduce a failure. |
  *
  * Docker may support Linux and cross-compiler jobs. It does not replace native
@@ -147,12 +147,12 @@
  *
  * | ID | Priority | State | Task | Acceptance criteria / evidence |
  * | -- | -------- | ----- | ---- | ------------------------------ |
- * | VAL-001 | P0 | `IN PROGRESS` | Validate macOS arm64 | On macOS 15.3.2 Arm64 with AppleClang 16.0.0, CMake 4.1.1, and Ninja 1.12.1, clean runs passed 161/161 Debug and 161/161 Release tests plus the 1/1 isolated package consumer. `libFoundation.a` is Arm64, the export contains no Debug artifact, and only `IMPORTED_LOCATION_RELEASE` is present. Examples and launcher acceptance remain. |
+ * | VAL-001 | P0 | `IN PROGRESS` | Validate macOS arm64 | On macOS 15.3.2 Arm64 with AppleClang 16.0.0, CMake 4.1.1, and Ninja 1.12.1, clean runs passed 162/162 Debug and 162/162 Release tests plus the 1/1 isolated package consumer. `libFoundation.a` is Arm64, the export contains no Debug artifact, and only `IMPORTED_LOCATION_RELEASE` is present. Examples and launcher acceptance remain. |
  * | VAL-002 | P0 | `TODO` | Validate macOS x64 | Cross-build and inspect x86-64 artifacts; run tests/consumer through Rosetta or on Intel hardware. |
  * | VAL-003 | P0 | `IN PROGRESS` | Validate Windows MSVC x64 | The v1.2.0 hosted job passed non-zero Debug/Release tests, Release export, and the external package consumer. Archive inspection plus examples/launcher acceptance on Windows remain. |
  * | VAL-004 | P0 | `IN PROGRESS` | Validate Windows Clang x64 | The v1.2.0 hosted Clang job passed the same tests, export, and consumer. Archive inspection plus examples/launcher acceptance on Windows remain. |
  * | VAL-005 | P0 | `IN PROGRESS` | Validate Linux x64 | GCC and Clang CI jobs completed both configurations, package checks, and consumers for v1.2.0. Local examples/launcher acceptance and a durable evidence record remain. |
- * | VAL-006 | P1 | `IN PROGRESS` | Validate Linux arm64 / Raspberry Pi | Native `ubuntu-24.04-arm` GCC and Clang jobs now run both configurations, export, and package consumers. A green hosted run is required; Raspberry Pi-specific consumer/hardware evidence remains separate. |
+ * | VAL-006 | P1 | `IN PROGRESS` | Validate Linux arm64 / Raspberry Pi | Native `ubuntu-24.04-arm` GCC and Clang jobs passed both configurations, Release export, and package consumers in [run 36227959990](https://github.com/ChecheRomo96/Foundation/actions/runs/36227959990). Raspberry Pi-specific consumer and hardware evidence remains separate. |
  * | VAL-007 | P0 | `IN PROGRESS` | Validate AVR ATmega328P | A clean local AVR-GCC 9.4.0 run built Debug and Release, regenerated the Release-only package, and confirmed `elf32-avr` / `avr:5` members plus `IMPORTED_LOCATION_RELEASE`. Consumer ELF link/size and board or emulator execution remain. |
  * | VAL-008 | P0 | `TODO` | Validate STM32 | All advertised profiles compile and package; at least one real firmware consumer links and executes on representative hardware. |
  * | VAL-009 | P1 | `TODO` | Decide PSoC 5LP status | Exact PSoC toolchain/consumer evidence promotes it to supported; until then it remains experimental. |

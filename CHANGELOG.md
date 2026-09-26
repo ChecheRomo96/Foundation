@@ -14,8 +14,8 @@ version 1.2.0 is the current release.
 - AVR and Arm bare-metal CI that builds Debug and Release, exports Release-only
   packages, and verifies object format, architecture, ABI metadata, and CMake
   import policy without claiming target execution.
-- A public-API coverage map that separates verified evidence from the remaining
-  `TEST-004` gap and records the closure of `TEST-002` and `TEST-003`.
+- A public-API coverage map that records the closure of `TEST-002`, `TEST-003`,
+  and `TEST-004` with direct behavior, conformance, and header evidence.
 - Twenty-three focused Math behavior cases for Complex, trigonometry, Ratio
   mutators and numeric limits, and fixed/dynamic matrix member APIs.
 - Sixteen focused behavior cases for explicit container-copy semantics,
@@ -53,8 +53,8 @@ version 1.2.0 is the current release.
 - Exported packages are static, target-specific, and Release-only. Foundation
   does not currently publish universal binaries, Debug packages, or a binary
   package manager integration.
-- Sanitizer, warning-policy, coverage-threshold, and public-header
-  self-containment work remain open.
+- Failure-evidence retention, stale-state hardening, and complete package
+  identity verification remain open.
 
 See the
 [online Known Limitations page](https://checheromo96.github.io/Foundation/group__Foundation__BuildGuide__KnownLimitations.html)

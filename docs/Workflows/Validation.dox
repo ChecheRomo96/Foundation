@@ -196,8 +196,8 @@
  * | Preset | `macos_arm64` |
  * | Toolchain | CMake 4.1.1, Ninja 1.12.1, AppleClang 16.0.0 |
  * | Clean configure/build | Passed after `clean.sh macos_arm64` |
- * | Debug tests | 161/161 passed |
- * | Release tests | 161/161 passed |
+ * | Debug tests | 162/162 passed |
+ * | Release tests | 162/162 passed |
  * | Release export | Passed; `dist/macos_arm64` regenerated |
  * | Package consumer | 1/1 passed against Foundation 1.2.0 |
  * | Archive identity | Thin Arm64 `libFoundation.a` |
@@ -225,6 +225,9 @@
  * stops at the compiler wrapper's `include_next <stdint.h>`. This is recorded
  * as a missing local runtime, not as a Foundation source failure and not as a
  * successful Arm validation. The Ubuntu embedded CI installs
- * `libnewlib-arm-none-eabi` and `libstdc++-arm-none-eabi-newlib` explicitly;
- * its first hosted result will provide the next Arm compile/package evidence.
+ * `libnewlib-arm-none-eabi` and `libstdc++-arm-none-eabi-newlib` explicitly.
+ * Hosted run
+ * [36227959989](https://github.com/ChecheRomo96/Foundation/actions/runs/36227959989)
+ * subsequently built, exported, and inspected all declared Arm profiles. Local
+ * firmware linkage and target execution remain separate validation gates.
  */
