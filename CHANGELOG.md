@@ -26,7 +26,10 @@ version 1.2.0 is the current release.
 
 - `scripts/test-arduino.sh` and an `arduino` CI job that compile every example
   sketch for the Arduino Uno with the unmodified AVR core.
-
+- A manual-only CI acceptance workflow that creates controlled Bash and
+  PowerShell failures, retains their CMake, CTest, JUnit, and partial-package
+  diagnostics, and verifies both uploaded artifacts without affecting normal
+  push or pull-request runs.
 - Pull-request Doxygen validation with warning-as-error generation and a
   deployment job that runs only after successful validation on a branch push.
 - Native Linux Arm64 GCC and Clang jobs using GitHub-hosted Arm64 runners.
@@ -73,16 +76,19 @@ version 1.2.0 is the current release.
 - External licensing remains blocked until the license and ownership model are
   reviewed by qualified legal counsel. Published source and packages remain
   proprietary and grant no external-use rights.
-- macOS Arm64 is the only target with a recorded clean local native test and
-  package-consumer run. The tagged workflow published packages for macOS
-  Arm64, Windows x64, and Linux x64; remaining local, Arm64 Linux, examples,
-  launcher, firmware, emulator, and hardware evidence stays explicitly open.
+- macOS Arm64 and macOS x64 through Rosetta 2 have recorded clean native,
+  package-consumer, example, and launcher validation. Hosted Windows and Linux
+  builds pass their tests and package consumers; Windows/Linux example and
+  Windows launcher acceptance remain open.
 - PSoC and generic Arm profiles are experimental. PIC remains deferred.
 - Exported packages are static, target-specific, and Release-only. Foundation
   does not currently publish universal binaries, Debug packages, or a binary
   package manager integration.
-- Arduino source-mode validation and physical embedded-target execution remain
-  open; cross-compilation and archive inspection do not replace those gates.
+- All Arduino Uno sketches compile with the stock AVR core, and the exported
+  AVR package has executed a 14-check firmware consumer on an Arduino Uno.
+  Raspberry Pi-specific evidence, STM32/PSoC firmware execution, and automated
+  AVR emulator execution remain open; cross-compilation alone does not replace
+  those gates.
 
 See the
 [online Known Limitations page](https://checheromo96.github.io/Foundation/group__Foundation__BuildGuide__KnownLimitations.html)

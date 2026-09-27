@@ -1,0 +1,179 @@
+name: Verify CI Failure Evidence
+
+run-name: Controlled failure-evidence acceptance
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_controlled_failure:
+        description: Run the intentional Linux and Windows failure probes
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: failure-evidence-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  controlled-failure:
+    name: Controlled failure / ${{ matrix.name }}
+    if: inputs.confirm_controlled_failure
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 5
+    continue-on-error: true
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Ubuntu / Bash
+            runner: ubuntu-24.04
+            platform: unix
+
+          - name: Windows / PowerShell
+            runner: windows-2025-vs2026
+            platform: windows
+
+    steps:
+      - name: Create representative Unix diagnostics
+        if: matrix.platform == 'unix'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p \
+            build/failure-evidence/test-results \
+            build/failure-evidence/Testing/Temporary \
+            dist/failure-evidence
+
+          printf '%s\n' \
+            '# Controlled CI-005 cache evidence' \
+            'FOUNDATION_FAILURE_EVIDENCE:BOOL=ON' \
+            > build/failure-evidence/CMakeCache.txt
+          printf '%s\n' \
+            '<?xml version="1.0" encoding="UTF-8"?>' \
+            '<testsuite name="CI-005" tests="1" failures="1">' \
+            '  <testcase name="ControlledFailure">' \
+            '    <failure message="intentional">CI-005 Unix probe</failure>' \
+            '  </testcase>' \
+            '</testsuite>' \
+            > build/failure-evidence/test-results/ControlledFailure.xml
+          printf '%s\n' \
+            'CI-005 Unix controlled failure log' \
+            > build/failure-evidence/Testing/Temporary/LastTest.log
+          printf '%s\n' \
+            'Incomplete package retained only as diagnostic evidence.' \
+            > dist/failure-evidence/README.txt
+
+      - name: Create representative Windows diagnostics
+        if: matrix.platform == 'windows'
+        shell: pwsh
+        run: |
+          $directories = @(
+              "build/failure-evidence/test-results",
+              "build/failure-evidence/Testing/Temporary",
+              "dist/failure-evidence"
+          )
+          foreach ($directory in $directories) {
+              New-Item -ItemType Directory -Force -Path $directory | Out-Null
+          }
+
+          @(
+              "# Controlled CI-005 cache evidence",
+              "FOUNDATION_FAILURE_EVIDENCE:BOOL=ON"
+          ) | Set-Content `
+              -LiteralPath "build/failure-evidence/CMakeCache.txt" `
+              -Encoding utf8
+          @(
+              '<?xml version="1.0" encoding="UTF-8"?>',
+              '<testsuite name="CI-005" tests="1" failures="1">',
+              '  <testcase name="ControlledFailure">',
+              '    <failure message="intentional">CI-005 Windows probe</failure>',
+              '  </testcase>',
+              '</testsuite>'
+          ) | Set-Content `
+              -LiteralPath "build/failure-evidence/test-results/ControlledFailure.xml" `
+              -Encoding utf8
+          "CI-005 Windows controlled failure log" | Set-Content `
+              -LiteralPath "build/failure-evidence/Testing/Temporary/LastTest.log" `
+              -Encoding utf8
+          "Incomplete package retained only as diagnostic evidence." |
+              Set-Content `
+                  -LiteralPath "dist/failure-evidence/README.txt" `
+                  -Encoding utf8
+
+      - name: Trigger the expected Unix failure
+        if: matrix.platform == 'unix'
+        shell: bash
+        run: |
+          printf '%s\n' 'CI-005: intentional Unix failure (exit 23)'
+          exit 23
+
+      - name: Trigger the expected Windows failure
+        if: matrix.platform == 'windows'
+        shell: pwsh
+        run: |
+          Write-Error "CI-005: intentional Windows failure (exit 23)"
+          exit 23
+
+      - name: Upload controlled failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: failure-evidence-${{ matrix.platform }}-${{ github.run_attempt }}
+          path: |
+            build/failure-evidence/CMakeCache.txt
+            build/failure-evidence/Testing/Temporary/
+            build/failure-evidence/test-results/
+            dist/failure-evidence/
+          if-no-files-found: error
+          retention-days: 14
+
+  verify-evidence:
+    name: Verify retained Linux and Windows evidence
+    if: always() && inputs.confirm_controlled_failure
+    needs: controlled-failure
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+
+    steps:
+      - name: Download controlled failure artifacts
+        uses: actions/download-artifact@v8
+        with:
+          pattern: failure-evidence-*-${{ github.run_attempt }}
+          path: retained-evidence
+
+      - name: Verify both diagnostic sets
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          for platform in unix windows
+          do
+            root="retained-evidence/failure-evidence-${platform}-${{ github.run_attempt }}"
+            test -f "$root/build/failure-evidence/CMakeCache.txt"
+            test -f "$root/build/failure-evidence/Testing/Temporary/LastTest.log"
+            test -f "$root/build/failure-evidence/test-results/ControlledFailure.xml"
+            test -f "$root/dist/failure-evidence/README.txt"
+
+            grep -q 'FOUNDATION_FAILURE_EVIDENCE:BOOL=ON' \
+              "$root/build/failure-evidence/CMakeCache.txt"
+            grep -q 'failures="1"' \
+              "$root/build/failure-evidence/test-results/ControlledFailure.xml"
+            grep -q 'controlled failure log' \
+              "$root/build/failure-evidence/Testing/Temporary/LastTest.log"
+            grep -q 'diagnostic evidence' \
+              "$root/dist/failure-evidence/README.txt"
+          done
+
+          {
+            echo '## CI-005 failure-evidence acceptance'
+            echo
+            echo '- Linux/Bash controlled failure: artifact verified'
+            echo '- Windows/PowerShell controlled failure: artifact verified'
+            echo '- CMake cache, test log, JUnit XML, and partial package retained'
+          } >> "$GITHUB_STEP_SUMMARY"

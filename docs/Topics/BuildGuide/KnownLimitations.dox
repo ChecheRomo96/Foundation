@@ -44,9 +44,17 @@
  * Embedded run
  * [36227959989](https://github.com/ChecheRomo96/Foundation/actions/runs/36227959989)
  * built, exported, and inspected AVR and every declared Arm profile.
+ * Clean macOS Arm64 and Rosetta 2 x64 validation additionally executed every
+ * native example and the interactive launcher. All 12 sketches compile with
+ * the stock Arduino AVR core, and a package-consuming firmware passed 14/14
+ * runtime checks on an Arduino Uno.
  *
  * The following evidence is still pending:
  *
+ * - Windows and Linux example execution plus Windows launcher acceptance;
+ * - controlled Linux/Windows failure-artifact acceptance for `CI-005`;
+ * - clean downstream consumption from a published release without
+ *   repository-relative paths;
  * - Raspberry Pi-specific consumer and hardware evidence;
  * - Arm/STM32 firmware linkage and target execution beyond hosted package
  *   cross-compilation;
@@ -111,12 +119,12 @@
  *
  * @section FoundationKnownLimitationsQuality Quality Gates Still Open
  *
- * The current suite is meaningful but is not the final quality ceiling.
- * The inventoried Math and remaining-module behavior gaps are closed.
- * Standalone compilation of every public header, agreed compiler-warning
- * policies, sanitizers, and a coverage baseline with an explicit threshold
- * remain open release tasks. Examples demonstrate API use and are never
- * counted as tests.
+ * The inventoried Math and remaining-module behavior gaps are closed. Every
+ * enabled public header compiles independently; supported native compilers
+ * enforce warnings as errors; native sanitizers pass; and the GCC coverage job
+ * enforces the agreed 90% line threshold. Remaining quality work concerns the
+ * platform, downstream-consumer, controlled-failure, and hardware evidence
+ * listed above. Examples demonstrate API use and are never counted as tests.
  *
  * The maintained release scope is summarized in the repository
  * `CHANGELOG.md`. Update this page, the changelog, support matrix, and release
