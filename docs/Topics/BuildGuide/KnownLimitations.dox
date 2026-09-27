@@ -52,7 +52,6 @@
  * The following evidence is still pending:
  *
  * - Windows and Linux example execution plus Windows launcher acceptance;
- * - controlled Linux/Windows failure-artifact acceptance for `CI-005`;
  * - clean downstream consumption from a published release without
  *   repository-relative paths;
  * - Raspberry Pi-specific consumer and hardware evidence;

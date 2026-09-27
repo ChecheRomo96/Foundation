@@ -229,8 +229,11 @@
  * any Foundation warning. All 12 sketches passed in
  * [run 36270755264](https://github.com/ChecheRomo96/Foundation/actions/runs/36270755264).
  *
- * `CI-005` is implemented across every production workflow. The manual
- * controlled-failure probe above must complete once on GitHub-hosted Linux and
- * Windows runners, and its successful verification run must be recorded in
- * @ref Foundation_Workflows_ReleaseV1 before the backlog item becomes `DONE`.
+ * `CI-005` is implemented across every production workflow. Its manual
+ * acceptance probe completed in
+ * [run 36348973174](https://github.com/ChecheRomo96/Foundation/actions/runs/36348973174):
+ * the expected Linux and Windows jobs failed, both `if: failure()` upload steps
+ * succeeded, GitHub retained two distinct artifacts, and the final job
+ * downloaded and verified both diagnostic sets. The overall acceptance run
+ * succeeded because only the two explicit probe jobs tolerate failure.
  */
