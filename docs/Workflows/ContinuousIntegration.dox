@@ -173,6 +173,26 @@
  * successful validated packages keep their existing shorter-lived artifact
  * names and policies.
  *
+ * `.github/workflows/failure-evidence.yml` is a manual-only acceptance probe
+ * for this policy. It is never triggered by a push or pull request. When
+ * dispatched with `confirm_controlled_failure=true`, one Ubuntu/Bash job and
+ * one Windows/PowerShell job create representative CMake, CTest, JUnit, and
+ * partial-package diagnostics, then intentionally exit with code 23. Their
+ * `if: failure()` steps upload separate 14-day artifacts. A final Ubuntu job
+ * downloads both artifacts and verifies every expected file and marker. The
+ * probe jobs use job-level `continue-on-error`, so an expected failure does
+ * not make the acceptance workflow red; missing or malformed evidence still
+ * fails the final verification job.
+ *
+ * Run the acceptance probe from **Actions → Verify CI Failure Evidence → Run
+ * workflow**, enable the confirmation input, or dispatch it with:
+ *
+ * @code{bash}
+ * gh workflow run failure-evidence.yml \
+ *     --ref main \
+ *     -f confirm_controlled_failure=true
+ * @endcode
+ *
  * Before each native matrix run, CI seeds representative stale build and
  * distribution files. It first verifies that normal clean removes only the
  * selected build tree, then that clean with the distribution flag removes both
@@ -208,4 +228,9 @@
  * `arduino:avr:uno` with the unmodified Arduino AVR core (C++11) and fails on
  * any Foundation warning. All 12 sketches passed in
  * [run 36270755264](https://github.com/ChecheRomo96/Foundation/actions/runs/36270755264).
+ *
+ * `CI-005` is implemented across every production workflow. The manual
+ * controlled-failure probe above must complete once on GitHub-hosted Linux and
+ * Windows runners, and its successful verification run must be recorded in
+ * @ref Foundation_Workflows_ReleaseV1 before the backlog item becomes `DONE`.
  */
