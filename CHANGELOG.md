@@ -30,6 +30,10 @@ version 1.2.0 is the current release.
   PowerShell failures, retains their CMake, CTest, JUnit, and partial-package
   diagnostics, and verifies both uploaded artifacts without affecting normal
   push or pull-request runs.
+- Cross-platform example validators that discover every desktop example, build
+  and execute Debug and Release, compare their output, validate the Release-only
+  export, run the exported executables, and exercise native menu launchers
+  without registering examples as tests.
 - Pull-request Doxygen validation with warning-as-error generation and a
   deployment job that runs only after successful validation on a branch push.
 - Native Linux Arm64 GCC and Clang jobs using GitHub-hosted Arm64 runners.
