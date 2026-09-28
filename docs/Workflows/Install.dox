@@ -3,6 +3,10 @@
  * @ingroup Foundation_Workflows_Delivery
  * @brief Install an already configured build into a selected prefix.
  *
+ * The public Foundation command delegates path validation and CMake install
+ * execution to the pinned RoModularBuild engine. Foundation retains its
+ * Release-only package policy and default `dist/<preset>` identity.
+ *
  * Install does not configure or build the project and does not delete existing
  * content. It always installs Release, which must already be configured and
  * compiled. Use install when the caller controls the destination and wants

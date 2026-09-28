@@ -9,6 +9,10 @@
  * 2. builds the selected configuration;
  * 3. runs CTest from `build/<preset>` with failure output enabled.
  *
+ * The pinned RoModularBuild engine owns this generic sequence; Foundation's
+ * local adapter supplies only `-DFOUNDATION_TESTING=ON` and preserves the
+ * existing public Bash and PowerShell interfaces.
+ *
  * `FOUNDATION_TESTING=ON` is present in the active cache immediately after this
  * workflow. A later script configuration reapplies preset-defined defaults, but
  * a fresh export is still recommended for release packaging because unrelated

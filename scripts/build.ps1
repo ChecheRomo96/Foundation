@@ -11,39 +11,16 @@ param(
     [switch]$ExamplesOn
 )
 
-. "$PSScriptRoot/common.ps1"
+. "$PSScriptRoot/romodular-adapter.ps1"
 
-$configureParameters = @{
+$parameters = @{
     Preset = $Preset
-}
-if ($Fresh) {
-    $configureParameters.Fresh = $true
-}
-if ($ExamplesOn) {
-    $configureParameters.CMakeArguments = @("-DFOUNDATION_EXAMPLES=ON")
-}
-& "$PSScriptRoot/configure.ps1" @configureParameters
-if ($LASTEXITCODE -ne 0) {
-    exit $LASTEXITCODE
+    Configuration = $Configuration
+    Target = $Target
+    Parallel = $Parallel
+    CleanFirst = $CleanFirst
+    Fresh = $Fresh
+    ExamplesOn = $ExamplesOn
 }
 
-$buildDirectory = Get-FoundationBuildDirectory -Preset $Preset
-$configurationName = Get-FoundationConfiguration `
-    -Preset $Preset `
-    -Configuration $Configuration `
-    -DefaultConfiguration "Debug"
-Assert-FoundationConfiguration -Configuration $configurationName
-$arguments = @("--build", $buildDirectory)
-
-$arguments += @("--config", $configurationName)
-if ($Target) {
-    $arguments += @("--target", $Target)
-}
-if ($Parallel -gt 0) {
-    $arguments += @("--parallel", $Parallel.ToString())
-}
-if ($CleanFirst) {
-    $arguments += "--clean-first"
-}
-
-Invoke-FoundationCMake -Arguments $arguments
+& (Join-Path $script:FoundationRoModularScripts "build.ps1") @parameters

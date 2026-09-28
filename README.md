@@ -21,8 +21,9 @@ complete C++ standard library.
 
 ## Checkout
 
-Foundation pins its reusable toolchains and hidden preset bases through the
-`tools/RoModularBuild` Git submodule. Clone the complete source tree with:
+Foundation pins its reusable toolchains, hidden preset bases, and generic
+configure/build/test/install/clean engine through the `tools/RoModularBuild`
+Git submodule. Clone the complete source tree with:
 
 ```bash
 git clone --recurse-submodules https://github.com/ChecheRomo96/Foundation.git
@@ -41,6 +42,13 @@ does not grant permission to use, modify, or redistribute it: its restrictive
 license remains authoritative. Foundation does not follow its `main` branch;
 the submodule records one exact commit belonging to a tagged infrastructure
 release.
+
+The commands documented in this repository remain the public Foundation API.
+Thin wrappers under `scripts/` supply Foundation's roots and cache options to
+the pinned engine, so users still invoke `./scripts/build.sh`,
+`./scripts/test.ps1`, and the other established commands directly. Packaging,
+examples, documentation, firmware validation, and releases remain implemented
+and governed by Foundation.
 
 ## Modules
 
