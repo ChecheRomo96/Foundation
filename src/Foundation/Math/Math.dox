@@ -1,6 +1,7 @@
 /**
-  @defgroup Foundation_Math Math
+ * @defgroup Foundation_Math Math
  * @ingroup Foundation
+ * @brief Arithmetic, ratios, complex numbers, and matrix utilities.
  *
  * Mathematical utilities and data structures.
  *
