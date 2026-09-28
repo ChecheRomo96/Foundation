@@ -1,37 +1,31 @@
 {
   "version": 6,
   "include": [
-    "base.json"
+    "base.json",
+    "../../tools/RoModularBuild/cmake/presets/native.json"
   ],
   "configurePresets": [
     {
       "name": "windows_msvc_x64",
-      "inherits": "base",
-      "generator": "Visual Studio 18 2026",
-      "architecture": "x64",
+      "inherits": ["base", "romodular_windows_msvc_x64"],
       "condition": {
         "type": "equals",
         "lhs": "${hostSystemName}",
         "rhs": "Windows"
       },
       "cacheVariables": {
-        "CMAKE_CONFIGURATION_TYPES": "Debug;Release",
         "FOUNDATION_PLATFORM": "windows_msvc_x64"
       }
     },
     {
       "name": "windows_clang_x64",
-      "inherits": "base",
-      "generator": "Ninja Multi-Config",
+      "inherits": ["base", "romodular_windows_clang_x64"],
       "condition": {
         "type": "equals",
         "lhs": "${hostSystemName}",
         "rhs": "Windows"
       },
       "cacheVariables": {
-        "CMAKE_CONFIGURATION_TYPES": "Debug;Release",
-        "CMAKE_C_COMPILER": "clang",
-        "CMAKE_CXX_COMPILER": "clang++",
         "FOUNDATION_PLATFORM": "windows_clang_x64",
         "FOUNDATION_EXPECTED_SYSTEM_PROCESSOR": "^(x86_64|AMD64|amd64)$"
       }

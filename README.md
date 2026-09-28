@@ -19,6 +19,29 @@ Arduino cores work unmodified; the C++17-only `_v` TypeTraits variables are
 unavailable there. The language requirement does not imply a dependency on the
 complete C++ standard library.
 
+## Checkout
+
+Foundation pins its reusable toolchains and hidden preset bases through the
+`tools/RoModularBuild` Git submodule. Clone the complete source tree with:
+
+```bash
+git clone --recurse-submodules https://github.com/ChecheRomo96/Foundation.git
+```
+
+For an existing checkout, initialize the pinned infrastructure revision before
+running CMake or any repository workflow:
+
+```bash
+git submodule update --init --recursive
+```
+
+`RoModularBuild` is publicly readable so clean clones and GitHub-hosted runners
+can obtain the pinned files without a cross-repository secret. Public visibility
+does not grant permission to use, modify, or redistribute it: its restrictive
+license remains authoritative. Foundation does not follow its `main` branch;
+the submodule records one exact commit belonging to a tagged infrastructure
+release.
+
 ## Modules
 
 - `Containers`: CircularBuffer, Queue and Stack.
