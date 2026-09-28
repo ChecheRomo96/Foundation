@@ -27,6 +27,12 @@
  * `int32_t` specialization for general mathematics, while `UnsignedRatio` is
  * the `uint32_t` specialization used for non-negative quantities such as Time
  * frequencies and periods.
+ * `Value<TResult>()` converts non-integral operands at the query boundary
+ * without changing the stored representation. The default is `float`;
+ * integral results divide through a safe 64-bit intermediate and then use the
+ * requested result conversion. `ToFloat()` remains only as a Foundation 1.x
+ * compatibility bridge and is scheduled for removal in 2.0.
  * Ratio construction, access, mutation, conversion, and reduction are
- * `constexpr` and `noexcept`. `GCD()` provides the same guarantees.
+ * `constexpr` and `noexcept` for the supported numeric uses. `GCD()` provides
+ * the same guarantees.
  */

@@ -8,6 +8,9 @@ version 1.2.0 is the current release.
 
 ### Changed
 
+- Foundation and its examples now use `BasicRatio<T>::Value<TResult>()` for
+  scalar conversion. `ToFloat()` remains as a Foundation 1.x compatibility
+  bridge and is planned for removal in 2.0.
 - Arduino source builds (`ARDUINO` defined) now accept C++11, so the stock
   Arduino IDE and AVR core compile Foundation without editing the core. Other
   integration modes still require C++17. C++14 relaxed-`constexpr` mutators use
@@ -24,6 +27,10 @@ version 1.2.0 is the current release.
 
 ### Added
 
+- `BasicRatio<T>::Value<TResult>()`, which preserves the selected numerator and
+  denominator representation while evaluating fractional results in the
+  requested type. Its default result type is `float`; integral results use a
+  safe 64-bit intermediate and normal truncating division.
 - `scripts/test-arduino.sh` and an `arduino` CI job that compile every example
   sketch for the Arduino Uno with the unmodified AVR core.
 - A manual-only CI acceptance workflow that creates controlled Bash and
