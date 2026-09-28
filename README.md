@@ -68,6 +68,15 @@ Time, and Scheduling. GoogleTest is fetched only when testing is enabled, and
 each module's tests are registered only when all required modules are enabled.
 Examples remain separate API demonstrations.
 
+Cross-compiled firmware has target-specific validators. For the exact
+STM32G0B1CBT6 profile, this command exports the package, links a bare-metal
+consumer, and inspects the final ELF without claiming hardware execution:
+
+```bash
+./scripts/test-stm32.sh \
+  stm32g0b1cbt6_armgcc_cortex_m0plus_soft --fresh --parallel 4
+```
+
 ## Export
 
 Build and install one self-contained Release package under `dist/<preset>`:
@@ -77,6 +86,9 @@ Build and install one self-contained Release package under `dist/<preset>`:
 ./scripts/export.sh psoc5lp_armgcc_cortex_m3_soft
 ./scripts/export.sh atmega328p_avrgcc_avr5
 ```
+
+The PSoC export is an experimental Cortex-M3/soft-float profile, not evidence
+of compatibility with PSoC Creator or execution on PSoC 5LP hardware.
 
 Target presets define the platform, compiler, architecture, and ABI. Feature
 options can be overridden for a custom export without creating another preset:

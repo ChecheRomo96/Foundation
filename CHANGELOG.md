@@ -18,6 +18,9 @@ version 1.2.0 is the current release.
   split, and the `_v` TypeTraits variables are declared only from C++17.
 - Every example sketch includes `<Foundation.h>` first so the Arduino builder
   discovers the library.
+- PSoC 5LP is explicitly retained as experimental. Its named preset currently
+  proves a generic Cortex-M3/soft-float package only; promotion requires an
+  exact C++17-capable PSoC Creator toolchain, consumer link, and hardware run.
 
 ### Fixed
 
@@ -27,6 +30,11 @@ version 1.2.0 is the current release.
 
 ### Added
 
+- An exact `stm32g0b1cbt6_armgcc_cortex_m0plus_soft` preset and a
+  repository-owned bare-metal firmware consumer. The consumer links the
+  exported package, emits ELF/HEX/BIN/map artifacts, and exposes its runtime
+  result through SWD-readable symbols without requiring HAL, CMSIS, UART, or a
+  board-specific LED.
 - `BasicRatio<T>::Value<TResult>()`, which preserves the selected numerator and
   denominator representation while evaluating fractional results in the
   requested type. Its default result type is `float`; integral results use a

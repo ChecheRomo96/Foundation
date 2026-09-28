@@ -45,6 +45,69 @@ function Get-FoundationPackageInfoValue {
 $systemName = Get-FoundationPackageInfoValue -Name "Foundation_SYSTEM_NAME"
 $systemProcessor = Get-FoundationPackageInfoValue `
     -Name "Foundation_SYSTEM_PROCESSOR"
+
+function Get-FoundationCacheValue {
+    param([Parameter(Mandatory = $true)][string]$Name)
+
+    $cache = Join-Path $buildDirectory "CMakeCache.txt"
+    $match = Select-String `
+        -LiteralPath $cache `
+        -Pattern "^${Name}:[^=]*=" | `
+        Select-Object -First 1
+    if (-not $match) {
+        return ""
+    }
+    return ($match.Line -split "=", 2)[1]
+}
+
+if ($systemName -eq "Generic") {
+    $armCpu = Get-FoundationPackageInfoValue -Name "Foundation_ARM_CPU"
+    $armFloatAbi = Get-FoundationPackageInfoValue `
+        -Name "Foundation_ARM_FLOAT_ABI"
+    $objdump = Get-FoundationCacheValue -Name "CMAKE_OBJDUMP"
+    $readelf = Get-FoundationCacheValue -Name "CMAKE_READELF"
+    $archive = Join-Path $packagePrefix "lib/libFoundation.a"
+
+    if (-not (Test-Path -LiteralPath $objdump -PathType Leaf)) {
+        throw "CMAKE_OBJDUMP is unavailable: $objdump"
+    }
+    if (-not (Test-Path -LiteralPath $readelf -PathType Leaf)) {
+        throw "CMAKE_READELF is unavailable: $readelf"
+    }
+
+    $inspection = & $objdump -f $archive 2>&1 | Out-String
+    if ($LASTEXITCODE -ne 0) {
+        throw "objdump failed to inspect $archive`n$inspection"
+    }
+    Write-Host $inspection
+
+    if ($inspection -notmatch "file format elf32-littlearm") {
+        throw "Archive is not 32-bit little-endian Arm ELF"
+    }
+    if ($inspection -notmatch "architecture:\s+arm") {
+        throw "Archive does not contain Arm objects"
+    }
+
+    $attributes = & $readelf -A $archive 2>&1 | Out-String
+    if ($LASTEXITCODE -ne 0) {
+        throw "readelf failed to inspect $archive`n$attributes"
+    }
+    Write-Host $attributes
+
+    $usesVfpRegisters = $attributes -match `
+        "Tag_ABI_VFP_args:\s+VFP registers"
+    if ($armFloatAbi -eq "hard" -and -not $usesVfpRegisters) {
+        throw "Hard-float archive lacks the VFP register ABI attribute"
+    }
+    if ($armFloatAbi -eq "soft" -and $usesVfpRegisters) {
+        throw "Soft-float archive advertises the hard-float VFP register ABI"
+    }
+
+    Write-Host "Validated Arm archive identity: $armCpu / $armFloatAbi"
+    Write-Host "Validated Foundation package identity at $packagePrefix"
+    return
+}
+
 if ($systemName -ne "Windows") {
     throw "PowerShell package validation expected Windows, got '$systemName'"
 }

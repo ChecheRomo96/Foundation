@@ -57,15 +57,20 @@
  * | Platform | Preset / integration | Binary identity | 1.x level | Validation gate |
  * | -------- | -------------------- | --------------- | ---------- | --------------- |
  * | AVR | `atmega328p_avrgcc_avr5` | AVR-GCC, ATmega328P, AVR5 | `SUPPORTED` | VAL-007 |
+ * | STM32G0B1CBT6 | `stm32g0b1cbt6_armgcc_cortex_m0plus_soft` | Arm GCC, Cortex-M0+, soft float | `RELEASE CANDIDATE` | VAL-008 |
  * | STM32F103 | `stm32f103_armgcc_cortex_m3_soft` | Arm GCC, Cortex-M3, soft float | `RELEASE CANDIDATE` | VAL-008 |
  * | STM32F407 | `stm32f407_armgcc_cortex_m4f_hard` | Arm GCC, Cortex-M4F, hard float | `RELEASE CANDIDATE` | VAL-008 |
  * | STM32H743 | `stm32h743_armgcc_cortex_m7f_hard` | Arm GCC, Cortex-M7F, hard float | `RELEASE CANDIDATE` | VAL-008 |
  * | PSoC 5LP | `psoc5lp_armgcc_cortex_m3_soft` | Arm GCC, Cortex-M3, soft float | `EXPERIMENTAL` | VAL-009 |
  *
- * PSoC remains experimental until its exact product toolchain and a real
- * consumer project are validated. The STM32 presets do not promise CMSIS, HAL,
- * startup files, linker scripts, device macros, or flashing support; those are
- * owned by the consuming firmware.
+ * PSoC remains experimental by the completed `VAL-009` decision: the named
+ * preset currently inherits the generic Cortex-M3 profile and has no exact
+ * PSoC Creator, C++17 toolchain, consumer-link, or hardware-execution evidence.
+ * The repository-owned STM32G0B1CBT6
+ * acceptance firmware provides a minimal startup and linker script only for
+ * that exact MCU. Other STM32 presets do not promise CMSIS, HAL, startup files,
+ * linker scripts, device macros, or flashing support; those remain owned by
+ * their consuming firmware.
  *
  * @section FoundationSupportMatrixProfiles Generic Arm Profiles
  *

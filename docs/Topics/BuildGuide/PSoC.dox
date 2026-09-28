@@ -1,9 +1,9 @@
 /**
  * @addtogroup Foundation_BuildGuide_PSoC
  *
- * @section FoundationBuildPSoCTarget Initial Supported Target
+ * @section FoundationBuildPSoCTarget Experimental Target Profile
  *
- * Initial PSoC target:
+ * Foundation provides this experimental target alias:
  *
  * @code
  * PSoC 5LP
@@ -18,6 +18,11 @@
  * psoc5lp_armgcc_cortex_m3_soft
  * @endcode
  *
+ * It inherits `arm_none_eabi_cortex_m3_soft`; today the alias changes package
+ * identity, not compiler flags. It therefore proves that Foundation can produce
+ * a Cortex-M3/Thumb/soft-float archive, but does not by itself prove PSoC
+ * Creator compatibility or execution on a PSoC device.
+ *
  * @section FoundationBuildPSoCWhy Why not every chip
  *
  * Foundation should not initially generate one distribution per PSoC chip.
@@ -29,15 +34,43 @@
  * - ABI/FPU mode,
  * - configuration.
  *
- * Since Foundation is mostly portable C++ and does not depend on chip registers,
- * a PSoC 5LP Cortex-M3 soft-float build can cover the typical CY8CKIT-059 use case.
- * The preset produces a generic Cortex-M3 soft-float static archive. It does not
- * provide PSoC Creator startup code, generated components, linker script, device
- * headers, or project metadata.
+ * Since Foundation is mostly portable C++ and does not depend on chip
+ * registers, a compatible Cortex-M3 soft-float build may eventually cover a
+ * CY8CKIT-059 consumer. The preset currently produces a generic Cortex-M3
+ * soft-float static archive. It does not provide PSoC Creator startup code,
+ * generated components, linker script, device headers, or project metadata.
  *
  * The consuming PSoC project must use a compatible Arm GNU compiler/runtime and
  * the same Thumb, Cortex-M3, and soft-float ABI. Compiler compatibility must be
  * validated with the exact PSoC Creator/toolchain version used by the product.
+ * This is especially important for the Foundation C++17 contract: PSoC Creator
+ * 4.3 bundles GCC 5.4-2016-q2, whose C++17 mode was experimental and whose
+ * C++17 ABI was not yet stable. PSoC Creator also exposes an `ARM GCC Generic`
+ * integration for a separately installed compiler, but Foundation has not yet
+ * validated that path.
+ *
+ * @section FoundationBuildPSoCStatus 1.x Status Decision
+ *
+ * PSoC 5LP remains `EXPERIMENTAL` in Foundation 1.x. `VAL-009` records this as
+ * a deliberate status decision rather than unfinished generic compilation.
+ * Promotion requires all of the following evidence from the same environment:
+ *
+ * - an exact PSoC 5LP part or board and PSoC Creator version;
+ * - a C++17-capable selected ARM GCC toolchain and recorded version;
+ * - a clean Foundation package built with matching CPU, ABI, runtime, and
+ *   compiler compatibility;
+ * - a real PSoC Creator consumer that links `Foundation::Foundation` or the
+ *   installed archive without source-tree leakage; and
+ * - successful programming and execution of representative checks on hardware.
+ *
+ * Official references:
+ *
+ * - <a href="https://www.infineon.com/evaluation-board/CY8CKIT-059">Infineon
+ *   CY8CKIT-059 product page</a>;
+ * - <a href="https://www.infineon.com/assets/row/public/documents/cross-divisions/44/infineon-psoc-creator-4.3-release-notes-usermanual-en.pdf">PSoC Creator 4.3
+ *   release notes</a>; and
+ * - <a href="https://gcc.gnu.org/projects/cxx-status.html#cxx17">GCC C++17
+ *   implementation status</a>.
  *
  * @section FoundationBuildPSoCExport Export
  *
@@ -59,7 +92,8 @@
  * dist/psoc5lp_armgcc_cortex_m3_soft/
  * @endcode
  *
- * Inspect the Release archive with `arm-none-eabi-objdump -f` and link it into a
- * minimal PSoC firmware before publishing. Do not use host CTest as proof of
- * embedded execution.
+ * Inspect the Release archive with `arm-none-eabi-objdump -f`. Treat the output
+ * as experimental until it is linked into a PSoC Creator firmware using the
+ * exact product toolchain and executed on hardware. Do not use host CTest or
+ * generic cross-compilation as proof of PSoC compatibility.
  */
