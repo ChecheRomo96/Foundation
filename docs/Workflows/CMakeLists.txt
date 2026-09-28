@@ -20,4 +20,5 @@ foundation_add_dox(
     "${CMAKE_CURRENT_LIST_DIR}/Clean.dox"
     "${CMAKE_CURRENT_LIST_DIR}/Presets.dox"
     "${CMAKE_CURRENT_LIST_DIR}/Toolchains.dox"
+    "${CMAKE_CURRENT_LIST_DIR}/SharedBuildInfrastructure.dox"
 )

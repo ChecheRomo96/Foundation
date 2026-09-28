@@ -1,0 +1,216 @@
+/**
+ * @defgroup Foundation_Workflows_SharedInfrastructure Shared Build Infrastructure
+ * @ingroup Foundation_Workflows
+ * @brief INFRA-001 design for reusable build infrastructure across Foundation and future projects.
+ *
+ * @section FoundationSharedInfrastructureStatus Status and Decision
+ *
+ * | Field | Value |
+ * | ----- | ----- |
+ * | Backlog task | `INFRA-001` |
+ * | Design status | `IN PROGRESS` |
+ * | Bootstrap repository | Private [ChecheRomo96/RoModularBuild](https://github.com/ChecheRomo96/RoModularBuild), commit `89e9c92`, tag `v0.1.1` |
+ * | Initial integration | Version-pinned Git submodule |
+ * | Current implementation owner | Foundation until extraction is accepted |
+ * | Migration rule | No workflow behavior or public command changes during extraction |
+ *
+ * Foundation has now exercised the same configure, build, test, install,
+ * export, package, and CI concepts across desktop, AVR, generic Arm, Arduino,
+ * and an exact STM32 firmware consumer. That is enough evidence to identify a
+ * reusable layer. It is not yet permission to move every build-related file.
+ * Project policy and acceptance tests must remain with the project that owns
+ * them.
+ *
+ * The selected direction is a small, separately versioned build-infrastructure
+ * repository named `RoModularBuild`. Foundation and future projects such as MCC
+ * will pin an exact infrastructure revision and retain thin repository-local
+ * adapters. An optional `romodular` command-line frontend may be added later;
+ * the initial extraction must continue to work through the existing `.sh` and
+ * `.ps1` entrypoints.
+ *
+ * @section FoundationSharedInfrastructureGoals Goals and Non-goals
+ *
+ * Goals:
+ *
+ * - define native and cross-compilation profiles once;
+ * - keep Bash and PowerShell workflow behavior equivalent;
+ * - give every repository reproducible, version-pinned infrastructure;
+ * - preserve `build/<preset>` and `dist/<preset>` conventions;
+ * - keep presets as the source of truth for compiler, architecture, and ABI;
+ * - keep Debug and Release as configurations, not separate preset identities;
+ * - allow project-specific feature options and package targets without teaching
+ *   the shared layer about Foundation or MCC; and
+ * - make upgrades explicit, reviewable, and independently reversible.
+ *
+ * Non-goals:
+ *
+ * - turning CMake into a hidden secondary build system;
+ * - putting Foundation modules, tests, package metadata, or release policy in a
+ *   shared repository;
+ * - defining startup code, linker scripts, HAL/CMSIS, flashing, or board wiring
+ *   for every microcontroller;
+ * - generating one precompiled Foundation package per Arm part number;
+ * - requiring Docker for native Windows or macOS validation; or
+ * - creating the final `romodular` CLI before the underlying contract is stable.
+ *
+ * @section FoundationSharedInfrastructureArchitecture Target Architecture
+ *
+ * @dot
+ * digraph FoundationSharedInfrastructure {
+ *     rankdir=TB;
+ *     graph [bgcolor="transparent", pad="0.2", nodesep="0.45", ranksep="0.55"];
+ *     node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=10];
+ *
+ *     shared [label="RoModularBuild\nversioned workflow engine\ntoolchains + preset bases",
+ *             fillcolor="#d6eaf8"];
+ *     adapter [label="Repository adapter\nproject name + cache options\ntarget names + policy",
+ *              fillcolor="#fcf3cf"];
+ *     project [label="Foundation / MCC\nCMake project + source\ntests + examples + docs",
+ *              fillcolor="#d5f5e3"];
+ *     firmware [label="Firmware target fixture\nstartup + linker + board\nflash + hardware evidence",
+ *               fillcolor="#fadbd8"];
+ *
+ *     shared -> adapter [label="pinned version"];
+ *     adapter -> project [label="stable local commands"];
+ *     project -> firmware [label="installed package"];
+ * }
+ * @enddot
+ *
+ * The shared repository must not depend on Foundation, MCC, or any other
+ * consumer. Dependency direction is one-way: a project selects a pinned
+ * infrastructure version and adds its own adapter and acceptance policy.
+ *
+ * Proposed shared layout:
+ *
+ * @code
+ * RoModularBuild/
+ * ├── CMakePresets.json
+ * ├── cmake/
+ * │   ├── presets/
+ * │   │   ├── native.json
+ * │   │   ├── arm-none-eabi.json
+ * │   │   └── avr-gcc.json
+ * │   └── toolchains/
+ * │       ├── arm-none-eabi.cmake
+ * │       ├── arm-none-eabi/
+ * │       ├── avr-gcc.cmake
+ * │       └── avr-gcc/
+ * ├── scripts/
+ * │   ├── common.sh
+ * │   ├── common.ps1
+ * │   ├── configure.sh / configure.ps1
+ * │   ├── build.sh / build.ps1
+ * │   ├── test.sh / test.ps1
+ * │   ├── install.sh / install.ps1
+ * │   └── clean.sh / clean.ps1
+ * ├── actions/
+ * └── docs/
+ * @endcode
+ *
+ * @section FoundationSharedInfrastructureOwnership Ownership Boundary
+ *
+ * | Current asset | Target owner | Rationale |
+ * | ------------- | ------------ | --------- |
+ * | Generic Arm and AVR toolchain mechanics | `RoModularBuild` | Compiler discovery, CPU/ABI flags, sysroots, and find-root behavior are not Foundation-specific. |
+ * | Native compiler/generator preset bases | `RoModularBuild` | macOS, Linux, and Windows host profiles are reusable compatibility identities. |
+ * | `common`, configure, build, test, install, and clean workflow engine | `RoModularBuild` | Argument parsing, safe paths, CMake invocation, configuration selection, and non-zero-test policy are reusable. |
+ * | Root `CMakePresets.json` and public project presets | Foundation | The project chooses which shared profiles it advertises and adds its cache defaults and artifact identity. |
+ * | Foundation CMake options and module dependencies | Foundation | `FOUNDATION_*` feature selection is public project policy. |
+ * | `FoundationConfig.cmake`, build identity, install/export targets | Foundation | These define the Foundation package contract. |
+ * | Package identity and standalone package consumer | Foundation | They inspect Foundation headers, metadata, target names, and archive names. |
+ * | Examples, Arduino, launchers, and output validation | Foundation | They validate Foundation APIs and presentation policy. |
+ * | STM32G0B1 startup, linker script, firmware checks, and SWD evidence | Foundation target fixture, later a firmware repository if reused | An exact MCU memory map and execution procedure are not generic library-build infrastructure. |
+ * | Repository workflow entrypoints and release publication | Foundation | Permissions, artifacts, license gates, release names, and acceptance evidence remain repository policy. |
+ * | Reusable CI job implementation | `RoModularBuild`, after scripts stabilize | Shared jobs may call project adapters, but each repository retains a small pinned caller workflow. |
+ *
+ * `export.sh`, `validate-package`, reusable CI, and release automation must not
+ * move in the first extraction. Their current implementation contains explicit
+ * Foundation option names, targets, package paths, examples, and policy. They
+ * can be split only after the adapter contract is proven.
+ *
+ * @section FoundationSharedInfrastructurePresetContract Preset and Toolchain Contract
+ *
+ * The shared layer provides hidden or clearly prefixed base presets. A project
+ * publishes its own preset by inheriting a shared base and adding local cache
+ * values. For example, the shared layer may define a Cortex-M0+/soft-float base,
+ * while Foundation continues to publish `arm_none_eabi_cortex_m0plus_soft` and
+ * records `FOUNDATION_PLATFORM` locally.
+ *
+ * Shared cache variables use the `ROMODULAR_` prefix. Project feature options
+ * retain their project prefix. The migration must temporarily accept the
+ * existing Foundation toolchain variables so saved commands do not break; the
+ * shared names become canonical only after both paths produce identical flags.
+ *
+ * Package boundaries remain based on binary compatibility:
+ *
+ * - native packages: operating system, compiler/toolchain, and architecture;
+ * - generic Arm packages: instruction-set core, float ABI, FPU, compiler/runtime,
+ *   and relevant flags;
+ * - AVR packages: the exact MCU may remain necessary because `-mmcu` controls
+ *   device-specific code generation and runtime selection; and
+ * - firmware targets: exact MCU/board memory map, startup, device SDK, and
+ *   programming procedure.
+ *
+ * Therefore, `STM32G0B1CBT6` is an exact Foundation acceptance target, while
+ * the reusable library compatibility profile is Cortex-M0+/soft-float. The
+ * shared repository must not grow one generic Arm library preset per MCU.
+ *
+ * @section FoundationSharedInfrastructureDistribution Distribution and Pinning
+ *
+ * The first integration uses a Git submodule at a stable relative path such as
+ * `tools/RoModularBuild`. Each project pins an exact commit belonging to a
+ * tagged infrastructure release. This solves the bootstrap constraint: CMake
+ * parses presets and loads a toolchain before the project can use
+ * `FetchContent`, so the required files must already exist before configure.
+ *
+ * Required operational rules:
+ *
+ * - clone with submodules or run the documented initialization command;
+ * - CI checkout enables submodules explicitly;
+ * - upgrades change one recorded submodule commit and run the complete project
+ *   matrix before merge;
+ * - no branch-floating reference such as `main` is accepted by a consumer;
+ * - `RoModularBuild` follows an independent semantic version;
+ * - `0.x` releases may evolve the adapter contract; `1.x` freezes it; and
+ * - access and licensing remain restricted until the separate legal review
+ *   authorizes external use and cross-repository distribution.
+ *
+ * A future `romodular` CLI may install or update the pinned infrastructure and
+ * expose commands such as `romodular build <preset>`. It must remain a frontend
+ * over the same CMake presets and workflow contract, not become another source
+ * of compiler or target truth.
+ *
+ * @section FoundationSharedInfrastructureMigration Migration Plan
+ *
+ * | Phase | State | Deliverable | Exit evidence |
+ * | ----- | ----- | ----------- | ------------- |
+ * | 0. Design and inventory | `DONE` | Ownership boundary, target layout, pinning strategy, compatibility rules, and migration gates recorded on this page | Warning-as-error Doxygen build and reviewed Foundation inventory |
+ * | 1. Bootstrap repository | `DONE` | Private repository `RoModularBuild` provides license guardrails, version `0.1.1`, documentation, hidden preset namespaces, Bash/PowerShell validators, CTest contract tests, and a three-platform validation workflow | Exact tag `v0.1.1` passed Linux Bash, macOS Bash, and Windows PowerShell in [run 36459142788](https://github.com/ChecheRomo96/RoModularBuild/actions/runs/36459142788) |
+ * | 2. Extract toolchains and preset bases | `TODO` | Introduce `ROMODULAR_*` variables and pinned shared files while Foundation keeps local public presets | Byte-equivalent compile flags and matching package identities before/after migration |
+ * | 3. Extract workflow engine | `TODO` | Move generic lifecycle logic; preserve current Foundation commands through thin wrappers | Native and embedded CI pass with Bash/PowerShell parity and clean/fresh guarantees |
+ * | 4. Extract reusable CI | `TODO` | Provide pinned reusable jobs or actions; keep repository permissions and release policy local | Foundation callers pass native, embedded, docs, sanitizer, coverage, and failure-evidence gates |
+ * | 5. Adopt from a second project | `TODO` | Consume the same tagged infrastructure from MCC without copying implementation | Both projects pin one release and pass their independent package-consumer tests |
+ * | 6. Consider the CLI | `DEFERRED` | Evaluate `romodular configure/build/test/export` after two repositories prove the contract | CLI adds no target truth and preserves direct script/CMake operation |
+ *
+ * Each phase is a separate reviewable commit or pull request. Foundation must
+ * stay buildable at every boundary. Do not delete the local implementation
+ * until the replacement has passed the same native and embedded matrices.
+ *
+ * @section FoundationSharedInfrastructureAcceptance INFRA-001 Acceptance
+ *
+ * `INFRA-001` is complete only when:
+ *
+ * - the shared repository exists and has an independently tagged version;
+ * - Foundation pins that exact version without floating branches;
+ * - generic files contain no `Foundation`, `MCC`, or project-specific target
+ *   names;
+ * - Foundation's current commands and output directories remain compatible;
+ * - Bash and PowerShell paths pass the hosted native matrix;
+ * - all advertised embedded packages retain their validated architecture/ABI;
+ * - package, example, Arduino, STM32, release, and legal policy remain local;
+ * - a second repository consumes the same release successfully; and
+ * - rollback consists only of restoring the previous pinned revision.
+ *
+ * Until those gates pass, the checked-in Foundation implementation remains the
+ * authoritative and supported workflow.
+ */
