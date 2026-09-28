@@ -9,6 +9,20 @@
  * CMake loads the toolchain before `project()`, so changing a compiler, target
  * processor, or sysroot requires a fresh cache.
  *
+ * Foundation's generic Arm and AVR files are 1.x compatibility adapters. They
+ * translate the established `FOUNDATION_*` cache variables and include the
+ * project-independent implementations pinned under
+ * `tools/RoModularBuild/cmake/toolchains`. Shared canonical names use the
+ * `ROMODULAR_*` prefix. If both forms are supplied with different values, the
+ * Foundation 1.x name wins and configuration emits a warning. This preserves
+ * existing commands while new consumers can use the shared contract directly.
+ *
+ * Initialize the pinned submodule before configuring:
+ *
+ * @code{bash}
+ * git submodule update --init --recursive
+ * @endcode
+ *
  * Both repository cross-toolchains set `CMAKE_SYSTEM_NAME=Generic` and
  * `CMAKE_TRY_COMPILE_TARGET_TYPE=STATIC_LIBRARY`. The latter prevents compiler
  * detection from requiring startup objects or a linker script. It does not make
@@ -32,6 +46,12 @@
  * - `FOUNDATION_FPU`: value passed through `-mfpu` when applicable;
  * - `FOUNDATION_ARM_SYSROOT`: target C runtime headers and libraries;
  * - `FOUNDATION_ARM_ADDITIONAL_FLAGS`: extra C and C++ target flags.
+ *
+ * The corresponding shared names are `ROMODULAR_ARM_TOOLCHAIN_ROOT`,
+ * `ROMODULAR_ARM_TOOLCHAIN_PREFIX`, `ROMODULAR_ARM_CPU`,
+ * `ROMODULAR_FLOAT_ABI`, `ROMODULAR_FPU`, `ROMODULAR_ARM_SYSROOT`, and
+ * `ROMODULAR_ARM_ADDITIONAL_FLAGS`. Foundation aliases remain supported for the
+ * 1.x line; use one naming family per configure command.
  *
  * Hard-float profiles require an explicit FPU. All profiles use Thumb mode,
  * section-level garbage collection support, disable C++ exceptions and RTTI,
@@ -72,6 +92,10 @@
  * `-fcheck-new` so a null-returning allocation backend remains observable.
  * `FOUNDATION_AVR_ADDITIONAL_FLAGS` is available for product-specific compiler
  * flags, but an MCU change requires a new profile and preset.
+ * The canonical shared equivalents use the same suffixes with the
+ * `ROMODULAR_` prefix. All configurable embedded inputs are forwarded into
+ * CMake's nested `try_compile()` projects so compiler detection uses the exact
+ * same CPU, ABI, sysroot, device, and additional flags as the final build.
  *
  * AVR-GCC distributions vary in supported C++ language/library functionality.
  * Foundation requires C++17 language compilation but avoids a dependency on the
@@ -99,10 +123,11 @@
  *
  * @section FoundationWorkflowAddTarget Adding a Target
  *
- * 1. Reuse an existing profile or add a focused toolchain file under
- *    `cmake/toolchains/`.
+ * 1. Reuse an existing hidden RoModularBuild profile. If a new compiler/core
+ *    contract is project-independent, add and release it there; keep exact
+ *    board/MCU integration local when it includes product policy.
  * 2. Add a configure preset under `cmake/presets/` and select its
- *    `toolchainFile` or a focused profile that includes the generic toolchain.
+ *    local compatibility adapter or focused target profile.
  * 3. Add one target-identity configure preset and matching build/test presets.
  *    Select Debug or Release as a build configuration, not in the preset name.
  * 4. Set `FOUNDATION_PLATFORM` to the artifact identity and validate the

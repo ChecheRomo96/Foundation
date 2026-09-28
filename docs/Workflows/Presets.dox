@@ -62,9 +62,24 @@
  * @section FoundationWorkflowPresetFiles Files
  *
  * `CMakePresets.json` includes platform files from `cmake/presets/`. Platform
- * files inherit shared defaults from `cmake/presets/base.json`. Cross-compiled
- * configure presets select a `toolchainFile`; native desktop presets normally
- * select a generator, compiler, and architecture directly.
+ * files inherit Foundation defaults from `cmake/presets/base.json` and hidden
+ * compiler/architecture bases from the exact `RoModularBuild` revision pinned
+ * at `tools/RoModularBuild`. Foundation retains every public preset name,
+ * `FOUNDATION_PLATFORM`, feature default, expected-processor check, build
+ * directory, and configuration policy. The shared layer supplies only reusable
+ * generator, compiler, architecture, and toolchain selections.
+ *
+ * Initialize the pinned files before CMake parses the preset include graph:
+ *
+ * @code{bash}
+ * git submodule update --init --recursive
+ * cmake --list-presets=all
+ * @endcode
+ *
+ * The submodule is version-pinned; do not replace it with a floating checkout
+ * of `main`. RoModularBuild is publicly readable so clean clones and hosted CI
+ * need no cross-repository secret. Its restrictive license still controls use,
+ * modification, and redistribution.
  *
  * Every new target should have one public configure preset and matching build
  * and test presets with the same name where applicable. Its binary directory
@@ -94,13 +109,16 @@
  * Before adding a public preset:
  *
  * 1. identify the complete binary compatibility boundary;
- * 2. select a generator available on supported hosts;
- * 3. put machine-local paths in cache variables, not hard-coded JSON;
- * 4. put immutable CPU/ABI/device values in the preset or forced profile;
- * 5. add only one configuration-independent public name;
- * 6. validate Debug and Release builds/tests, then validate the Release archive,
+ * 2. reuse a hidden `romodular_` base when its compiler/architecture contract
+ *    matches; add a project-independent profile to RoModularBuild only when it
+ *    is genuinely reusable;
+ * 3. select a generator available on supported hosts;
+ * 4. put machine-local paths in cache variables, not hard-coded JSON;
+ * 5. put immutable CPU/ABI/device values in the preset or forced profile;
+ * 6. add only one configuration-independent public name;
+ * 7. validate Debug and Release builds/tests, then validate the Release archive,
  *    package metadata, and a downstream Release consumer;
- * 7. document prerequisites and limitations in the matching platform page.
+ * 8. document prerequisites and limitations in the matching platform page.
  *
  * Do not add `_debug`, `_release`, or feature names to the normal target preset.
  * Do not claim support for a generic device family when the compiler requires an
