@@ -48,10 +48,16 @@
  * native example and the interactive launcher. All 12 sketches compile with
  * the stock Arduino AVR core, and a package-consuming firmware passed 14/14
  * runtime checks on an Arduino Uno.
+ * Main-branch run
+ * [36375583593](https://github.com/ChecheRomo96/Foundation/actions/runs/36375583593)
+ * subsequently executed and compared all Debug, Release, and exported examples
+ * with Linux GCC/Clang x64 and Windows MSVC/Clang x64. Both Windows jobs also
+ * passed scripted `.cmd` launcher scenarios; Linux exports correctly contained
+ * no launcher.
  *
  * The following evidence is still pending:
  *
- * - Windows and Linux example execution plus Windows launcher acceptance;
+ * - manual opening of the example launcher through Windows Explorer;
  * - clean downstream consumption from a published release without
  *   repository-relative paths;
  * - Raspberry Pi-specific consumer and hardware evidence;
