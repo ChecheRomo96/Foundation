@@ -287,4 +287,25 @@
  * archive, a missing public header, and altered build-identity metadata. This
  * closes package structure and binary identity; firmware linkage, emulator, and
  * hardware execution remain separate evidence.
+ *
+ * @subsection FoundationValidationEvidenceNativeExamples Hosted native examples — 2026-09-27
+ *
+ * Main-branch
+ * [run 36375583593](https://github.com/ChecheRomo96/Foundation/actions/runs/36375583593)
+ * validated commit `8c2ec36` with the repository-owned example validators.
+ * The validators discover the 12 desktop example definitions instead of using
+ * a hardcoded executable list.
+ *
+ * | Field | Recorded value |
+ * | ----- | -------------- |
+ * | Windows MSVC x64 | All 12 examples built and exited 0 in Debug and Release; stdout and stderr matched; the Release-only export passed identity validation; all 12 exported executables ran with matching output; scripted quit and first-example scenarios passed through `FoundationExamples.cmd` |
+ * | Windows Clang x64 | Passed the same build, execution, output, export, and `.cmd` launcher checks |
+ * | Linux GCC x64 | All 12 examples built and exited 0 in Debug and Release; output matched; the Release-only export passed identity validation; all 12 exported executables ran with matching output; the export correctly contained no desktop launcher |
+ * | Linux Clang x64 | Passed the same build, execution, output, export, and no-launcher checks |
+ * | Additional coverage | macOS Arm64 plus Linux GCC/Clang Arm64 passed the same applicable automated workflow in the run |
+ * | Not covered | Opening `FoundationExamples.cmd` manually through Windows Explorer; unsigned-download security prompts |
+ *
+ * This closes VAL-005. VAL-003 and VAL-004 retain only the manual Explorer
+ * user-experience check; their compiler, test, package, example, and scripted
+ * launcher gates pass on the GitHub-hosted Windows runner.
  */
