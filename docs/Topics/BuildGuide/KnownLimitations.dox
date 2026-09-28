@@ -58,8 +58,6 @@
  * The following evidence is still pending:
  *
  * - manual opening of the example launcher through Windows Explorer;
- * - clean downstream consumption from a published release without
- *   repository-relative paths;
  * - Raspberry Pi-specific consumer and hardware evidence;
  * - Arm/STM32 firmware linkage and target execution beyond hosted package
  *   cross-compilation;
