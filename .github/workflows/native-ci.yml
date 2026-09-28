@@ -71,6 +71,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+        with:
+          submodules: recursive
 
       - name: Verify Unix toolchain
         if: matrix.platform == 'unix'
@@ -275,6 +277,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+        with:
+          submodules: recursive
 
       - name: Test Debug with AddressSanitizer and UndefinedBehaviorSanitizer
         shell: bash
@@ -304,6 +308,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+        with:
+          submodules: recursive
 
       - name: Install gcovr
         run: pipx install gcovr==8.6
@@ -363,6 +369,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+        with:
+          submodules: recursive
 
       - name: Build and test every supported feature selection
         run: cmake -DPRESET=linux_gcc_x64 -P tests/cmake/FeatureMatrix.cmake
