@@ -82,6 +82,13 @@
  * consumers, archive uploads completed, and the final job downloaded exactly
  * five archives and verified all five SHA-256 files before publication.
  *
+ * On 2026-09-27 the public `Foundation-1.2.0-macos_arm64.tar.gz` asset and its
+ * checksum were downloaded into a clean directory outside this repository. A
+ * newly authored external project found exactly Foundation 1.2.0 only through
+ * the extracted prefix, linked `Foundation::Foundation`, executed code from the
+ * archive, and passed without any checkout or unreleased-file path. See
+ * @ref FoundationValidationEvidenceReleasedConsumer.
+ *
  * @section FoundationReleasePackagesReleaseProcedure Release Procedure
  *
  * Before creating a publishing tag:
