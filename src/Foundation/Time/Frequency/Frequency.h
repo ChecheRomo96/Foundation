@@ -130,7 +130,7 @@
             }
 
             constexpr float Frequency::Hertz() const noexcept {
-                return IsValid() ? _ratio.ToFloat() : 0.0f;
+                return IsValid() ? _ratio.Value<float>() : 0.0f;
             }
 
             constexpr float Frequency::PeriodSeconds() const noexcept {

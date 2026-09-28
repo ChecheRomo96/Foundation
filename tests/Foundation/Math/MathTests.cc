@@ -244,14 +244,35 @@ TEST(RatioTest, SupportsConstantConstructionAndConversion) {
 
     constexpr Ratio half(1, 2);
     constexpr Ratio reduced = Ratio(-42, 56).Reduced();
+    constexpr Ratio narrowIntegralResult(1, 256);
+    constexpr Ratio widenedOverflowCase(
+        std::numeric_limits<int32_t>::min(),
+        -1
+    );
     static_assert(half.Numerator() == 1, "Ratio numerator must be constexpr");
     static_assert(half.Denominator() == 2, "Ratio denominator must be constexpr");
     static_assert(half.IsValid(), "A nonzero denominator must be valid");
     static_assert(reduced.Numerator() == -3, "Ratio reduction must be constexpr");
     static_assert(reduced.Denominator() == 4, "Ratio reduction must be constexpr");
-    static_assert(noexcept(half.ToFloat()), "Ratio value operations must not throw");
+    static_assert(noexcept(half.Value<float>()), "Ratio value operations must not throw");
+    static_assert(half.Value() == 0.5f, "The default result type must be float");
+    static_assert(half.Value<double>() == 0.5, "Ratio must convert to double");
+    static_assert(half.Value<int32_t>() == 0, "Integral results must truncate");
+    static_assert(
+        narrowIntegralResult.Value<uint8_t>() == 0,
+        "Integral conversion must not narrow the divisor before division"
+    );
+    static_assert(
+        widenedOverflowCase.Value<int64_t>() == INT64_C(2147483648),
+        "Integral conversion must widen before dividing INT32_MIN by -1"
+    );
+    static_assert(
+        std::is_same<decltype(half.Value<double>()), double>::value,
+        "Value must return the requested type"
+    );
 
-    EXPECT_FLOAT_EQ(half.ToFloat(), 0.5f);
+    EXPECT_FLOAT_EQ(half.Value<float>(), 0.5f);
+    EXPECT_FLOAT_EQ(half.ToFloat(), half.Value<float>());
 }
 
 TEST(RatioTest, PreservesTheFullUnsignedRange) {
@@ -309,12 +330,13 @@ TEST(RatioTest, UpdatesNumeratorAndDenominatorIndependently) {
 
     ratio.SetDenominator(0);
     EXPECT_FALSE(ratio.IsValid());
-    EXPECT_FLOAT_EQ(ratio.ToFloat(), 0.0f);
+    EXPECT_FLOAT_EQ(ratio.Value<float>(), 0.0f);
+    EXPECT_DOUBLE_EQ(ratio.Value<double>(), 0.0);
 
     ratio.SetDenominator(-10);
     EXPECT_TRUE(ratio.IsValid());
     EXPECT_EQ(ratio.Sign(), -1);
-    EXPECT_FLOAT_EQ(ratio.ToFloat(), -0.5f);
+    EXPECT_FLOAT_EQ(ratio.Value<float>(), -0.5f);
 }
 
 TEST(RatioTest, HandlesZeroAndExtremeTerms) {
@@ -332,7 +354,7 @@ TEST(RatioTest, HandlesZeroAndExtremeTerms) {
     EXPECT_EQ(equalMinimums.Numerator(), -1);
     EXPECT_EQ(equalMinimums.Denominator(), -1);
     EXPECT_EQ(equalMinimums.Sign(), 1);
-    EXPECT_FLOAT_EQ(equalMinimums.ToFloat(), 1.0f);
+    EXPECT_FLOAT_EQ(equalMinimums.Value<float>(), 1.0f);
 
     const Ratio coprimeLimits = Ratio(maximum, minimum).Reduced();
     EXPECT_EQ(coprimeLimits.Numerator(), maximum);
@@ -358,7 +380,7 @@ TEST(RatioTest, HandlesAnInvalidDenominator) {
     const Ratio reduced = invalid.Reduced();
 
     EXPECT_FALSE(invalid.IsValid());
-    EXPECT_FLOAT_EQ(invalid.ToFloat(), 0.0f);
+    EXPECT_FLOAT_EQ(invalid.Value<float>(), 0.0f);
     EXPECT_EQ(reduced.Numerator(), 0);
     EXPECT_EQ(reduced.Denominator(), 1);
 }

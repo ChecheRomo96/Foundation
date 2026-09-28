@@ -122,7 +122,7 @@ namespace Foundation {
         }
 
         constexpr float Period::Seconds() const noexcept {
-            return IsValid() ? _ratio.ToFloat() : 0.0f;
+            return IsValid() ? _ratio.Value<float>() : 0.0f;
         }
 
         constexpr float Period::Milliseconds() const noexcept {

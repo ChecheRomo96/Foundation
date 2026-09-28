@@ -20,7 +20,7 @@ namespace {
         Serial.print("  Valid denominator .... ");
         Serial.println(ratio.IsValid() ? "yes" : "no");
         Serial.print("  Decimal view ......... ");
-        Serial.println(ratio.ToFloat(), 6);
+        Serial.println(ratio.Value<float>(), 6);
         Serial.println();
     }
 

@@ -16,7 +16,10 @@ namespace {
         std::cout << "  Exact value .......... " << ratio.Numerator() << " / " << ratio.Denominator() << '\n';
         std::cout << "  Valid denominator .... "
                   << (ratio.IsValid() ? "yes" : "no") << '\n';
-        std::cout << "  Decimal view ......... " << ratio.ToFloat() << "\n\n";
+        std::cout
+            << "  Decimal view ......... "
+            << ratio.Value<float>()
+            << "\n\n";
     }
 
 }
