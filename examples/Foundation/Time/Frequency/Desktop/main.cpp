@@ -15,7 +15,10 @@ namespace {
         std::cout << "    " << code << '\n';
         std::cout << "  Exact ratio .......... " << ratio.Numerator() << " / " << ratio.Denominator() << '\n';
         std::cout << "  Valid ................ " << (ratio.IsValid() ? "yes" : "no") << '\n';
-        std::cout << "  Decimal view ......... " << ratio.ToFloat() << "\n\n";
+        std::cout
+            << "  Decimal view ......... "
+            << ratio.Value<float>()
+            << "\n\n";
     }
 
     void PrintFrequency(

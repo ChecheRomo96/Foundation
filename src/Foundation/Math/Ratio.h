@@ -50,6 +50,114 @@
                     }
                 };
 
+                template <typename T>
+                struct RatioValueTraits {
+                    static constexpr bool IsIntegral = false;
+                };
+
+                template <>
+                struct RatioValueTraits<bool> {
+                    static constexpr bool IsIntegral = true;
+                };
+
+                template <>
+                struct RatioValueTraits<char> {
+                    static constexpr bool IsIntegral = true;
+                };
+
+                template <>
+                struct RatioValueTraits<wchar_t> {
+                    static constexpr bool IsIntegral = true;
+                };
+
+                template <>
+                struct RatioValueTraits<char16_t> {
+                    static constexpr bool IsIntegral = true;
+                };
+
+                template <>
+                struct RatioValueTraits<char32_t> {
+                    static constexpr bool IsIntegral = true;
+                };
+
+                template <>
+                struct RatioValueTraits<int8_t> {
+                    static constexpr bool IsIntegral = true;
+                };
+
+                template <>
+                struct RatioValueTraits<uint8_t> {
+                    static constexpr bool IsIntegral = true;
+                };
+
+                template <>
+                struct RatioValueTraits<int16_t> {
+                    static constexpr bool IsIntegral = true;
+                };
+
+                template <>
+                struct RatioValueTraits<uint16_t> {
+                    static constexpr bool IsIntegral = true;
+                };
+
+                template <>
+                struct RatioValueTraits<int32_t> {
+                    static constexpr bool IsIntegral = true;
+                };
+
+                template <>
+                struct RatioValueTraits<uint32_t> {
+                    static constexpr bool IsIntegral = true;
+                };
+
+                template <>
+                struct RatioValueTraits<int64_t> {
+                    static constexpr bool IsIntegral = true;
+                };
+
+                template <>
+                struct RatioValueTraits<uint64_t> {
+                    static constexpr bool IsIntegral = true;
+                };
+
+                template <typename T>
+                struct RatioValueTraits<const T> : RatioValueTraits<T> {};
+
+                template <typename T>
+                struct RatioValueTraits<volatile T> : RatioValueTraits<T> {};
+
+                template <typename T>
+                struct RatioValueTraits<const volatile T> : RatioValueTraits<T> {};
+
+                template <
+                    typename TResult,
+                    bool IsIntegral = RatioValueTraits<TResult>::IsIntegral
+                >
+                struct RatioValueConverter {
+                    template <typename TRepresentation>
+                    static constexpr TResult Convert(
+                        TRepresentation num,
+                        TRepresentation den
+                    ) noexcept {
+                        return static_cast<TResult>(num) /
+                               static_cast<TResult>(den);
+                    }
+                };
+
+                template <typename TResult>
+                struct RatioValueConverter<TResult, true> {
+                    template <typename TRepresentation>
+                    static constexpr TResult Convert(
+                        TRepresentation num,
+                        TRepresentation den
+                    ) noexcept {
+                        return static_cast<TResult>(
+                            static_cast<int64_t>(num) /
+                            static_cast<int64_t>(den)
+                        );
+                    }
+                };
+
             }
             /** @endcond */
 
@@ -145,12 +253,39 @@
                     return _den != 0;
                 }
 
-                /** @brief Converts the ratio to float, or zero when invalid. */
-                constexpr float ToFloat() const noexcept {
+                /**
+                 * @brief Evaluates the ratio using the requested result type.
+                 * @tparam TResult Type used for both operands and the division.
+                 * @return `num / den` evaluated as `TResult`, or a value-initialized
+                 * `TResult` when the ratio is invalid.
+                 *
+                 * The stored numerator and denominator remain unchanged in
+                 * `Representation`. For non-integral results, each operand is
+                 * converted at the query boundary before division so
+                 * floating-point and fixed-point types retain the fractional
+                 * part. Integral results divide through a safe 64-bit
+                 * intermediate before the final conversion and therefore use
+                 * normal truncation toward zero without narrowing the divisor.
+                 * `TResult` must support conversion from `Representation`,
+                 * value-initialization, and division when it is not integral.
+                 */
+                template <typename TResult = float>
+                constexpr TResult Value() const noexcept {
                     return IsValid()
-                        ? static_cast<float>(_num) /
-                          static_cast<float>(_den)
-                        : 0.0f;
+                        ? Detail::RatioValueConverter<TResult>::Convert(
+                            _num,
+                            _den
+                        )
+                        : TResult();
+                }
+
+                /**
+                 * @brief Converts the ratio to float, or zero when invalid.
+                 * @deprecated Use `Value<float>()`. This compatibility bridge is
+                 * retained for Foundation 1.x and will be removed in 2.0.
+                 */
+                constexpr float ToFloat() const noexcept {
+                    return Value<float>();
                 }
 
                 /**

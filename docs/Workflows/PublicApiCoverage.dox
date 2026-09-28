@@ -63,7 +63,7 @@
  * | `FloorMod` | Dedicated positive, negative, zero, exact, divisor-one, limit, invalid-divisor, exhaustive-reference, and `constexpr` cases | `BEHAVIOR` |
  * | `FloorDiv` | Dedicated positive, negative, zero, exact, divisor-one, limit, invalid-divisor, exhaustive-reference, invariant, and `constexpr` cases | `BEHAVIOR` |
  * | `Pi`, `DegToRad`, `RadToDeg` | Three `TrigonometryTest` cases cover constant evaluation, positive/negative/unwrapped conversion, and representative round trips | `BEHAVIOR` |
- * | `BasicRatio<T>`, `Ratio`, `UnsignedRatio`: construction, aliases, access, validity, conversion, sign, reduction, mutators, and limits | Eight `RatioTest` cases in `MathTests.cc`, including independent mutators, zero, `INT32_MIN`, and `INT32_MAX` | `BEHAVIOR` |
+ * | `BasicRatio<T>`, `Ratio`, `UnsignedRatio`: construction, aliases, access, validity, typed `Value<TResult>()` conversion, legacy `ToFloat()`, sign, reduction, mutators, and limits | Eight `RatioTest` cases in `MathTests.cc`, including `float`, `double`, truncating integral and invalid conversions, the 1.x compatibility bridge, independent mutators, zero, `INT32_MIN`, and `INT32_MAX` | `BEHAVIOR` |
  * | `Complex<T>` constructors, assignment, arithmetic, compound arithmetic, comparisons, conjugate, and magnitude | Six `ComplexTest` cases exercise integer and floating-point behavior | `BEHAVIOR` |
  * | `Matrix::Fixed`: array construction and `At`; fixed/fixed multiplication | `MatrixTest.MultipliesFixedMatrices` | `BEHAVIOR` |
  * | `Matrix::Fixed`: default/fill/copy/assignment, dimensions, data and row access, element/scalar arithmetic, comparison, fill/zero, transpose, factories | Six `FixedMatrixTest` cases in `MatrixBehaviorTests.cc` | `BEHAVIOR` |
