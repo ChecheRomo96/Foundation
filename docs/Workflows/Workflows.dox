@@ -80,6 +80,8 @@
  * expected output, and failure modes.
  * Track release readiness in @ref Foundation_Workflows_ReleaseV1; that backlog
  * is updated in Git with task status, acceptance criteria, and evidence.
+ * The planned extraction of reusable, project-neutral infrastructure is
+ * specified in @ref Foundation_Workflows_SharedInfrastructure.
  */
 
 /**
