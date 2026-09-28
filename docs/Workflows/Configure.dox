@@ -6,6 +6,9 @@
  * Configuration is the only workflow that accepts arbitrary CMake cache
  * overrides. Those values remain in `build/<preset>/CMakeCache.txt` and are
  * reused by later build, test, install, and export operations.
+ * The public Foundation entrypoints are thin adapters over the exact
+ * RoModularBuild revision pinned in `tools/RoModularBuild`; command names,
+ * arguments, paths, and defaults remain Foundation's supported contract.
  *
  * Internally, the scripts run `cmake --preset <preset>` and forward
  * caller-supplied CMake arguments. With the fresh option, the script first
