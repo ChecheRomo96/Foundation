@@ -59,8 +59,8 @@
  *
  * - manual opening of the example launcher through Windows Explorer;
  * - Raspberry Pi-specific consumer and hardware evidence;
- * - Arm/STM32 firmware linkage and target execution beyond hosted package
- *   cross-compilation;
+ * - physical execution of the linked STM32G0B1CBT6 acceptance firmware, plus
+ *   firmware-consumer evidence for the other advertised STM32/Arm profiles;
  * - PSoC Creator integration using a recorded C++17-capable ARM GCC toolchain,
  *   a real consumer, and representative PSoC 5LP hardware execution.
  *
