@@ -308,4 +308,28 @@
  * This closes VAL-005. VAL-003 and VAL-004 retain only the manual Explorer
  * user-experience check; their compiler, test, package, example, and scripted
  * launcher gates pass on the GitHub-hosted Windows runner.
+ *
+ * @subsection FoundationValidationEvidenceReleasedConsumer Published v1.2.0 downstream consumer — 2026-09-27
+ *
+ * The public macOS Arm64 release asset was downloaded from
+ * [Foundation v1.2.0](https://github.com/ChecheRomo96/Foundation/releases/tag/v1.2.0)
+ * into a new directory under `/private/tmp`, outside the Foundation checkout.
+ * Its published checksum file verified SHA-256
+ * `69fa1d44db8186b5bf55a4571a0f7f4cd51ef0e0fd0c86d04066f16aea33b1b7`.
+ *
+ * A new external CMake project, also outside the checkout, requested
+ * `Foundation 1.2.0 EXACT` and received the package only through
+ * `CMAKE_PREFIX_PATH` pointing at the extracted archive. It included
+ * `Foundation.h` plus selective Time headers, used the v1.2.0 `FloorDiv` and
+ * `FloorMod` APIs in constant expressions, and linked
+ * `Foundation::Foundation`. The resulting Arm64 executable contained the
+ * out-of-line `Frequency::GetPeriod()` and `Period::GetFrequency()` symbols and
+ * passed its registered test 1/1.
+ *
+ * The consumer source, CMake cache, compile commands, and Ninja graph contained
+ * no path to the Foundation checkout. No source, build tree, package metadata,
+ * or other unreleased file from `main` participated in configuration,
+ * compilation, linking, or execution. This closes REL-005 for the published
+ * release; the release matrix already validates the equivalent package shape
+ * on the other published native platforms before publication.
  */
