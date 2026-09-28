@@ -8,24 +8,16 @@ param(
     [string[]]$CMakeArguments
 )
 
-. "$PSScriptRoot/common.ps1"
+. "$PSScriptRoot/romodular-adapter.ps1"
 
+$parameters = @{
+    Preset = $Preset
+}
 if ($Fresh) {
-    $buildDirectory = Get-FoundationBuildDirectory -Preset $Preset
-    if (Test-Path -LiteralPath $buildDirectory) {
-        Remove-Item -LiteralPath $buildDirectory -Recurse -Force
-    }
+    $parameters.Fresh = $true
+}
+if ($CMakeArguments) {
+    $parameters.CMakeArguments = $CMakeArguments
 }
 
-$arguments = @("--preset", $Preset)
-$effectiveCMakeArguments = @(
-    $CMakeArguments | Where-Object {
-        -not [string]::IsNullOrWhiteSpace($_)
-    }
-)
-if ($effectiveCMakeArguments.Count -gt 0) {
-    $arguments += $effectiveCMakeArguments
-}
-
-Invoke-FoundationCMake -Arguments $arguments
-
+& (Join-Path $script:FoundationRoModularScripts "configure.ps1") @parameters

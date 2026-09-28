@@ -2,45 +2,8 @@
 set -eu
 
 SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-. "$SCRIPT_DIR/common.sh"
+. "$SCRIPT_DIR/romodular-adapter.sh"
 
-usage() {
-    printf '%s\n' "Usage: $0 <preset> [--prefix <path>]"
-}
-
-PRESET=""
-PREFIX=""
-
-while [ "$#" -gt 0 ]; do
-    case "$1" in
-        --prefix)
-            foundation_require_value "$1" "${2:-}"
-            PREFIX=$2
-            shift 2
-            ;;
-        -h|--help)
-            usage
-            exit 0
-            ;;
-        -*)
-            foundation_die "unknown option: $1"
-            ;;
-        *)
-            [ -z "$PRESET" ] || foundation_die "only one preset may be specified"
-            PRESET=$1
-            shift
-            ;;
-    esac
-done
-
-foundation_require_preset "$PRESET"
-foundation_require_configured "$PRESET"
-
-BUILD_DIR=$(foundation_build_dir "$PRESET")
-[ -n "$PREFIX" ] || PREFIX="$FOUNDATION_DIST_ROOT/$PRESET"
-PREFIX=$(foundation_absolute_path "$PREFIX")
-
-set -- cmake --install "$BUILD_DIR" --prefix "$PREFIX"
-set -- "$@" --config Release
-
-"$@"
+ROMODULAR_COMMAND_NAME=$0
+export ROMODULAR_COMMAND_NAME
+exec "$FOUNDATION_ROMODULAR_SCRIPTS/install.sh" "$@"

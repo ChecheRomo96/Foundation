@@ -6,6 +6,9 @@
  * The build workflow first configures the selected preset, then invokes CMake
  * using `build/<preset>` as the binary directory. It therefore works even when
  * a configure preset has no matching build preset.
+ * Foundation's public scripts delegate generic execution to the pinned
+ * RoModularBuild engine while retaining Foundation-specific examples and
+ * target policy in the local adapter and CMake project.
  * Calling build repeatedly is incremental unless `--clean-first`, `-CleanFirst`,
  * or a fresh/clean operation invalidates prior outputs.
  *

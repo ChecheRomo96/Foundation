@@ -3,6 +3,9 @@
  * @ingroup Foundation_Workflows_Development
  * @brief Remove known build and optional distribution directories safely.
  *
+ * The public Foundation command delegates safe preset-scoped removal to the
+ * pinned RoModularBuild engine without changing its arguments or path layout.
+ *
  * Cleanup always requires either an explicit preset or the explicit all flag.
  * Distribution outputs are retained unless their separate flag is supplied.
  * Clean does not modify source files, presets, toolchains, or files outside the
