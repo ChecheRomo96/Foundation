@@ -6,6 +6,7 @@
  * Supported target presets:
  *
  * @code
+ * stm32g0b1cbt6_armgcc_cortex_m0plus_soft
  * stm32f103_armgcc_cortex_m3_soft
  * stm32f407_armgcc_cortex_m4f_hard
  * stm32h743_armgcc_cortex_m7f_hard
@@ -15,6 +16,7 @@
  *
  * | Preset | CPU | Float ABI | FPU |
  * | --- | --- | --- | --- |
+ * | `stm32g0b1cbt6_armgcc_cortex_m0plus_soft` | Cortex-M0+ | soft | none |
  * | `stm32f103_armgcc_cortex_m3_soft` | Cortex-M3 | soft | none |
  * | `stm32f407_armgcc_cortex_m4f_hard` | Cortex-M4 | hard | `fpv4-sp-d16` |
  * | `stm32h743_armgcc_cortex_m7f_hard` | Cortex-M7 | hard | `fpv5-d16` |
@@ -37,6 +39,13 @@
  * do not select a concrete STM32 device macro, CMSIS package, HAL, startup file,
  * interrupt vector table, memory map, linker script, or programmer. Those belong
  * to the consuming firmware and may further narrow compatibility.
+ *
+ * `stm32g0b1cbt6_armgcc_cortex_m0plus_soft` is the first exact STM32 device
+ * profile. Its acceptance fixture in `tests/Stm32G0B1Consumer` supplies a
+ * minimal vector table, startup, and memory map for the STM32G0B1CBT6 only.
+ * It deliberately avoids HAL, CMSIS, clocks, GPIO, and serial output. Runtime
+ * results are exposed through SWD-readable symbols, so the same firmware works
+ * on a custom board without assuming its LED or UART routing.
  *
  * @section FoundationBuildSTM32Commands Build and Export
  *
@@ -64,4 +73,58 @@
  * or emulator execution is the behavioral test; host CTest cannot execute
  * Cortex-M objects. See @ref Foundation_Workflows_Validation for the full
  * checklist.
+ *
+ * For the exact STM32G0B1CBT6 profile, build, link, and inspect the repository
+ * firmware consumer with:
+ *
+ * @code{bash}
+ * ./scripts/test-stm32.sh \
+ *     stm32g0b1cbt6_armgcc_cortex_m0plus_soft \
+ *     --fresh --parallel 4
+ * @endcode
+ *
+ * PowerShell exposes the same workflow:
+ *
+ * @code{powershell}
+ * ./scripts/test-stm32.ps1 `
+ *     stm32g0b1cbt6_armgcc_cortex_m0plus_soft `
+ *     -Fresh -Parallel 4
+ * @endcode
+ *
+ * This command proves the package, Cortex-M0+/soft-float identity, vector and
+ * memory placement, final link, absence of undefined symbols, and the presence
+ * of out-of-line Foundation Time symbols. It does not claim target execution.
+ *
+ * @section FoundationBuildSTM32G0Hardware STM32G0B1 Hardware Acceptance
+ *
+ * The firmware stops in `FoundationValidationHalt()` after its checks. Load the
+ * generated `FoundationStm32G0B1Consumer.elf` with STM32CubeIDE or an ST-LINK
+ * GDB server, set a breakpoint on that function, reset, and run. Inspect these
+ * global symbols:
+ *
+ * | Symbol | Passing value |
+ * | ------ | ------------- |
+ * | `FoundationValidationState` | `0x50415353` (`PASS`) |
+ * | `FoundationValidationPassed` | `14` |
+ * | `FoundationValidationTotal` | `14` |
+ *
+ * A command-line GDB session connected to an already-running ST-LINK GDB
+ * server can use:
+ *
+ * @code{bash}
+ * arm-none-eabi-gdb FoundationStm32G0B1Consumer.elf
+ * (gdb) target extended-remote localhost:61234
+ * (gdb) monitor reset halt
+ * (gdb) load
+ * (gdb) break FoundationValidationHalt
+ * (gdb) continue
+ * (gdb) x/wx &FoundationValidationState
+ * (gdb) x/wd &FoundationValidationPassed
+ * (gdb) x/wd &FoundationValidationTotal
+ * @endcode
+ *
+ * The GDB-server port is environment-specific; use the value reported by
+ * STM32CubeIDE or STM32CubeProgrammer. Record the tool versions, exact MCU,
+ * flash verification, three observed values, and the commit SHA in
+ * @ref Foundation_Workflows_Validation before changing VAL-008 to `DONE`.
  */

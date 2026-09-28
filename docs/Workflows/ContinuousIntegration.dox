@@ -98,9 +98,11 @@
  * the validated package for inspection.
  *
  * The matrix contains ATmega328P/AVR5; the four generic Cortex-M profiles;
- * PSoC 5LP; and the STM32F103, STM32F407, and STM32H743 identities. These jobs
- * are compile/package evidence only. They deliberately do not invoke CTest,
- * execute target code on the x86-64 runner, or claim firmware/hardware proof.
+ * PSoC 5LP; and the STM32G0B1CBT6, STM32F103, STM32F407, and STM32H743
+ * identities. The exact STM32G0B1 job additionally links and inspects the
+ * repository-owned firmware consumer and uploads its ELF, HEX, BIN, and map.
+ * These jobs deliberately do not invoke target CTest, execute target code on
+ * the x86-64 runner, or claim hardware proof.
  *
  * @section FoundationContinuousIntegrationQuality Warnings and Sanitizers
  *
@@ -151,8 +153,9 @@
  * - `macos_x64`, which requires an Intel runner or Rosetta execution and is
  *   validated locally through Rosetta 2 (VAL-002);
  * - Raspberry Pi-specific integration and hardware behavior;
- * - AVR, STM32, or PSoC firmware linkage and hardware behavior, and Arduino
- *   board execution (sketches are compiled, not run);
+ * - STM32 or PSoC hardware behavior, and Arduino board execution (sketches are
+ *   compiled, not run); STM32G0B1 firmware linkage is checked separately from
+ *   its pending hardware execution;
  * - branch-coverage gates; only line coverage is enforced.
  *
  * Those concerns retain separate backlog tasks. In particular, embedded jobs

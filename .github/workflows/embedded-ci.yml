@@ -164,11 +164,22 @@ jobs:
             arm_none_eabi_cortex_m7f_hard \
             psoc5lp_armgcc_cortex_m3_soft \
             stm32f103_armgcc_cortex_m3_soft \
+            stm32g0b1cbt6_armgcc_cortex_m0plus_soft \
             stm32f407_armgcc_cortex_m4f_hard \
             stm32h743_armgcc_cortex_m7f_hard
           do
             validate_profile "$preset"
           done
+
+      - name: Link and inspect STM32G0B1 firmware consumer
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./scripts/test-stm32.sh \
+            stm32g0b1cbt6_armgcc_cortex_m0plus_soft \
+            --skip-export \
+            --package dist/stm32g0b1cbt6_armgcc_cortex_m0plus_soft \
+            --parallel 4
 
       - name: Upload validated Arm packages
         uses: actions/upload-artifact@v7
@@ -178,8 +189,13 @@ jobs:
             dist/arm_none_eabi_*
             dist/psoc5lp_*
             dist/stm32f103_*
+            dist/stm32g0b1cbt6_*
             dist/stm32f407_*
             dist/stm32h743_*
+            build/stm32-consumer/stm32g0b1cbt6_armgcc_cortex_m0plus_soft/Release/FoundationStm32G0B1Consumer.elf
+            build/stm32-consumer/stm32g0b1cbt6_armgcc_cortex_m0plus_soft/Release/FoundationStm32G0B1Consumer.hex
+            build/stm32-consumer/stm32g0b1cbt6_armgcc_cortex_m0plus_soft/Release/FoundationStm32G0B1Consumer.bin
+            build/stm32-consumer/stm32g0b1cbt6_armgcc_cortex_m0plus_soft/Release/FoundationStm32G0B1Consumer.map
           if-no-files-found: error
           retention-days: 7
 
@@ -194,7 +210,9 @@ jobs:
             dist/arm_none_eabi_*/
             dist/psoc5lp_*/
             dist/stm32f103_*/
+            dist/stm32g0b1cbt6_*/
             dist/stm32f407_*/
             dist/stm32h743_*/
+            build/stm32-consumer/stm32g0b1cbt6_armgcc_cortex_m0plus_soft/
           if-no-files-found: warn
           retention-days: 14

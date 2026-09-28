@@ -61,7 +61,8 @@
  * - Raspberry Pi-specific consumer and hardware evidence;
  * - Arm/STM32 firmware linkage and target execution beyond hosted package
  *   cross-compilation;
- * - representative PSoC product-toolchain integration.
+ * - PSoC Creator integration using a recorded C++17-capable ARM GCC toolchain,
+ *   a real consumer, and representative PSoC 5LP hardware execution.
  *
  * Docker may reproduce Linux and some cross-compilation environments. It does
  * not substitute for native macOS, native Windows/MSVC, or physical embedded
@@ -72,8 +73,10 @@
  *
  * Rows marked `RELEASE CANDIDATE` or `PUBLISHED` in the support matrix are not
  * `SUPPORTED` until their full acceptance evidence passes. PSoC 5LP and
- * generic Arm profiles are experimental. PIC is explicitly deferred and has no current preset, package, or
- * compatibility promise.
+ * generic Arm profiles are experimental. The PSoC alias proves only generic
+ * Cortex-M3/soft-float compilation; it does not promise compatibility with the
+ * GCC version bundled by PSoC Creator. PIC is explicitly deferred and has no
+ * current preset, package, or compatibility promise.
  *
  * Cross-compiled archives do not provide a complete firmware environment.
  * Foundation does not supply a target C runtime, startup code, interrupt

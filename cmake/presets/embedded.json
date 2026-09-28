@@ -19,6 +19,13 @@
       }
     },
     {
+      "name": "stm32g0b1cbt6_armgcc_cortex_m0plus_soft",
+      "inherits": "arm_none_eabi_cortex_m0plus_soft",
+      "cacheVariables": {
+        "FOUNDATION_PLATFORM": "stm32g0b1cbt6_armgcc_cortex_m0plus_soft"
+      }
+    },
+    {
       "name": "stm32f407_armgcc_cortex_m4f_hard",
       "inherits": "arm_none_eabi_cortex_m4f_hard",
       "cacheVariables": {
@@ -42,6 +49,11 @@
     {
       "name": "stm32f103_armgcc_cortex_m3_soft",
       "configurePreset": "stm32f103_armgcc_cortex_m3_soft",
+      "configuration": "Debug"
+    },
+    {
+      "name": "stm32g0b1cbt6_armgcc_cortex_m0plus_soft",
+      "configurePreset": "stm32g0b1cbt6_armgcc_cortex_m0plus_soft",
       "configuration": "Debug"
     },
     {

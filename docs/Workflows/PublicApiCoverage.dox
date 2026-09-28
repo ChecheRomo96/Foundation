@@ -132,8 +132,9 @@
  * has a narrower but truthful contract: compile Debug and Release with the
  * target toolchain, export the Release package, and inspect an object inside
  * `libFoundation.a` with the matching binutils. AVR board execution was
- * recorded by `VAL-007` with `tests/AvrConsumer`; hardware or emulator
- * execution for Arm remains part of `VAL-008` and `VAL-009`.
+ * recorded by `VAL-007` with `tests/AvrConsumer`. `VAL-008` additionally links
+ * the exact STM32G0B1CBT6 firmware in `tests/Stm32G0B1Consumer`; its hardware
+ * execution and the remaining Arm targets stay separate evidence.
  *
  * @section FoundationPublicApiCoverageNext Prioritized Test Work
  *

@@ -71,6 +71,7 @@
  *
  * Select the preset that matches the firmware CPU and floating-point ABI:
  *
+ * - `stm32g0b1cbt6_armgcc_cortex_m0plus_soft`;
  * - `stm32f103_armgcc_cortex_m3_soft`;
  * - `stm32f407_armgcc_cortex_m4f_hard`;
  * - `stm32h743_armgcc_cortex_m7f_hard`.
@@ -100,6 +101,27 @@
  * compatible runtime or linker configuration. If configuration cannot find
  * `stdint.h`, install the target Newlib/runtime or pass a compatible
  * `FOUNDATION_ARM_SYSROOT` during a fresh configure/export.
+ *
+ * The exact STM32G0B1CBT6 consumer automates the package, link, and ELF checks:
+ *
+ * @code{bash}
+ * ./scripts/test-stm32.sh \
+ *     stm32g0b1cbt6_armgcc_cortex_m0plus_soft \
+ *     --fresh --parallel 4
+ * @endcode
+ *
+ * The equivalent PowerShell command is:
+ *
+ * @code{powershell}
+ * ./scripts/test-stm32.ps1 `
+ *     stm32g0b1cbt6_armgcc_cortex_m0plus_soft `
+ *     -Fresh -Parallel 4
+ * @endcode
+ *
+ * Its linker map uses 128 KiB Flash at `0x08000000`. Although the MCU exposes
+ * up to 144 KiB SRAM, the fixture conservatively uses the first 128 KiB at
+ * `0x20000000`, which remains valid when SRAM parity protection is enabled.
+ * The command does not execute the ELF.
  *
  * @section FoundationValidationAVR AVR Matrix
  *
@@ -275,6 +297,23 @@
  * [36227959989](https://github.com/ChecheRomo96/Foundation/actions/runs/36227959989)
  * subsequently built, exported, and inspected all declared Arm profiles. Local
  * firmware linkage and target execution remain separate validation gates.
+ *
+ * @subsection FoundationValidationEvidenceSTM32G0B1 STM32G0B1CBT6 firmware consumer — 2026-09-28
+ *
+ * | Field | Recorded value |
+ * | ----- | -------------- |
+ * | Operator | José Manuel Romo |
+ * | Host | macOS Arm64 |
+ * | MCU | STM32G0B1CBT6; Cortex-M0+, 128 KiB Flash, up to 144 KiB SRAM |
+ * | Preset | `stm32g0b1cbt6_armgcc_cortex_m0plus_soft` |
+ * | Toolchain | Arm GNU Toolchain 15.3.Rel1 with Newlib, extracted locally without a system-wide installation |
+ * | Package | Fresh Release export; identity validator confirmed ELF32 little-endian Armv6S-M, soft-float, 4-byte pointers, and no Debug import |
+ * | Consumer | `tests/Stm32G0B1Consumer`, found through `find_package(Foundation 1.2 CONFIG REQUIRED)` and linked only through `Foundation::Foundation` |
+ * | Firmware | 2696-byte ELF image; 2668 bytes text, 16 bytes initialized data, 12 bytes BSS; HEX, BIN, and linker map generated |
+ * | Memory contract | 64-byte vector table at `0x08000000`; code in 128 KiB Flash; data begins at `0x20000000`; first 128 KiB SRAM used conservatively |
+ * | ABI and link inspection | ELF32/Arm executable, Armv6S-M, Thumb-1, soft-float, no undefined symbols; map pulls `Frequency.cpp` and `Period.cpp` from the exported `libFoundation.a` |
+ * | Runtime contract | Fourteen representative Math, Time, Containers, Functional, and Utils checks update `FoundationValidationPassed`, `FoundationValidationTotal`, and `FoundationValidationState`; completion executes `bkpt` for SWD inspection |
+ * | Not yet proven | Flashing and execution on the physical STM32G0B1CBT6; this is required before VAL-008 can be `DONE` |
  *
  * @subsection FoundationValidationEvidencePackageIdentity Package identity — 2026-09-26
  *
