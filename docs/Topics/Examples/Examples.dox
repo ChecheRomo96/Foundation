@@ -208,4 +208,28 @@
  * @note These convenience scripts are not application bundles and do not bypass
  * operating-system security. A downloaded package may still require the normal
  * macOS Gatekeeper or Windows security approval applicable to unsigned software.
+ *
+ * @section FoundationExamplesValidation Automated Native Validation
+ *
+ * Repository validation discovers examples from their `Desktop/CMakeLists.txt`
+ * files; it does not contain a second hardcoded executable list. A clean native
+ * validation builds every example in Debug and Release, executes both forms,
+ * compares stdout and stderr, creates a Release-only export, validates the
+ * package identity, executes every exported example, and compares the exported
+ * output with the Release build:
+ *
+ * @code{bash}
+ * ./scripts/validate-examples.sh macos_arm64 --fresh --parallel 4
+ * @endcode
+ *
+ * @code{powershell}
+ * ./scripts/validate-examples.ps1 windows_msvc_x64 -Fresh -Parallel 4
+ * @endcode
+ *
+ * The validator rejects an empty or incomplete example set, any distributed
+ * Debug executable, missing or extra export files, nonzero exit codes, and
+ * output differences. It also exercises the macOS or Windows menu launcher by
+ * scripted input. Linux exports intentionally contain no launcher. This is an
+ * artifact and presentation acceptance workflow, not a CTest or GoogleTest
+ * suite; examples remain demonstrations of the public API.
  */

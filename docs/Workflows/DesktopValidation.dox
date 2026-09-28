@@ -107,6 +107,7 @@
  * ./scripts/export.ps1 $Preset -Fresh
  * ./scripts/validate-package.ps1 $Preset
  * ./scripts/test-package.ps1 $Preset -SkipExport
+ * ./scripts/validate-examples.ps1 $Preset -Fresh -Parallel 4
  *
  * Test-Path "dist/$Preset/include"
  * Test-Path "dist/$Preset/lib/Foundation.lib"
@@ -166,6 +167,7 @@
  * ./scripts/export.sh "$PRESET" --fresh
  * ./scripts/validate-package.sh "$PRESET"
  * ./scripts/test-package.sh "$PRESET" --skip-export
+ * ./scripts/validate-examples.sh "$PRESET" --fresh --parallel 4
  *
  * test -d "dist/$PRESET/include"
  * test -f "dist/$PRESET/lib/libFoundation.a"
