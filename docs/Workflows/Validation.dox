@@ -313,6 +313,7 @@
  * | Memory contract | 64-byte vector table at `0x08000000`; code in 128 KiB Flash; data begins at `0x20000000`; first 128 KiB SRAM used conservatively |
  * | ABI and link inspection | ELF32/Arm executable, Armv6S-M, Thumb-1, soft-float, no undefined symbols; map pulls `Frequency.cpp` and `Period.cpp` from the exported `libFoundation.a` |
  * | Runtime contract | Fourteen representative Math, Time, Containers, Functional, and Utils checks update `FoundationValidationPassed`, `FoundationValidationTotal`, and `FoundationValidationState`; completion executes `bkpt` for SWD inspection |
+ * | Hosted reproduction | [Run 36445860085](https://github.com/ChecheRomo96/Foundation/actions/runs/36445860085) rebuilt all nine Arm packages and passed the STM32G0B1 package, link, ELF, map, and artifact checks on commit `f8b1f50` |
  * | Not yet proven | Flashing and execution on the physical STM32G0B1CBT6; this is required before VAL-008 can be `DONE` |
  *
  * @subsection FoundationValidationEvidencePackageIdentity Package identity — 2026-09-26
