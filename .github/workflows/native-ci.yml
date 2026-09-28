@@ -214,6 +214,20 @@ jobs:
           cmake "-DPRESET=${{ matrix.preset }}"
           -P tests/cmake/PackageIdentityNegative.cmake
 
+      - name: Validate Debug, Release, and exported examples
+        if: matrix.platform == 'unix'
+        shell: bash
+        run: >-
+          ./scripts/validate-examples.sh "${{ matrix.preset }}"
+          --fresh --parallel 4
+
+      - name: Validate Debug, Release, and exported examples
+        if: matrix.platform == 'windows'
+        shell: pwsh
+        run: >-
+          ./scripts/validate-examples.ps1 "${{ matrix.preset }}"
+          -Fresh -Parallel 4
+
       - name: Upload native failure evidence
         if: failure()
         uses: actions/upload-artifact@v7
@@ -228,6 +242,7 @@ jobs:
             build/package-consumer/${{ matrix.preset }}/CMakeFiles/CMakeConfigureLog.yaml
             build/package-consumer/${{ matrix.preset }}/Testing/Temporary/
             build/package-identity-negative/${{ matrix.preset }}/
+            build/${{ matrix.preset }}/example-validation/
             dist/${{ matrix.preset }}/
           if-no-files-found: warn
           retention-days: 14

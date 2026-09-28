@@ -51,7 +51,11 @@
  * 5. recreate the standalone package consumer, find only that exported prefix,
  *    link `Foundation::Foundation`, and execute the consumer test;
  * 6. prove the identity gate rejects an added Debug archive, a missing public
- *    header, and modified build-identity metadata.
+ *    header, and modified build-identity metadata;
+ * 7. discover every desktop example definition, build and execute its Debug
+ *    and Release forms, require identical output, export only Release
+ *    executables, execute the exported copies, and exercise the native launcher
+ *    where one exists.
  *
  * Debug and Release do not name separate test suites. The same tests execute
  * against both library configurations. Debug remains a development artifact;
@@ -63,12 +67,21 @@
  * ./scripts/test.sh <preset> --config Debug --fresh --parallel 4
  * ./scripts/test.sh <preset> --config Release --parallel 4
  * ./scripts/test-package.sh <preset> --fresh --parallel 4
+ * ./scripts/validate-examples.sh <preset> --fresh --parallel 4
  * @endcode
  *
  * Windows runners invoke the equivalent `.ps1` commands. Both test scripts
  * reject an empty CTest suite, and `test-package` forces a real archive link by
  * calling out-of-line Time symbols. See @ref Foundation_Workflows_Test and
  * @ref Foundation_Workflows_PackageConsumer.
+ *
+ * Example validation remains separate from CTest because examples demonstrate
+ * API use; they are not correctness tests. `validate-examples.sh` and
+ * `validate-examples.ps1` discover the example definitions and artifacts
+ * instead of maintaining a hardcoded executable list. Linux validates direct
+ * execution and intentionally expects no launcher. macOS and Windows also run
+ * scripted quit and single-example launcher scenarios; opening the launcher
+ * through Finder or Explorer remains a manual user-experience check.
  *
  * The native Arm64 runner is equivalent CPU/OS evidence for the Linux Arm64
  * package identity. It is useful preparation for a Raspberry Pi consumer, but
