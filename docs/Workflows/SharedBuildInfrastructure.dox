@@ -8,10 +8,10 @@
  * | Field | Value |
  * | ----- | ----- |
  * | Backlog task | `INFRA-001` |
- * | Design status | `IN PROGRESS` - phases 0 through 3 are complete; phase 4 is next |
- * | Shared repository | Publicly readable, restrictively licensed [ChecheRomo96/RoModularBuild](https://github.com/ChecheRomo96/RoModularBuild), commit `1bf8e44`, tag `v0.3.0` |
+ * | Design status | `IN PROGRESS` - the phase 4 shared release is validated; Foundation hosted acceptance is pending |
+ * | Shared repository | Publicly readable, restrictively licensed [ChecheRomo96/RoModularBuild](https://github.com/ChecheRomo96/RoModularBuild), commit `c905ef4`, tag `v0.4.0` |
  * | Initial integration | `tools/RoModularBuild` version-pinned Git submodule |
- * | Current implementation owner | RoModularBuild for toolchains, hidden preset bases, and the generic lifecycle engine; Foundation for public wrappers, adapter values, and project policy |
+ * | Current implementation owner | RoModularBuild for toolchains, hidden preset bases, generic lifecycle, and cross-platform CI invocation; Foundation for public wrappers, adapter values, and project policy |
  * | Migration rule | No workflow behavior or public command changes during extraction |
  *
  * Foundation has now exercised the same configure, build, test, install,
@@ -220,6 +220,42 @@
  * over the same CMake presets and workflow contract, not become another source
  * of compiler or target truth.
  *
+ * @section FoundationSharedInfrastructureCI Reusable CI Contract
+ *
+ * Phase 4 uses composite actions stored inside the pinned submodule rather than
+ * a remote reusable workflow with a second `@ref`. After recursive checkout, a
+ * consumer calls the action through its local path:
+ *
+ * @code{.yaml}
+ * - uses: ./tools/RoModularBuild/actions/project-workflow
+ *   with:
+ *     command: test
+ *     preset: macos_arm64
+ *     configuration: Debug
+ *     fresh: true
+ *     parallel: 4
+ * @endcode
+ *
+ * The gitlink is therefore the only RoModularBuild version pin. The local
+ * caller cannot execute action code from a different branch or tag by accident.
+ * Third-party GitHub actions retain separate dependency pins because they are
+ * independent dependencies.
+ *
+ * The shared CI surface has two project-independent actions:
+ *
+ * - `project-workflow` selects Bash or PowerShell and invokes the consumer's
+ *   configure, build, test, install, or clean adapter without accepting an
+ *   arbitrary shell command; and
+ * - `report-toolchain` reports CMake, Ninja, the selected compiler, and the
+ *   hosted operating system.
+ *
+ * Foundation still owns triggers, runner and compiler matrices, permissions,
+ * concurrency, dependency installation, Foundation package and example
+ * validation, coverage policy, firmware evidence, artifact retention,
+ * documentation deployment, and release publication. The phase 4 extraction
+ * removes platform-specific invocation duplication without moving repository
+ * policy into the shared dependency.
+ *
  * @section FoundationSharedInfrastructureMigration Migration Plan
  *
  * | Phase | State | Deliverable | Exit evidence |
@@ -228,7 +264,7 @@
  * | 1. Bootstrap repository | `DONE` | Publicly readable, restrictively licensed repository `RoModularBuild` provides license guardrails, independent versioning, documentation, hidden preset namespaces, Bash/PowerShell validators, CTest contract tests, and a three-platform validation workflow | Exact tag `v0.1.1` passed Linux Bash, macOS Bash, and Windows PowerShell in [run 36459142788](https://github.com/ChecheRomo96/RoModularBuild/actions/runs/36459142788) |
  * | 2. Extract toolchains and preset bases | `DONE` | Foundation pins RoModularBuild `v0.2.3`; hidden shared bases own reusable native/Arm/AVR selections, while thin local adapters preserve public presets and `FOUNDATION_*` variables | Local macOS Arm64, Cortex-M0+/soft, and AVR5 `compile_commands.json` files are byte-identical before/after migration; AVR Release archive SHA-256 remains `50f5a152a3d14eb9cbdb1ab3280e638078251ad5358968242aae8270943a3aaf`; macOS passes 162/162 Debug tests; macOS and AVR Release exports pass package-identity validation; and direct `ROMODULAR_*` configuration and 1.x precedence behavior pass. RoModularBuild exact-tag [run 36480576076](https://github.com/ChecheRomo96/RoModularBuild/actions/runs/36480576076) passes Linux, macOS, and Windows. On integration commit `73bc2df`, Foundation [native run 36481996365](https://github.com/ChecheRomo96/Foundation/actions/runs/36481996365), [embedded run 36481996289](https://github.com/ChecheRomo96/Foundation/actions/runs/36481996289), and [documentation run 36481996372](https://github.com/ChecheRomo96/Foundation/actions/runs/36481996372) all pass after recursively checking out the public submodule without secrets. |
  * | 3. Extract workflow engine | `DONE` | RoModularBuild `v0.3.0`, commit `1bf8e44`, owns generic configure, build, test, install, and clean engines; Foundation retains parameter-compatible wrappers and project adapter values | Exact-tag [run 36485701825](https://github.com/ChecheRomo96/RoModularBuild/actions/runs/36485701825) passes the lifecycle contract on Linux Bash, macOS Bash, and Windows PowerShell. Foundation integration commit `0e20d95` passes the complete [native matrix](https://github.com/ChecheRomo96/Foundation/actions/runs/36486043053), [embedded matrix](https://github.com/ChecheRomo96/Foundation/actions/runs/36486043166), and [documentation deployment](https://github.com/ChecheRomo96/Foundation/actions/runs/36486043312). This covers clean/fresh scope, Debug and Release, MSVC and Clang PowerShell paths, packages, consumers, examples, feature combinations, sanitizers, coverage, AVR, Arm, Arduino, STM32G0B1, and Doxygen/Pages. The AVR Release archive remains byte-identical with SHA-256 `50f5a152a3d14eb9cbdb1ab3280e638078251ad5358968242aae8270943a3aaf`. |
- * | 4. Extract reusable CI | `TODO` | Provide pinned reusable jobs or actions; keep repository permissions and release policy local | Foundation callers pass native, embedded, docs, sanitizer, coverage, and failure-evidence gates |
+ * | 4. Extract reusable CI | `IN PROGRESS` | RoModularBuild `v0.4.0`, commit `c905ef4`, provides pinned `project-workflow` and `report-toolchain` composite actions; Foundation uses them for native toolchain reporting, clean/test workflows, sanitizers, and AVR builds while retaining repository policy | Exact-tag [run 36521874858](https://github.com/ChecheRomo96/RoModularBuild/actions/runs/36521874858) passes the complete action contract on Linux Bash, macOS Bash, and Windows PowerShell. Local Foundation action acceptance passes 162/162 tests in Debug and Release, the package consumer, both AVR configurations, package identity, and the byte-identical Release archive. The full Foundation hosted matrices remain required before marking the phase `DONE`. |
  * | 5. Adopt from a second project | `TODO` | Consume the same tagged infrastructure from MCC without copying implementation | Both projects pin one release and pass their independent package-consumer tests |
  * | 6. Consider the CLI | `DEFERRED` | Evaluate `romodular configure/build/test/export` after two repositories prove the contract | CLI adds no target truth and preserves direct script/CMake operation |
  *

@@ -44,15 +44,24 @@ jobs:
           avr-g++ --version
           uname -a
 
-      - name: Build Debug and Release
-        shell: bash
-        run: |
-          set -euo pipefail
-          preset=atmega328p_avrgcc_avr5
-          ./scripts/build.sh "$preset" \
-            --config Debug --fresh --parallel 4 --target Foundation
-          ./scripts/build.sh "$preset" \
-            --config Release --parallel 4 --target Foundation
+      - name: Build Debug
+        uses: ./tools/RoModularBuild/actions/project-workflow
+        with:
+          command: build
+          preset: atmega328p_avrgcc_avr5
+          configuration: Debug
+          target: Foundation
+          fresh: true
+          parallel: 4
+
+      - name: Build Release
+        uses: ./tools/RoModularBuild/actions/project-workflow
+        with:
+          command: build
+          preset: atmega328p_avrgcc_avr5
+          configuration: Release
+          target: Foundation
+          parallel: 4
 
       - name: Export and verify Release package identity
         shell: bash
