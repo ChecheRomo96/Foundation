@@ -25,6 +25,10 @@ user explicitly includes it.
   `scripts/` as the supported build interface.
 - Initialize the pinned `tools/RoModularBuild` submodule before invoking a
   workflow in a fresh checkout.
+- Treat `tools/RoModularBuild` as a pinned, read-only dependency while working
+  in Foundation. Shared engine or toolchain changes belong in the
+  RoModularBuild repository; updating the submodule revision is a separate,
+  explicit dependency change.
 - Preserve C++17 for CMake packages and direct source builds. Arduino source
   builds intentionally support C++11 when `ARDUINO` is defined.
 - Keep embedded paths free from mandatory exceptions and full-STL assumptions.
@@ -44,7 +48,7 @@ user explicitly includes it.
 
 ## Supported entry points
 
-Use the PowerShell equivalent on Windows.
+Use the PowerShell equivalent on Windows when one is provided.
 
 ```text
 ./scripts/configure.sh <preset> [--fresh] [-- <cmake-options>]
@@ -53,6 +57,10 @@ Use the PowerShell equivalent on Windows.
 ./scripts/install.sh <preset>
 ./scripts/export.sh <preset> [--fresh] [-- <cmake-options>]
 ./scripts/test-package.sh <preset> [--fresh]
+./scripts/validate-package.sh <preset>
+./scripts/validate-examples.sh <preset> [--fresh]
+./scripts/test-arduino.sh [--fqbn <board>]
+./scripts/test-stm32.sh <preset> [--fresh]
 ./scripts/docs.sh [--fresh]
 ```
 
