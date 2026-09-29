@@ -8,6 +8,14 @@
  * it does not reproduce the configure, build, test, export, or consumer logic
  * already owned by `scripts/`.
  *
+ * Generic cross-platform lifecycle invocation and toolchain reporting use the
+ * composite actions in the exact RoModularBuild revision checked out at
+ * `tools/RoModularBuild`. The local action path is governed by the same gitlink
+ * as the shared scripts and toolchains, so CI does not introduce a second
+ * RoModularBuild version reference. Foundation keeps its triggers, matrices,
+ * permissions, package and example gates, artifacts, and release policy in
+ * this repository. See @ref FoundationSharedInfrastructureCI.
+ *
  * @section FoundationContinuousIntegrationTriggers Triggers and Permissions
  *
  * Native CI runs for:
