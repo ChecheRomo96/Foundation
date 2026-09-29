@@ -74,34 +74,10 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Verify Unix toolchain
-        if: matrix.platform == 'unix'
-        shell: bash
-        run: |
-          set -eu
-          cmake --version
-          ninja --version
-          "${{ matrix.compiler }}" --version
-          uname -a
-
-      - name: Verify Windows toolchain
-        if: matrix.platform == 'windows'
-        shell: pwsh
-        run: |
-          cmake --version
-          ninja --version
-
-          if ("${{ matrix.compiler }}" -eq "clang") {
-              clang++ --version
-          }
-          else {
-              $vswhere = Join-Path `
-                  ${env:ProgramFiles(x86)} `
-                  "Microsoft Visual Studio/Installer/vswhere.exe"
-              & $vswhere -latest -products * `
-                  -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
-                  -property installationVersion
-          }
+      - name: Verify hosted toolchain
+        uses: ./tools/RoModularBuild/actions/report-toolchain
+        with:
+          compiler: ${{ matrix.compiler }}
 
       - name: Seed clean-scope state
         run: >-
@@ -114,14 +90,10 @@ jobs:
           -P tests/cmake/FreshState.cmake
 
       - name: Clean build tree only
-        if: matrix.platform == 'unix'
-        shell: bash
-        run: ./scripts/clean.sh "${{ matrix.preset }}"
-
-      - name: Clean build tree only
-        if: matrix.platform == 'windows'
-        shell: pwsh
-        run: ./scripts/clean.ps1 "${{ matrix.preset }}"
+        uses: ./tools/RoModularBuild/actions/project-workflow
+        with:
+          command: clean
+          preset: ${{ matrix.preset }}
 
       - name: Verify build-only clean scope
         run: >-
@@ -134,14 +106,11 @@ jobs:
           -P tests/cmake/FreshState.cmake
 
       - name: Clean build and package trees
-        if: matrix.platform == 'unix'
-        shell: bash
-        run: ./scripts/clean.sh "${{ matrix.preset }}" --dist
-
-      - name: Clean build and package trees
-        if: matrix.platform == 'windows'
-        shell: pwsh
-        run: ./scripts/clean.ps1 "${{ matrix.preset }}" -Dist
+        uses: ./tools/RoModularBuild/actions/project-workflow
+        with:
+          command: clean
+          preset: ${{ matrix.preset }}
+          dist: true
 
       - name: Verify build-and-package clean scope
         run: >-
@@ -154,36 +123,23 @@ jobs:
           -P tests/cmake/FreshState.cmake
 
       - name: Test Debug
-        if: matrix.platform == 'unix'
-        shell: bash
-        run: >-
-          ./scripts/test.sh "${{ matrix.preset }}"
-          --config Debug --fresh --parallel 4
-          --junit "build/${{ matrix.preset }}/test-results/Debug.xml"
-
-      - name: Test Debug
-        if: matrix.platform == 'windows'
-        shell: pwsh
-        run: >-
-          ./scripts/test.ps1 "${{ matrix.preset }}"
-          -Configuration Debug -Fresh -Parallel 4
-          -JUnit "build/${{ matrix.preset }}/test-results/Debug.xml"
+        uses: ./tools/RoModularBuild/actions/project-workflow
+        with:
+          command: test
+          preset: ${{ matrix.preset }}
+          configuration: Debug
+          fresh: true
+          parallel: 4
+          junit: build/${{ matrix.preset }}/test-results/Debug.xml
 
       - name: Test Release
-        if: matrix.platform == 'unix'
-        shell: bash
-        run: >-
-          ./scripts/test.sh "${{ matrix.preset }}"
-          --config Release --parallel 4
-          --junit "build/${{ matrix.preset }}/test-results/Release.xml"
-
-      - name: Test Release
-        if: matrix.platform == 'windows'
-        shell: pwsh
-        run: >-
-          ./scripts/test.ps1 "${{ matrix.preset }}"
-          -Configuration Release -Parallel 4
-          -JUnit "build/${{ matrix.preset }}/test-results/Release.xml"
+        uses: ./tools/RoModularBuild/actions/project-workflow
+        with:
+          command: test
+          preset: ${{ matrix.preset }}
+          configuration: Release
+          parallel: 4
+          junit: build/${{ matrix.preset }}/test-results/Release.xml
 
       - name: Seed stale package state
         run: >-
@@ -281,11 +237,14 @@ jobs:
           submodules: recursive
 
       - name: Test Debug with AddressSanitizer and UndefinedBehaviorSanitizer
-        shell: bash
-        run: >-
-          ./scripts/test.sh "${{ matrix.preset }}"
-          --config Debug --fresh --parallel 4
-          --junit "build/${{ matrix.preset }}/test-results/Sanitizers.xml"
+        uses: ./tools/RoModularBuild/actions/project-workflow
+        with:
+          command: test
+          preset: ${{ matrix.preset }}
+          configuration: Debug
+          fresh: true
+          parallel: 4
+          junit: build/${{ matrix.preset }}/test-results/Sanitizers.xml
 
       - name: Upload sanitizer failure evidence
         if: failure()
