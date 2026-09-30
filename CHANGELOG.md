@@ -2,9 +2,9 @@
 
 This file records user-visible changes to Foundation. Release dates use the
 `YYYY-MM-DD` format. Version 1.1.0 was the first published GitHub release;
-version 1.2.0 is the current release.
+version 1.3.0 is the current release.
 
-## [Unreleased]
+## [1.3.0] - 2026-09-30
 
 ### Changed
 
@@ -88,7 +88,10 @@ version 1.2.0 is the current release.
 ### Changed
 
 - Release, support-matrix, validation, package, README, and backlog
-  documentation now reflect the published Foundation 1.2.0 state.
+  documentation now reflect the published Foundation 1.3.0 state.
+- Version metadata is now `1.3.0`. The CMake package keeps
+  `SameMajorVersion` compatibility, so 1.x consumers such as MCC continue to
+  accept it.
 
 ### Known limitations
 
@@ -97,8 +100,8 @@ version 1.2.0 is the current release.
   proprietary and grant no external-use rights.
 - macOS Arm64 and macOS x64 through Rosetta 2 have recorded clean native,
   package-consumer, example, and launcher validation. Hosted Windows and Linux
-  builds pass their tests and package consumers; Windows/Linux example and
-  Windows launcher acceptance remain open.
+  builds pass their tests, package consumers, and examples; only the manual
+  Windows Explorer launcher acceptance remains open.
 - PSoC and generic Arm profiles are experimental. PIC remains deferred.
 - Exported packages are static, target-specific, and Release-only. Foundation
   does not currently publish universal binaries, Debug packages, or a binary
