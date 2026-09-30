@@ -6,7 +6,7 @@
     //  Version
 
         #ifndef FOUNDATION_VERSION
-            #define FOUNDATION_VERSION "1.2.0"
+            #define FOUNDATION_VERSION "1.3.0"
         #endif
 
     //
@@ -26,9 +26,9 @@
         // Arduino source builds accept the stock cores' C++11; every other
         // integration mode requires C++17.
         #if !defined(DOXYGEN) && defined(ARDUINO) && (FOUNDATION_CPLUSPLUS < 201103L)
-            #error "Foundation 1.2.0 requires C++11 or newer for Arduino source builds"
+            #error "Foundation 1.3.0 requires C++11 or newer for Arduino source builds"
         #elif !defined(DOXYGEN) && !defined(ARDUINO) && (FOUNDATION_CPLUSPLUS < 201703L)
-            #error "Foundation 1.2.0 requires C++17 or newer"
+            #error "Foundation 1.3.0 requires C++17 or newer"
         #endif
 
         // `_v` convenience traits are inline variables, a C++17 feature.
