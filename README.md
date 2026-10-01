@@ -8,12 +8,12 @@ It provides reusable low-level building blocks shared by projects such as MIDILA
 · [Known limitations](https://checheromo96.github.io/Foundation/group__Foundation__BuildGuide__KnownLimitations.html)
 · [Changelog](CHANGELOG.md)
 
-Foundation 1.3.0 is the current published release. Its five native GitHub
+Foundation 1.4.0 is the current published release. Its five native GitHub
 Release packages passed the tagged build, test, export, checksum, and standalone
 package-consumer workflow. Other presets remain candidates or experimental
 until their documented validation gates pass.
 
-Foundation 1.3.0 requires a C++17-capable compiler for CMake packages and direct
+Foundation 1.4.0 requires a C++17-capable compiler for CMake packages and direct
 source builds. Arduino source builds (`ARDUINO` defined) accept C++11 so stock
 Arduino cores work unmodified; the C++17-only `_v` TypeTraits variables are
 unavailable there. The language requirement does not imply a dependency on the

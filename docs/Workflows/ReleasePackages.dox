@@ -59,7 +59,7 @@
  *
  * @code{bash}
  * cmake -S . -B build \
- *   -DCMAKE_PREFIX_PATH=/path/to/Foundation-1.3.0-macos_arm64
+ *   -DCMAKE_PREFIX_PATH=/path/to/Foundation-1.4.0-macos_arm64
  * @endcode
  *
  * The consuming project uses only the exported CMake target:
