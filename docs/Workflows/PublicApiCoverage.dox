@@ -125,6 +125,8 @@
  * | `Move` | `MoveTest.TransfersAValueToANewObject`, plus use by Containers and Matrix | `BEHAVIOR` |
  * | `Swap` | `SwapTest.ExchangesTwoValues` | `BEHAVIOR` |
  * | Move-only and throwing user-defined types | `SwapTest.ExchangesMoveOnlyValues` and `UtilsTest.MoveIsOnlyACastAndSwapPropagatesElementFailures` | `BEHAVIOR` |
+ * | `Flash::Read`, `Copy`, `StringLength`, `CopyString` (fit, truncation, zero capacity) | `FoundationUtilsFlash` cases in `FlashTests.cc` | `BEHAVIOR` |
+ * | `FOUNDATION_FLASH` placement on AVR | `tests/AvrConsumer` links a flash table and string into `.text`, not `.data`; board execution not yet run | `TARGET` |
  *
  * @section FoundationPublicApiCoverageTarget Target-only Evidence
  *
