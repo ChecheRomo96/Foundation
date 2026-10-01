@@ -4,6 +4,14 @@ This file records user-visible changes to Foundation. Release dates use the
 `YYYY-MM-DD` format. Version 1.1.0 was the first published GitHub release;
 version 1.4.0 is the current release.
 
+## [Unreleased]
+
+### Added
+
+- `scripts/test-arduino.ps1`, the PowerShell equivalent of
+  `scripts/test-arduino.sh`, and a Windows leg of the Arduino CI job that runs
+  it.
+
 ## [1.4.0] - 2026-10-01
 
 ### Added

@@ -93,9 +93,21 @@ jobs:
           retention-days: 14
 
   arduino:
-    name: Arduino AVR / Uno source mode
-    runs-on: ubuntu-24.04
+    name: Arduino AVR / Uno source mode / ${{ matrix.name }}
+    runs-on: ${{ matrix.runner }}
     timeout-minutes: 20
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Ubuntu / Bash
+            runner: ubuntu-24.04
+            platform: unix
+
+          - name: Windows / PowerShell
+            runner: windows-2025-vs2026
+            platform: windows
 
     steps:
       - name: Checkout repository
@@ -121,8 +133,14 @@ jobs:
           arduino-cli core list
 
       - name: Compile every example sketch for Arduino Uno
+        if: matrix.platform == 'unix'
         shell: bash
         run: ./scripts/test-arduino.sh
+
+      - name: Compile every example sketch for Arduino Uno
+        if: matrix.platform == 'windows'
+        shell: pwsh
+        run: ./scripts/test-arduino.ps1
 
   arm:
     name: Arm GCC / Cortex-M profiles
