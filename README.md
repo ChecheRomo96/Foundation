@@ -158,8 +158,9 @@ Copy this folder into your Arduino `libraries` folder and include:
 Include `<Foundation.h>` (or a root `Foundation_<Module>.h`) in the sketch
 before any nested `<Foundation/...>` header so the Arduino builder finds the
 library. The stock Arduino AVR core works as installed; no compiler overrides
-are needed. `./scripts/test-arduino.sh` compiles every example sketch for the
-Arduino Uno with the unmodified core.
+are needed. `./scripts/test-arduino.sh` (or `.\scripts\test-arduino.ps1` on
+Windows) compiles every example sketch for the Arduino Uno with the
+unmodified core.
 
 ## License
 
