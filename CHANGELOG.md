@@ -2,9 +2,9 @@
 
 This file records user-visible changes to Foundation. Release dates use the
 `YYYY-MM-DD` format. Version 1.1.0 was the first published GitHub release;
-version 1.3.0 is the current release.
+version 1.4.0 is the current release.
 
-## [Unreleased]
+## [1.4.0] - 2026-10-01
 
 ### Added
 
