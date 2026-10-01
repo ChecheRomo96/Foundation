@@ -4,6 +4,17 @@ This file records user-visible changes to Foundation. Release dates use the
 `YYYY-MM-DD` format. Version 1.1.0 was the first published GitHub release;
 version 1.3.0 is the current release.
 
+## [Unreleased]
+
+### Added
+
+- `Foundation/Utils/Flash.h`: the `FOUNDATION_FLASH` placement macro
+  (`PROGMEM` on AVR, empty elsewhere) and `Foundation::Utils::Flash::Read`,
+  `Copy`, `StringLength`, and `CopyString`, so constant tables and strings stay
+  in program memory on AVR and are read identically on every target.
+- `Foundation_Utils_FlashData` desktop example and Arduino sketch.
+- Flash checks in the `tests/AvrConsumer` firmware.
+
 ## [1.3.0] - 2026-09-30
 
 ### Changed

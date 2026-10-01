@@ -4,5 +4,6 @@
     #include <Foundation_BuildSettings.h>
     #include <Foundation/Utils/Move.h>
     #include <Foundation/Utils/Swap.h>
+    #include <Foundation/Utils/Flash.h>
 
 #endif//FOUNDATION_UTILS_MODULE_H
