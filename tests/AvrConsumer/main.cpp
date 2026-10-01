@@ -69,6 +69,11 @@ namespace {
         return a + b;
     }
 
+    // Program-memory data read back through Foundation::Utils::Flash.
+    const uint16_t FlashTable[] FOUNDATION_FLASH = {0x7B56, 0x5ABC};
+    const char FlashName[] FOUNDATION_FLASH = "Dorian";
+    volatile uint8_t flashIndex = 1;
+
     static_assert(
         Foundation::TypeTraits::is_same<uint32_t, unsigned long>::value,
         "avr-gcc uint32_t is unsigned long"
@@ -138,6 +143,13 @@ int main() {
     int b = 2;
     Foundation::Utils::Swap(a, b);
     Check("Utils::Swap", a == 2 && b == 1);
+
+    Check("Flash::Read table[1] == 0x5ABC",
+        Foundation::Utils::Flash::Read(&FlashTable[flashIndex]) == 0x5ABC);
+    char name[8];
+    Check("Flash::CopyString Dorian",
+        Foundation::Utils::Flash::CopyString(name, sizeof(name), FlashName) == 6 &&
+        name[0] == 'D' && name[5] == 'n' && name[6] == '\0');
 
     UartPrint(passed == total ? "FOUNDATION AVR CONSUMER: PASSED " :
                                 "FOUNDATION AVR CONSUMER: FAILED ");
