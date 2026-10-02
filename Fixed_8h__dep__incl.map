@@ -1,0 +1,8 @@
+<map id="src/Foundation/Math/Matrix/Fixed.h" name="src/Foundation/Math/Matrix/Fixed.h">
+<area shape="rect" id="Node000001" title="Fixed&#45;size matrix type." alt="" coords="5,5,160,45"/>
+<area shape="rect" id="Node000002" href="$Matrix_2Matrix_8h_source.html" title=" " alt="" coords="5,181,160,221"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="61,58,43,94,39,113,43,133,54,158,69,180,64,183,49,160,37,134,34,113,37,92,56,55"/>
+<area shape="rect" id="Node000003" href="$MatrixOperations_8h.html" title="Matrix arithmetic algorithms." alt="" coords="52,93,249,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="108,55,138,91,134,95,104,58"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="129,146,100,183,96,179,125,143"/>
+</map>

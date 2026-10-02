@@ -1,0 +1,9 @@
+<map id="Type Traits" name="Type Traits">
+<area shape="rect" id="Node000002" href="$group__Foundation.html" title="Core documentation topic for the Foundation framework." alt="" coords="5,104,100,129"/>
+<area shape="rect" id="Node000001" title="Compile&#45;time type inspection and relationships for generic code." alt="" coords="148,104,239,129"/>
+<area shape="rect" id="Node000006" href="$group__Foundation__TypeTraits__Composite.html" title="Traits composed from multiple primary classifications." alt="" coords="287,5,487,31"/>
+<area shape="rect" id="Node000003" href="$group__Foundation__TypeTraits__Helpers.html" title="Typed compile&#45;time constants used as trait results." alt="" coords="327,55,446,80"/>
+<area shape="rect" id="Node000005" href="$group__Foundation__TypeTraits__Primary.html" title="Traits that identify one primary category of a type." alt="" coords="296,104,477,129"/>
+<area shape="rect" id="Node000004" href="$group__Foundation__TypeTraits__Properties.html" title="Qualifier inspection, signedness inspection, and type transformations." alt="" coords="311,154,462,194"/>
+<area shape="rect" id="Node000007" href="$group__Foundation__TypeTraits__Relationships.html" title="Traits that compare types or test whether an expression is valid." alt="" coords="315,219,459,244"/>
+</map>

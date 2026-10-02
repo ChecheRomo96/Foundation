@@ -1,0 +1,5 @@
+<map id="Foundation::TypeTraits::is_unsigned_integer&lt; T &gt;" name="Foundation::TypeTraits::is_unsigned_integer&lt; T &gt;">
+<area shape="rect" id="Node000001" title="Reports whether a type is an unsigned integer other than bool." alt="" coords="305,20,504,60"/>
+<area shape="rect" id="Node000002" href="$structFoundation_1_1TypeTraits_1_1integral__constant.html" title=" " alt="" coords="5,5,257,75"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="271,37,305,37,305,43,271,43"/>
+</map>

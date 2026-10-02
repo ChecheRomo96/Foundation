@@ -1,0 +1,7 @@
+<map id="Desktop" name="Desktop">
+<area shape="rect" id="Node000001" title="Native Windows, Linux, and macOS targets." alt="" coords="139,55,215,80"/>
+<area shape="rect" id="Node000004" href="$group__Foundation__BuildGuide__Linux.html" title="Native GCC and Clang builds for x86&#45;64 and Arm64 Linux." alt="" coords="275,5,332,31"/>
+<area shape="rect" id="Node000005" href="$group__Foundation__BuildGuide__MacOs.html" title="Apple Silicon and Intel macOS builds." alt="" coords="269,55,337,80"/>
+<area shape="rect" id="Node000003" href="$group__Foundation__BuildGuide__Windows.html" title="MSVC and Clang builds for Windows." alt="" coords="263,104,344,129"/>
+<area shape="rect" id="Node000002" href="$group__Foundation__BuildGuide__Platforms.html" title="Platform&#45;specific compiler, architecture, and integration guidance." alt="" coords="5,55,91,80"/>
+</map>
