@@ -126,7 +126,7 @@
  * | `Swap` | `SwapTest.ExchangesTwoValues` | `BEHAVIOR` |
  * | Move-only and throwing user-defined types | `SwapTest.ExchangesMoveOnlyValues` and `UtilsTest.MoveIsOnlyACastAndSwapPropagatesElementFailures` | `BEHAVIOR` |
  * | `Flash::Read`, `Copy`, `StringLength`, `CopyString` (fit, truncation, zero capacity) | `FoundationUtilsFlash` cases in `FlashTests.cc` | `BEHAVIOR` |
- * | `FOUNDATION_FLASH` placement on AVR | `tests/AvrConsumer` links a flash table and string into `.text`, not `.data`; board execution not yet run | `TARGET` |
+ * | `FOUNDATION_FLASH` placement on AVR | `tests/AvrConsumer` links a flash table and string into `.text`, not `.data`; on 2026-10-02 the `Utils/FlashData` sketch printed the expected table value and full and truncated strings on an Arduino Mega 2560 | `TARGET` |
  *
  * @section FoundationPublicApiCoverageTarget Target-only Evidence
  *
@@ -134,7 +134,8 @@
  * has a narrower but truthful contract: compile Debug and Release with the
  * target toolchain, export the Release package, and inspect an object inside
  * `libFoundation.a` with the matching binutils. AVR board execution was
- * recorded by `VAL-007` with `tests/AvrConsumer`. `VAL-008` additionally links
+ * recorded by `VAL-007` with `tests/AvrConsumer`, and flash reads by the
+ * `Utils/FlashData` sketch on a Mega 2560. `VAL-008` additionally links
  * the exact STM32G0B1CBT6 firmware in `tests/Stm32G0B1Consumer`; its hardware
  * execution and the remaining Arm targets stay separate evidence.
  *
