@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <stdint.h>
+
 #include <Foundation/Utils.h>
 #include <Foundation/Functional.h>
 
@@ -12,14 +14,14 @@ int IncrementWithUtilsFirst(int value) {
 } // namespace
 
 TEST(FunctionalUmbrellaTest, CoexistsWithUtilsWhenIncludedSecond) {
-    int first = 1;
-    int second = 2;
-    Foundation::Utils::Swap(first, second);
+    const uint8_t source[2] = {1, 2};
+    uint8_t copy[2] = {0, 0};
+    Foundation::Utils::Flash::Copy(copy, source, sizeof copy);
 
     Foundation::Functional::Callback<int, int> callback;
     callback.Bind(IncrementWithUtilsFirst);
 
-    EXPECT_EQ(first, 2);
-    EXPECT_EQ(second, 1);
+    EXPECT_EQ(copy[0], 1);
+    EXPECT_EQ(copy[1], 2);
     EXPECT_EQ(callback.Invoke(41), 42);
 }

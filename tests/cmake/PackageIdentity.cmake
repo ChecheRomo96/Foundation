@@ -140,6 +140,16 @@ file(GLOB_RECURSE PACKAGE_ARCHIVES
     "${PACKAGE_PREFIX}/lib/*.a"
     "${PACKAGE_PREFIX}/lib/*.lib"
 )
+# A Foundation build that compiled CPSTL from source installs it alongside,
+# as its own package.
+set(CPSTL_ARCHIVES ${PACKAGE_ARCHIVES})
+list(FILTER CPSTL_ARCHIVES INCLUDE REGEX "/(libCPSTL\\.a|CPSTL\\.lib)$")
+list(FILTER PACKAGE_ARCHIVES EXCLUDE REGEX "/(libCPSTL\\.a|CPSTL\\.lib)$")
+if(CPSTL_ARCHIVES AND
+   NOT EXISTS "${PACKAGE_PREFIX}/lib/cmake/CPSTL/CPSTLConfig.cmake")
+    message(FATAL_ERROR
+        "The package bundles ${CPSTL_ARCHIVES} without a CPSTL CMake package")
+endif()
 list(LENGTH PACKAGE_ARCHIVES PACKAGE_ARCHIVE_COUNT)
 if(NOT PACKAGE_ARCHIVE_COUNT EQUAL 1)
     message(FATAL_ERROR
@@ -218,6 +228,10 @@ file(GLOB_RECURSE PACKAGE_HEADERS
     RELATIVE "${PACKAGE_INCLUDE_DIR}"
     "${PACKAGE_INCLUDE_DIR}/*"
 )
+# CPSTL headers installed with a bundled CPSTL belong to that package.
+if(CPSTL_ARCHIVES)
+    list(FILTER PACKAGE_HEADERS EXCLUDE REGEX "^CPSTL/")
+endif()
 list(SORT STAGED_HEADERS)
 list(SORT PACKAGE_HEADERS)
 if(NOT "${STAGED_HEADERS}" STREQUAL "${PACKAGE_HEADERS}")

@@ -9,7 +9,7 @@
     #################################################################################################
     # Project Name, Version, and Language
 
-        project(Foundation VERSION 1.4.0 LANGUAGES C CXX)
+        project(Foundation VERSION 2.0.0 LANGUAGES C CXX)
 
         set(FOUNDATION_REQUIRED_CXX_STANDARD 17)
 
@@ -104,6 +104,8 @@
 
     include(cmake/FoundationDependencies.cmake)
     foundation_validate_dependencies()
+
+    include(cmake/FoundationCPSTL.cmake)
 #
 ######################################################################################################
 # Append Source

@@ -2,10 +2,6 @@ if(FOUNDATION_MATH)
     add_subdirectory(Math)
 endif()
 
-if(FOUNDATION_TYPE_TRAITS)
-    add_subdirectory(TypeTraits)
-endif()
-
 if(FOUNDATION_CONTAINERS)
     add_subdirectory(Containers)
 endif()

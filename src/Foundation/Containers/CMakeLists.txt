@@ -12,8 +12,7 @@
     list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
         "${CMAKE_CURRENT_LIST_DIR}/Containers.h"
         "${CMAKE_CURRENT_LIST_DIR}/CircularBuffer.h"
-        "${CMAKE_CURRENT_LIST_DIR}/Queue.h"
-        "${CMAKE_CURRENT_LIST_DIR}/Stack.h"
+        "${CMAKE_CURRENT_LIST_DIR}/BitVector.h"
     )
     
     list(APPEND FOUNDATION_DOX_LOCAL

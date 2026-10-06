@@ -104,13 +104,14 @@
  *
  * - CMake package and direct-source builds require a C++17-capable compiler;
  *   C++14 and older are rejected. Arduino source builds accept C++11, where
- *   relaxed-`constexpr` mutators are ordinary inline functions and the `_v`
- *   TypeTraits variables are unavailable. Foundation avoids requiring the
+ *   relaxed-`constexpr` mutators are ordinary inline functions. Foundation
+ *   takes the standard vocabulary from CPSTL instead of requiring the
  *   complete C++ standard library.
- * - TypeTraits intentionally implements the subset used and documented by
- *   Foundation; it is not a complete replacement for `<type_traits>`.
- * - Containers and TaskScheduler use caller-owned, fixed-capacity storage.
+ * - CircularBuffer and TaskScheduler use caller-owned, fixed-capacity storage.
  *   They do not allocate, resize, own, or destroy the supplied arrays.
+ *   BitVector uses an external buffer when given one and otherwise grows an
+ *   owned `cpstd::vector`; in CPSTL's STL mode an allocation failure follows
+ *   `std::vector`.
  * - Callback is allocation-free and does not own bound objects. Bound objects,
  *   contexts, clocks, tasks, and external storage must outlive their users.
  * - TimePoint ordering and Duration arithmetic use modular half-range rules.

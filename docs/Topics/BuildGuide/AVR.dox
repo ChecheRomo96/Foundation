@@ -90,7 +90,8 @@
  *
  * `tests/AvrConsumer` is the repository's firmware consumer. It checks Math,
  * Time (including the archive's `Frequency::GetPeriod()` and
- * `Period::GetFrequency()`), Containers, Functional, Utils, and TypeTraits at
+ * `Period::GetFrequency()`), Containers (including BitVector over the heap),
+ * Functional, Utils, and the CPSTL type traits at
  * runtime and reports over USART0 at 115200 baud:
  *
  * @code{bash}

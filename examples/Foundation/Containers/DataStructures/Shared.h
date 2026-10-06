@@ -11,9 +11,12 @@ namespace DataStructures {
         int CircularBufferFirst;
         int CircularBufferLast;
         bool CircularBufferEmpty;
-        int QueueFront;
-        int StackTop;
-        unsigned int StackRemaining;
+        unsigned int BitVectorFirstByte;
+        unsigned int BitVectorOnes;
+        bool ExternalBitsFull;
+        unsigned int OwnedBitCount;
+        unsigned int OwnedByteCount;
+        bool OwnedBitsOwnStorage;
     };
 
     Result Run();

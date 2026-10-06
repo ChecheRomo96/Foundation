@@ -2,7 +2,7 @@
 #define FOUNDATION_CONTAINERS_CIRCULAR_BUFFER_H
 
 #include <stddef.h>
-#include "../Utils/Move.h"
+#include <CPutility.h>
 
 namespace Foundation { namespace Containers {
 
@@ -52,7 +52,7 @@ namespace Foundation { namespace Containers {
          */
         bool Push(T&& value) {
             if (!IsValid() || IsFull()) { return false; }
-            _buffer[_writeIndex] = Foundation::Utils::Move(value);
+            _buffer[_writeIndex] = cpstd::move(value);
             AdvanceWrite();
             return true;
         }
@@ -64,7 +64,7 @@ namespace Foundation { namespace Containers {
          */
         bool Pop(T& out) {
             if (!IsValid() || IsEmpty()) { return false; }
-            out = Foundation::Utils::Move(_buffer[_readIndex]);
+            out = cpstd::move(_buffer[_readIndex]);
             AdvanceRead();
             return true;
         }
