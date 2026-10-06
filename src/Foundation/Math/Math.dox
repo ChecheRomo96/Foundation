@@ -31,8 +31,8 @@
  * `Value<TResult>()` converts non-integral operands at the query boundary
  * without changing the stored representation. The default is `float`;
  * integral results divide through a safe 64-bit intermediate and then use the
- * requested result conversion. `ToFloat()` remains only as a Foundation 1.x
- * compatibility bridge and is scheduled for removal in 2.0.
+ * requested result conversion. `ToFloat()` was removed in 2.0; use
+ * `Value<float>()`.
  * Ratio construction, access, mutation, conversion, and reduction are
  * `constexpr` and `noexcept` for the supported numeric uses. `GCD()` provides
  * the same guarantees.
