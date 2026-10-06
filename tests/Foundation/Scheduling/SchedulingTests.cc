@@ -48,14 +48,14 @@ using Foundation::Time::Frequency;
 
 TEST(SchedulingTypeTest, DefaultAliasesUseTick32) {
     static_assert(
-        Foundation::TypeTraits::is_same<
+        cpstd::is_same<
             Task,
             Foundation::Scheduling::BasicTask<Foundation::Time::Tick32>
         >::value,
         "Task must use Tick32 by default"
     );
     static_assert(
-        Foundation::TypeTraits::is_same<
+        cpstd::is_same<
             TaskScheduler,
             Foundation::Scheduling::BasicTaskScheduler<
                 Foundation::Time::Tick32
@@ -64,7 +64,7 @@ TEST(SchedulingTypeTest, DefaultAliasesUseTick32) {
         "TaskScheduler must use Tick32 by default"
     );
     static_assert(
-        Foundation::TypeTraits::is_same<
+        cpstd::is_same<
             decltype(&Task::ShouldRun),
             bool (Task::*)(Task::TimePointType) const
         >::value,

@@ -1,6 +1,8 @@
 #ifndef FOUNDATION_FUNCTIONAL_TOP_H
 #define FOUNDATION_FUNCTIONAL_TOP_H
 
+    #include "Foundation_BuildSettings.h"
+
     #if __has_include(<Foundation/Functional/Functional.h>)
         #ifndef FOUNDATION_FUNCTIONAL
             #define FOUNDATION_FUNCTIONAL

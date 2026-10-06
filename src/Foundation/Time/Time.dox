@@ -7,9 +7,8 @@
  * Clock binds a raw counter callback and a Frequency; `Now()` combines the
  * current value with the identity of that Clock in a TimePoint. Duration stores
  * a validated elapsed count, while Frequency and Period describe the scale of
- * each tick. `FOUNDATION_TIME` enables this complete family. TypeTraits is a
- * required module dependency because Tick representations are constrained at
- * compile time.
+ * each tick. `FOUNDATION_TIME` enables this complete family. Tick
+ * representations are constrained at compile time with the CPSTL type traits.
  *
  * @section FoundationTimeHeaders Public Headers
  *
@@ -50,7 +49,7 @@
  * @section FoundationTimeRepresentations Tick Representations
  *
  * `Tick<T>` is a strongly typed raw counter value. Its representation defaults
- * to `uint32_t` and must satisfy `TypeTraits::is_unsigned_integer<T>`; signed
+ * to `uint32_t` and must be an unsigned integer type other than `bool`; signed
  * integers, floating-point values, classes, and `bool` are rejected at compile
  * time. The standard aliases are exact specializations:
  *

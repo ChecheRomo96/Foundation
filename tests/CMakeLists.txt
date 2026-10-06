@@ -49,7 +49,6 @@ add_test(
         ${CMAKE_COMMAND}
         -DFOUNDATION_TIME=OFF
         -DFOUNDATION_SCHEDULING=OFF
-        -DFOUNDATION_TYPE_TRAITS=OFF
         -DFOUNDATION_MATH_RATIO=OFF
         -DFOUNDATION_FUNCTIONAL_CALLBACK=OFF
         -P "${FOUNDATION_DEPENDENCY_TEST_SCRIPT}"
@@ -60,19 +59,9 @@ set_tests_properties(
 )
 
 foundation_add_invalid_dependency_test(
-    ContainersWithoutUtils
-    FOUNDATION_CONTAINERS
-    FOUNDATION_UTILS
-)
-foundation_add_invalid_dependency_test(
     TimeWithoutMath
     FOUNDATION_TIME
     FOUNDATION_MATH
-)
-foundation_add_invalid_dependency_test(
-    TimeWithoutTypeTraits
-    FOUNDATION_TIME
-    FOUNDATION_TYPE_TRAITS
 )
 foundation_add_invalid_dependency_test(
     TimeWithoutRatio

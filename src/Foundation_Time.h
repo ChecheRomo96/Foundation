@@ -1,6 +1,8 @@
 #ifndef FOUNDATION_TIME_TOP_H
 #define FOUNDATION_TIME_TOP_H
 
+    #include "Foundation_BuildSettings.h"
+
     #if __has_include(<Foundation/Time/Time.h>)
         #ifndef FOUNDATION_TIME
             #define FOUNDATION_TIME
