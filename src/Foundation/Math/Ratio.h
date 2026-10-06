@@ -280,15 +280,6 @@
                 }
 
                 /**
-                 * @brief Converts the ratio to float, or zero when invalid.
-                 * @deprecated Use `Value<float>()`. This compatibility bridge is
-                 * retained for Foundation 1.x and will be removed in 2.0.
-                 */
-                constexpr float ToFloat() const noexcept {
-                    return Value<float>();
-                }
-
-                /**
                  * @brief Returns a reduced copy.
                  * @return `0 / 1` when this ratio is invalid.
                  */
