@@ -2,7 +2,8 @@
 #define FOUNDATION_TIME_TICK_H
 
 #include <stdint.h>
-#include <Foundation/TypeTraits/TypeTraits.h>
+#include <CPtype_traits.h>
+#include <Foundation_BuildSettings.h>
 
 namespace Foundation {
     namespace Time {
@@ -21,13 +22,13 @@ namespace Foundation {
         class Tick {
         public:
             using Representation =
-                Foundation::TypeTraits::remove_cv_t<T>;
+                typename cpstd::remove_cv<T>::type;
 
         private:
             static_assert(
-                Foundation::TypeTraits::is_unsigned_integer<
-                    Representation
-                >::value,
+                cpstd::is_integral<Representation>::value &&
+                cpstd::is_unsigned<Representation>::value &&
+                !cpstd::is_same<Representation, bool>::value,
                 "Tick requires an unsigned integer representation"
             );
 

@@ -10,8 +10,11 @@
  *
  * The framework provides reusable software components organized into
  * independent modules. Each module focuses on a specific domain such as
- * mathematics, time handling, containers, scheduling, or compile-time
- * utilities.
+ * mathematics, time handling, containers, or scheduling. The standard
+ * vocabulary (vectors, strings, `move`, type traits) comes from CPSTL
+ * (`cpstd`), which aliases `std` where a standard library exists and
+ * provides its own implementation elsewhere, such as AVR. Foundation does
+ * not reimplement standard types; it adds what the standard library lacks.
  *
  * @section Foundation_Overview Overview
  *
@@ -38,7 +41,7 @@
  * - Modular architecture.
  * - Stable public interfaces.
  * - Minimal runtime overhead.
- * - Minimal dependency on the C++ standard library.
+ * - The standard vocabulary through CPSTL (`cpstd`), never a reimplementation.
  * - Optional module selection through the build system.
  * - Clear separation between public API and internal structure.
  *
@@ -49,7 +52,6 @@
  *
  * @code
  * Foundation
- * ├── TypeTraits
  * ├── Math
  * ├── Time
  * ├── Containers
@@ -65,21 +67,12 @@
  *
  * The main Foundation modules are:
  *
- * - @ref Foundation_TypeTraits
  * - @ref Foundation_Math
  * - @ref Foundation_Time
  * - @ref Foundation_Containers
  * - @ref Foundation_Functional
  * - @ref Foundation_Scheduling
  * - @ref Foundation_Utils
- *
- * @section Foundation_TypeTraitsModule Type Traits Module
- *
- * The Type Traits module provides compile-time type utilities.
- *
- * This module is intended to provide lightweight template
- * metaprogramming support, especially for embedded environments where
- * depending on the full C++ standard library may not be desirable.
  *
  * @section Foundation_MathModule Math Module
  *
@@ -110,11 +103,10 @@
  *
  * @section Foundation_ContainersModule Containers Module
  *
- * The Containers module provides reusable data structures.
- *
- * This module is intended for arrays, buffers, queues, lists, or other
- * storage abstractions that are useful across embedded and desktop
- * projects.
+ * The Containers module provides data structures that the standard library
+ * does not: a circular FIFO over caller storage and a packed bit vector over
+ * an external buffer or an owned `cpstd::vector`. Vectors, stacks and queues
+ * come from CPSTL.
  *
  * @section Foundation_FunctionalModule Functional Module
  *
@@ -146,7 +138,7 @@
  * A typical dependency direction is:
  *
  * @code
- * TypeTraits
+ * CPSTL (cpstd)
  *      |
  *      v
  * Math
@@ -211,8 +203,6 @@
  * - `Get...()` for associated or configured objects when the direct noun would
  *   collide with a public type name, as in `GetFrequency()` and `GetClock()`.
  * - `Is...()` and `Has...()` for Boolean state queries.
- * - Standard-compatible snake_case only in TypeTraits, where matching
- *   `<type_traits>` is part of the public contract.
  * - Nested namespaces.
  * - Explicit module ownership.
  * - Small focused headers.

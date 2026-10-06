@@ -22,7 +22,7 @@ get_filename_component(
 
 # The cross toolchain restricts package searches to the target root, so the
 # host-side package prefix is exempted explicitly.
-find_package(Foundation 1.0 CONFIG REQUIRED
+find_package(Foundation 2.0 CONFIG REQUIRED
     PATHS "${FOUNDATION_PACKAGE_PREFIX}"
     NO_DEFAULT_PATH
     NO_CMAKE_FIND_ROOT_PATH

@@ -21,7 +21,7 @@ get_filename_component(
     ABSOLUTE
 )
 
-find_package(Foundation 1.0 CONFIG REQUIRED
+find_package(Foundation 2.0 CONFIG REQUIRED
     PATHS "${FOUNDATION_PACKAGE_PREFIX}"
     NO_DEFAULT_PATH
 )

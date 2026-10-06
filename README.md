@@ -11,13 +11,28 @@ It provides reusable low-level building blocks shared by projects such as MIDILA
 Foundation 1.4.0 is the current published release. Its five native GitHub
 Release packages passed the tagged build, test, export, checksum, and standalone
 package-consumer workflow. Other presets remain candidates or experimental
-until their documented validation gates pass.
+until their documented validation gates pass. The unreleased 2.0.0 on `main`
+builds on CPSTL; see [CHANGELOG](CHANGELOG.md).
 
-Foundation 1.4.0 requires a C++17-capable compiler for CMake packages and direct
+Foundation requires a C++17-capable compiler for CMake packages and direct
 source builds. Arduino source builds (`ARDUINO` defined) accept C++11 so stock
-Arduino cores work unmodified; the C++17-only `_v` TypeTraits variables are
-unavailable there. The language requirement does not imply a dependency on the
-complete C++ standard library.
+Arduino cores work unmodified. The language requirement does not imply a
+dependency on the complete C++ standard library.
+
+## CPSTL
+
+Foundation 2.0.0 builds on [CPSTL](https://github.com/ChecheRomo96/CPSTL)
+1.1.0 or newer for the standard vocabulary: `cpstd::vector`, `cpstd::move`,
+`cpstd::swap`, `cpstd::stack`, `cpstd::queue` and the type traits. `cpstd`
+aliases `std` in CPSTL's STL mode and is CPSTL's own implementation elsewhere,
+such as AVR. Foundation does not reimplement standard types; it adds what the
+standard library lacks.
+
+CMake resolves CPSTL from a parent project, `FOUNDATION_CPSTL_PREFIX`, a
+sibling export at `../CPSTL/dist/<preset>`, the normal package search, or,
+by default, its sources at tag `v1.1.0` (`-DFETCHCONTENT_SOURCE_DIR_CPSTL=../CPSTL`
+uses a local working copy). Arduino users install the CPSTL library next to
+Foundation; `library.properties` declares it.
 
 ## Checkout
 
@@ -52,13 +67,13 @@ and governed by Foundation.
 
 ## Modules
 
-- `Containers`: CircularBuffer, Queue and Stack.
+- `Containers`: CircularBuffer and BitVector (external buffer or owned
+  `cpstd::vector`).
 - `Math`: ratios, complex values, matrices, and arithmetic helpers.
-- `TypeTraits`: embedded-oriented compile-time type inspection.
 - `Functional`: callback utilities.
 - `Time`: clocks, durations, frequencies, periods, ticks, and time points.
 - `Scheduling`: Task, PeriodicTask, OneShotTask and TaskScheduler.
-- `Utils`: minimal utility helpers such as move semantics.
+- `Utils`: program-memory (`FOUNDATION_FLASH`) helpers.
 
 ## Build
 
@@ -94,7 +109,7 @@ subsequent workflows reuse its `build/<preset>` cache:
 ./scripts/test.sh macos_arm64 --config Debug
 ```
 
-The native CTest suite covers Math, TypeTraits, Utils, Containers, Functional,
+The native CTest suite covers Math, Utils, Containers, Functional,
 Time, and Scheduling. GoogleTest is fetched only when testing is enabled, and
 each module's tests are registered only when all required modules are enabled.
 Examples remain separate API demonstrations.

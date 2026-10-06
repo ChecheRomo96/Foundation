@@ -1,12 +1,13 @@
 /**
  * @defgroup Foundation_Containers Containers
  * @ingroup Foundation
- * @brief Static-memory containers for embedded systems.
+ * @brief Containers the standard library does not provide.
  *
- * Containers provides bounded FIFO and LIFO data structures backed by storage
- * supplied by the caller. The module performs no heap allocation and keeps its
- * memory requirements explicit, which makes it suitable for embedded and
- * deterministic applications.
+ * Containers provides a bounded FIFO over storage supplied by the caller and
+ * a packed bit vector. Vectors, stacks and queues are standard types and come
+ * from CPSTL (`cpstd::vector`, `cpstd::stack`, `cpstd::queue`), which aliases
+ * `std` where a standard library exists and provides its own implementation
+ * elsewhere, such as AVR.
  *
  * @section FoundationContainersHeaders Public Headers
  *
@@ -22,8 +23,7 @@
  * | Type | Ordering | Full operation | Empty operation |
  * | ---- | -------- | -------------- | --------------- |
  * | Foundation::Containers::CircularBuffer | FIFO with wraparound | `Push()` returns `false` | `Pop()` returns `false` |
- * | Foundation::Containers::Queue | FIFO alias of `CircularBuffer` | `Push()` returns `false` | `Pop()` returns `false` |
- * | Foundation::Containers::Stack | LIFO | `Push()` returns `false` | `Pop()` returns `false` |
+ * | Foundation::Containers::BitVector | Indexed bits, eight per byte | Owned: grows; external buffer: `PushBack()` returns `false` | `PopBack()` returns `false` |
  *
  * @section FoundationContainersUsage Basic Usage
  *
@@ -31,30 +31,64 @@
  * #include <Foundation_Containers.h>
  *
  * int storage[4] = {};
- * Foundation::Containers::Queue<int> queue(storage, 4);
+ * Foundation::Containers::CircularBuffer<int> buffer(storage, 4);
  *
- * queue.Push(10);
- * queue.Push(20);
+ * buffer.Push(10);
+ * buffer.Push(20);
  *
  * int next = 0;
- * if (queue.Pop(next)) {
+ * if (buffer.Pop(next)) {
  *     // next == 10
  * }
  * @endcode
  *
+ * @section FoundationContainersBitVector BitVector
+ *
+ * BitVector packs bits eight per byte; bits are read with `Get()` and written
+ * with `Set()`, and its capacity counts whole bytes. The bytes live either in
+ * an owned `cpstd::vector<uint8_t>` (the default) or in an external buffer:
+ * a non-null pointer passed to the constructor or to `Attach()` is always
+ * used as storage, and a null pointer selects owned storage.
+ *
+ * - Owned storage grows on demand. An allocation failure follows
+ *   `cpstd::vector`: with CPSTL's own implementation the operation returns
+ *   `false` and leaves the bits unchanged; in CPSTL's STL mode it is
+ *   `std::vector`'s behavior.
+ * - An external buffer is never grown, released or zeroed by the bit vector;
+ *   an operation that needs more bytes returns `false` and leaves the bits
+ *   unchanged. Copies of a bit vector use owned storage, and moving one takes
+ *   its buffer.
+ *
+ * Operations that change the size may allocate. The library makes no
+ * real-time assumptions about the caller: implementers who change the bits
+ * in time-critical code reserve the space beforehand with `Reserve()` or use
+ * an external buffer.
+ *
+ * @code{.cpp}
+ * uint8_t steps[Foundation::Containers::BitVector::BytesFor(16)] = {};
+ * Foundation::Containers::BitVector pattern(steps, sizeof steps);
+ * pattern.Resize(16);
+ * pattern.Set(0, true);
+ * pattern.PushBack(true);   // false: the 16-bit buffer is full
+ * @endcode
+ *
  * @section FoundationContainersOwnership Storage and Lifetime Contract
  *
+ * The rules below apply to CircularBuffer and to BitVector while it uses an
+ * external buffer.
+ *
  * - A container does not own, allocate, resize, or release its backing array.
- * - A null pointer with zero capacity is a valid empty container. `IsFull()`
- *   returns true and insertion fails because no element can fit.
- * - A null pointer with non-zero capacity is invalid. `IsValid()` reports false,
- *   `Push()` and `Pop()` return false, and no pointer is dereferenced.
+ * - A null pointer with zero capacity is a valid empty CircularBuffer.
+ *   `IsFull()` returns true and insertion fails because no element can fit.
+ * - A null pointer with non-zero capacity is an invalid CircularBuffer.
+ *   `IsValid()` reports false, `Push()` and `Pop()` return false, and no
+ *   pointer is dereferenced.
  * - Non-null storage must remain valid for the complete lifetime of the
  *   container.
  * - The caller must provide at least `capacity` constructed `T` objects because
- *   insertion uses assignment into existing array elements.
+ *   CircularBuffer insertion uses assignment into existing array elements.
  * - `Push(const T&)` requires copy assignment; `Push(T&&)` and `Pop()` require
- *   move assignment compatible with Foundation::Utils::Move.
+ *   move assignment compatible with `cpstd::move`.
  * - `Reset()` clears logical state but does not destroy or overwrite elements.
  * - Operations are not synchronized; external synchronization is required when
  *   one container is shared across execution contexts.
@@ -66,12 +100,13 @@
  * @section FoundationContainersExample Runnable Example
  *
  * `Foundation_Containers_DataStructures` demonstrates CircularBuffer
- * wraparound, Queue FIFO ordering, and Stack LIFO ordering. See
- * @ref Foundation_Examples "Examples" for build and launch instructions.
+ * wraparound and BitVector packing over an external buffer and over owned
+ * storage. See @ref Foundation_Examples "Examples" for build and launch
+ * instructions.
  */
 
 /**
  * @namespace Foundation::Containers
  * @ingroup Foundation_Containers
- * @brief Bounded containers backed by caller-provided storage.
+ * @brief Containers the standard library does not provide.
  */

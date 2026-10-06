@@ -104,29 +104,17 @@ int main() {
     circular.Push(4);
     Check(value == 1 && !circular.IsEmpty());
 
-    int queueStorage[2] = {};
-    Foundation::Containers::Queue<int> queue(queueStorage, 2);
-    queue.Push(10);
-    queue.Push(20);
-    queue.Pop(value);
-    Check(value == 10);
-
-    int stackStorage[2] = {};
-    Foundation::Containers::Stack<int> stack(stackStorage, 2);
-    stack.Push(5);
-    stack.Push(6);
-    stack.Pop(value);
-    Check(value == 6 && stack.GetCount() == 1);
+    uint8_t bitStorage[1] = {};
+    Foundation::Containers::BitVector bits(bitStorage, sizeof bitStorage);
+    for (uint8_t step = 0; step < 8; ++step) {
+        bits.PushBack(step == 0 || step == 3 || step == 6);
+    }
+    Check(bitStorage[0] == 0x49 && !bits.PushBack(true));
 
     Foundation::Functional::Callback<int, int, int> callback;
     Check(!callback.IsBound());
     callback.Bind(Add);
     Check(callback.Invoke(4, 5) == 9);
-
-    int left = 1;
-    int right = 2;
-    Foundation::Utils::Swap(left, right);
-    Check(left == 2 && right == 1);
 
     FoundationValidationState =
         (FoundationValidationPassed == FoundationValidationTotal)

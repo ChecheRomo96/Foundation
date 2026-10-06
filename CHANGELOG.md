@@ -6,6 +6,47 @@ version 1.4.0 is the current release.
 
 ## [Unreleased]
 
+Planned as Foundation 2.0.0: Foundation now builds on CPSTL and stops
+reimplementing standard types.
+
+### Changed
+
+- Foundation depends on CPSTL 1.1.0 or newer (1.x) for the standard
+  vocabulary (`cpstd::vector`, `cpstd::move`, type traits). `cpstd` aliases
+  `std` in CPSTL's STL mode and is CPSTL's own implementation elsewhere, such
+  as AVR. CMake resolves CPSTL from a parent project, `FOUNDATION_CPSTL_PREFIX`,
+  a sibling export at `../CPSTL/dist/<preset>`, the normal package search, or
+  its sources at tag `v1.1.0` (`FOUNDATION_FETCH_CPSTL`, default `ON`;
+  `FETCHCONTENT_SOURCE_DIR_CPSTL` selects a local working copy). A Foundation
+  package that built CPSTL installs it alongside, and `FoundationConfig.cmake`
+  finds it. On AVR the bundled CPSTL defaults to C (`malloc`) allocation.
+- `library.properties` declares `depends=CPSTL (>=1.1.0)`, and every root
+  header in `src/` includes `Foundation_BuildSettings.h`, which includes
+  `CPSTL_BuildSettings.h`, so the Arduino builder discovers CPSTL from any
+  Foundation include. `scripts/test-arduino.sh` and `.ps1` take `--cpstl`
+  (default `FOUNDATION_CPSTL_SOURCE` or `../CPSTL`).
+- `Foundation::Containers::BitVector` (unreleased in 1.x) stores its bits in
+  an owned `cpstd::vector<uint8_t>` or, when given a non-null pointer through
+  the constructor or `Attach()`, in that external buffer, which is never grown
+  or released. `Attach(nullptr, ...)` returns to owned storage; `IsExternal()`
+  reports the mode. Owned growth follows `cpstd::vector`.
+- Containers no longer requires Utils, and Time no longer requires TypeTraits.
+- The `Foundation_Containers_DataStructures` example and sketch show
+  CircularBuffer and BitVector over an external buffer and over owned storage.
+
+### Removed
+
+- The TypeTraits module (`Foundation/TypeTraits.h`, `Foundation_TypeTraits.h`,
+  `FOUNDATION_TYPE_TRAITS`, `FOUNDATION_HAS_CPP17_VARIABLE_TRAITS`) and its
+  `Foundation_TypeTraits_BasicChecks` example: use the CPSTL type traits
+  (`<CPtype_traits.h>`).
+- `Foundation::Utils::Move` and `Foundation::Utils::Swap` and the
+  `Foundation_Utils_MoveAndSwap` example: use `cpstd::move` and `cpstd::swap`.
+- `Foundation::Containers::Stack` and `Foundation::Containers::Queue`: use
+  `cpstd::stack` and `cpstd::queue`, or `CircularBuffer` for a bounded FIFO
+  over caller storage.
+- The unreleased `Foundation::Containers::Vector<T>`: use `cpstd::vector`.
+
 ### Added
 
 - `scripts/test-arduino.ps1`, the PowerShell equivalent of

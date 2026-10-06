@@ -4,7 +4,7 @@
 
 TEST(FoundationUmbrellaContainersTest, ExposesContainers) {
     int storage[2] = {};
-    Foundation::Containers::Queue<int> queue(storage, 2);
+    Foundation::Containers::CircularBuffer<int> buffer(storage, 2);
 
-    EXPECT_TRUE(queue.Push(42));
+    EXPECT_TRUE(buffer.Push(42));
 }

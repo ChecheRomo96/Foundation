@@ -3,10 +3,6 @@
 
     #include "Foundation_BuildSettings.h"
 
-    #if __has_include("Foundation_TypeTraits.h")
-        #include "Foundation_TypeTraits.h"
-    #endif
-
     #if __has_include("Foundation_Math.h")
         #include "Foundation_Math.h"
     #endif
