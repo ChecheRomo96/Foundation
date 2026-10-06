@@ -40,7 +40,6 @@
  * | [ ] | Preset defaults | none |
  * | [ ] | Explicit full build | `-DFOUNDATION_FULL_BUILD=ON` |
  * | [ ] | Without Math | `-DFOUNDATION_MATH=OFF` |
- * | [ ] | Without TypeTraits | `-DFOUNDATION_TYPE_TRAITS=OFF` |
  * | [ ] | Without Containers | `-DFOUNDATION_CONTAINERS=OFF` |
  * | [ ] | Without Scheduling | `-DFOUNDATION_SCHEDULING=OFF` |
  * | [ ] | Without Time | `-DFOUNDATION_TIME=OFF` |

@@ -51,7 +51,6 @@
  * @code
  * Foundation.h
  * Foundation_BuildSettings.h
- * Foundation_TypeTraits.h
  * Foundation_Math.h
  * Foundation_Time.h
  * Foundation_Containers.h
@@ -101,13 +100,15 @@
  *
  * These macros describe the Foundation version, active C++ language level,
  * and which modules or features are available in the current build.
- * `FOUNDATION_VERSION` reports `1.4.0`. `FOUNDATION_CPLUSPLUS` follows
+ * `FOUNDATION_VERSION` reports `2.0.0`. `FOUNDATION_CPLUSPLUS` follows
  * `_MSVC_LANG` on MSVC and `__cplusplus` elsewhere. Including the header from
  * a language mode older than C++17 produces a compile error, except when
  * `ARDUINO` is defined, where the minimum is C++11.
  * `FOUNDATION_CONSTEXPR14` expands to `constexpr` from C++14 and to `inline`
- * below it; `FOUNDATION_HAS_CPP17_VARIABLE_TRAITS` reports whether the `_v`
- * TypeTraits variables are declared.
+ * below it. The header also includes `CPSTL_BuildSettings.h`: Foundation
+ * builds on CPSTL (`cpstd`) for the standard vocabulary, such as
+ * `cpstd::vector`, `cpstd::move` and the type traits, so every root header
+ * also makes the Arduino builder discover the CPSTL library.
  *
  * The header does not invent platform markers or include target SDK headers.
  * Platform detection remains the responsibility of the compiler, toolchain,
@@ -133,22 +134,6 @@
  *
  * These headers allow application code to include only the module-level
  * interface it needs.
- *
- * @subsection FoundationTop_TypeTraitsHeader Foundation_TypeTraits.h
- *
- * The Foundation_TypeTraits.h header exposes the Type Traits module.
- *
- * This module provides compile-time type utilities.
- *
- * Typical usage:
- *
- * @code{.cpp}
- * #include <Foundation_TypeTraits.h>
- * @endcode
- *
- * This header maps to:
- *
- * - @ref Foundation_TypeTraits
  *
  * @subsection FoundationTop_MathHeader Foundation_Math.h
  *
@@ -484,7 +469,6 @@
  * Related Foundation documentation:
  *
  * - @ref Foundation
- * - @ref Foundation_TypeTraits
  * - @ref Foundation_Math
  * - @ref Foundation_Time
  * - @ref Foundation_Containers

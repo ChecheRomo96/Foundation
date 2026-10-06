@@ -3,7 +3,6 @@
 
     #include <Foundation_BuildSettings.h>
     #include <Foundation/Containers/CircularBuffer.h>
-    #include <Foundation/Containers/Queue.h>
-    #include <Foundation/Containers/Stack.h>
+    #include <Foundation/Containers/BitVector.h>
 
 #endif//FOUNDATION_CONTAINERS_MODULE_H

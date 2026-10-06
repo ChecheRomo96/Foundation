@@ -48,7 +48,6 @@
  *
  * Foundation is divided into the following main modules:
  *
- * - @ref Foundation_TypeTraits
  * - @ref Foundation_Math
  * - @ref Foundation_Time
  * - @ref Foundation_Containers
@@ -161,8 +160,10 @@
  *
  * @section MainPage_Requirements Requirements
  *
- * Foundation 1.4.0 requires C++17 or newer in CMake package, direct-source,
+ * Foundation 2.0.0 requires C++17 or newer in CMake package, direct-source,
  * desktop, and embedded builds. Arduino source builds accept C++11 so stock
  * Arduino cores work unmodified. Requiring a language level does not mean every
- * target must provide the complete C++ standard library.
+ * target must provide the complete C++ standard library: Foundation builds on
+ * CPSTL 1.1.0 or newer (`cpstd`), which aliases `std` where a standard library
+ * exists and provides its own implementation elsewhere, such as AVR.
  */

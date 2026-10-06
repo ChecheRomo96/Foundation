@@ -26,8 +26,10 @@
  * When `ARDUINO` is defined, Foundation therefore accepts C++11 instead of its
  * usual C++17 minimum, so the IDE works without editing the core. Below C++14,
  * mutators such as `Ratio::SetNumerator()` are ordinary inline functions rather
- * than `constexpr`; below C++17, the `_v` TypeTraits variables are not declared
- * (use `::value`). A core that already compiles as C++17 gets the full API.
+ * than `constexpr`. A core that already compiles as C++17 gets the full API.
+ * Install the CPSTL library next to Foundation; `library.properties` declares
+ * it in `depends`, and every Foundation root header includes CPSTL so the
+ * Arduino builder finds it.
  *
  * @subsection FoundationBuildArduinoIncludes Includes
  *

@@ -1,6 +1,15 @@
 @PACKAGE_INIT@
 
 include("${CMAKE_CURRENT_LIST_DIR}/FoundationBuildInfo.cmake")
+
+# CPSTL is installed next to Foundation when Foundation built it from source;
+# otherwise it is found like any other package.
+include(CMakeFindDependencyMacro)
+find_package(CPSTL @FOUNDATION_CPSTL_VERSION@ CONFIG QUIET
+    PATHS "${PACKAGE_PREFIX_DIR}" NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
+if(NOT CPSTL_FOUND)
+    find_dependency(CPSTL @FOUNDATION_CPSTL_VERSION@ CONFIG)
+endif()
 include("${CMAKE_CURRENT_LIST_DIR}/FoundationTargets.cmake")
 
 check_required_components(Foundation)

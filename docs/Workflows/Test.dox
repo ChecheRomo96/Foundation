@@ -58,10 +58,9 @@
  *
  * @section FoundationWorkflowTestSuite Registered Native Suite
  *
- * The default feature set builds seven module-scoped GoogleTest executables:
+ * The default feature set builds six module-scoped GoogleTest executables:
  *
  * - `FoundationMathTests`;
- * - `FoundationTypeTraitsTests`;
  * - `FoundationUtilsTests`;
  * - `FoundationContainersTests`;
  * - `FoundationFunctionalTests`;

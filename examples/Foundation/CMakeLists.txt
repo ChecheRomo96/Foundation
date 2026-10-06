@@ -6,10 +6,6 @@ if(FOUNDATION_TIME)
     add_subdirectory(Time)
 endif()
 
-if(FOUNDATION_TYPE_TRAITS)
-    add_subdirectory(TypeTraits)
-endif()
-
 if(FOUNDATION_CONTAINERS)
     add_subdirectory(Containers)
 endif()

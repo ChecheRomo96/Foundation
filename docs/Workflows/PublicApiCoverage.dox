@@ -3,6 +3,11 @@
  * @ingroup Foundation_Workflows_ReleaseV1
  * @brief Traceability from the Foundation 1.2 public API to automated evidence.
  *
+ * @note Historical record of the Foundation 1.x API. Foundation 2.0.0 removed
+ * TypeTraits, `Utils::Move`, `Utils::Swap` and the `Stack`, `Queue` and
+ * `Vector` containers in favor of CPSTL (`cpstd`); entries for them describe
+ * 1.x only.
+ *
  * This page is the version-controlled result of backlog item `TEST-001`. It
  * records what the current test suite actually proves and makes uncovered
  * behavior visible before more tests are added. An entry marked `GAP` is not

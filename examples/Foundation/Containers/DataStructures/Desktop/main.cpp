@@ -11,8 +11,9 @@ int main() {
         << " FOUNDATION :: Containers / DataStructures\n"
         << "============================================================\n"
         << "\nPURPOSE\n"
-        << "  Compare bounded FIFO and LIFO containers using caller-\n"
-        << "  provided storage and no heap allocation.\n\n"
+        << "  Show the containers std does not provide: a circular FIFO\n"
+        << "  over caller storage and packed bits over an external\n"
+        << "  buffer or an owned cpstd::vector.\n\n"
         << "[1] CIRCULAR BUFFER / WRAPAROUND\n"
         << "------------------------------------------------------------\n"
         << "  CODE\n"
@@ -24,31 +25,43 @@ int main() {
         << "  Last removed ........ " << result.CircularBufferLast << '\n'
         << "  Empty after drain ... "
         << (result.CircularBufferEmpty ? "yes" : "no") << "\n\n"
-        << "[2] QUEUE / FIFO ORDER\n"
+        << "[2] BITVECTOR / EXTERNAL BUFFER\n"
         << "------------------------------------------------------------\n"
         << "  CODE\n"
-        << "    queue.Push(10); queue.Push(20); queue.Pop(front);\n"
-        << "  Scenario ............ Push [10, 20], then pop once\n"
-        << "  Front removed ....... " << result.QueueFront << "\n\n"
-        << "[3] STACK / LIFO ORDER\n"
+        << "    BitVector bits(storage, sizeof storage);  // non-null: external\n"
+        << "    bits.PushBack(step == 'x');    // x..x..x. over one byte\n"
+        << "  First byte .......... 0x" << std::hex << result.BitVectorFirstByte
+        << std::dec << '\n'
+        << "  Bits set ............ " << result.BitVectorOnes << '\n'
+        << "  Ninth bit refused ... "
+        << (result.ExternalBitsFull ? "yes, PushBack returned false" : "no")
+        << "\n\n"
+        << "[3] BITVECTOR / OWNED STORAGE\n"
         << "------------------------------------------------------------\n"
         << "  CODE\n"
-        << "    stack.Push(5); stack.Push(6); stack.Pop(top);\n"
-        << "  Scenario ............ Push [5, 6], then pop once\n"
-        << "  Top removed ......... " << result.StackTop << '\n'
-        << "  Values remaining .... " << result.StackRemaining << "\n\n"
+        << "    BitVector owned;               // cpstd::vector<uint8_t>\n"
+        << "    owned.PushBack(i % 3 == 0);    // twelve times\n"
+        << "  Bits / bytes ........ " << result.OwnedBitCount << " / "
+        << result.OwnedByteCount << '\n'
+        << "  Owns storage ........ "
+        << (result.OwnedBitsOwnStorage ? "yes" : "no") << "\n\n"
         << "------------------------------------------------------------\n"
         << "TAKEAWAY\n"
-        << "  Queue/CircularBuffer remove the oldest value; Stack\n"
-        << "  removes the newest value.\n"
+        << "  CircularBuffer removes the oldest value and never allocates.\n"
+        << "  BitVector stays inside a buffer you provide, or grows on the\n"
+        << "  heap through cpstd::vector. For vectors, stacks and queues\n"
+        << "  use cpstd (CPSTL).\n"
         << "============================================================\n";
 
     return result.CircularBufferFirst == 1
         && result.CircularBufferLast == 4
         && result.CircularBufferEmpty
-        && result.QueueFront == 10
-        && result.StackTop == 6
-        && result.StackRemaining == 1
+        && result.BitVectorFirstByte == 0x49
+        && result.BitVectorOnes == 3
+        && result.ExternalBitsFull
+        && result.OwnedBitCount == 12
+        && result.OwnedByteCount == 2
+        && result.OwnedBitsOwnStorage
         ? 0
         : 1;
 }
