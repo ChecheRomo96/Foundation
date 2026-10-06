@@ -46,6 +46,7 @@ reimplementing standard types.
   `cpstd::stack` and `cpstd::queue`, or `CircularBuffer` for a bounded FIFO
   over caller storage.
 - The unreleased `Foundation::Containers::Vector<T>`: use `cpstd::vector`.
+- `BasicRatio<T>::ToFloat()`, deprecated since 1.3.0: use `Value<float>()`.
 
 ### Added
 
