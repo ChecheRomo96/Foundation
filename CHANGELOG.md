@@ -3,6 +3,16 @@
 This file records user-visible changes to Foundation. Release dates use the
 `YYYY-MM-DD` format. Version 1.1.0 was the first published GitHub release.
 
+## [2.0.1] - 2026-10-07
+
+### Fixed
+
+- Foundation now requires CPSTL 1.1.2. The dependency defaults to C allocation
+  (`malloc`/`free`) for every freestanding Arm and AVR source build, so the
+  STM32G0B1 firmware consumer links without `operator new` or `operator
+  delete` from a C++ runtime.
+- Embedded CI and the Arduino metadata resolve CPSTL 1.1.2 rather than 1.1.0.
+
 ## [2.0.0] - 2026-10-07
 
 Foundation now builds on CPSTL and stops reimplementing standard types.
