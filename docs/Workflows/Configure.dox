@@ -89,7 +89,7 @@
  *
  * @subsection FoundationWorkflowConfigureCPSTL CPSTL Dependency
  *
- * Foundation links CPSTL 1.1.0 or newer (1.x), resolved in this order:
+ * Foundation links CPSTL 1.1.2 or newer (1.x), resolved in this order:
  *
  * 1. a `CPSTL::CPSTL` target defined by a parent project;
  * 2. `FOUNDATION_CPSTL_PREFIX` (cache or environment), an installed CPSTL
@@ -98,12 +98,13 @@
  *    `./scripts/install.sh <preset>` in CPSTL;
  * 4. the normal `find_package()` search (`CPSTL_DIR`, `CMAKE_PREFIX_PATH`);
  * 5. with `FOUNDATION_FETCH_CPSTL` (default `ON`), the CPSTL sources at tag
- *    `v1.1.0`, built with Foundation and installed alongside it.
+ *    `v1.1.2`, built with Foundation and installed alongside it.
  *    `-DFETCHCONTENT_SOURCE_DIR_CPSTL=../CPSTL` builds a local working copy
  *    instead.
  *
  * CPSTL keeps its own options (`CPSTL_USING_STL`, `CPSTL_ALLOCATION`) when
- * Foundation builds it; on AVR the allocation defaults to `C` (`malloc`).
+ * Foundation builds it; on freestanding Arm and AVR the allocation defaults
+ * to `C` (`malloc`).
  *
  * @subsection FoundationWorkflowConfigureDependencies Feature Dependencies
  *

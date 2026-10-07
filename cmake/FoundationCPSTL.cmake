@@ -19,7 +19,7 @@
 #
 # Outputs: CPSTL_VERSION and FOUNDATION_CPSTL_SOURCE.
 
-set(FOUNDATION_CPSTL_VERSION "1.1.0")
+set(FOUNDATION_CPSTL_VERSION "1.1.2")
 set(FOUNDATION_CPSTL_REPOSITORY "ChecheRomo96/CPSTL" CACHE STRING
     "GitHub repository (owner/name) used to fetch CPSTL")
 option(FOUNDATION_FETCH_CPSTL
@@ -117,9 +117,12 @@ if(NOT TARGET CPSTL::CPSTL AND
     set(CPSTL_TESTING OFF CACHE BOOL "" FORCE)
     set(CPSTL_EXAMPLES OFF CACHE BOOL "" FORCE)
     set(CPSTL_AVR_SMOKE OFF CACHE BOOL "" FORCE)
-    # AVR has no operator new(nothrow) without a C++ runtime: CPSTL uses
-    # malloc/free there unless the cache already chose an allocation mode.
-    if(CMAKE_SYSTEM_PROCESSOR MATCHES "^avr")
+    # Freestanding Arm and AVR consumers do not link a C++ runtime. Keep
+    # CPSTL's allocator on malloc/free unless an embedding project explicitly
+    # selects another backend.
+    if((CMAKE_SYSTEM_NAME STREQUAL "Generic" OR
+        CMAKE_SYSTEM_PROCESSOR MATCHES "^avr") AND
+       NOT DEFINED CPSTL_ALLOCATION)
         set(CPSTL_ALLOCATION "C" CACHE STRING
             "cpstd::allocator backend: C, CPP or STD")
     endif()
