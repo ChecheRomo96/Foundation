@@ -11,7 +11,7 @@ It provides reusable low-level building blocks shared by projects such as MIDILA
 Foundation 1.4.0 is the current published release. Its five native GitHub
 Release packages passed the tagged build, test, export, checksum, and standalone
 package-consumer workflow. Other presets remain candidates or experimental
-until their documented validation gates pass. Foundation 2.0.2 is the current
+until their documented validation gates pass. Foundation 2.0.3 is the current
 release and builds on CPSTL; see [CHANGELOG](CHANGELOG.md).
 
 Foundation requires a C++17-capable compiler for CMake packages and direct
@@ -21,7 +21,7 @@ dependency on the complete C++ standard library.
 
 ## CPSTL
 
-Foundation 2.0.2 builds on [CPSTL](https://github.com/ChecheRomo96/CPSTL)
+Foundation 2.0.3 builds on [CPSTL](https://github.com/ChecheRomo96/CPSTL)
 1.1.3 or newer for the standard vocabulary: `cpstd::vector`, `cpstd::move`,
 `cpstd::swap`, `cpstd::stack`, `cpstd::queue` and the type traits. `cpstd`
 aliases `std` in CPSTL's STL mode and is CPSTL's own implementation elsewhere,

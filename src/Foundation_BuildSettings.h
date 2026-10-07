@@ -6,7 +6,7 @@
     //  Version
 
         #ifndef FOUNDATION_VERSION
-            #define FOUNDATION_VERSION "2.0.2"
+            #define FOUNDATION_VERSION "2.0.3"
         #endif
 
     //
