@@ -76,7 +76,6 @@
  * | `FOUNDATION_EXAMPLES` | `OFF` | Builds repository examples. |
  * | `FOUNDATION_COVERAGE` | `OFF` | Adds `--coverage` to GCC/Clang Debug builds; see @ref Foundation_Workflows_ContinuousIntegration for the report. |
  * | `FOUNDATION_MATH` | `ON` | Includes Math and its selected submodules. |
- * | `FOUNDATION_TYPE_TRAITS` | `ON` | Includes TypeTraits. |
  * | `FOUNDATION_CONTAINERS` | `ON` | Includes Containers. |
  * | `FOUNDATION_SCHEDULING` | `ON` | Includes Scheduling. |
  * | `FOUNDATION_TIME` | `ON` | Includes the complete Time family. |
@@ -88,15 +87,31 @@
  * `Matrix::Dynamic`, and `Matrix::Multiply`; enabling Time provides Clock,
  * Duration, Frequency, Period, the Tick specializations, and TimePoint.
  *
+ * @subsection FoundationWorkflowConfigureCPSTL CPSTL Dependency
+ *
+ * Foundation links CPSTL 1.1.0 or newer (1.x), resolved in this order:
+ *
+ * 1. a `CPSTL::CPSTL` target defined by a parent project;
+ * 2. `FOUNDATION_CPSTL_PREFIX` (cache or environment), an installed CPSTL
+ *    package; failing to use it is a configure error;
+ * 3. a sibling export at `../CPSTL/dist/<preset>`, produced by
+ *    `./scripts/install.sh <preset>` in CPSTL;
+ * 4. the normal `find_package()` search (`CPSTL_DIR`, `CMAKE_PREFIX_PATH`);
+ * 5. with `FOUNDATION_FETCH_CPSTL` (default `ON`), the CPSTL sources at tag
+ *    `v1.1.0`, built with Foundation and installed alongside it.
+ *    `-DFETCHCONTENT_SOURCE_DIR_CPSTL=../CPSTL` builds a local working copy
+ *    instead.
+ *
+ * CPSTL keeps its own options (`CPSTL_USING_STL`, `CPSTL_ALLOCATION`) when
+ * Foundation builds it; on AVR the allocation defaults to `C` (`malloc`).
+ *
  * @subsection FoundationWorkflowConfigureDependencies Feature Dependencies
  *
  * CMake validates module dependencies before creating any build targets:
  *
  * | Feature | Required feature |
  * | ------- | ---------------- |
- * | `FOUNDATION_CONTAINERS` | `FOUNDATION_UTILS` |
  * | `FOUNDATION_TIME` | `FOUNDATION_MATH` |
- * | `FOUNDATION_TIME` | `FOUNDATION_TYPE_TRAITS` |
  * | `FOUNDATION_TIME` | `FOUNDATION_MATH_RATIO` |
  * | `FOUNDATION_TIME` | `FOUNDATION_FUNCTIONAL` |
  * | `FOUNDATION_TIME` | `FOUNDATION_FUNCTIONAL_CALLBACK` |

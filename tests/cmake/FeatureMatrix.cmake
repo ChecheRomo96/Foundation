@@ -19,7 +19,6 @@ endif()
 
 set(MODULES
     FOUNDATION_MATH
-    FOUNDATION_TYPE_TRAITS
     FOUNDATION_CONTAINERS
     FOUNDATION_SCHEDULING
     FOUNDATION_TIME
@@ -31,6 +30,16 @@ list(TRANSFORM CORE_ONLY PREPEND "-D")
 
 set(PASSED 0)
 
+# Forward how CPSTL is resolved (-DFETCHCONTENT_SOURCE_DIR_CPSTL=<dir> or
+# -DFOUNDATION_CPSTL_PREFIX=<dir>) to every case.
+set(CPSTL_ARGS "")
+foreach(var FETCHCONTENT_SOURCE_DIR_CPSTL FOUNDATION_CPSTL_PREFIX
+        FETCHCONTENT_SOURCE_DIR_GOOGLETEST)
+    if(DEFINED ${var})
+        list(APPEND CPSTL_ARGS "-D${var}=${${var}}")
+    endif()
+endforeach()
+
 function(configure_case name)
     set(build_dir "${WORK_DIR}/${name}")
     file(REMOVE_RECURSE "${build_dir}")
@@ -38,8 +47,9 @@ function(configure_case name)
         COMMAND "${CMAKE_COMMAND}" --preset "${PRESET}" -S "${SOURCE_DIR}"
             -B "${build_dir}"
             -DFOUNDATION_TESTING=ON
-            # One GoogleTest download shared by every case.
+            # One GoogleTest and CPSTL download shared by every case.
             "-DFETCHCONTENT_BASE_DIR=${WORK_DIR}/_deps"
+            ${CPSTL_ARGS}
             ${ARGN}
         WORKING_DIRECTORY "${SOURCE_DIR}"
         RESULT_VARIABLE result
@@ -107,12 +117,10 @@ expect_pass(CoreOnly ${CORE_ONLY})
 # Each top-level module disabled together with the modules that need it.
 expect_pass(WithoutMath
     -DFOUNDATION_MATH=OFF -DFOUNDATION_TIME=OFF -DFOUNDATION_SCHEDULING=OFF)
-expect_pass(WithoutTypeTraits
-    -DFOUNDATION_TYPE_TRAITS=OFF -DFOUNDATION_TIME=OFF -DFOUNDATION_SCHEDULING=OFF)
 expect_pass(WithoutContainers -DFOUNDATION_CONTAINERS=OFF)
 expect_pass(WithoutScheduling -DFOUNDATION_SCHEDULING=OFF)
 expect_pass(WithoutTime -DFOUNDATION_TIME=OFF -DFOUNDATION_SCHEDULING=OFF)
-expect_pass(WithoutUtils -DFOUNDATION_UTILS=OFF -DFOUNDATION_CONTAINERS=OFF)
+expect_pass(WithoutUtils -DFOUNDATION_UTILS=OFF)
 expect_pass(WithoutFunctional
     -DFOUNDATION_FUNCTIONAL=OFF -DFOUNDATION_TIME=OFF -DFOUNDATION_SCHEDULING=OFF)
 
@@ -127,9 +135,7 @@ expect_pass(WithoutCallback
 
 # A module disabled alone while another enabled module still needs it.
 expect_reject(RejectMath FOUNDATION_TIME FOUNDATION_MATH)
-expect_reject(RejectTypeTraits FOUNDATION_TIME FOUNDATION_TYPE_TRAITS)
 expect_reject(RejectTime FOUNDATION_SCHEDULING FOUNDATION_TIME)
-expect_reject(RejectUtils FOUNDATION_CONTAINERS FOUNDATION_UTILS)
 expect_reject(RejectFunctional FOUNDATION_TIME FOUNDATION_FUNCTIONAL)
 expect_reject(RejectRatio FOUNDATION_TIME FOUNDATION_MATH_RATIO)
 expect_reject(RejectCallback FOUNDATION_TIME FOUNDATION_FUNCTIONAL_CALLBACK)
