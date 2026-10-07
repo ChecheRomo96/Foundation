@@ -3,6 +3,15 @@
 This file records user-visible changes to Foundation. Release dates use the
 `YYYY-MM-DD` format. Version 1.1.0 was the first published GitHub release.
 
+## [2.0.3] - 2026-10-07
+
+### Fixed
+
+- The STM32G0B1 validation firmware now supplies a bounded `malloc` heap via
+  `_sbrk`, making the freestanding CPSTL C allocator linkable without a C++
+  runtime. This is isolated to the firmware consumer; production boards retain
+  control of their own heap policy.
+
 ## [2.0.2] - 2026-10-07
 
 ### Fixed
