@@ -3,6 +3,14 @@
 This file records user-visible changes to Foundation. Release dates use the
 `YYYY-MM-DD` format. Version 1.1.0 was the first published GitHub release.
 
+## [2.0.2] - 2026-10-07
+
+### Fixed
+
+- Updated the CPSTL dependency to 1.1.3. That release declares the C allocator
+  hooks on freestanding Arm targets and prevents GCC from reporting a false
+  placement-new overflow while compiling the external-storage container tests.
+
 ## [2.0.1] - 2026-10-07
 
 ### Fixed
