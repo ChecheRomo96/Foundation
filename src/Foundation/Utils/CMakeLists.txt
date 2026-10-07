@@ -11,8 +11,6 @@
 
     list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
         "${CMAKE_CURRENT_LIST_DIR}/Utils.h"
-        "${CMAKE_CURRENT_SOURCE_DIR}/Move.h"
-        "${CMAKE_CURRENT_SOURCE_DIR}/Swap.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/Flash.h"
     )
     

@@ -1,6 +1,7 @@
 #ifndef FOUNDATION_MATH_TOP_H
 #define FOUNDATION_MATH_TOP_H
 
+    #include "Foundation_BuildSettings.h"
     #if __has_include(<Foundation/Math/Math.h>)
         #ifndef FOUNDATION_MATH
             #define FOUNDATION_MATH

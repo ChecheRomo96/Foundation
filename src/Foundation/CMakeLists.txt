@@ -20,13 +20,6 @@
         add_subdirectory(Math)
     endif()
 
-    if(FOUNDATION_TYPE_TRAITS)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_LIST_DIR}/TypeTraits.h"
-        )
-        add_subdirectory(TypeTraits)
-    endif()
-
     if(FOUNDATION_CONTAINERS)
         list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
             "${CMAKE_CURRENT_LIST_DIR}/Containers.h"

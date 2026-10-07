@@ -95,6 +95,11 @@ CXX_COMPILER=$(foundation_cache_value CMAKE_CXX_COMPILER)
 TOOLCHAIN_FILE=$(foundation_cache_value CMAKE_TOOLCHAIN_FILE)
 OSX_ARCHITECTURES=$(foundation_cache_value CMAKE_OSX_ARCHITECTURES)
 CROSSCOMPILING=$(foundation_cache_value CMAKE_CROSSCOMPILING)
+CPSTL_DIR=$(foundation_cache_value CPSTL_DIR)
+if [ -z "$CPSTL_DIR" ]; then
+    CPSTL_DIR="$FOUNDATION_ROOT/../CPSTL/dist/$PRESET/lib/cmake/CPSTL"
+fi
+[ -f "$CPSTL_DIR/CPSTLConfig.cmake" ] || CPSTL_DIR=""
 
 if [ "$CROSSCOMPILING" = "TRUE" ]; then
     foundation_die "package execution requires a native preset; validate cross-compiled packages in target firmware"
@@ -110,6 +115,7 @@ set -- cmake \
 
 [ -z "$GENERATOR_PLATFORM" ] || set -- "$@" -A "$GENERATOR_PLATFORM"
 [ -z "$OSX_ARCHITECTURES" ] || set -- "$@" "-DCMAKE_OSX_ARCHITECTURES=$OSX_ARCHITECTURES"
+[ -z "$CPSTL_DIR" ] || set -- "$@" "-DCPSTL_DIR=$CPSTL_DIR"
 
 if [ -n "$TOOLCHAIN_FILE" ]; then
     set -- "$@" "-DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN_FILE"

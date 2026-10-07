@@ -5,16 +5,9 @@
         set(FOUNDATION_CONTAINERS ON)
         set(FOUNDATION_SCHEDULING ON)
         set(FOUNDATION_TIME ON)
-        set(FOUNDATION_TYPE_TRAITS ON)
         set(FOUNDATION_UTILS ON)
         set(FOUNDATION_FUNCTIONAL ON)
     endif()
-#
-#################################################################################################################################
-# Type Traits
-
-    option(FOUNDATION_TYPE_TRAITS "Enables the compilation of Foundation::TypeTraits" ON)
-    #include(${CMAKE_CURRENT_LIST_DIR}/TypeTraits/CMakeOptions.cmake)
 #
 #################################################################################################################################
 # Math

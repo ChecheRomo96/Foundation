@@ -1,14 +1,6 @@
 ######################################################################################################
 # Add Compiler Definitions
 
-    if(FOUNDATION_TYPE_TRAITS)
-        message(STATUS "Foundation::TypeTraits")
-        target_compile_definitions(Foundation PUBLIC FOUNDATION_TYPE_TRAITS)
-        list(APPEND ${PROJECT_NAME_UPPER}_MACROS "FOUNDATION_TYPE_TRAITS")
-
-        #include(${CMAKE_CURRENT_LIST_DIR}/TypeTraits/CMakeMacros.cmake)
-    endif()
-
     if(FOUNDATION_CONTAINERS)
         message(STATUS "Foundation::Containers")
         target_compile_definitions(Foundation PUBLIC FOUNDATION_CONTAINERS)

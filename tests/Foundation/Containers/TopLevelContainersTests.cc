@@ -3,8 +3,8 @@
 #include <Foundation_Containers.h>
 
 TEST(FoundationContainersHeaderTest, ExposesContainers) {
-    int storage[2] = {};
-    Foundation::Containers::Stack<int> stack(storage, 2);
+    Foundation::Containers::BitVector bits;
 
-    EXPECT_TRUE(stack.Push(42));
+    EXPECT_TRUE(bits.PushBack(true));
+    EXPECT_TRUE(bits.Get(0));
 }
