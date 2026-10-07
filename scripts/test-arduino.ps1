@@ -1,5 +1,6 @@
 param(
-    [string]$Fqbn = "arduino:avr:uno"
+    [string]$Fqbn = "arduino:avr:uno",
+    [string]$Cpstl = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -13,15 +14,23 @@ if (-not (Get-Command arduino-cli -ErrorAction SilentlyContinue)) {
 }
 
 $root = $script:FoundationRoot
+# CPSTL defaults to FOUNDATION_CPSTL_SOURCE or the sibling ../CPSTL.
+if (-not $Cpstl) {
+    $Cpstl = if ($env:FOUNDATION_CPSTL_SOURCE) { $env:FOUNDATION_CPSTL_SOURCE } else { Join-Path $root "../CPSTL" }
+}
+if (-not (Test-Path -LiteralPath (Join-Path $Cpstl "library.properties"))) {
+    throw "CPSTL Arduino library not found at $Cpstl"
+}
+$Cpstl = (Resolve-Path -LiteralPath $Cpstl).Path
 $examplesRoot = Join-Path $root "examples/Foundation"
 $buildRoot = Join-Path $root ("build/arduino/" + ($Fqbn -replace ":", "_"))
 if (Test-Path -LiteralPath $buildRoot) {
     Remove-Item -LiteralPath $buildRoot -Recurse -Force
 }
 
-# Compile each sketch against the repository itself as the library, exactly as
-# an Arduino user who copied it into their libraries folder would, with the
-# core's unmodified flags (gnu++11 on Arduino AVR).
+# Compile each sketch against the repository and CPSTL as libraries, exactly as
+# an Arduino user who installed both would, with the core's unmodified flags
+# (gnu++11 on Arduino AVR).
 $sketches = Get-ChildItem -Path $examplesRoot -Recurse -Filter *.ino |
     Where-Object {
         $relative = $_.DirectoryName.Substring($examplesRoot.Length + 1)
@@ -39,6 +48,7 @@ foreach ($sketch in $sketches) {
     & arduino-cli compile `
         --fqbn $Fqbn `
         --library $root `
+        --library $Cpstl `
         --build-path (Join-Path $buildRoot $name) `
         --warnings default `
         $sketch.DirectoryName *> $log

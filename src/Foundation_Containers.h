@@ -1,6 +1,8 @@
 #ifndef FOUNDATION_CONTAINERS_TOP_H
 #define FOUNDATION_CONTAINERS_TOP_H
 
+    #include "Foundation_BuildSettings.h"
+
     #if __has_include(<Foundation/Containers/Containers.h>)
         #ifndef FOUNDATION_CONTAINERS
             #define FOUNDATION_CONTAINERS

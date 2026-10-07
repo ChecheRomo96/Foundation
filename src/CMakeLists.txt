@@ -6,6 +6,9 @@
     add_library(Foundation STATIC)
     add_library(Foundation::Foundation ALIAS Foundation)
 
+    # cpstd (CPSTL) provides the standard vocabulary: vector, move, type traits.
+    target_link_libraries(Foundation PUBLIC CPSTL::CPSTL)
+
     target_compile_features(Foundation PUBLIC
         cxx_std_${FOUNDATION_REQUIRED_CXX_STANDARD}
     )
@@ -79,12 +82,6 @@
     if(FOUNDATION_MATH)
         list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
             "${CMAKE_CURRENT_LIST_DIR}/Foundation_Math.h"
-        )
-    endif()
-
-    if(FOUNDATION_TYPE_TRAITS)
-        list(APPEND FOUNDATION_PUBLIC_HEADERS_LOCAL
-            "${CMAKE_CURRENT_LIST_DIR}/Foundation_TypeTraits.h"
         )
     endif()
 

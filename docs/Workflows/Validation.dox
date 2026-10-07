@@ -32,8 +32,8 @@
  *
  * @section FoundationValidationCurrentLimits Test-Suite Scope
  *
- * The default native configuration builds seven module-scoped GoogleTest
- * executables covering Math, TypeTraits, Utils, Containers, Functional, Time,
+ * The default native configuration builds six module-scoped GoogleTest
+ * executables covering Math, Utils, Containers, Functional, Time,
  * and Scheduling. CTest discovers their individual cases. A feature override
  * conditionally removes every test target whose required modules are no longer
  * all available. Always inspect the reported case count;

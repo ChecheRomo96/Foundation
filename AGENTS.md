@@ -31,10 +31,13 @@ user explicitly includes it.
 - Preserve C++17 for CMake packages and direct source builds. Arduino source
   builds intentionally support C++11 when `ARDUINO` is defined.
 - Keep embedded paths free from mandatory exceptions and full-STL assumptions.
+  Take the standard vocabulary (vector, move, swap, stack, queue, type traits)
+  from CPSTL (`cpstd`); Foundation does not reimplement standard types.
   Do not disable heap use merely because a target is embedded.
 - Preserve module selection through existing CMake cache options. Do not create
   configuration-specific package directory names.
-- Release exports contain one Release library and CMake package metadata.
+- Release exports contain one Release Foundation library and CMake package
+  metadata, plus the CPSTL package when Foundation built CPSTL from source.
   Debug is for development and testing and is not distributed.
 - Examples demonstrate public APIs; they are not unit tests. Unit tests live
   under `tests/Foundation/` and use GoogleTest through CTest integration.

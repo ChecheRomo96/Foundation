@@ -32,14 +32,14 @@ using Foundation::Time::TimePoint;
 
 TEST(TickTest, ProvidesExplicitUnsignedWidths) {
     static_assert(
-        Foundation::TypeTraits::is_same<
+        cpstd::is_same<
             Tick32,
             Foundation::Time::Tick<uint32_t>
         >::value,
         "Tick32 must alias Tick<uint32_t>"
     );
     static_assert(
-        Foundation::TypeTraits::is_same<
+        cpstd::is_same<
             Tick32,
             Foundation::Time::Tick<>
         >::value,

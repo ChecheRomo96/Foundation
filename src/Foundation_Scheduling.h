@@ -1,6 +1,8 @@
 #ifndef FOUNDATION_SCHEDULING_TOP_H
 #define FOUNDATION_SCHEDULING_TOP_H
 
+    #include "Foundation_BuildSettings.h"
+
     #if __has_include(<Foundation/Scheduling/Scheduling.h>)
         #ifndef FOUNDATION_SCHEDULING
             #define FOUNDATION_SCHEDULING

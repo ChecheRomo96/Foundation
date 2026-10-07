@@ -24,8 +24,7 @@ if(DOXYGEN_FOUND)
 
     # Doxygen does not run a C++ compiler, so it cannot infer the language
     # feature-test value selected by the Foundation target. Keep conditional
-    # declarations such as the C++17 `_v` TypeTraits variables visible and
-    # enable documentation-only preprocessor paths.
+    # declarations visible and enable documentation-only preprocessor paths.
     list(APPEND FOUNDATION_DOXYGEN_PREDEFS
         DOXYGEN=1
         FOUNDATION_CPLUSPLUS=201703L

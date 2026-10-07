@@ -75,7 +75,7 @@ namespace {
     volatile uint8_t flashIndex = 1;
 
     static_assert(
-        Foundation::TypeTraits::is_same<uint32_t, unsigned long>::value,
+        cpstd::is_same<uint32_t, unsigned long>::value,
         "avr-gcc uint32_t is unsigned long"
     );
 
@@ -120,29 +120,25 @@ int main() {
     circular.Push(4);
     Check("CircularBuffer FIFO wraps", value == 1 && !circular.IsEmpty());
 
-    int queueStorage[2] = {};
-    Foundation::Containers::Queue<int> queue(queueStorage, 2);
-    queue.Push(10);
-    queue.Push(20);
-    queue.Pop(value);
-    Check("Queue front == 10", value == 10);
+    uint8_t bitStorage[1] = {};
+    Foundation::Containers::BitVector external(bitStorage, sizeof bitStorage);
+    for (uint8_t step = 0; step < 8; ++step) {
+        external.PushBack(step == 0 || step == 3 || step == 6);
+    }
+    Check("BitVector external x..x..x. == 0x49",
+        bitStorage[0] == 0x49 && !external.PushBack(true));
 
-    int stackStorage[2] = {};
-    Foundation::Containers::Stack<int> stack(stackStorage, 2);
-    stack.Push(5);
-    stack.Push(6);
-    stack.Pop(value);
-    Check("Stack top == 6", value == 6 && stack.GetCount() == 1);
+    Foundation::Containers::BitVector owned;
+    for (uint8_t step = 0; step < 12; ++step) {
+        owned.PushBack(step % 3 == 0);
+    }
+    Check("BitVector owned grows on the heap",
+        owned.GetCount() == 12 && owned.CountOnes() == 4 && owned.OwnsStorage());
 
     Foundation::Functional::Callback<int, int, int> callback;
     Check("Callback unbound", !callback.IsBound());
     callback.Bind(Add);
     Check("Callback Invoke(4, 5) == 9", callback.Invoke(4, 5) == 9);
-
-    int a = 1;
-    int b = 2;
-    Foundation::Utils::Swap(a, b);
-    Check("Utils::Swap", a == 2 && b == 1);
 
     Check("Flash::Read table[1] == 0x5ABC",
         Foundation::Utils::Flash::Read(&FlashTable[flashIndex]) == 0x5ABC);

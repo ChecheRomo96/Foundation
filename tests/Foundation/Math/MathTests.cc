@@ -272,7 +272,6 @@ TEST(RatioTest, SupportsConstantConstructionAndConversion) {
     );
 
     EXPECT_FLOAT_EQ(half.Value<float>(), 0.5f);
-    EXPECT_FLOAT_EQ(half.ToFloat(), half.Value<float>());
 }
 
 TEST(RatioTest, PreservesTheFullUnsignedRange) {
