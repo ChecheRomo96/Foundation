@@ -3,6 +3,14 @@
 This file records user-visible changes to Foundation. Release dates use the
 `YYYY-MM-DD` format. Version 1.1.0 was the first published GitHub release.
 
+## [2.0.4] - 2026-10-07
+
+### Fixed
+
+- Updated the CPSTL dependency to 1.1.4, which scopes its freestanding
+  allocator declarations so Windows hosted C runtimes retain their ABI
+  attributes.
+
 ## [2.0.3] - 2026-10-07
 
 ### Fixed
