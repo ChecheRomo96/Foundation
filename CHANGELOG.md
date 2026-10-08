@@ -3,6 +3,14 @@
 This file records user-visible changes to Foundation. Release dates use the
 `YYYY-MM-DD` format. Version 1.1.0 was the first published GitHub release.
 
+## [2.0.5] - 2026-10-08
+
+### Fixed
+
+- Pin Foundation's bundled CPSTL source dependency to the validated 1.1.5
+  release, including its Arduino verification suite and `cpstd::function`
+  free-function compatibility fix.
+
 ## [2.0.4] - 2026-10-07
 
 ### Fixed
