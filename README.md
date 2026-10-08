@@ -8,11 +8,11 @@ It provides reusable low-level building blocks shared by projects such as MIDILA
 · [Known limitations](https://checheromo96.github.io/Foundation/group__Foundation__BuildGuide__KnownLimitations.html)
 · [Changelog](CHANGELOG.md)
 
-Foundation 1.4.0 is the current published release. Its five native GitHub
-Release packages passed the tagged build, test, export, checksum, and standalone
-package-consumer workflow. Other presets remain candidates or experimental
-until their documented validation gates pass. Foundation 2.0.5 is the current
-release and builds on CPSTL; see [CHANGELOG](CHANGELOG.md).
+Foundation 2.0.5 is the current published release and builds on CPSTL. Its
+tagged native Release packages passed the build, test, export, checksum, and
+standalone package-consumer workflow. Other presets remain candidates or
+experimental until their documented validation gates pass; see
+[CHANGELOG](CHANGELOG.md).
 
 Foundation requires a C++17-capable compiler for CMake packages and direct
 source builds. Arduino source builds (`ARDUINO` defined) accept C++11 so stock
