@@ -25,7 +25,29 @@ if(APPLE OR WIN32 OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(FOUNDATION_DESKTOP_EXAMPLES_SUPPORTED ON)
 endif()
 
-add_subdirectory(Foundation)
+if(FOUNDATION_MATH)
+    add_subdirectory(Math)
+endif()
+
+if(FOUNDATION_TIME)
+    add_subdirectory(Time)
+endif()
+
+if(FOUNDATION_CONTAINERS)
+    add_subdirectory(Containers)
+endif()
+
+if(FOUNDATION_FUNCTIONAL AND FOUNDATION_FUNCTIONAL_CALLBACK)
+    add_subdirectory(Functional)
+endif()
+
+if(FOUNDATION_SCHEDULING)
+    add_subdirectory(Scheduling)
+endif()
+
+if(FOUNDATION_UTILS)
+    add_subdirectory(Utils)
+endif()
 
 set(FOUNDATION_EXAMPLES_LAUNCHER_DIRECTORY
     "${CMAKE_CURRENT_BINARY_DIR}/launchers"
