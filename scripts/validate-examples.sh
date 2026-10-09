@@ -65,7 +65,7 @@ set -- "$SCRIPT_DIR/build.sh" "$PRESET" \
 [ -z "$PARALLEL" ] || set -- "$@" --parallel "$PARALLEL"
 "$@"
 
-EXPECTED_COUNT=$(find "$FOUNDATION_ROOT/examples/Foundation" \
+EXPECTED_COUNT=$(find "$FOUNDATION_ROOT/examples" \
     -type f -path '*/Desktop/CMakeLists.txt' -print | wc -l | tr -d ' ')
 [ "$EXPECTED_COUNT" -gt 0 ] || foundation_die "no desktop example definitions were found"
 [ -d "$DEBUG_DIR" ] || foundation_die "Debug example directory not found: $DEBUG_DIR"

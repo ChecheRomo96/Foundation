@@ -47,9 +47,9 @@ rm -rf "$BUILD_ROOT"
 # an Arduino user who installed both would, with the core's unmodified flags
 # (gnu++11 on Arduino AVR).
 COUNT=0
-for SKETCH in "$FOUNDATION_ROOT"/examples/Foundation/*/*/*.ino; do
+for SKETCH in "$FOUNDATION_ROOT"/examples/*/*/*.ino; do
     SKETCH_DIR=$(dirname -- "$SKETCH")
-    NAME=${SKETCH_DIR#"$FOUNDATION_ROOT/examples/Foundation/"}
+    NAME=${SKETCH_DIR#"$FOUNDATION_ROOT/examples/"}
     LOG="$BUILD_ROOT/$NAME.log"
     mkdir -p -- "$(dirname -- "$LOG")"
     printf '%s\n' "== $NAME ($FQBN)"

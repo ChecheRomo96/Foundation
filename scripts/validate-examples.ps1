@@ -48,7 +48,7 @@ if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
 }
 
-$exampleRoot = Join-Path $script:FoundationRoot "examples/Foundation"
+$exampleRoot = Join-Path $script:FoundationRoot "examples"
 $expectedDefinitions = @(
     Get-ChildItem -LiteralPath $exampleRoot -Filter "CMakeLists.txt" -File -Recurse |
         Where-Object { $_.Directory.Name -eq "Desktop" }

@@ -28,9 +28,10 @@
  * Each example lives under the module that owns the demonstrated API:
  *
  * @code
- * examples/Foundation/<module>/<example>/
+ * examples/<module>/<example>/
  * |-- CMakeLists.txt
  * |-- <example>.ino
+ * |-- README.md
  * |-- Shared.h
  * |-- Shared.cpp
  * `-- Desktop/
@@ -42,7 +43,8 @@
  * Both entry points reuse that scenario: `<example>.ino` adapts its output to
  * Arduino `Serial`, while `Desktop/main.cpp` adapts it to a native console
  * executable. This prevents the Arduino and desktop versions from silently
- * becoming different examples.
+ * becoming different examples. `README.md` gives the scenario, the primary
+ * interfaces, serial-monitor instructions, and one concrete extension to try.
  *
  * @subsection FoundationExamplesPresentation Presentation Contract
  *
@@ -100,8 +102,8 @@
  * coverage belong in `tests/Foundation`.
  *
  * The CMake hierarchy mirrors `src/Foundation`: `examples/CMakeLists.txt`
- * provides the common example helper and launcher, `examples/Foundation`
- * selects enabled modules, and each example's own `CMakeLists.txt` selects its
+ * provides the common example helper, module selection, and launcher; each
+ * example's own `CMakeLists.txt` selects its
  * platform adapter. The `Desktop/CMakeLists.txt` explicitly compiles the entry
  * point together with the parent directory's `Shared.cpp`.
  *
@@ -136,7 +138,7 @@
  *
  * @subsection FoundationExamplesAdd Adding an Example
  *
- * 1. Create `examples/Foundation/<module>/<example>` using the structure above.
+ * 1. Create `examples/<module>/<example>` using the structure above.
  * 2. Put platform-independent Foundation API usage in `Shared.h` and
  *    `Shared.cpp`; do not put `Serial`, `iostream`, `main()`, `setup()`, or
  *    `loop()` there.
