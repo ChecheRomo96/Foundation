@@ -1,0 +1,9 @@
+<map id="Delivery" name="Delivery">
+<area shape="rect" id="Node000002" href="$group__Foundation__Workflows.html" title="Repeatable configure, build, test, install, export, and maintenance workflows." alt="" coords="5,104,95,129"/>
+<area shape="rect" id="Node000001" title="Install, package, and consume target&#45;specific Foundation libraries." alt="" coords="143,104,220,129"/>
+<area shape="rect" id="Node000004" href="$group__Foundation__Workflows__Export.html" title="Build and install a clean, target&#45;specific distribution package." alt="" coords="343,5,407,31"/>
+<area shape="rect" id="Node000003" href="$group__Foundation__Workflows__Install.html" title="Install an already configured build into a selected prefix." alt="" coords="344,55,407,80"/>
+<area shape="rect" id="Node000007" href="$group__Foundation__Workflows__PackageConsumer.html" title="Prove that an exported Release package works from a separate CMake project." alt="" coords="268,104,483,129"/>
+<area shape="rect" id="Node000006" href="$group__Foundation__Workflows__Precompiled.html" title="Compatibility and consumption rules for exported static libraries." alt="" coords="294,153,457,179"/>
+<area shape="rect" id="Node000005" href="$group__Foundation__Workflows__ReleasePackages.html" title="Build validated archives and publish immutable GitHub Release assets." alt="" coords="306,203,445,228"/>
+</map>

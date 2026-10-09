@@ -1,0 +1,25 @@
+var searchData=
+[
+  ['2_20—_202026_2009_2026_0',['macOS x86-64 through Rosetta 2 — 2026-09-26',['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceMacOSx64',1,'']]],
+  ['2_200_200_202026_2010_2007_1',['[2.0.0] - 2026-10-07',['../md_CHANGELOG.html#autotoc_md20',1,'']]],
+  ['2_200_201_202026_2010_2007_2',['[2.0.1] - 2026-10-07',['../md_CHANGELOG.html#autotoc_md18',1,'']]],
+  ['2_200_202_202026_2010_2007_3',['[2.0.2] - 2026-10-07',['../md_CHANGELOG.html#autotoc_md16',1,'']]],
+  ['2_200_202026_2009_2025_4',['[1.2.0] - 2026-09-25',['../md_CHANGELOG.html#autotoc_md32',1,'']]],
+  ['2_200_203_202026_2010_2007_5',['[2.0.3] - 2026-10-07',['../md_CHANGELOG.html#autotoc_md14',1,'']]],
+  ['2_200_204_202026_2010_2007_6',['[2.0.4] - 2026-10-07',['../md_CHANGELOG.html#autotoc_md12',1,'']]],
+  ['2_200_205_202026_2010_2008_7',['[2.0.5] - 2026-10-08',['../md_CHANGELOG.html#autotoc_md10',1,'']]],
+  ['2_200_20downstream_20consumer_20—_202026_2009_2027_8',['Published v1.2.0 downstream consumer — 2026-09-27',['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceReleasedConsumer',1,'']]],
+  ['2_202026_2010_2007_9',['[2.0.2] - 2026-10-07',['../md_CHANGELOG.html#autotoc_md16',1,'']]],
+  ['2026_2009_2025_10',['2026 09 25',['../md_CHANGELOG.html#autotoc_md35',1,'[1.1.0] - 2026-09-25'],['../md_CHANGELOG.html#autotoc_md32',1,'[1.2.0] - 2026-09-25'],['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceArmLocal',1,'Arm bare-metal local preflight — 2026-09-25'],['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceAVR',1,'AVR ATmega328P — 2026-09-25'],['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceMacOSArm64',1,'macOS Arm64 — 2026-09-25']]],
+  ['2026_2009_2026_11',['2026 09 26',['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceAVRBoard',1,'AVR firmware consumer on an Arduino Uno — 2026-09-26'],['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceMacOSArm64Examples',1,'macOS Arm64 examples and launcher — 2026-09-26'],['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceMacOSx64',1,'macOS x86-64 through Rosetta 2 — 2026-09-26'],['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidencePackageIdentity',1,'Package identity — 2026-09-26']]],
+  ['2026_2009_2027_12',['2026 09 27',['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceNativeExamples',1,'Hosted native examples — 2026-09-27'],['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceReleasedConsumer',1,'Published v1.2.0 downstream consumer — 2026-09-27']]],
+  ['2026_2009_2028_13',['STM32G0B1CBT6 firmware consumer — 2026-09-28',['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceSTM32G0B1',1,'']]],
+  ['2026_2009_2030_14',['[1.3.0] - 2026-09-30',['../md_CHANGELOG.html#autotoc_md26',1,'']]],
+  ['2026_2010_2001_15',['[1.4.0] - 2026-10-01',['../md_CHANGELOG.html#autotoc_md24',1,'']]],
+  ['2026_2010_2007_16',['2026 10 07',['../md_CHANGELOG.html#autotoc_md20',1,'[2.0.0] - 2026-10-07'],['../md_CHANGELOG.html#autotoc_md18',1,'[2.0.1] - 2026-10-07'],['../md_CHANGELOG.html#autotoc_md16',1,'[2.0.2] - 2026-10-07'],['../md_CHANGELOG.html#autotoc_md14',1,'[2.0.3] - 2026-10-07'],['../md_CHANGELOG.html#autotoc_md12',1,'[2.0.4] - 2026-10-07']]],
+  ['2026_2010_2008_17',['[2.0.5] - 2026-10-08',['../md_CHANGELOG.html#autotoc_md10',1,'']]],
+  ['25_18',['25',['../md_CHANGELOG.html#autotoc_md35',1,'[1.1.0] - 2026-09-25'],['../md_CHANGELOG.html#autotoc_md32',1,'[1.2.0] - 2026-09-25'],['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceArmLocal',1,'Arm bare-metal local preflight — 2026-09-25'],['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceAVR',1,'AVR ATmega328P — 2026-09-25'],['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceMacOSArm64',1,'macOS Arm64 — 2026-09-25']]],
+  ['26_19',['26',['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceAVRBoard',1,'AVR firmware consumer on an Arduino Uno — 2026-09-26'],['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceMacOSArm64Examples',1,'macOS Arm64 examples and launcher — 2026-09-26'],['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceMacOSx64',1,'macOS x86-64 through Rosetta 2 — 2026-09-26'],['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidencePackageIdentity',1,'Package identity — 2026-09-26']]],
+  ['27_20',['27',['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceNativeExamples',1,'Hosted native examples — 2026-09-27'],['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceReleasedConsumer',1,'Published v1.2.0 downstream consumer — 2026-09-27']]],
+  ['28_21',['STM32G0B1CBT6 firmware consumer — 2026-09-28',['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceSTM32G0B1',1,'']]]
+];
