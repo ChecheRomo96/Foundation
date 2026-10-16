@@ -1,10 +1,11 @@
 # Foundation
 
+**Documentation:** [API and build guide](https://checheromo96.github.io/Foundation/) · [API class index](https://checheromo96.github.io/Foundation/annotated.html)
+
 Foundation is a lightweight C++ foundation library for embedded and desktop projects.
 It provides reusable low-level building blocks shared by projects such as MIDILAR and RoboFoundation.
 
-**Documentation:** [Foundation on GitHub Pages](https://checheromo96.github.io/Foundation/)
-· [Support matrix](https://checheromo96.github.io/Foundation/group__Foundation__BuildGuide__SupportMatrix.html)
+[Support matrix](https://checheromo96.github.io/Foundation/group__Foundation__BuildGuide__SupportMatrix.html)
 · [Known limitations](https://checheromo96.github.io/Foundation/group__Foundation__BuildGuide__KnownLimitations.html)
 · [Changelog](CHANGELOG.md)
 
