@@ -3,6 +3,12 @@
 This file records user-visible changes to Foundation. Release dates use the
 `YYYY-MM-DD` format. Version 1.1.0 was the first published GitHub release.
 
+## [2.0.8] - 2026-10-16
+
+### Changed
+
+- Require CPSTL 1.1.12 in Arduino metadata, CMake source resolution and embedded CI.
+
 ## [2.0.7] - 2026-10-16
 
 ### Fixed
