@@ -43,7 +43,7 @@
  * `stm32g0b1cbt6_armgcc_cortex_m0plus_soft` is the first exact STM32 device
  * profile. Its acceptance fixture in `tests/Stm32G0B1Consumer` consumes the
  * vector table, startup, bounded runtime and memory map from pinned
- * RoModularBuild v0.6.1. Foundation retains the checks and report symbols.
+ * RoModularBuild v0.6.2. Foundation retains the checks and report symbols.
  * It deliberately avoids HAL, CMSIS, clocks, GPIO, and serial output. Runtime
  * results are exposed through SWD-readable symbols, so the same firmware works
  * on a custom board without assuming its LED or UART routing.
