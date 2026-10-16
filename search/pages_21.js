@@ -1,0 +1,7 @@
+var searchData=
+[
+  ['—_202026_2009_2025_0',['— 2026 09 25',['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceArmLocal',1,'Arm bare-metal local preflight — 2026-09-25'],['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceAVR',1,'AVR ATmega328P — 2026-09-25'],['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceMacOSArm64',1,'macOS Arm64 — 2026-09-25']]],
+  ['—_202026_2009_2026_1',['— 2026 09 26',['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceAVRBoard',1,'AVR firmware consumer on an Arduino Uno — 2026-09-26'],['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceMacOSArm64Examples',1,'macOS Arm64 examples and launcher — 2026-09-26'],['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceMacOSx64',1,'macOS x86-64 through Rosetta 2 — 2026-09-26'],['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidencePackageIdentity',1,'Package identity — 2026-09-26']]],
+  ['—_202026_2009_2027_2',['— 2026 09 27',['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceNativeExamples',1,'Hosted native examples — 2026-09-27'],['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceReleasedConsumer',1,'Published v1.2.0 downstream consumer — 2026-09-27']]],
+  ['—_202026_2009_2028_3',['STM32G0B1CBT6 firmware consumer — 2026-09-28',['../group__Foundation__Workflows__Validation.html#FoundationValidationEvidenceSTM32G0B1',1,'']]]
+];
