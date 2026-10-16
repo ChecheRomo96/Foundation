@@ -9,7 +9,7 @@
  * | ----- | ----- |
  * | Backlog task | `INFRA-001` |
  * | Design status | `DONE` - phases 0 through 5 are complete; the CLI (phase 6) remains deferred |
- * | Shared repository | Publicly readable, restrictively licensed [ChecheRomo96/RoModularBuild](https://github.com/ChecheRomo96/RoModularBuild), commit `92d69b9`, tag `v0.6.1` |
+ * | Shared repository | Publicly readable, restrictively licensed [ChecheRomo96/RoModularBuild](https://github.com/ChecheRomo96/RoModularBuild), commit `7e9fbdb`, tag `v0.6.2` |
  * | Initial integration | `tools/RoModularBuild` version-pinned Git submodule |
  * | Current implementation owner | RoModularBuild for toolchains, hidden preset bases, generic lifecycle, STM32 startup/linker/runtime, firmware artifacts and generic programmer transports; Foundation for public wrappers, adapter values, and project policy |
  * | Migration rule | No workflow behavior or public command changes during extraction |
