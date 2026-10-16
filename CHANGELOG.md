@@ -3,6 +3,14 @@
 This file records user-visible changes to Foundation. Release dates use the
 `YYYY-MM-DD` format. Version 1.1.0 was the first published GitHub release.
 
+## [2.0.7] - 2026-10-16
+
+### Fixed
+
+- Pin RoModularBuild v0.6.2 and CPSTL v1.1.11 for AVR consumers of exported
+  C++ packages, including MCC and MIDILAR.
+- Normalize Windows symbol output and map paths in the STM32 linkage validator.
+
 ## [2.0.6] - 2026-10-16
 
 ### Changed

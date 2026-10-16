@@ -252,13 +252,13 @@ foreach ($symbol in @(
     "FoundationValidationPassed",
     "FoundationValidationTotal"
 )) {
-    if ($symbols -notmatch "(?m)\s[A-Za-z]\s+$([regex]::Escape($symbol))$") {
+    if ($symbols -notmatch "(?m)\s[A-Za-z]\s+$([regex]::Escape($symbol))\s*$") {
         throw "Consumer symbol is missing: $symbol"
     }
 }
 
-$mapContents = Get-Content -LiteralPath $map -Raw
-$foundationArchive = Join-Path $packagePrefix "lib/libFoundation.a"
+$mapContents = (Get-Content -LiteralPath $map -Raw).Replace('\', '/')
+$foundationArchive = (Join-Path $packagePrefix "lib/libFoundation.a").Replace('\', '/')
 if (-not $mapContents.Contains($foundationArchive)) {
     throw "Consumer map does not reference the exported Foundation archive"
 }
