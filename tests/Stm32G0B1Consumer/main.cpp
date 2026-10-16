@@ -6,12 +6,6 @@
 
 extern "C" {
 
-    extern uint32_t _sidata;
-    extern uint32_t _sdata;
-    extern uint32_t _edata;
-    extern uint32_t _sbss;
-    extern uint32_t _ebss;
-
     volatile uint32_t FoundationValidationState;
     volatile uint32_t FoundationValidationPassed;
     volatile uint32_t FoundationValidationTotal;
@@ -31,12 +25,6 @@ namespace {
     volatile int32_t numerator = 6;
     volatile int32_t denominator = 8;
 
-    // The validation firmware intentionally supplies a bounded C heap for
-    // CPSTL's C allocator. Production targets should replace this with their
-    // board's linker-script-backed heap policy.
-    alignas(8) uint8_t FoundationValidationHeap[4096] = {};
-    uint8_t* FoundationValidationHeapCursor = FoundationValidationHeap;
-
     void Check(bool condition) {
         ++FoundationValidationTotal;
         if (condition) {
@@ -50,42 +38,14 @@ namespace {
 
 }
 
-extern "C" void* _sbrk(intptr_t increment) {
-    uint8_t* const heapEnd =
-        FoundationValidationHeap + sizeof FoundationValidationHeap;
-    if (increment < 0 ||
-        static_cast<uintptr_t>(increment) >
-            static_cast<uintptr_t>(heapEnd - FoundationValidationHeapCursor)) {
-        return reinterpret_cast<void*>(static_cast<uintptr_t>(-1));
-    }
-
-    uint8_t* const previous = FoundationValidationHeapCursor;
-    FoundationValidationHeapCursor += static_cast<uintptr_t>(increment);
-    return previous;
-}
-
-extern "C" __attribute__((noreturn)) void FoundationValidationHalt() {
-    __asm volatile("bkpt #0");
+extern "C" __attribute__((noreturn, noinline)) void FoundationValidationHalt() {
     for (;;) {
-        __asm volatile("wfi");
+        __asm volatile("nop");
     }
 }
 
-extern "C" __attribute__((noreturn)) void Reset_Handler() {
-    uint32_t* source = &_sidata;
-    for (uint32_t* destination = &_sdata;
-         destination < &_edata;
-         ++destination) {
-        *destination = *source++;
-    }
-
-    for (uint32_t* destination = &_sbss;
-         destination < &_ebss;
-         ++destination) {
-        *destination = 0;
-    }
-
-    (void)main();
+extern "C" __attribute__((noreturn)) void romodular_fault_handler() {
+    FoundationValidationState = ValidationFailed;
     FoundationValidationHalt();
 }
 

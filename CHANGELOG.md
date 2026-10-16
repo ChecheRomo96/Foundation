@@ -3,6 +3,16 @@
 This file records user-visible changes to Foundation. Release dates use the
 `YYYY-MM-DD` format. Version 1.1.0 was the first published GitHub release.
 
+## [2.0.6] - 2026-10-16
+
+### Changed
+
+- Pin RoModularBuild v0.6.1 and consume its shared compiler/preset interfaces.
+- Use shared STM32 startup, linker/runtime and artifacts in the firmware consumer;
+  keep application checks and fault state in Foundation.
+- Add ATmega2560 / AVR6 and STM32G0B1 platform coverage to embedded builds.
+- Refresh released dependency pins across CMake and Arduino CI.
+
 ## [2.0.5] - 2026-10-08
 
 ### Fixed

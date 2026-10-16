@@ -190,3 +190,9 @@ The long-term licensing and distribution model still requires review by
 qualified legal counsel. Publishing source, documentation, or binary artifacts
 does not grant permission to use them. Until the license is replaced in
 writing, the all-rights-reserved notice applies.
+
+Shared embedded build support is pinned to RoModularBuild `v0.6.1`.
+The `atmega328p_avrgcc_avr5`, `atmega2560_avrgcc_avr6` and
+`stm32g0b1cbt6_armgcc_cortex_m0plus_soft` presets retain repository-specific
+feature and package policy. CI compile/package checks do not establish physical
+board execution.
