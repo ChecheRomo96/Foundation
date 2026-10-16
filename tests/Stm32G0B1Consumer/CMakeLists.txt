@@ -35,67 +35,15 @@ if(NOT Foundation_PLATFORM STREQUAL
     )
 endif()
 
-add_executable(FoundationStm32G0B1Consumer
-    main.cpp
-    startup_stm32g0b1.S
-)
-
-set_target_properties(FoundationStm32G0B1Consumer PROPERTIES
-    SUFFIX ".elf"
-)
-
+add_executable(FoundationStm32G0B1Consumer main.cpp)
 target_compile_features(FoundationStm32G0B1Consumer PRIVATE cxx_std_17)
 target_compile_options(FoundationStm32G0B1Consumer PRIVATE
-    -Os
-    -Wall
-    -Wextra
-    -Werror
-    -ffreestanding
-    -fno-unwind-tables
-    -fno-asynchronous-unwind-tables
-)
-target_link_options(FoundationStm32G0B1Consumer PRIVATE
-    -nostdlib
-    -nostartfiles
-    "-T${CMAKE_CURRENT_LIST_DIR}/stm32g0b1cbt6.ld"
-    "-Wl,-Map,$<TARGET_FILE_DIR:FoundationStm32G0B1Consumer>/FoundationStm32G0B1Consumer.map"
-    -Wl,--gc-sections
-    -Wl,--no-warn-rwx-segments
-    -Wl,--no-warn-execstack
-    -Wl,--print-memory-usage
-)
-target_link_libraries(FoundationStm32G0B1Consumer PRIVATE
-    Foundation::Foundation
-    c
-    gcc
-)
+    -Os -Wall -Wextra -Werror -ffreestanding
+    -fno-unwind-tables -fno-asynchronous-unwind-tables)
+target_link_libraries(FoundationStm32G0B1Consumer PRIVATE Foundation::Foundation)
 
-get_filename_component(
-    FOUNDATION_ARM_COMPILER_DIRECTORY
-    "${CMAKE_CXX_COMPILER}"
-    DIRECTORY
-)
-find_program(FOUNDATION_ARM_OBJCOPY
-    arm-none-eabi-objcopy
-    HINTS "${FOUNDATION_ARM_COMPILER_DIRECTORY}"
-    NO_DEFAULT_PATH
-    REQUIRED
-)
-find_program(FOUNDATION_ARM_SIZE
-    arm-none-eabi-size
-    HINTS "${FOUNDATION_ARM_COMPILER_DIRECTORY}"
-    NO_DEFAULT_PATH
-    REQUIRED
-)
-
-add_custom_command(TARGET FoundationStm32G0B1Consumer POST_BUILD
-    COMMAND "${FOUNDATION_ARM_OBJCOPY}" -O ihex
-        "$<TARGET_FILE:FoundationStm32G0B1Consumer>"
-        "$<TARGET_FILE_DIR:FoundationStm32G0B1Consumer>/FoundationStm32G0B1Consumer.hex"
-    COMMAND "${FOUNDATION_ARM_OBJCOPY}" -O binary
-        "$<TARGET_FILE:FoundationStm32G0B1Consumer>"
-        "$<TARGET_FILE_DIR:FoundationStm32G0B1Consumer>/FoundationStm32G0B1Consumer.bin"
-    COMMAND "${FOUNDATION_ARM_SIZE}"
-        "$<TARGET_FILE:FoundationStm32G0B1Consumer>"
-    VERBATIM
-)
+# The consumer selects its memory budget; shared infrastructure owns CRT,
+# linker generation and ELF/HEX/BIN/map mechanics.
+set(ROMODULAR_STM32_HEAP_BYTES 4096 CACHE STRING "Validation firmware heap bytes")
+include("${CMAKE_CURRENT_LIST_DIR}/../../tools/RoModularBuild/cmake/boards/STM32G0B1CBT6.cmake")
+romodular_configure_stm32g0b1cbt6(FoundationStm32G0B1Consumer)

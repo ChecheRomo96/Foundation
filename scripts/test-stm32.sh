@@ -189,8 +189,8 @@ if printf '%s\n' "$ATTRIBUTES" | \
     foundation_die "consumer unexpectedly advertises the hard-float ABI"
 fi
 printf '%s\n' "$SECTIONS" | grep -E \
-    '^  [0-9]+ \.isr_vector +00000040 +08000000 ' >/dev/null || \
-    foundation_die "vector table is not a 64-byte table at 0x08000000"
+    '^  [0-9]+ \.isr_vector +000000[cC]0 +08000000 ' >/dev/null || \
+    foundation_die "vector table is not a 192-byte table at 0x08000000"
 printf '%s\n' "$SECTIONS" | grep -E \
     '^  [0-9]+ \.data +[0-9a-f]+ +20000000 ' >/dev/null || \
     foundation_die "initialized data does not begin in SRAM at 0x20000000"
