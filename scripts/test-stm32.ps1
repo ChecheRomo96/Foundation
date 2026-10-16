@@ -234,8 +234,8 @@ if ($attributes -match "Tag_ABI_VFP_args:\s+VFP registers") {
     throw "Consumer unexpectedly advertises the hard-float ABI"
 }
 if ($sections -notmatch `
-    "(?m)^\s*\d+\s+\.isr_vector\s+00000040\s+08000000\s") {
-    throw "Vector table is not a 64-byte table at 0x08000000"
+    "(?m)^\s*\d+\s+\.isr_vector\s+000000[cC]0\s+08000000\s") {
+    throw "Vector table is not a 192-byte table at 0x08000000"
 }
 if ($sections -notmatch `
     "(?m)^\s*\d+\s+\.data\s+[0-9a-f]+\s+20000000\s") {
