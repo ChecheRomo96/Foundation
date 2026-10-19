@@ -4,6 +4,57 @@
 
 using Foundation::Math::Complex;
 
+template<typename T> class SignedComplexTest : public ::testing::Test {};
+using SignedScalars = ::testing::Types<int8_t, int16_t, int32_t, int64_t,
+                                      float, double, long double>;
+TYPED_TEST_SUITE(SignedComplexTest, SignedScalars);
+
+TYPED_TEST(SignedComplexTest, PreservesNativeScalarArithmeticAndValueLayout) {
+    using T = TypeParam;
+    static_assert(__is_trivially_copyable(Complex<T>),
+                  "Complex must be trivially copyable");
+    static_assert(sizeof(Complex<T>) == 2 * sizeof(T), "Complex stores two scalars");
+    const Complex<T> a(T(4), T(2)), b(T(1), T(-1));
+    EXPECT_EQ(a + b, Complex<T>(T(5), T(1)));
+    EXPECT_EQ(a - b, Complex<T>(T(3), T(3)));
+    EXPECT_EQ(a * b, Complex<T>(T(6), T(-2)));
+    EXPECT_EQ(a / b, Complex<T>(T(1), T(3)));
+    EXPECT_EQ(-a, Complex<T>(T(-4), T(-2)));
+    EXPECT_EQ(a.Conjugate(), Complex<T>(T(4), T(-2)));
+    EXPECT_EQ(a.MagnitudeSquared(), T(20));
+    Complex<T> value(a);
+    value += b; EXPECT_EQ(value, a + b);
+    value = a; value -= b; EXPECT_EQ(value, a - b);
+    value = a; value *= b; EXPECT_EQ(value, a * b);
+    value = a; value /= b; EXPECT_EQ(value, a / b);
+    value = a; value *= value; EXPECT_EQ(value, a * a);
+    value = a; value /= value; EXPECT_EQ(value, Complex<T>(T(1), T(0)));
+}
+
+TEST(ComplexTest, IntegerDivisionTruncatesTowardZero) {
+    EXPECT_EQ(Complex<int8_t>(1, -1) / Complex<int8_t>(2, 0),
+              Complex<int8_t>(0, 0));
+    EXPECT_EQ(Complex<int16_t>(-3, 3) / Complex<int16_t>(2, 0),
+              Complex<int16_t>(-1, 1));
+}
+
+TEST(ComplexTest, SmallIntegerDivisorUsesNativeIntegralPromotions) {
+    // 12^2 + 12^2 = 288 fits the promoted int, but not int8_t.
+    const Complex<int8_t> divisor(12, 12);
+    EXPECT_EQ(divisor / divisor, Complex<int8_t>(1, 0));
+    Complex<int8_t> value(divisor);
+    value /= divisor;
+    EXPECT_EQ(value, Complex<int8_t>(1, 0));
+}
+
+TEST(ComplexTest, LargeIntegersNeverRoundThroughFloat) {
+    const int64_t exact = INT64_C(9007199254740993);
+    const Complex<int64_t> value(exact, -exact);
+    EXPECT_EQ(value + Complex<int64_t>(1, -1),
+              Complex<int64_t>(exact + 1, -exact - 1));
+    EXPECT_EQ(value * Complex<int64_t>(1, 0), value);
+}
+
 TEST(ComplexTest, ConstructsCopiesAndAssignsValues) {
     const Complex<int> zero;
     const Complex<int> realOnly(7);

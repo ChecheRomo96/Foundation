@@ -25,23 +25,6 @@
             imag(imagPart) {}
 
         template <typename T>
-        Complex<T>::Complex(
-            const Complex<T>& other
-        )
-            : real(other.real),
-            imag(other.imag) {}
-
-        template <typename T>
-        Complex<T>& Complex<T>::operator=(
-            const Complex<T>& other
-        ) {
-            real = other.real;
-            imag = other.imag;
-
-            return *this;
-        }
-
-        template <typename T>
         Complex<T> Complex<T>::operator+() const {
             return *this;
         }
@@ -49,8 +32,8 @@
         template <typename T>
         Complex<T> Complex<T>::operator-() const {
             return Complex<T>(
-                -real,
-                -imag
+                static_cast<T>(-real),
+                static_cast<T>(-imag)
             );
         }
 
@@ -59,8 +42,8 @@
             const Complex<T>& other
         ) const {
             return Complex<T>(
-                real + other.real,
-                imag + other.imag
+                static_cast<T>(real + other.real),
+                static_cast<T>(imag + other.imag)
             );
         }
 
@@ -69,8 +52,8 @@
             const Complex<T>& other
         ) const {
             return Complex<T>(
-                real - other.real,
-                imag - other.imag
+                static_cast<T>(real - other.real),
+                static_cast<T>(imag - other.imag)
             );
         }
 
@@ -79,8 +62,8 @@
             const Complex<T>& other
         ) const {
             return Complex<T>(
-                (real * other.real) - (imag * other.imag),
-                (real * other.imag) + (imag * other.real)
+                static_cast<T>((real * other.real) - (imag * other.imag)),
+                static_cast<T>((real * other.imag) + (imag * other.real))
             );
         }
 
@@ -89,20 +72,20 @@
             const Complex<T>& other
         ) const {
 
-            T den =
+            const auto den =
                 (other.real * other.real) +
                 (other.imag * other.imag);
 
             return Complex<T>(
-                (
+                static_cast<T>((
                     (real * other.real) +
                     (imag * other.imag)
-                ) / den,
+                ) / den),
 
-                (
+                static_cast<T>((
                     (imag * other.real) -
                     (real * other.imag)
-                ) / den
+                ) / den)
             );
         }
 
@@ -110,8 +93,8 @@
         Complex<T>& Complex<T>::operator+=(
             const Complex<T>& other
         ) {
-            real += other.real;
-            imag += other.imag;
+            real = static_cast<T>(real + other.real);
+            imag = static_cast<T>(imag + other.imag);
 
             return *this;
         }
@@ -120,8 +103,8 @@
         Complex<T>& Complex<T>::operator-=(
             const Complex<T>& other
         ) {
-            real -= other.real;
-            imag -= other.imag;
+            real = static_cast<T>(real - other.real);
+            imag = static_cast<T>(imag - other.imag);
 
             return *this;
         }
@@ -131,13 +114,13 @@
             const Complex<T>& other
         ) {
 
-            T r =
+            T r = static_cast<T>(
                 (real * other.real) -
-                (imag * other.imag);
+                (imag * other.imag));
 
-            T i =
+            T i = static_cast<T>(
                 (real * other.imag) +
-                (imag * other.real);
+                (imag * other.real));
 
             real = r;
             imag = i;
@@ -150,21 +133,21 @@
             const Complex<T>& other
         ) {
 
-            T den =
+            const auto den =
                 (other.real * other.real) +
                 (other.imag * other.imag);
 
-            T r =
+            T r = static_cast<T>(
                 (
                     (real * other.real) +
                     (imag * other.imag)
-                ) / den;
+                ) / den);
 
-            T i =
+            T i = static_cast<T>(
                 (
                     (imag * other.real) -
                     (real * other.imag)
-                ) / den;
+                ) / den);
 
             real = r;
             imag = i;
@@ -192,15 +175,15 @@
         Complex<T> Complex<T>::Conjugate() const {
             return Complex<T>(
                 real,
-                -imag
+                static_cast<T>(-imag)
             );
         }
 
         template <typename T>
         T Complex<T>::MagnitudeSquared() const {
-            return
+            return static_cast<T>(
                 (real * real) +
-                (imag * imag);
+                (imag * imag));
         }
 
     } // namespace Math

@@ -2,13 +2,25 @@
  * @defgroup Foundation_Math_Complex Complex
  * @ingroup Foundation_Math
  *
- * @brief Cartesian complex numbers for any arithmetic type.
+ * @brief Cartesian complex numbers for signed arithmetic types.
  *
  * `Complex<T>` stores public `real` and `imag` parts and provides the usual
  * arithmetic, comparison, conjugation, and squared-magnitude operations.
  * The module is enabled by `FOUNDATION_MATH_COMPLEX` and does not depend on
- * the C++ standard library or on floating-point support, so integer
+ * the full C++ standard library or on floating-point support, so integer
  * specializations remain usable on targets without an FPU.
+ * CPSTL traits reject unsigned types, bool and non-arithmetic types.
+ * Signed integer types, float, double and long double use the same class.
+ * Values are trivially copyable and store two T components.
+ *
+ * Arithmetic follows native C++ rules for T, including integral promotions;
+ * results are explicitly converted back to T. There is no conversion to float,
+ * automatic saturation, fixed-point format or overflow detection. Integer
+ * division truncates toward zero. All intermediate expressions and stored
+ * results must be representable. A divisor's squared magnitude must be nonzero
+ * and representable in its expression type (the promoted type for small integers).
+ * Negating the minimum signed integer also requires caller care.
+ * These scalar operations do not define fixed-point FFT scaling or twiddle formats.
  *
  * @code
  * Foundation::Math::Complex<float> z(3.0f, 4.0f);
