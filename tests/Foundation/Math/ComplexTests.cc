@@ -7,7 +7,14 @@ using Foundation::Math::Complex;
 template<typename T> class SignedComplexTest : public ::testing::Test {};
 using SignedScalars = ::testing::Types<int8_t, int16_t, int32_t, int64_t,
                                       float, double, long double>;
-TYPED_TEST_SUITE(SignedComplexTest, SignedScalars);
+struct SignedScalarNames {
+    template<typename T> static std::string GetName(int index) {
+        const char* names[] = {"Int8", "Int16", "Int32", "Int64",
+                               "Float", "Double", "LongDouble"};
+        return names[index];
+    }
+};
+TYPED_TEST_SUITE(SignedComplexTest, SignedScalars, SignedScalarNames);
 
 TYPED_TEST(SignedComplexTest, PreservesNativeScalarArithmeticAndValueLayout) {
     using T = TypeParam;

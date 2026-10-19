@@ -3,7 +3,7 @@
 This file records user-visible changes to Foundation. Release dates use the
 `YYYY-MM-DD` format. Version 1.1.0 was the first published GitHub release.
 
-## [Unreleased]
+## [2.0.9] - 2026-10-19
 
 ### Changed
 
@@ -14,6 +14,11 @@ This file records user-visible changes to Foundation. Release dates use the
   the squared divisor magnitude prematurely for small integer types.
 - Document integer range preconditions and division truncation; add signed
   integer and floating-point arithmetic regression tests.
+
+### Fixed
+
+- Supply the typed-test name generator explicitly for strict C++17 Clang builds.
+- Request a GitHub Pages rebuild after deploying the generated documentation.
 
 ## [2.0.8] - 2026-10-16
 
