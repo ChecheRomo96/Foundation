@@ -3,6 +3,18 @@
 This file records user-visible changes to Foundation. Release dates use the
 `YYYY-MM-DD` format. Version 1.1.0 was the first published GitHub release.
 
+## [Unreleased]
+
+### Changed
+
+- Restrict Math::Complex<T> to signed arithmetic types using CPSTL traits.
+- Default copy operations preserve trivial copyability and two-component storage.
+- Preserve native scalar arithmetic, including integral promotions, without
+  converting integers through floating point. Complex division no longer narrows
+  the squared divisor magnitude prematurely for small integer types.
+- Document integer range preconditions and division truncation; add signed
+  integer and floating-point arithmetic regression tests.
+
 ## [2.0.8] - 2026-10-16
 
 ### Changed

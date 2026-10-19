@@ -7,6 +7,7 @@
  */
 
     #include <stdint.h>
+    #include <CPtype_traits.h>
 
     namespace Foundation {
     namespace Math {
@@ -17,16 +18,22 @@
          *
          * @brief Complex number stored as real and imaginary parts.
          *
-         * @tparam T Arithmetic type used for both parts, such as `float`,
+         * @tparam T Signed arithmetic type used for both parts, such as `float`,
          * `double`, or a signed integer type.
          *
-         * All arithmetic is performed directly in `T`, without widening or
-         * overflow checks. Division by a complex value whose magnitude is zero
-         * is not checked: it produces infinities or NaN for floating-point `T`
-         * and is undefined behavior for integer `T`.
+         * Arithmetic follows T's native C++ rules, including integral promotions,
+         * and results are stored in T. No implicit floating-point conversion,
+         * saturation, fixed-point scaling or overflow checks are performed.
+         * Integer division truncates toward zero. Callers must keep intermediate
+         * expressions and stored results representable, including negation of
+         * the minimum signed integer. Integer division requires a nonzero,
+         * representable squared divisor magnitude and representable quotients.
+         * Floating-point division by zero follows the target's arithmetic.
          */
         template <typename T>
         class Complex {
+            static_assert(cpstd::is_arithmetic<T>::value && !cpstd::is_unsigned<T>::value,
+                          "Complex requires a signed arithmetic type");
         public:
 
             /** @brief Real part. */
@@ -65,7 +72,7 @@
              */
             Complex(
                 const Complex<T>& other
-            );
+            ) = default;
 
             /**
              * @brief Assigns another complex value to this value.
@@ -75,7 +82,7 @@
              */
             Complex<T>& operator=(
                 const Complex<T>& other
-            );
+            ) = default;
 
             /**
              * @brief Unary plus.
