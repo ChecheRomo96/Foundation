@@ -70,8 +70,8 @@ namespace {
     }
 
     // Program-memory data read back through Foundation::Utils::Flash.
-    const uint16_t FlashTable[] FOUNDATION_FLASH = {0x7B56, 0x5ABC};
-    const char FlashName[] FOUNDATION_FLASH = "Dorian";
+    const uint16_t FlashTable[] ROMODULAR_FLASH = {0x7B56, 0x5ABC};
+    const char FlashName[] ROMODULAR_FLASH = "Dorian";
     volatile uint8_t flashIndex = 1;
 
     static_assert(

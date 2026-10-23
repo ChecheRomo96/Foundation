@@ -19,20 +19,30 @@
      * data is already addressable in place, it expands to nothing.
      *
      * @code{.cpp}
-     * const uint16_t Table[] FOUNDATION_FLASH = {1, 2, 3};
+     * const uint16_t Table[] ROMODULAR_FLASH = {1, 2, 3};
      * uint16_t second = Foundation::Utils::Flash::Read(&Table[1]);
      * @endcode
      */
     #if defined(__AVR__)
-        #define FOUNDATION_FLASH PROGMEM
+        #define ROMODULAR_FLASH PROGMEM
     #else
-        #define FOUNDATION_FLASH
+        #define ROMODULAR_FLASH
+    #endif
+
+    /**
+     * @brief Backward-compatible spelling for ROMODULAR_FLASH.
+     *
+     * New code should use the ecosystem-level name. This alias remains during
+     * the Foundation 2.x line so existing sketches keep compiling.
+     */
+    #ifndef FOUNDATION_FLASH
+        #define FOUNDATION_FLASH ROMODULAR_FLASH
     #endif
 
     namespace Foundation { namespace Utils { namespace Flash {
 
         /**
-         * @brief Copies bytes from an object declared with FOUNDATION_FLASH.
+         * @brief Copies bytes from an object declared with ROMODULAR_FLASH.
          * @ingroup Foundation_Utils
          * @param destination RAM destination of at least `size` bytes.
          * @param source Program-memory source of at least `size` bytes.
@@ -47,7 +57,7 @@
         }
 
         /**
-         * @brief Reads one object declared with FOUNDATION_FLASH by value.
+         * @brief Reads one object declared with ROMODULAR_FLASH by value.
          * @ingroup Foundation_Utils
          * @tparam T Trivially copyable, default-constructible type.
          * @param source Address of the object in program memory.
@@ -63,7 +73,7 @@
         }
 
         /**
-         * @brief Returns the length of a string declared with FOUNDATION_FLASH.
+         * @brief Returns the length of a string declared with ROMODULAR_FLASH.
          * @ingroup Foundation_Utils
          * @param source Null-terminated program-memory string.
          * @return The number of characters before the terminator.
@@ -77,7 +87,7 @@
         }
 
         /**
-         * @brief Copies a string declared with FOUNDATION_FLASH into a buffer.
+         * @brief Copies a string declared with ROMODULAR_FLASH into a buffer.
          * @ingroup Foundation_Utils
          *
          * Follows `snprintf` semantics: at most `capacity - 1` characters are

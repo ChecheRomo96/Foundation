@@ -9,7 +9,7 @@ It provides reusable low-level building blocks shared by projects such as MIDILA
 · [Known limitations](https://checheromo96.github.io/Foundation/group__Foundation__BuildGuide__KnownLimitations.html)
 · [Changelog](CHANGELOG.md)
 
-Foundation 2.0.5 is the current published release and builds on CPSTL. Its
+Foundation 2.0.10 is the current published release and builds on CPSTL. Its
 tagged native Release packages passed the build, test, export, checksum, and
 standalone package-consumer workflow. Other presets remain candidates or
 experimental until their documented validation gates pass; see
@@ -22,8 +22,8 @@ dependency on the complete C++ standard library.
 
 ## CPSTL
 
-Foundation 2.0.5 builds on [CPSTL](https://github.com/ChecheRomo96/CPSTL)
-1.1.5 or newer for the standard vocabulary: `cpstd::vector`, `cpstd::move`,
+Foundation 2.0.10 builds on [CPSTL](https://github.com/ChecheRomo96/CPSTL)
+1.1.12 or newer for the standard vocabulary: `cpstd::vector`, `cpstd::move`,
 `cpstd::swap`, `cpstd::stack`, `cpstd::queue` and the type traits. `cpstd`
 aliases `std` in CPSTL's STL mode and is CPSTL's own implementation elsewhere,
 such as AVR. Foundation does not reimplement standard types; it adds what the
@@ -31,7 +31,7 @@ standard library lacks.
 
 CMake resolves CPSTL from a parent project, `FOUNDATION_CPSTL_PREFIX`, a
 sibling export at `../CPSTL/dist/<preset>`, the normal package search, or,
-by default, its sources at tag `v1.1.5` (`-DFETCHCONTENT_SOURCE_DIR_CPSTL=../CPSTL`
+by default, its sources at tag `v1.1.12` (`-DFETCHCONTENT_SOURCE_DIR_CPSTL=../CPSTL`
 uses a local working copy). Arduino users install the CPSTL library next to
 Foundation; `library.properties` declares it.
 
@@ -74,7 +74,7 @@ and governed by Foundation.
 - `Functional`: callback utilities.
 - `Time`: clocks, durations, frequencies, periods, ticks, and time points.
 - `Scheduling`: Task, PeriodicTask, OneShotTask and TaskScheduler.
-- `Utils`: program-memory (`FOUNDATION_FLASH`) helpers.
+- `Utils`: program-memory (`ROMODULAR_FLASH`) helpers.
 
 ## Build
 

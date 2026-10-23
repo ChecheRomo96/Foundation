@@ -8,8 +8,8 @@ namespace FlashData {
 
         // On AVR these stay in program memory; elsewhere they are ordinary
         // constants. Both are read only through Foundation::Utils::Flash.
-        const uint16_t Table[] FOUNDATION_FLASH = {100, 250, 400};
-        const char Name[] FOUNDATION_FLASH = "Foundation";
+        const uint16_t Table[] ROMODULAR_FLASH = {100, 250, 400};
+        const char Name[] ROMODULAR_FLASH = "Foundation";
 
     } // namespace
 

@@ -40,7 +40,7 @@ void setup() {
     Serial.println();
     Serial.println("------------------------------------------------------------");
     Serial.println("TAKEAWAY");
-    Serial.println("  FOUNDATION_FLASH places data; Flash::Read and CopyString");
+    Serial.println("  ROMODULAR_FLASH places data; Flash::Read and CopyString");
     Serial.println("  read it back on every target.");
     Serial.println("============================================================");
 }
