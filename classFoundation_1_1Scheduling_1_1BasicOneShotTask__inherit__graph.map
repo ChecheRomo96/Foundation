@@ -1,0 +1,5 @@
+<map id="Foundation::Scheduling::BasicOneShotTask&lt; TickType &gt;" name="Foundation::Scheduling::BasicOneShotTask&lt; TickType &gt;">
+<area shape="rect" id="Node000001" title="Task that becomes due once at or after a trigger TimePoint." alt="" coords="5,217,233,416"/>
+<area shape="rect" id="Node000002" href="$classFoundation_1_1Scheduling_1_1BasicTask.html" title=" " alt="" coords="7,5,231,169"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,183,122,217,117,217,117,183"/>
+</map>
