@@ -11,8 +11,8 @@ struct Entry {
     uint16_t mask;
 };
 
-const Entry Entries[] FOUNDATION_FLASH = {{3, 0x7B56}, {9, 0x5ABC}};
-const char Name[] FOUNDATION_FLASH = "Dorian";
+const Entry Entries[] ROMODULAR_FLASH = {{3, 0x7B56}, {9, 0x5ABC}};
+const char Name[] ROMODULAR_FLASH = "Dorian";
 
 }
 

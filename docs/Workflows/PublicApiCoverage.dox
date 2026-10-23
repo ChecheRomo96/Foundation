@@ -131,7 +131,7 @@
  * | `Swap` | `SwapTest.ExchangesTwoValues` | `BEHAVIOR` |
  * | Move-only and throwing user-defined types | `SwapTest.ExchangesMoveOnlyValues` and `UtilsTest.MoveIsOnlyACastAndSwapPropagatesElementFailures` | `BEHAVIOR` |
  * | `Flash::Read`, `Copy`, `StringLength`, `CopyString` (fit, truncation, zero capacity) | `FoundationUtilsFlash` cases in `FlashTests.cc` | `BEHAVIOR` |
- * | `FOUNDATION_FLASH` placement on AVR | `tests/AvrConsumer` links a flash table and string into `.text`, not `.data`; on 2026-10-02 the `Utils/FlashData` sketch printed the expected table value and full and truncated strings on an Arduino Mega 2560 | `TARGET` |
+ * | `ROMODULAR_FLASH` placement on AVR | `tests/AvrConsumer` links a flash table and string into `.text`, not `.data`; on 2026-10-02 the `Utils/FlashData` sketch printed the expected table value and full and truncated strings on an Arduino Mega 2560 | `TARGET` |
  *
  * @section FoundationPublicApiCoverageTarget Target-only Evidence
  *

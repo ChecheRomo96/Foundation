@@ -3,6 +3,16 @@
 This file records user-visible changes to Foundation. Release dates use the
 `YYYY-MM-DD` format. Version 1.1.0 was the first published GitHub release.
 
+## [2.0.10] - 2026-10-23
+
+### Changed
+
+- `ROMODULAR_FLASH` is the portable ecosystem-level program-memory placement
+  macro: it expands to `PROGMEM` on AVR and is empty elsewhere. The existing
+  `Foundation::Utils::Flash` read/copy API remains the portable access path.
+  `FOUNDATION_FLASH` remains an alias throughout Foundation 2.x so existing
+  sketches keep compiling.
+
 ## [2.0.9] - 2026-10-19
 
 ### Changed

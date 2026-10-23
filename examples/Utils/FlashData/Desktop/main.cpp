@@ -17,7 +17,7 @@ int main() {
         << "[1] READ ONE TABLE ENTRY\n"
         << "------------------------------------------------------------\n"
         << "  CODE\n"
-        << "    const uint16_t Table[] FOUNDATION_FLASH = {100, 250, 400};\n"
+        << "    const uint16_t Table[] ROMODULAR_FLASH = {100, 250, 400};\n"
         << "    Foundation::Utils::Flash::Read(&Table[1]);\n"
         << "  Value ................ " << result.SecondValue << "\n\n"
         << "[2] COPY A STRING INTO A BUFFER\n"
@@ -31,7 +31,7 @@ int main() {
         << "  truncation can be detected.\n\n"
         << "------------------------------------------------------------\n"
         << "TAKEAWAY\n"
-        << "  FOUNDATION_FLASH places data; Flash::Read and CopyString\n"
+        << "  ROMODULAR_FLASH places data; Flash::Read and CopyString\n"
         << "  are the only supported way to read it back.\n"
         << "============================================================\n";
 

@@ -19,13 +19,13 @@
  * @section FoundationUtilsFlash Program-Memory Data
  *
  * AVR is a Harvard architecture: an ordinary `const` table is copied from
- * flash into the small RAM at startup. `FOUNDATION_FLASH` expands to `PROGMEM`
+ * flash into the small RAM at startup. `ROMODULAR_FLASH` expands to `PROGMEM`
  * on AVR and to nothing elsewhere, and `Foundation::Utils::Flash` reads the
  * data back identically on every target:
  *
  * @code{.cpp}
- * const uint16_t Table[] FOUNDATION_FLASH = {100, 250, 400};
- * const char Name[] FOUNDATION_FLASH = "Foundation";
+ * const uint16_t Table[] ROMODULAR_FLASH = {100, 250, 400};
+ * const char Name[] ROMODULAR_FLASH = "Foundation";
  *
  * uint16_t value = Foundation::Utils::Flash::Read(&Table[1]);
  * char buffer[8];
@@ -33,7 +33,7 @@
  * @endcode
  *
  * Only namespace-scope `const` objects of trivially copyable types may be
- * placed with `FOUNDATION_FLASH`, and on AVR they must never be dereferenced
+ * placed with `ROMODULAR_FLASH`, and on AVR they must never be dereferenced
  * directly. `Read` returns a RAM copy, `Copy` transfers raw bytes, and
  * `CopyString` follows `snprintf` semantics: it always terminates a non-empty
  * buffer and returns the full source length so truncation can be detected.
