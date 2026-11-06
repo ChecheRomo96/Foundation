@@ -1,0 +1,4 @@
+<map id="Clock" name="Clock">
+<area shape="rect" id="Node000002" href="$group__Foundation__Time.html" title="Clock abstractions and time utilities." alt="" coords="5,5,60,31"/>
+<area shape="rect" id="Node000001" title="Callback&#45;backed tick source with a frequency." alt="" coords="108,5,167,31"/>
+</map>
