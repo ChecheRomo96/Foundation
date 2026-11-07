@@ -118,4 +118,20 @@ set_tests_properties(
     PROPERTIES LABELS "Foundation;Headers"
 )
 
+if(NOT CMAKE_CROSSCOMPILING)
+    add_test(
+        NAME FoundationSourceConsumer.FetchContent
+        COMMAND
+            ${CMAKE_COMMAND}
+            "-DFOUNDATION_SOURCE_DIR=${CMAKE_SOURCE_DIR}"
+            "-DFOUNDATION_SOURCE_CONSUMER_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/SourceConsumer"
+            "-DFOUNDATION_SOURCE_CONSUMER_BINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}/SourceConsumer"
+            -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/ValidateSourceConsumer.cmake"
+    )
+    set_tests_properties(
+        FoundationSourceConsumer.FetchContent
+        PROPERTIES LABELS "Foundation;SourceConsumer"
+    )
+endif()
+
 add_subdirectory(Foundation)

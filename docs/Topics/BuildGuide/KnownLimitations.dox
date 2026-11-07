@@ -96,9 +96,9 @@
  * - The repository package-consumer fixture currently validates the default
  *   feature set, including Math and Time. The complete feature-option package
  *   matrix remains tracked as `PKG-002`.
- * - Direct source inclusion is available for Arduino-style and internal use,
- *   but the exported CMake package is the primary Foundation 1.x desktop
- *   consumer contract.
+ * - `FetchContent` source inclusion is the recommended desktop development
+ *   workflow. Exported CMake packages remain the Release distribution path and
+ *   therefore retain their toolchain, ABI, and feature-selection boundaries.
  *
  * @section FoundationKnownLimitationsLanguage Runtime and API Boundaries
  *

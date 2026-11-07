@@ -95,6 +95,27 @@ On Windows PowerShell:
 ./scripts/build.ps1 windows_msvc_x64 -Configuration Debug
 ```
 
+### Windows development workflow
+
+Open **Developer PowerShell for Visual Studio**, then work from a recursive
+checkout so the pinned build infrastructure is available:
+
+```powershell
+git clone --recurse-submodules https://github.com/ChecheRomo96/Foundation.git
+Set-Location Foundation
+
+./scripts/configure.ps1 windows_msvc_x64 -Fresh
+./scripts/build.ps1 windows_msvc_x64 -Configuration Debug -Target Foundation
+./scripts/test.ps1 windows_msvc_x64 -Configuration Debug
+./scripts/build.ps1 windows_msvc_x64 -Configuration Debug `
+    -ExamplesOn -Target FoundationExamples
+```
+
+`windows_msvc_x64` uses the Visual Studio multi-configuration generator, so
+`-Configuration Debug` or `-Configuration Release` belongs on the build and
+test commands; do not set `CMAKE_BUILD_TYPE`. Use `windows_clang_x64` instead
+when developing with Clang on x64 Windows.
+
 Configure a preset separately when target-specific cache values are needed;
 subsequent workflows reuse its `build/<preset>` cache:
 
@@ -148,6 +169,67 @@ Every default export contains shared public headers, one Release static library,
 and CMake package files for `find_package(Foundation)`. Debug remains available
 from the source build for development and testing, but is not distributed.
 
+### Use Foundation during development
+
+For normal application development on Windows, Linux, or macOS, consume
+Foundation directly from source. CMake downloads the pinned source revision and
+its CPSTL dependency; no export, installation, or `CMAKE_PREFIX_PATH`
+configuration is required:
+
+```cmake
+include(FetchContent)
+
+FetchContent_Declare(Foundation
+  GIT_REPOSITORY https://github.com/ChecheRomo96/Foundation.git
+  GIT_TAG v0.0.1
+)
+FetchContent_MakeAvailable(Foundation)
+
+target_link_libraries(MyApplication PRIVATE Foundation::Foundation)
+```
+
+On Windows, configure and build the application normally with the desired
+toolchain:
+
+```powershell
+cmake -S . -B build -G "Visual Studio 18 2026" -A x64
+cmake --build build --config Debug
+```
+
+### Use an exported package for distribution
+
+Use an exported Release package when distributing a controlled binary build.
+It must use the same toolchain, architecture, and runtime as the application.
+On Windows, export it first:
+
+```powershell
+./scripts/export.ps1 windows_msvc_x64 -Fresh
+```
+
+Then point the consumer at `dist/windows_msvc_x64` and link the exported target:
+
+```cmake
+cmake_minimum_required(VERSION 3.25)
+project(MyApplication LANGUAGES CXX)
+
+find_package(Foundation 0.0.1 CONFIG REQUIRED)
+
+add_executable(MyApplication main.cpp)
+target_link_libraries(MyApplication PRIVATE Foundation::Foundation)
+target_compile_features(MyApplication PRIVATE cxx_std_17)
+```
+
+For example, configure the consumer from Developer PowerShell with:
+
+```powershell
+cmake -S . -B build -G "Visual Studio 18 2026" -A x64 `
+    -DCMAKE_PREFIX_PATH="C:/path/to/Foundation/dist/windows_msvc_x64"
+cmake --build build --config Release
+```
+
+The exported package is Release-only. Build Foundation from source when the
+consumer requires Debug artifacts, and never mix MSVC and Clang packages.
+
 The [published Doxygen documentation](https://checheromo96.github.io/Foundation/)
 is the primary guide for API usage, cache behavior, toolchains, package
 compatibility, troubleshooting, known limitations, and the
@@ -191,7 +273,7 @@ qualified legal counsel. Publishing source, documentation, or binary artifacts
 does not grant permission to use them. Until the license is replaced in
 writing, the all-rights-reserved notice applies.
 
-Shared embedded build support is pinned to RoModularBuild `v0.6.2`.
+Shared embedded build support is pinned to RoModularBuild `v0.0.1`.
 The `atmega328p_avrgcc_avr5`, `atmega2560_avrgcc_avr6` and
 `stm32g0b1cbt6_armgcc_cortex_m0plus_soft` presets retain repository-specific
 feature and package policy. CI compile/package checks do not establish physical

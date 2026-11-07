@@ -33,9 +33,10 @@
  * only the Release library and `FoundationTargets-release.cmake`.
  *
  * Debug remains a source-tree build configuration for development, diagnostics,
- * and tests. It is intentionally not installed. Consumers that must step into a
- * Debug Foundation build should build Foundation from source rather than expect
- * a precompiled Debug archive in the distribution package.
+ * and tests. It is intentionally not installed. Desktop applications that need
+ * to step into Foundation should use the `FetchContent` source workflow in
+ * @ref Foundation_BuildGuide_Overview rather than expect a precompiled Debug
+ * archive in the distribution package.
  *
  * Install never removes stale files. If a feature was disabled after an earlier
  * installation, old headers or archives may remain in the prefix. Use export for

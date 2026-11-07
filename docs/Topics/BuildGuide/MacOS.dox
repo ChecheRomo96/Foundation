@@ -32,6 +32,22 @@
  * release-candidate sequence is documented in
  * @ref Foundation_Workflows_Manual.
  *
+ * @section FoundationBuildMacOSApplication Application Development
+ *
+ * A macOS application should use the `FetchContent` workflow in
+ * @ref Foundation_BuildGuide_Overview. It compiles Foundation with the
+ * application's Apple Clang configuration, so no Foundation export,
+ * installation, or `CMAKE_PREFIX_PATH` is needed while developing:
+ *
+ * @code{bash}
+ * cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug
+ * cmake --build build
+ * @endcode
+ *
+ * Configure the application for `arm64` or `x86_64` as appropriate; the
+ * `FetchContent` dependency follows that selected architecture. A universal
+ * application requires its own explicit universal-binary strategy.
+ *
  * Clean release export:
  *
  * @code{bash}
@@ -67,7 +83,8 @@
  *
  * Native CTest execution is part of the release check. The default feature set
  * discovers and runs the module-owned GoogleTest cases in both Debug and
- * Release. See
+ * Release. The exported-package consumer is a separate Release-distribution
+ * validation; it is not the normal application-development workflow. See
  * @ref Foundation_Workflows_Test and use the acceptance sequence in
  * @ref Foundation_Workflows_Validation.
  */

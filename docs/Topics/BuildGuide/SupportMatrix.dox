@@ -94,7 +94,7 @@
  * | ----------- | ---------- | ----- |
  * | Arduino Uno / ATmega328P source mode | `RELEASE CANDIDATE` | Every example sketch must compile warning-free with the unmodified Arduino AVR core (`arduino:avr:uno`, C++11) through `scripts/test-arduino.sh`. |
  * | Other Arduino cores | `EXPERIMENTAL` | Source-compatible by design, but not validated as a group. Each architecture needs explicit evidence. |
- * | Direct source inclusion in a higher-level CMake project | `EXPERIMENTAL` | The supported v1 consumer path is the exported package; source inclusion still requires a dedicated consumer contract. |
+ * | `FetchContent` source inclusion in a higher-level CMake project | `SUPPORTED` | The source-consumer fixture configures Foundation as a child project, links `Foundation::Foundation`, and executes the resulting application. This is the recommended desktop development path. |
  * | PIC | `DEFERRED` | No current preset, toolchain, package, or compatibility promise. |
  *
  * @section FoundationSupportMatrixWorkflowPresets Workflow-Only Presets

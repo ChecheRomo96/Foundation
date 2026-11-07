@@ -17,15 +17,43 @@
  *
  * In source mode, Foundation remains fully configurable through compile-time macros.
  *
+ * @section FoundationBuildDesktopDevelopment Desktop Development
+ *
+ * For a Windows, Linux, or macOS application, use CMake `FetchContent` to make
+ * Foundation part of the application's build. This is the supported day-to-day
+ * development path: Foundation and CPSTL compile with the application's selected
+ * compiler, architecture, configuration, and C++ runtime. There is no separate
+ * Foundation export, installation, or `CMAKE_PREFIX_PATH` to configure.
+ *
+ * Add this to the application's top-level `CMakeLists.txt` before linking the
+ * application target:
+ *
+ * @code{.cmake}
+ * include(FetchContent)
+ *
+ * FetchContent_Declare(Foundation
+ *   GIT_REPOSITORY https://github.com/ChecheRomo96/Foundation.git
+ *   GIT_TAG v0.0.1
+ * )
+ * FetchContent_MakeAvailable(Foundation)
+ *
+ * target_link_libraries(MyApplication PRIVATE Foundation::Foundation)
+ * @endcode
+ *
+ * The first configure downloads the pinned Foundation revision and its CPSTL
+ * dependency into the application's build tree; later builds reuse CMake's
+ * download cache. Configure the application normally for the platform you are
+ * developing on. The platform pages document the corresponding compiler and
+ * architecture choices.
+ *
  * @section FoundationBuildFullPrecompiledMode Full Precompiled Mode
  *
  * Full precompiled mode builds Foundation with all supported modules enabled.
  *
  * This mode is intended for:
  *
- * - quick integration,
- * - desktop experiments,
- * - users that want a ready-to-link library,
+ * - controlled Release distribution,
+ * - users that need a ready-to-link binary for one exact target,
  * - generic full builds for known toolchains.
  *
  * A full build is larger, but easier to consume.
@@ -51,8 +79,10 @@
  * @section FoundationBuildRule General Rule
  *
  * If macros change the compiled implementation, build a custom library.
+ * For normal desktop development, use source mode through `FetchContent`.
  * If the project needs maximum flexibility, use source mode.
- * If the project needs fast integration, use a precompiled full build.
+ * Use a precompiled full build only when distributing a controlled Release
+ * binary for its exact target identity.
  * Always validate a precompiled package with a separate consumer using the same
  * target toolchain and ABI.
  */

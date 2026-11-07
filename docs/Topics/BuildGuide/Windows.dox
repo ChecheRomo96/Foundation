@@ -47,6 +47,23 @@
  * For Clang, verify `clang++` and `ninja`, then replace the preset name with
  * `windows_clang_x64` in the same workflow.
  *
+ * @section FoundationBuildWindowsApplication Application Development
+ *
+ * A Windows application should consume Foundation through the `FetchContent`
+ * workflow in @ref Foundation_BuildGuide_Overview. Configure that application
+ * with its own chosen compiler; no Foundation export or `CMAKE_PREFIX_PATH` is
+ * needed for Debug or Release development. For example, from Developer
+ * PowerShell with MSVC:
+ *
+ * @code{powershell}
+ * cmake -S . -B build -G "Visual Studio 18 2026" -A x64
+ * cmake --build build --config Debug
+ * @endcode
+ *
+ * Use the same application workflow with its Clang toolchain when targeting
+ * `windows_clang_x64`. Foundation is then compiled by that application build,
+ * so MSVC and Clang artifacts are never mixed.
+ *
  * @section FoundationBuildWindowsExport Export
  *
  * Recommended:
@@ -76,8 +93,9 @@
  * @section FoundationBuildWindowsValidation Validation
  *
  * Inspect MSVC output with `dumpbin /headers` and Clang output with
- * `llvm-readobj` where available. Compile a separate x64 consumer using
- * `find_package(Foundation CONFIG REQUIRED)` in Release and verify it selects
- * `Foundation.lib`. Build Foundation from source for Debug consumers. The
+ * `llvm-readobj` where available. The Release-package validation intentionally
+ * compiles a separate x64 consumer using `find_package(Foundation CONFIG
+ * REQUIRED)` and verifies it selects `Foundation.lib`. That check validates a
+ * distributed binary; application development uses `FetchContent` above. The
  * complete command checklist is in @ref Foundation_Workflows_Validation.
  */

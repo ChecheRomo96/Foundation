@@ -5,8 +5,8 @@
  * The Build Guide documents the supported workflows for using Foundation as:
  *
  * - an Arduino-compatible source library,
- * - a CMake development project,
- * - a precompiled static library,
+ * - a CMake desktop development dependency,
+ * - a precompiled static library for distribution,
  * - a platform-specific embedded dependency.
  *
  * @section FoundationBuildGuideSections Sections
@@ -15,7 +15,7 @@
 /**
  * @defgroup Foundation_BuildGuide_Overview Overview
  * @ingroup Foundation_BuildGuide
- * @brief Choose between source, full precompiled, and target-specific builds.
+ * @brief Choose source development, Release distribution, or target-specific builds.
  */
 
 /**

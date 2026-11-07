@@ -34,8 +34,10 @@
  *
  * @section FoundationPrecompiledFullBuild Full Build
  *
- * A full build enables all Foundation modules. It is useful for desktop
- * integration, testing, examples, and quick prototyping.
+ * A full build enables all Foundation modules. It is useful for controlled
+ * desktop Release distribution, testing, examples, and quick prototyping.
+ * Desktop application development itself uses `FetchContent` source inclusion;
+ * see @ref Foundation_BuildGuide_Overview.
  *
  * @section FoundationPrecompiledCustomBuild Custom Build
  *
@@ -69,19 +71,20 @@
  * CTest execution with firmware/consumer validation described in
  * @ref Foundation_Workflows_Validation.
  *
- * @section FoundationPrecompiledConsumer Consumer Contract
+ * @section FoundationPrecompiledConsumer Release Package Consumer Contract
  *
  * A CMake consumer should use:
  *
  * @code{cmake}
- * find_package(Foundation 1.0 CONFIG REQUIRED)
+ * find_package(Foundation 0.0.1 CONFIG REQUIRED)
  * target_link_libraries(MyTarget PRIVATE Foundation::Foundation)
  * @endcode
  *
  * The imported target carries include directories, compile features, public
  * definitions, and the Release archive mapping. Consumers must not copy only the
- * archive and omit the installed headers/package metadata. Debug consumers must
- * build Foundation from source.
+ * archive and omit the installed headers/package metadata. This is the contract
+ * for a distributed Release package, not the normal desktop development path;
+ * Debug consumers must build Foundation from source through `FetchContent`.
  *
  * See @ref Foundation_Workflows_Export for package contents and
  * `find_package(Foundation CONFIG)` integration.

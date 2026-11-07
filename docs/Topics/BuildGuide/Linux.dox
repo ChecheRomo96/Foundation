@@ -19,6 +19,23 @@
  * Arm64 presets require an AArch64/Arm64 Linux host. They do not install a
  * cross-compiler or sysroot and will reject a mismatched detected processor.
  *
+ * @section FoundationBuildLinuxApplication Application Development
+ *
+ * A Linux application should use the `FetchContent` workflow in
+ * @ref Foundation_BuildGuide_Overview. It compiles Foundation with the
+ * application's selected GCC or Clang toolchain, so no Foundation export,
+ * installation, or `CMAKE_PREFIX_PATH` is needed while developing. For a
+ * single-configuration Ninja application build:
+ *
+ * @code{bash}
+ * cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug
+ * cmake --build build
+ * @endcode
+ *
+ * The host architecture and compiler used to configure the application select
+ * the resulting Foundation build. Configure the application separately on x64
+ * and Arm64 hosts; these native presets are not cross-compilers.
+ *
  * Example:
  *
  * @code{bash}
@@ -31,6 +48,8 @@
  * @endcode
  *
  * Repeat with the Clang preset after recording `clang++ --version`. Inspect the
- * exported objects with `file`, `readelf`, or `llvm-readobj`, and compile an
- * external consumer through `Foundation::Foundation`.
+ * exported objects with `file`, `readelf`, or `llvm-readobj`, and validate the
+ * distributed Release package with an external `find_package` consumer through
+ * `Foundation::Foundation`. That package validation is distinct from the
+ * `FetchContent` development workflow.
  */
