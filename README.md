@@ -28,11 +28,11 @@ aliases `std` in CPSTL's STL mode and is CPSTL's own implementation elsewhere,
 such as AVR. Foundation does not reimplement standard types; it adds what the
 standard library lacks.
 
-CMake resolves CPSTL from a parent project, `FOUNDATION_CPSTL_PREFIX`, a
-sibling export at `../CPSTL/dist/<preset>`, the normal package search, or,
-by default, its sources at tag `v0.0.1` (`-DFETCHCONTENT_SOURCE_DIR_CPSTL=../CPSTL`
-uses a local working copy). Arduino users install the CPSTL library next to
-Foundation; `library.properties` declares it.
+CMake reuses a `CPSTL::CPSTL` target supplied by the parent project or fetches
+its sources at tag `v0.0.1` (`-DFETCHCONTENT_SOURCE_DIR_CPSTL=../CPSTL` uses a
+local working copy). Exported Foundation packages retain their separate CMake
+package dependency for Release distribution. Arduino users install the CPSTL
+library next to Foundation; `library.properties` declares it.
 
 ## Checkout
 

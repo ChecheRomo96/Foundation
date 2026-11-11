@@ -30,11 +30,9 @@ list(TRANSFORM CORE_ONLY PREPEND "-D")
 
 set(PASSED 0)
 
-# Forward how CPSTL is resolved (-DFETCHCONTENT_SOURCE_DIR_CPSTL=<dir> or
-# -DFOUNDATION_CPSTL_PREFIX=<dir>) to every case.
+# Forward the optional local CPSTL source override to every case.
 set(CPSTL_ARGS "")
-foreach(var FETCHCONTENT_SOURCE_DIR_CPSTL FOUNDATION_CPSTL_PREFIX
-        FETCHCONTENT_SOURCE_DIR_GOOGLETEST)
+foreach(var FETCHCONTENT_SOURCE_DIR_CPSTL FETCHCONTENT_SOURCE_DIR_GOOGLETEST)
     if(DEFINED ${var})
         list(APPEND CPSTL_ARGS "-D${var}=${${var}}")
     endif()

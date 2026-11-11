@@ -58,6 +58,8 @@
 
         set(FOUNDATION_EXPECTED_SYSTEM_PROCESSOR "" CACHE STRING
             "Regular expression for the expected target processor")
+        set(FOUNDATION_PLATFORM "desktop" CACHE STRING
+            "Foundation target platform identifier")
         if(FOUNDATION_EXPECTED_SYSTEM_PROCESSOR AND
            NOT CMAKE_SYSTEM_PROCESSOR MATCHES "${FOUNDATION_EXPECTED_SYSTEM_PROCESSOR}")
             message(FATAL_ERROR
