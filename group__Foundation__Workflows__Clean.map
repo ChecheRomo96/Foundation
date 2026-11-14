@@ -1,0 +1,4 @@
+<map id="Clean" name="Clean">
+<area shape="rect" id="Node000001" title="Remove known build and optional distribution directories safely." alt="" coords="164,5,223,31"/>
+<area shape="rect" id="Node000002" href="$group__Foundation__Workflows__Development.html" title="Compile, test, document, and clean the project during development." alt="" coords="5,5,116,31"/>
+</map>

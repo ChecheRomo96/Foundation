@@ -1,0 +1,4 @@
+<map id="Test" name="Test">
+<area shape="rect" id="Node000002" href="$group__Foundation__Workflows__Development.html" title="Compile, test, document, and clean the project during development." alt="" coords="5,5,116,31"/>
+<area shape="rect" id="Node000001" title="Build a testing preset and execute its CTest suite." alt="" coords="164,5,212,31"/>
+</map>

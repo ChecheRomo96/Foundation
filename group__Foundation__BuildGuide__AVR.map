@@ -1,0 +1,4 @@
+<map id="AVR" name="AVR">
+<area shape="rect" id="Node000001" title="AVR&#45;GCC builds for explicitly named 8&#45;bit AVR devices." alt="" coords="144,5,192,31"/>
+<area shape="rect" id="Node000002" href="$group__Foundation__BuildGuide__EmbeddedPlatforms.html" title="Arduino, AVR, PSoC, STM32, and related cross&#45;compiled targets." alt="" coords="5,5,96,31"/>
+</map>
