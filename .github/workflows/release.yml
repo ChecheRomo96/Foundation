@@ -37,10 +37,10 @@ jobs:
 
     outputs:
       tag: ${{ steps.release.outputs.tag }}
-      source_version: ${{ steps.release.outputs.source_version }}
-      release_version: ${{ steps.release.outputs.release_version }}
+      source_version: ${{ steps.release.outputs.version }}
+      release_version: ${{ steps.release_label.outputs.release_version }}
       prerelease: ${{ steps.release.outputs.prerelease }}
-      publish: ${{ steps.release.outputs.publish }}
+      publish: ${{ steps.release_publication.outputs.publish }}
 
     steps:
       - name: Checkout tagged source
@@ -52,57 +52,33 @@ jobs:
 
       - name: Validate tag and project version
         id: release
+        uses: ./tools/RoModularBuild/actions/validate-release-version
+        with:
+          tag: ${{ env.RELEASE_TAG }}
+          allow-prerelease: true
+
+      - name: Label release package
+        id: release_label
+        shell: bash
+        run: echo "release_version=${RELEASE_TAG#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Determine release publication
+        id: release_publication
         shell: bash
         run: |
-          set -euo pipefail
-
-          source_version=$(
-            sed -nE \
-              's/^[[:space:]]*project\(Foundation[[:space:]]+VERSION[[:space:]]+([0-9]+\.[0-9]+\.[0-9]+).*/\1/p' \
-              CMakeLists.txt | head -n 1
-          )
-
-          if [[ -z "$source_version" ]]; then
-            echo "Unable to read the Foundation version from CMakeLists.txt" >&2
-            exit 1
-          fi
-
-          if [[ ! "$RELEASE_TAG" =~ ^v${source_version}(-[0-9A-Za-z][0-9A-Za-z.-]*)?$ ]]; then
-            echo "Tag '$RELEASE_TAG' does not match source version '$source_version'" >&2
-            exit 1
-          fi
-
-          if [[ -z "$(git tag --points-at HEAD --list "$RELEASE_TAG")" ]]; then
-            echo "'$RELEASE_TAG' is not an existing tag on the checked-out commit" >&2
-            exit 1
-          fi
-
-          release_version=${RELEASE_TAG#v}
-          prerelease=false
-          if [[ "$RELEASE_TAG" != "v${source_version}" ]]; then
-            prerelease=true
-          fi
-
           publish=false
           if [[ "$EVENT_NAME" == "push" || "$REQUESTED_PUBLISH" == "true" ]]; then
             publish=true
           fi
-
-          {
-            echo "tag=$RELEASE_TAG"
-            echo "source_version=$source_version"
-            echo "release_version=$release_version"
-            echo "prerelease=$prerelease"
-            echo "publish=$publish"
-          } >> "$GITHUB_OUTPUT"
+          echo "publish=$publish" >> "$GITHUB_OUTPUT"
 
           {
             echo "## Foundation release package build"
             echo
             echo "- Tag: \`$RELEASE_TAG\`"
-            echo "- Source version: \`$source_version\`"
-            echo "- Package label: \`$release_version\`"
-            echo "- Prerelease: \`$prerelease\`"
+            echo "- Source version: \`${{ steps.release.outputs.version }}\`"
+            echo "- Package label: \`${RELEASE_TAG#v}\`"
+            echo "- Prerelease: \`${{ steps.release.outputs.prerelease }}\`"
             echo "- Publish: \`$publish\`"
           } >> "$GITHUB_STEP_SUMMARY"
 

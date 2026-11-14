@@ -9,7 +9,19 @@
     #################################################################################################
     # Project Name, Version, and Language
 
-        project(Foundation VERSION 0.0.1 LANGUAGES C CXX)
+        file(STRINGS
+            "${CMAKE_CURRENT_LIST_DIR}/VERSION"
+            FOUNDATION_VERSION
+            LIMIT_COUNT 1
+        )
+        string(STRIP "${FOUNDATION_VERSION}" FOUNDATION_VERSION)
+        if(NOT FOUNDATION_VERSION MATCHES "^[0-9]+\\.[0-9]+\\.[0-9]+$")
+            message(FATAL_ERROR
+                "VERSION must contain one semantic version, got '${FOUNDATION_VERSION}'"
+            )
+        endif()
+
+        project(Foundation VERSION ${FOUNDATION_VERSION} LANGUAGES C CXX)
 
         set(FOUNDATION_REQUIRED_CXX_STANDARD 17)
 
