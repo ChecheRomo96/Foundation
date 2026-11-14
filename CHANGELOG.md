@@ -13,6 +13,9 @@ This file records user-visible changes to Foundation. Release dates use the
 ### Fixed
 
 - Pin RoModularBuild 0.0.3 and use its shared release-version validation action.
+- Preserve the source-consumer test configuration on multi-config generators,
+  align Arduino CI with the declared CPSTL baseline and make release publishing
+  safe to retry.
 
 ## [2.0.10] - 2026-10-23
 
