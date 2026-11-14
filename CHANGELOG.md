@@ -3,12 +3,16 @@
 This file records user-visible changes to Foundation. Release dates use the
 `YYYY-MM-DD` format. Version 1.1.0 was the first published GitHub release.
 
-## [0.0.1] - Unreleased
+## [0.0.2] - Unreleased
 
 ### Changed
 
-- Reset the active RoModular release baseline to 0.0.1 and require the matching
+- Advance the active RoModular release baseline to 0.0.2 and require the matching
   CPSTL baseline. Earlier tags remain historical references only.
+
+### Fixed
+
+- Pin RoModularBuild 0.0.3 and use its shared release-version validation action.
 
 ## [2.0.10] - 2026-10-23
 
