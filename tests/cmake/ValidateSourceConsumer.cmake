@@ -3,7 +3,8 @@ cmake_minimum_required(VERSION 3.25)
 foreach(required_variable
         FOUNDATION_SOURCE_DIR
         FOUNDATION_SOURCE_CONSUMER_SOURCE_DIR
-        FOUNDATION_SOURCE_CONSUMER_BINARY_DIR)
+        FOUNDATION_SOURCE_CONSUMER_BINARY_DIR
+        FOUNDATION_SOURCE_CONSUMER_CONFIGURATION)
     if(NOT DEFINED ${required_variable} OR "${${required_variable}}" STREQUAL "")
         message(FATAL_ERROR "${required_variable} is required")
     endif()
@@ -31,6 +32,7 @@ endif()
 
 execute_process(
     COMMAND "${CMAKE_COMMAND}" --build "${FOUNDATION_SOURCE_CONSUMER_BINARY_DIR}"
+        --config "${FOUNDATION_SOURCE_CONSUMER_CONFIGURATION}"
     RESULT_VARIABLE build_result
 )
 if(NOT build_result EQUAL 0)
@@ -40,6 +42,7 @@ endif()
 execute_process(
     COMMAND "${CMAKE_CTEST_COMMAND}"
         --test-dir "${FOUNDATION_SOURCE_CONSUMER_BINARY_DIR}"
+        --build-config "${FOUNDATION_SOURCE_CONSUMER_CONFIGURATION}"
         --output-on-failure
         --no-tests=error
     RESULT_VARIABLE test_result

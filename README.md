@@ -9,7 +9,7 @@ It provides reusable low-level building blocks shared by projects such as MIDILA
 · [Known limitations](https://checheromo96.github.io/Foundation/group__Foundation__BuildGuide__KnownLimitations.html)
 · [Changelog](CHANGELOG.md)
 
-Foundation 0.0.1 is the active RoModular baseline and builds on CPSTL 0.0.1.
+Foundation 0.0.2 is the active RoModular baseline and builds on CPSTL 0.0.1.
 Earlier tagged releases remain historical references; this baseline must pass
 the build, test, export, checksum and standalone package-consumer workflow
 before it is published.
@@ -21,7 +21,7 @@ dependency on the complete C++ standard library.
 
 ## CPSTL
 
-Foundation 0.0.1 builds on [CPSTL](https://github.com/ChecheRomo96/CPSTL)
+Foundation 0.0.2 builds on [CPSTL](https://github.com/ChecheRomo96/CPSTL)
 0.0.1 or newer for the standard vocabulary: `cpstd::vector`, `cpstd::move`,
 `cpstd::swap`, `cpstd::stack`, `cpstd::queue` and the type traits. `cpstd`
 aliases `std` in CPSTL's STL mode and is CPSTL's own implementation elsewhere,
@@ -273,7 +273,7 @@ qualified legal counsel. Publishing source, documentation, or binary artifacts
 does not grant permission to use them. Until the license is replaced in
 writing, the all-rights-reserved notice applies.
 
-Shared embedded build support is pinned to RoModularBuild `v0.0.2`.
+Shared embedded build support is pinned to RoModularBuild `v0.0.3`.
 The `atmega328p_avrgcc_avr5`, `atmega2560_avrgcc_avr6` and
 `stm32g0b1cbt6_armgcc_cortex_m0plus_soft` presets retain repository-specific
 feature and package policy. CI compile/package checks do not establish physical
