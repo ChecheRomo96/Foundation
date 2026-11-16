@@ -1,0 +1,10 @@
+<map id="Time" name="Time">
+<area shape="rect" id="Node000002" href="$group__Foundation.html" title="Core documentation topic for the Foundation framework." alt="" coords="5,129,100,155"/>
+<area shape="rect" id="Node000001" title="Clock abstractions and time utilities." alt="" coords="148,129,203,155"/>
+<area shape="rect" id="Node000008" href="$group__Foundation__Time__Clock.html" title="Callback&#45;backed tick source with a frequency." alt="" coords="267,5,326,31"/>
+<area shape="rect" id="Node000006" href="$group__Foundation__Time__Duration.html" title="Validated elapsed tick counts and unit conversion." alt="" coords="257,55,336,80"/>
+<area shape="rect" id="Node000003" href="$group__Foundation__Time__Frequency.html" title="Positive unsigned rational tick frequency and reciprocal conversion." alt="" coords="252,104,341,129"/>
+<area shape="rect" id="Node000004" href="$group__Foundation__Time__Period.html" title="Positive unsigned rational seconds&#45;per&#45;tick representation." alt="" coords="265,153,328,179"/>
+<area shape="rect" id="Node000005" href="$group__Foundation__Time__Tick.html" title="Width&#45;explicit unsigned wrapping counter representations." alt="" coords="272,203,321,228"/>
+<area shape="rect" id="Node000007" href="$group__Foundation__Time__TimePoint.html" title="Modular counter samples associated with a Clock identity." alt="" coords="251,252,343,277"/>
+</map>

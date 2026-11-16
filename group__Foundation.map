@@ -1,0 +1,9 @@
+<map id="Foundation" name="Foundation">
+<area shape="rect" id="Node000001" title="Core documentation topic for the Foundation framework." alt="" coords="5,129,100,155"/>
+<area shape="rect" id="Node000003" href="$group__Foundation__Containers.html" title="Containers the standard library does not provide." alt="" coords="149,5,241,31"/>
+<area shape="rect" id="Node000004" href="$group__Foundation__Functional.html" title="Allocation&#45;free callable utilities for embedded and desktop code." alt="" coords="150,55,239,80"/>
+<area shape="rect" id="Node000002" href="$group__Foundation__Math.html" title="Arithmetic, ratios, complex numbers, and matrix utilities." alt="" coords="167,104,222,129"/>
+<area shape="rect" id="Node000006" href="$group__Foundation__Scheduling.html" title="Cooperative task scheduling primitives." alt="" coords="148,153,241,179"/>
+<area shape="rect" id="Node000005" href="$group__Foundation__Time.html" title="Clock abstractions and time utilities." alt="" coords="167,203,222,228"/>
+<area shape="rect" id="Node000007" href="$group__Foundation__Utils.html" title="Program&#45;memory helpers." alt="" coords="169,252,221,277"/>
+</map>

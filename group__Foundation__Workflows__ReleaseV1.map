@@ -1,0 +1,7 @@
+<map id="Foundation 1.x Stabilization Backlog" name="Foundation 1.x Stabilization Backlog">
+<area shape="rect" id="Node000005" href="$group__Foundation__Workflows__LegalReview.html" title="Interim restrictions and the evidence packet required for legal review." alt="" coords="391,5,563,45"/>
+<area shape="rect" id="Node000003" href="$group__Foundation__Workflows__PublicApiAudit.html" title="Inventory, findings, and freeze decisions for the Foundation 1.x API." alt="" coords="415,70,539,95"/>
+<area shape="rect" id="Node000004" href="$group__Foundation__Workflows__PublicApiCoverage.html" title="Traceability from the Foundation 1.2 public API to automated evidence." alt="" coords="401,119,553,145"/>
+<area shape="rect" id="Node000001" title="Version&#45;controlled plan and quality gates for the Foundation 1.x line." alt="" coords="140,63,343,103"/>
+<area shape="rect" id="Node000002" href="$group__Foundation__Workflows__Validation.html" title="Repeatable acceptance matrix for native and cross&#45;compiled targets." alt="" coords="5,70,92,95"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="Platforms" name="Platforms">
+<area shape="rect" id="Node000002" href="$group__Foundation__BuildGuide.html" title="Build, integration, export, and distribution guide for Foundation." alt="" coords="5,31,103,56"/>
+<area shape="rect" id="Node000001" title="Platform&#45;specific compiler, architecture, and integration guidance." alt="" coords="151,31,236,56"/>
+<area shape="rect" id="Node000003" href="$group__Foundation__BuildGuide__DesktopPlatforms.html" title="Native Windows, Linux, and macOS targets." alt="" coords="291,5,367,31"/>
+<area shape="rect" id="Node000004" href="$group__Foundation__BuildGuide__EmbeddedPlatforms.html" title="Arduino, AVR, PSoC, STM32, and related cross&#45;compiled targets." alt="" coords="284,55,375,80"/>
+</map>
