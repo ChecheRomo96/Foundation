@@ -12,8 +12,9 @@
  * @section FoundationReleasePackagesTriggers Triggers and Publication
  *
  * Pushing a tag beginning with `v` starts the workflow and publishes the
- * resulting GitHub Release automatically. The tag must match the version in
- * `CMakeLists.txt`. Stable and release-candidate examples are:
+ * resulting GitHub Release automatically. The tag must match the root
+ * `VERSION` file, which CMake reads as its project version. Stable and
+ * release-candidate examples are:
  *
  * @code
  * v1.2.0
@@ -24,6 +25,23 @@
  * temporary workflow artifacts for inspection. Selecting its `publish` input
  * additionally creates the GitHub Release. This makes manual packaging safe to
  * rehearse without publishing a release accidentally.
+
+ * @section FoundationReleasePackagesVersionMetadata Version Metadata
+ *
+ * `VERSION` is the single human-edited version source. Do not edit the version
+ * fields in `library.properties` or `src/Foundation_BuildSettings.h` manually:
+ * synchronize them before opening the release PR:
+ *
+ * @code{bash}
+ * cmake -DFOUNDATION_VERSION=0.0.3 -P cmake/SyncVersion.cmake
+ * cmake -DFOUNDATION_VERIFY_VERSION_SYNC=ON -P cmake/SyncVersion.cmake
+ * @endcode
+ *
+ * The first command writes `VERSION`, the Arduino library metadata and the
+ * public C++ version macro. The second is read-only and is run by native,
+ * embedded and release CI. Release metadata additionally requires the tag to
+ * be `v` followed by the same version; for example, `VERSION` `0.0.3` requires
+ * `v0.0.3` or an allowed prerelease such as `v0.0.3-rc.1`.
  *
  * @section FoundationReleasePackagesMatrix Package Matrix
  *

@@ -28,6 +28,12 @@
  * concurrency group cancels an older run for the same branch or pull request
  * when a newer commit supersedes it. Matrix fail-fast is disabled so one
  * compiler failure does not hide the state of the other platforms.
+
+ * Native and embedded jobs first run
+ * `cmake -DFOUNDATION_VERIFY_VERSION_SYNC=ON -P cmake/SyncVersion.cmake`.
+ * It requires the checked-in `library.properties` Arduino metadata and
+ * `Foundation_BuildSettings.h` macro to equal the root `VERSION` value before
+ * any toolchain-specific work begins.
  *
  * @section FoundationContinuousIntegrationMatrix Native Matrix
  *
