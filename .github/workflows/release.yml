@@ -50,6 +50,9 @@ jobs:
           fetch-depth: 0
           submodules: recursive
 
+      - name: Verify version metadata
+        run: cmake -DFOUNDATION_VERIFY_VERSION_SYNC=ON -P cmake/SyncVersion.cmake
+
       - name: Validate tag and project version
         id: release
         uses: ./tools/RoModularBuild/actions/validate-release-version

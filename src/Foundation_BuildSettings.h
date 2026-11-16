@@ -5,6 +5,9 @@
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //  Version
 
+        // FOUNDATION_VERSION is synchronized from ../VERSION by
+        // cmake/SyncVersion.cmake.
+
         #ifndef FOUNDATION_VERSION
             #define FOUNDATION_VERSION "0.0.2"
         #endif

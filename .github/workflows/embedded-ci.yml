@@ -32,6 +32,9 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Verify version metadata
+        run: cmake -DFOUNDATION_VERIFY_VERSION_SYNC=ON -P cmake/SyncVersion.cmake
+
       - name: Install AVR toolchain
         shell: bash
         run: |
@@ -121,6 +124,9 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Verify version metadata
+        run: cmake -DFOUNDATION_VERIFY_VERSION_SYNC=ON -P cmake/SyncVersion.cmake
+
       # Keep in step with FOUNDATION_CPSTL_VERSION in cmake/FoundationCPSTL.cmake.
       - name: Checkout the pinned CPSTL release
         uses: actions/checkout@v7
@@ -166,6 +172,9 @@ jobs:
         uses: actions/checkout@v7
         with:
           submodules: recursive
+
+      - name: Verify version metadata
+        run: cmake -DFOUNDATION_VERIFY_VERSION_SYNC=ON -P cmake/SyncVersion.cmake
 
       - name: Install Arm toolchain and runtime
         shell: bash

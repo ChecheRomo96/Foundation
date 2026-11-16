@@ -16,6 +16,8 @@ This file records user-visible changes to Foundation. Release dates use the
 - Preserve the source-consumer test configuration on multi-config generators,
   align Arduino CI with the declared CPSTL baseline and make release publishing
   safe to retry.
+- Synchronize release version metadata from one root `VERSION` file and verify
+  it before native, embedded and release CI work begins.
 
 ## [2.0.10] - 2026-10-23
 
